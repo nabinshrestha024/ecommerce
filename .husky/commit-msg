@@ -1,5 +1,5 @@
 #!/bin/sh
-commit_regex='^(FE-|BE-)(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\([a-z]+\))?: .{1,72}$'
+commit_regex='^(FE-|BE-)(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\([a-z-]+\))?: .{1,72}$'
 
 if ! grep -qE "$commit_regex" "$1"; then
     echo "❌ Invalid commit message format!"
