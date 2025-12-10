@@ -2,7 +2,7 @@
 
 branch=$(git symbolic-ref --short HEAD)
 protected_branches="^(main|develop)$"
-valid_branch_regex="^(BE|FE)-(feature|bugfix|hotfix|refactor)/[a-z0-9-]+$"
+valid_branch_regex="^(BE|FE)-(feat|bugfix|hotfix|refactor|fix|chore)/[a-z0-9-]+$"
 
 if echo "$branch" | grep -qE "$protected_branches"; then
     echo "❌ Direct push to '$branch' is not allowed!"
