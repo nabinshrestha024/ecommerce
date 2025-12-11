@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Check if any frontend files are staged
+frontend_files=$(git diff --cached --name-only | grep "^frontend/" || true)
+
+if [ -z "$frontend_files" ]; then
+  echo "⏭️  No frontend files staged, skipping commit message validation"
+  exit 0
+fi
+
+commit_regex='^FE-(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\([a-z-]+\))?: .{1,72}$'
+
+if ! grep -qE "$commit_regex" "$1"; then
+    echo "❌ Invalid commit message format!"
+    echo ""
+    echo "Expected format: FE-<type>(<scope>): <subject>"
+    echo ""
+    echo "Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore"
+    echo "Example: FE-feat(auth): add login form"
+    echo ""
+    exit 1
+fi
