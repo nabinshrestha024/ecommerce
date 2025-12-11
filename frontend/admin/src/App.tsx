@@ -14,27 +14,17 @@ export const App = () => {
   return (
     <>
       <Navbar />
-      {/*simran*/}
       <Sidebar />
-      {/*utsarga*/}
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        {/*utsarga*/}
         <Route path="/order-management" element={<OrderManagement />} />
-        {/*simran*/}
         <Route path="/customer" element={<Customer />} />
-        {/*pranawa*/}
         <Route path="/category" element={<Category />} />
-        {/*pranawa*/}
         <Route path="/product-management" element={<ProductManagement />} />
-        {/*amardeep*/}
         <Route path="/transaction" element={<Transaction />} />
-        {/*simran*/}
         <Route path="/profile" element={<Profile />} />
-        {/*amardeep*/}
         <Route path="/login" element={<Login />} />
-        {/*utsarga*/}
       </Routes>
     </>
   );
