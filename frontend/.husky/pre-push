@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# Check if any frontend files are being pushed (compare with remote)
+branch=$(git symbolic-ref --short HEAD)
+remote_branch=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || echo "")
+
+if [ -n "$remote_branch" ]; then
+  frontend_files=$(git diff --name-only "$remote_branch"...HEAD | grep "^frontend/" || true)
+else
+  # No upstream, compare with main/master
+  base_branch=$(git rev-parse --verify main 2>/dev/null && echo "main" || echo "master")
+  frontend_files=$(git diff --name-only "$base_branch"...HEAD | grep "^frontend/" || true)
+fi
+
+if [ -z "$frontend_files" ]; then
+  echo "⏭️  No frontend files in push, skipping branch validation"
+  exit 0
+fi
+
+protected_branches="^(main|develop)$"
+valid_branch_regex="^FE-(feat|bugfix|hotfix|refactor|fix|chore)/[a-z0-9-]+$"
+
+if echo "$branch" | grep -qE "$protected_branches"; then
+    echo "❌ Direct push to '$branch' is not allowed!"
+    echo "Please create a PR instead."
+    exit 1
+fi
+
+if ! echo "$branch" | grep -qE "$valid_branch_regex"; then
+    echo "❌ Invalid branch name: $branch"
+    echo ""
+    echo "For frontend changes, branch must follow:"
+    echo "  FE-feat/xxx, FE-bugfix/xxx, FE-hotfix/xxx, FE-refactor/xxx, FE-fix/xxx, FE-chore/xxx"
+    echo ""
+    echo "Example: FE-feat/add-auth-form"
+    exit 1
+fi

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Check if any frontend files are staged
+frontend_files=$(git diff --cached --name-only | grep "^frontend/" || true)
+
+if [ -z "$frontend_files" ]; then
+  echo "⏭️  No frontend files staged, skipping lint-staged"
+  exit 0
+fi
+
+echo "✨ Running lint-staged..."
+cd frontend && pnpm lint-staged
