@@ -6,7 +6,6 @@ import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import prettier from "eslint-plugin-prettier";
-import tailwind from "eslint-plugin-tailwindcss";
 
 export default [
   {
@@ -23,14 +22,12 @@ export default [
       globals: globals.browser,
     },
 
-    // ❌ Wrong: plugins: ["react-hooks"]
     plugins: {
       "@typescript-eslint": tseslint,
       react,
       "react-hooks": reactHooks,
       "jsx-a11y": jsxA11y,
       prettier,
-      tailwind,
     },
 
     rules: {
