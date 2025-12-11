@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { Dashboard } from "./screens/dashboard";
 import { OrderManagement } from "./screens/order-management";
 import { Customer } from "./screens/customer";
@@ -18,7 +18,7 @@ export const App = () => {
       <Sidebar />
       {/*utsarga*/}
       <Routes>
-        <Route path="/" element={<></>} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
         {/*utsarga*/}
         <Route path="/order-management" element={<OrderManagement />} />
