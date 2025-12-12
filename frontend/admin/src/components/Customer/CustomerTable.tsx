@@ -148,7 +148,7 @@ export const CustomerTable = () => {
   });
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-4 max-lg:flex-col">
       <div className="flex-1">
         <Table table={table} pageIndex={pagination.pageIndex} />
       </div>
