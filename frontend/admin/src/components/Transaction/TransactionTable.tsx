@@ -182,12 +182,12 @@ export const TransactionTable = () => {
   const handleSortPrice = () => {};
 
   return (
-    <div className="bg-white p-3 rounded-lg">
+    <div className="p-3 rounded-lg">
       <div className="relative">
         <Tabs
           defaultValue="All"
           data={tabsData}
-          tabsListClassName="bg-[#EAF8E7] flex"
+          tabsListClassName="bg-[#EAF8E7] flex dark:bg-accent"
         />
         <div className="absolute top-0 right-0 w-70 flex gap-2 justify-end items-center">
           <Input

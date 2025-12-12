@@ -21,7 +21,7 @@ export const Table = <TData,>({
   return (
     <div className="space-y-3">
       <table className="min-w-full mt-5 rounded-lg">
-        <thead className="bg-[#EAF8E7]">
+        <thead className="bg-[#EAF8E7] dark:bg-accent">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
