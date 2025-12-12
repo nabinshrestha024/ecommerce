@@ -7,13 +7,12 @@ import { ProductManagement } from "./screens/product-management";
 import { Transaction } from "./screens/transaction";
 import { Profile } from "./screens/profile";
 import { Login } from "./screens/login";
-import { Navbar } from "./components/Navbar/Navbar";
 import { Sidebar } from "./components/Sidebar/Sidebar";
 
 export const App = () => {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <Sidebar />
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
