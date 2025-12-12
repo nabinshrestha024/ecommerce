@@ -18,7 +18,7 @@ export const Input = ({
   type,
   placeholder,
   className,
-  icon,
+  // icon,
   error,
   ...props
 }: InputProps) => {

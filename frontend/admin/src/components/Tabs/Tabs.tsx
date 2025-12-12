@@ -11,10 +11,10 @@ interface DataType {
 interface TabsProps {
   defaultValue: string;
   data: DataType[];
-  rootClassName: string;
+  rootClassName?: string;
   tabsListClassName: string;
-  tabsTriggerClassName: string;
-  tabsContentClassName: string;
+  tabsTriggerClassName?: string;
+  tabsContentClassName?: string;
 }
 
 export const Tabs = ({
