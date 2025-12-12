@@ -3,7 +3,7 @@ import { Categories } from "./CategoryData.import";
 
 export const CategoryCard = () => {
   return (
-    <div className="w-full grid grid-cols-4 gap-5">
+    <div className="w-full grid grid-cols-4 gap-5 mb-[42px]">
       {Categories.map((category) => (
         <Card
           key={category.categoryId}
