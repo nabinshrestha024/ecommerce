@@ -1,7 +1,6 @@
 USE [EcommerceDB];
 GO
 
--- drop the table if it exists to allow re-running the script
 IF OBJECT_ID(N'dbo.Addresses', N'U') IS NOT NULL
 	DROP TABLE dbo.Addresses;
 GO
@@ -19,10 +18,9 @@ CREATE TABLE dbo.Addresses (
     UpdatedAt    DATETIME2 NULL,
     CONSTRAINT FK_Addresses_Users FOREIGN KEY (UserId) REFERENCES dbo.Users(UserId) ON DELETE CASCADE
 );
-
 CREATE INDEX IX_Addresses_UserId ON dbo.Addresses(UserId);
 GO
 
-PRINT 'Addresses table created successfully.';
+PRINT 'dbo.Addresses table created successfully.';
 GO
 
