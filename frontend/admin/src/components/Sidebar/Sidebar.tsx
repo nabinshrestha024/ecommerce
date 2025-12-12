@@ -60,9 +60,11 @@ export const Sidebar = () => {
   return (
     <Root collapsible="icon" className="w-60">
       <div
-        className={`w-full flex ${collapsed ? "justify-center" : "justify-between"} px-4 pt-2`}
+        className={`w-full flex ${collapsed ? "justify-center" : "justify-between"} items-center px-4 pt-2`}
       >
-        <div className={`${collapsed ? "hidden" : "block"}`}>Logo</div>
+        <div className={`${collapsed ? "hidden" : "block"} w-30 h-auto`}>
+          <img src="/logo.png" className="h-full w-full object-cover" />
+        </div>
         <SidebarTrigger
           onClick={() => setCollapsed(!collapsed)}
           size={"icon-lg"}
