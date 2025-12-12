@@ -31,9 +31,9 @@ export const Input = ({
         <Button
           variant="outline"
           id="date"
-          className="w-48 justify-between font-normal"
+          className="w-full justify-between font-normal"
         >
-          {date ? date.toLocaleDateString() : "Select date"}
+          {date ? date.toLocaleDateString() : placeholder}
           <ChevronDownIcon />
         </Button>
       </PopoverTrigger>
