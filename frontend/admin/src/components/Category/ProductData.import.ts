@@ -6,6 +6,7 @@ export const data = [
     createdAt: "2025-01-05",
     order: 1,
     image: "/CategoryImage/beauty.webp",
+    category: "Electronic",
   },
   {
     productId: "p002",
@@ -14,6 +15,7 @@ export const data = [
     createdAt: "2025-01-10",
     order: 2,
     image: "/CategoryImage/beauty.webp",
+    category: "Electronic",
   },
   {
     productId: "p003",

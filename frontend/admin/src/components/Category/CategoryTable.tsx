@@ -14,6 +14,9 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { DropDown } from "../DropDown/DropDown";
 import { IoFilter } from "react-icons/io5";
+import { Input } from "../Input/Input";
+import { Dialog } from "../Dialog/Dialog";
+import { ProductForm } from "./ProductForm";
 
 type ProductData = {
   productId: string;
@@ -32,8 +35,17 @@ const status = {
 
 export const CategoryTable = () => {
   const [searchProduct, setSearchProduct] = useState("");
-  const [sortType, setSortType] = useState<"date" | "price" | null>(null);
+  const [sortType, setSortType] = useState<"date" | "order" | null>(null);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<ProductData | null>(
+    null,
+  );
+
+  const handleRowClick = (row: ProductData) => {
+    setSelectedProduct(row);
+    setOpen(true);
+  };
   const columnHelper = createColumnHelper<ProductData>();
 
   const [pagination, setPagination] = useState({
@@ -91,9 +103,20 @@ export const CategoryTable = () => {
     columnHelper.display({
       id: "actions",
       header: "Actions",
-      cell: () => (
+      cell: (info) => (
         <div className="flex gap-2 justify-center items-center">
-          <FaEdit className="text-[#6A717F] text-[20px]" />
+          <Dialog
+            open={open}
+            onOpenChange={setOpen}
+            triggerContent={
+              <FaEdit
+                className="text-[#6A717F] text-[20px]"
+                onClick={() => handleRowClick(info.row.original)}
+              />
+            }
+          >
+            {selectedProduct && <ProductForm product={selectedProduct} />}
+          </Dialog>
           <MdDelete className="text-[#6A717F] text-[20px]" />
         </div>
       ),
@@ -112,30 +135,32 @@ export const CategoryTable = () => {
       );
     };
 
-    let allProducts = filterBySearch(data);
-
-    if (sortType === "date") {
-      allProducts = [...allProducts].sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      );
-    }
-
-    if (sortType === "price") {
-      allProducts = [...allProducts].sort((a, b) => a.order - b.order);
-    }
+    const sortProduct = (products: ProductData[]) => {
+      if (sortType === "date") {
+        return [...products].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
+      }
+      if (sortType === "order") {
+        return [...products].sort((a, b) => a.order - b.order);
+      }
+      return products;
+    };
 
     return {
-      all: filterBySearch(data),
-      featuredProduct: filterBySearch(
-        data.filter((d) => d.status === status.FEATURED),
+      all: sortProduct(filterBySearch(data)),
+      featuredProduct: sortProduct(
+        filterBySearch(data.filter((d) => d.status === status.FEATURED)),
       ),
-      outofStock: filterBySearch(
-        data.filter((d) => d.status === status.OUTOFPRODUCT),
+      onSale: sortProduct(
+        filterBySearch(data.filter((d) => d.status === status.ONSALE)),
       ),
-      onSale: filterBySearch(data.filter((d) => d.status === status.ONSALE)),
+      outofStock: sortProduct(
+        filterBySearch(data.filter((d) => d.status === status.OUTOFPRODUCT)),
+      ),
     };
-  }, [searchProduct]);
+  }, [searchProduct, sortType]);
 
   const table = useReactTable({
     data: filteredData.all,
@@ -217,16 +242,16 @@ export const CategoryTable = () => {
           tabsListClassName="bg-[#EAF8E7] flex"
         ></Tabs>
         <div className="absolute top-0 right-0  flex gap-2 justify-end items-center">
-          <input
+          <Input
             type="text"
             value={searchProduct}
             onChange={handleChange}
             placeholder="Search product"
-            className="pt-2.5 pb-2.5 pl-3 pr-2  border-none bg-[#F9FAFB] "
+            className="pt-2.5 pb-2.5 pl-3 pr-2  border-none bg-[#F9FAFB] focus-visible:border-0 focus-visible:ring-0"
           />
-          <div className="p-2 rounded-lg border shadow-2xl">
+          <div className="p-2 rounded-sm border shadow-2xl bg-[#F9FAFB]">
             <DropDown
-              trigger={<IoFilter />}
+              trigger={<IoFilter className="text-[#4B5563] text-[20px]" />}
               className="p-2 flex flex-col gap-2"
             >
               <div
@@ -238,9 +263,9 @@ export const CategoryTable = () => {
 
               <div
                 className="cursor-pointer hover:text-green-600"
-                onClick={() => setSortType("price")}
+                onClick={() => setSortType("order")}
               >
-                Sort by Price
+                Sort by Order
               </div>
             </DropDown>
           </div>
