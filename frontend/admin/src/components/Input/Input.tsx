@@ -12,6 +12,7 @@ interface InputProps {
   className?: string;
   icon?: ReactNode;
   error?: string;
+  disabled?: boolean;
   defaultValue?: string;
 }
 
@@ -22,6 +23,7 @@ export const Input = ({
   defaultValue,
   // icon,
   error,
+  disabled,
   ...props
 }: InputProps) => {
   const [open, setOpen] = useState(false);
@@ -44,6 +46,7 @@ export const Input = ({
           mode="single"
           selected={date}
           captionLayout="dropdown"
+          disabled={disabled}
           onSelect={(date) => {
             setDate(date);
             setOpen(false);
@@ -64,6 +67,7 @@ export const Input = ({
         maxLength={10}
         className={className}
         placeholder={placeholder}
+        disabled={disabled}
         {...props}
       />
       {error && <div className="text-[14px] text-red-500 mt-3">{error}</div>}
@@ -73,6 +77,7 @@ export const Input = ({
       <Root
         type={!password ? "text" : "password"}
         className="pr-10"
+        disabled={disabled}
         {...props}
         placeholder={placeholder}
       />
@@ -80,6 +85,7 @@ export const Input = ({
       <button
         type="button"
         onClick={() => setPassword((s) => !s)}
+        disabled={disabled}
         className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center text-muted-foreground hover:text-foreground"
       >
         {!password ? (
@@ -95,6 +101,7 @@ export const Input = ({
       <textarea
         className={className}
         placeholder={placeholder}
+        disabled={disabled}
         {...props}
       ></textarea>
       {error && <div className="text-[14px] text-red-500 mt-3">{error}</div>}
@@ -106,6 +113,7 @@ export const Input = ({
         className={className}
         defaultValue={defaultValue}
         placeholder={placeholder}
+        disabled={disabled}
         {...props}
       />
       {error && <div className="text-[14px] text-red-500 mt-3">{error}</div>}
