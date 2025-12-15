@@ -4,14 +4,12 @@ import {
   DialogTrigger,
   Dialog as Root,
 } from "@/ui/dialog";
-import type { Dispatch, ReactNode, SetStateAction } from "react";
+import type { ReactNode } from "react";
 
 interface DialogProps {
   children: ReactNode;
   className?: string;
   triggerContent: ReactNode;
-  open?: boolean;
-  setOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export const Dialog = ({

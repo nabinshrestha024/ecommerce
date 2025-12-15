@@ -7,17 +7,17 @@ import {
 import { Input } from "../Input/Input.tsx";
 
 interface Person {
-  id?: string;
-  phone?: string;
-  address?: string;
-  avatar?: string;
-  name?: string;
-  email?: string;
-  registration?: string;
-  lastPurchase?: string;
-  orderCount?: string;
-  totalSpend?: string;
-  status?: string;
+  id: string;
+  phone: string;
+  address: string;
+  avatar: string;
+  name: string;
+  email: string;
+  registration: string;
+  lastPurchase: string;
+  orderCount: string;
+  totalSpend: string;
+  status: string;
 }
 
 export const CustomerForm = ({ customer }: { customer: Person }) => {
