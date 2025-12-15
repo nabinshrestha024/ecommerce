@@ -18,7 +18,7 @@ namespace Ecommerce.Persistence.Repositories
         {
             using var conn = _context.CreateConnection();
             return await conn.ExecuteScalarAsync<int>(
-                "sp_Categories_Create",
+                "catalog.sp_CreateCategory",
                 category,
                 commandType: CommandType.StoredProcedure);
         }
@@ -27,7 +27,7 @@ namespace Ecommerce.Persistence.Repositories
         {
             using var conn = _context.CreateConnection();
             return await conn.ExecuteAsync(
-                "sp_Categories_Update",
+                "catalog.sp_UpdateCategory",
                 category,
                 commandType: CommandType.StoredProcedure) > 0;
         }
@@ -36,7 +36,7 @@ namespace Ecommerce.Persistence.Repositories
         {
             using var conn = _context.CreateConnection();
             return await conn.ExecuteAsync(
-                "sp_Categories_Delete",
+                "catalog.sp_DeleteCategory",
                 new { CategoryId = categoryId },
                 commandType: CommandType.StoredProcedure) > 0;
         }
@@ -45,7 +45,7 @@ namespace Ecommerce.Persistence.Repositories
         {
             using var conn = _context.CreateConnection();
             return await conn.QueryFirstOrDefaultAsync<Category>(
-                "sp_Categories_GetById",
+                "catalog.sp_GetCategoryById",
                 new { CategoryId = categoryId },
                 commandType: CommandType.StoredProcedure);
         }
@@ -54,7 +54,7 @@ namespace Ecommerce.Persistence.Repositories
         {
             using var conn = _context.CreateConnection();
             return await conn.QueryAsync<Category>(
-                "sp_Categories_GetAll",
+                "catalog.sp_GetAllCategories",
                 commandType: CommandType.StoredProcedure);
         }
     }
