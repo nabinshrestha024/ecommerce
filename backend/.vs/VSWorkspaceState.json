@@ -1,6 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\src",
+    "\\src\\Ecommerce.Api",
+    "\\src\\Ecommerce.Persistence",
+    "\\src\\Ecommerce.Persistence\\Repositories"
   ],
   "PreviewInSolutionExplorer": false
 }
