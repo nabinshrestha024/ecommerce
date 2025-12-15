@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Ecommerce.Application.Common.Interfaces;
+using Ecommerce.Application.DTOs.Category;
 using Ecommerce.Domain.Entities;
 using Ecommerce.Persistence.Context;
 using System.Data;
@@ -14,7 +15,7 @@ namespace Ecommerce.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<int> CreateAsync(Category category)
+        public async Task<int> CreateAsync(CreateCategoryDto category)
         {
             using var conn = _context.CreateConnection();
             return await conn.ExecuteScalarAsync<int>(
@@ -23,7 +24,7 @@ namespace Ecommerce.Persistence.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task<bool> UpdateAsync(Category category)
+        public async Task<bool> UpdateAsync(UpdateCategoryDto category)
         {
             using var conn = _context.CreateConnection();
             return await conn.ExecuteAsync(
@@ -50,12 +51,20 @@ namespace Ecommerce.Persistence.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task<IEnumerable<Category>> GetAllAsync()
+        public async Task<IEnumerable<CategoryDto>> GetAllAsync(CategoryFilterDto filter)
         {
             using var conn = _context.CreateConnection();
-            return await conn.QueryAsync<Category>(
+
+            return await conn.QueryAsync<CategoryDto>(
                 "catalog.sp_GetAllCategories",
-                commandType: CommandType.StoredProcedure);
+                new
+                {
+                    IsActive = filter.IsActive,
+                    Name = filter.Name
+                },
+                commandType: CommandType.StoredProcedure
+            );
         }
+
     }
 }

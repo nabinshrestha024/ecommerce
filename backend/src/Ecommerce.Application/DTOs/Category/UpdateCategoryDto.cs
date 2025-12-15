@@ -9,14 +9,14 @@ namespace Ecommerce.Application.DTOs.Category
     public class UpdateCategoryDto
     {
         public int CategoryId { get; set; }
-        public int ParentCategoryId { get; internal set; }
-        public string Name { get; internal set; }
-        public string Slug { get; internal set; }
-        public string CategoryImage { get; internal set; }
-        public bool IsFeatured { get; internal set; }
-        public int DisplayOrder { get; internal set; }
-        public int SortOrder { get; internal set; }
-        public string Description { get; internal set; }
-        public bool IsActive { get; internal set; }
+        public int? ParentCategoryId { get; set; }
+        public string Name { get; set; }
+        public string Slug { get; set; }
+        public string CategoryImage { get; set; }
+        public bool IsFeatured { get; set; }
+        public int DisplayOrder { get; set; }
+        public int SortOrder { get; set; }
+        public string Description { get; set; }
+        public bool IsActive { get; set; }
     }
 }
