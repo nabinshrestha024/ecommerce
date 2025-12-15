@@ -1,5 +1,7 @@
 using System.Reflection;
+using Ecommerce.Application.Common.Behaviors;
 using Ecommerce.Application.Features.Categories.Queries;
+using Ecommerce.Application.Features.Categories.Validator;
 using Ecommerce.Application.Features.Orders.Queries;
 using Ecommerce.Persistence.Extensions;
 using MediatR;
@@ -11,6 +13,9 @@ builder.Services.AddMediatR(
     typeof(GetAllCategoriesQuery).Assembly,
     typeof(GetOrderByIdQuery).Assembly
     );
+
+
+
 // Add services to the container.
 // In Program.cs
 

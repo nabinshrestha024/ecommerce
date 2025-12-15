@@ -11,5 +11,6 @@ namespace Ecommerce.Application.Features.Categories.Queries
 {
     public class GetAllCategoriesQuery : IRequest<IEnumerable<CategoryDto>>
     {
+        public CategoryFilterDto Filter { get; set; } = new();
     }
 }
