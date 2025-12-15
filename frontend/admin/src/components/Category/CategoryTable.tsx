@@ -34,13 +34,14 @@ const status = {
 };
 
 export const CategoryTable = () => {
-  const [searchProduct, setSearchProduct] = useState("");
+  const [searchProduct] = useState("");
   const [sortType, setSortType] = useState<"date" | "order" | null>(null);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductData | null>(
     null,
   );
+  console.log(open);
 
   const handleRowClick = (row: ProductData) => {
     setSelectedProduct(row);
@@ -106,8 +107,8 @@ export const CategoryTable = () => {
       cell: (info) => (
         <div className="flex gap-2 justify-center items-center">
           <Dialog
-            open={open}
-            onOpenChange={setOpen}
+            // open={open}
+            // onOpenChange={setOpen}
             triggerContent={
               <FaEdit
                 className="text-[#6A717F] text-[20px]"
@@ -229,9 +230,9 @@ export const CategoryTable = () => {
     },
   ];
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchProduct(e.target.value);
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearchProduct(e.target.value);
+  // };
 
   return (
     <div className="w-full  pt-6 pb-14 pl-6 pr-6 border border-[#E5E7EB] rounded-lg">
@@ -244,8 +245,8 @@ export const CategoryTable = () => {
         <div className="absolute top-0 right-0  flex gap-2 justify-end items-center">
           <Input
             type="text"
-            value={searchProduct}
-            onChange={handleChange}
+            defaultValue={searchProduct}
+            // onChange={handleChange}
             placeholder="Search product"
             className="pt-2.5 pb-2.5 pl-3 pr-2  border-none bg-[#F9FAFB] focus-visible:border-0 focus-visible:ring-0"
           />
