@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using MediatR;
-using Ecommerce.Application.Features.Categories.Queries;
+﻿using Ecommerce.Application.DTOs.Category;
 using Ecommerce.Application.Features.Categories.Commands;
-using Ecommerce.Application.DTOs.Category;
+using Ecommerce.Application.Features.Categories.Queries;
+using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.Api.Controllers
 {
@@ -17,10 +18,19 @@ namespace Ecommerce.Api.Controllers
             _mediator = mediator;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] bool? isActive, [FromQuery] string? name)
         {
-            var categories = await _mediator.Send(new GetAllCategoriesQuery());
-            return Ok(categories);
+            var query = new GetAllCategoriesQuery
+            {
+                Filter = new CategoryFilterDto
+                {
+                    IsActive = isActive,
+                    Name = name
+                }
+            };
+
+             var result = await _mediator.Send(query);
+             return Ok(result);
         }
 
         [HttpGet("{id:int}")]
@@ -33,6 +43,32 @@ namespace Ecommerce.Api.Controllers
 
             return Ok(category);
         }
+        [HttpPost("upload-image")]
+        public async Task<IActionResult> UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded");
+
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+            var extension = Path.GetExtension(file.FileName).ToLower();
+
+            if (!allowedExtensions.Contains(extension))
+                return BadRequest("Invalid image format");
+
+            var uploadsFolder = Path.Combine("wwwroot", "images", "categories");
+            Directory.CreateDirectory(uploadsFolder);
+
+            var fileName = $"{Guid.NewGuid()}{extension}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            using var stream = new FileStream(filePath, FileMode.Create);
+            await file.CopyToAsync(stream);
+
+            var imageUrl = $"/images/categories/{fileName}";
+
+            return Ok(new { imageUrl });
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateCategoryCommand command)

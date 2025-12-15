@@ -8,7 +8,8 @@ namespace Ecommerce.Application.DTOs.Category
 {
     public class CreateCategoryDto
     {
-        public int ParentCategoryId { get; set; }
+        public int CategoryId { get; set; }
+        public int? ParentCategoryId { get; set; }
         public string Name { get; set; } = null!;
         public string Slug { get; set; } = null!;
         public string? CategoryImage { get; set; }
