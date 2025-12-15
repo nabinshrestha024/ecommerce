@@ -5,10 +5,10 @@ export const BasicDetails = () => {
   const { register } = useFormContext();
   return (
     <Card
-      className="flex flex-col shadow-[0px_1px_3px_0px_#00000033] w-full py-6 px-6"
-      cardClassName="p-0"
+      className="flex flex-col shadow-[0px_1px_3px_0px_#00000033] w-full py-4 sm:py-6 px-4 sm:px-6 rounded-xl"
+      cardClassName="p-0 border-none shadow-none w-full"
     >
-      <div className="font-bold text-[22px] leading-[26px] tracking-[0%]">
+      <div className="flex justify-center font-bold text-[22px] leading-[26px] tracking-[0%]">
         Basic Details
       </div>
       <div className="flex flex-col mt-6 gap-8">
