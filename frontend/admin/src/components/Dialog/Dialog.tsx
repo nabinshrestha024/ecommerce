@@ -1,4 +1,9 @@
-import { DialogContent, DialogTrigger, Dialog as Root } from "@/ui/dialog";
+import {
+  DialogContent,
+  DialogOverlay,
+  DialogTrigger,
+  Dialog as Root,
+} from "@/ui/dialog";
 import type { ReactNode } from "react";
 
 interface DialogProps {
@@ -14,7 +19,10 @@ export const Dialog = ({
 }: DialogProps) => {
   return (
     <Root>
-      <DialogTrigger>{triggerContent}</DialogTrigger>
+      <DialogTrigger asChild>{triggerContent}</DialogTrigger>
+
+      <DialogOverlay className="bg-transparent backdrop-blur-sm" />
+
       <DialogContent className={className}>{children}</DialogContent>
     </Root>
   );
