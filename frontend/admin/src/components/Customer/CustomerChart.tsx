@@ -11,7 +11,7 @@ const data = [
   { xAxis: "Saturday", yAxis: 3490 },
 ];
 
-export const DashboardChart = () => {
+export const CustomerChart = () => {
   return (
     <Card className="w-full">
       <AreaChart data={data} />

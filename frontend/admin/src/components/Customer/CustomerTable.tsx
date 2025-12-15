@@ -10,6 +10,8 @@ import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import { Table } from "../Table/Table";
 import { CustomerProfile } from "../Customer/CustomerProfile.tsx";
+import { Dialog } from "../Dialog/Dialog.tsx";
+import { CustomerForm } from "./CustomerForm.tsx";
 
 type Person = {
   id: string;
@@ -36,6 +38,10 @@ export const CustomerTable = () => {
     } else {
       setSelectedCustomer(row);
     }
+  };
+
+  const handleEdit = (row: Person) => {
+    setSelectedCustomer(row);
   };
 
   const columns = [
@@ -129,9 +135,18 @@ export const CustomerTable = () => {
     columnHelper.display({
       id: "actions",
       header: "Actions",
-      cell: () => (
+      cell: (info) => (
         <div className="flex gap-2 justify-center items-center">
-          <FaEdit className="text-[#6A717F] text-[20px]" />
+          <Dialog
+            triggerContent={
+              <FaEdit
+                className="text-[#6A717F] text-[20px]"
+                onClick={() => handleEdit(info.row.original)}
+              />
+            }
+          >
+            {selectedCustomer && <CustomerForm customer={selectedCustomer} />}
+          </Dialog>
           <MdDelete className="text-[#6A717F] text-[20px]" />
         </div>
       ),

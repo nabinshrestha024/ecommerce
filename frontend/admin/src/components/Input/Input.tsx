@@ -14,6 +14,7 @@ interface InputProps {
   error?: string;
   disabled?: boolean;
   defaultValue?: string;
+  value?: string;
 }
 
 export const Input = ({
@@ -21,6 +22,7 @@ export const Input = ({
   placeholder,
   className,
   defaultValue,
+  value,
   // icon,
   error,
   disabled,
@@ -66,6 +68,7 @@ export const Input = ({
         }}
         maxLength={10}
         className={className}
+        value={value}
         placeholder={placeholder}
         disabled={disabled}
         {...props}

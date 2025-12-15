@@ -14,9 +14,9 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { DropDown } from "../DropDown/DropDown";
 import { IoFilter } from "react-icons/io5";
-import { Input } from "../Input/Input";
 import { Dialog } from "../Dialog/Dialog";
 import { ProductForm } from "./ProductForm";
+import { Input } from "@/ui/input";
 
 type ProductData = {
   productId: string;
@@ -34,18 +34,15 @@ const status = {
 };
 
 export const CategoryTable = () => {
-  const [searchProduct] = useState("");
+  const [searchProduct, setSearchProduct] = useState("");
   const [sortType, setSortType] = useState<"date" | "order" | null>(null);
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductData | null>(
     null,
   );
-  console.log(open);
 
   const handleRowClick = (row: ProductData) => {
     setSelectedProduct(row);
-    setOpen(true);
   };
   const columnHelper = createColumnHelper<ProductData>();
 
@@ -107,8 +104,6 @@ export const CategoryTable = () => {
       cell: (info) => (
         <div className="flex gap-2 justify-center items-center">
           <Dialog
-            // open={open}
-            // onOpenChange={setOpen}
             triggerContent={
               <FaEdit
                 className="text-[#6A717F] text-[20px]"
@@ -230,9 +225,9 @@ export const CategoryTable = () => {
     },
   ];
 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSearchProduct(e.target.value);
-  // };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchProduct(e.target.value);
+  };
 
   return (
     <div className="w-full  pt-6 pb-14 pl-6 pr-6 border border-[#E5E7EB] rounded-lg">
@@ -245,8 +240,8 @@ export const CategoryTable = () => {
         <div className="absolute top-0 right-0  flex gap-2 justify-end items-center">
           <Input
             type="text"
-            defaultValue={searchProduct}
-            // onChange={handleChange}
+            value={searchProduct}
+            onChange={handleChange}
             placeholder="Search product"
             className="pt-2.5 pb-2.5 pl-3 pr-2  border-none bg-[#F9FAFB] focus-visible:border-0 focus-visible:ring-0"
           />
