@@ -42,20 +42,29 @@ export const TransactionTable = () => {
       header: "Status",
       cell: (info) => {
         return info.getValue() === status.COMPLETED ? (
-          <div className="text-green-500 flex items-center justify-start gap-3">
-            <div className="rounded-full h-2 w-2 bg-green-500"></div> Completed
+          <div className="flex justify-center items-center">
+            <div className="text-green-500 flex items-center justify-start gap-3 w-25">
+              <div className="rounded-full h-2 w-2 bg-green-500"></div>{" "}
+              Completed
+            </div>
           </div>
         ) : info.getValue() === status.CANCELLED ? (
-          <div className="text-red-500 flex items-center justify-start gap-3">
-            <div className="rounded-full h-2 w-2 bg-red-500"></div> Cancelled
+          <div className="flex justify-center items-center">
+            <div className="text-red-500 flex items-center justify-start gap-3 w-25">
+              <div className="rounded-full h-2 w-2 bg-red-500"></div> Cancelled
+            </div>
           </div>
         ) : info.getValue() === status.PENDING ? (
-          <div className="text-gray-500 flex items-center justify-start gap-3">
-            <div className="rounded-full h-2 w-2 bg-gray-500"></div> Pending
+          <div className="flex justify-center items-center">
+            <div className="text-gray-500 flex items-center justify-start gap-3 w-25">
+              <div className="rounded-full h-2 w-2 bg-gray-500"></div> Pending
+            </div>
           </div>
         ) : (
-          <div className="text-red-500 flex items-center justify-start gap-3">
-            Error
+          <div className="flex justify-center items-center">
+            <div className="text-red-500 flex items-center justify-start gap-3">
+              Error
+            </div>
           </div>
         );
       },

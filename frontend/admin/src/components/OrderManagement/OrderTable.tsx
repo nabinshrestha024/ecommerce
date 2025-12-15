@@ -57,12 +57,16 @@ export const OrderTable = () => {
       header: "Payment",
       cell: (info) => {
         return info.getValue() === "Paid" ? (
-          <div className="text-green-500 flex items-center justify-start gap-3">
-            <div className="rounded-full h-2 w-2 bg-green-500"></div> Paid
+          <div className="flex justify-center items-center">
+            <div className="text-green-500 flex items-center justify-start gap-3 w-18">
+              <div className="rounded-full h-2 w-2 bg-green-500"></div> Paid
+            </div>
           </div>
         ) : (
-          <div className="text-red-500 flex items-center justify-start gap-3">
-            <div className="rounded-full h-2 w-2 bg-red-500"></div> Unpaid
+          <div className="flex justify-center items-center">
+            <div className="text-red-500 flex items-center justify-start gap-3 w-18">
+              <div className="rounded-full h-2 w-2 bg-red-500"></div> Unpaid
+            </div>
           </div>
         );
       },
@@ -72,28 +76,38 @@ export const OrderTable = () => {
       cell: ({ row }) => {
         const original = row.original;
         return original.status === status.DELIVERED ? (
-          <div className="text-green-500 flex items-center justify-start gap-3">
-            <LuBus style={{ color: "green" }} />
-            Delivered
+          <div className="flex justify-center items-center">
+            <div className="text-green-500 flex items-center justify-start gap-3 w-24">
+              <LuBus style={{ color: "green" }} />
+              Delivered
+            </div>
           </div>
         ) : original.status === status.PENDING ? (
-          <div className="text-orange-500 flex items-center justify-start gap-3">
-            <LuBus style={{ color: "orange" }} />
-            Pending
+          <div className="flex justify-center items-center">
+            <div className="text-orange-500 flex items-center justify-start gap-3 w-24">
+              <LuBus style={{ color: "orange" }} />
+              Pending
+            </div>
           </div>
         ) : original.status === status.SHIPPED ? (
-          <div className="text-gray-500 flex items-center justify-start gap-3">
-            <LuBus style={{ color: "gray" }} />
-            Shipped
+          <div className="flex justify-center items-center">
+            <div className="text-gray-500 flex items-center justify-start gap-3 w-24">
+              <LuBus style={{ color: "gray" }} />
+              Shipped
+            </div>
           </div>
         ) : original.status === status.CANCELLED ? (
-          <div className="text-red-500 flex items-center justify-start gap-3">
-            <LuBus style={{ color: "red" }} />
-            Cancelled
+          <div className="flex justify-center items-center">
+            <div className="text-red-500 flex items-center justify-start gap-3 w-24">
+              <LuBus style={{ color: "red" }} />
+              Cancelled
+            </div>
           </div>
         ) : (
-          <div className="text-red-500 flex items-center justify-start gap-3">
-            Error
+          <div className="flex justify-center items-center">
+            <div className="text-red-500 flex items-center justify-start gap-3">
+              Error
+            </div>
           </div>
         );
       },
