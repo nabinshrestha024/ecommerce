@@ -48,7 +48,7 @@ export const ProductForm = ({ product }: { product: ProductData }) => {
           <div className="col-span-3">
             <Input
               type="text"
-              value={product.productId}
+              defaultValue={product.productId}
               placeholder=""
               {...register("productId")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0"
@@ -66,7 +66,7 @@ export const ProductForm = ({ product }: { product: ProductData }) => {
           <div className="col-span-3">
             <Input
               type="text"
-              value={product.category}
+              defaultValue={product.category}
               placeholder=""
               {...register("categoryId")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
@@ -84,7 +84,7 @@ export const ProductForm = ({ product }: { product: ProductData }) => {
           <div className="col-span-3">
             <Input
               type="text"
-              value={product.name}
+              defaultValue={product.name}
               placeholder=""
               {...register("name")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
@@ -157,7 +157,7 @@ export const ProductForm = ({ product }: { product: ProductData }) => {
           <div className="col-span-3">
             <Input
               type="date"
-              value={product.createdAt}
+              defaultValue={product.createdAt}
               placeholder=""
               {...register("createdAt")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"

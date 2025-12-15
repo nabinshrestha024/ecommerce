@@ -12,12 +12,14 @@ interface InputProps {
   className?: string;
   icon?: ReactNode;
   error?: string;
+  defaultValue?: string;
 }
 
 export const Input = ({
   type,
   placeholder,
   className,
+  defaultValue,
   // icon,
   error,
   ...props
@@ -102,6 +104,7 @@ export const Input = ({
       <Root
         type={type}
         className={className}
+        defaultValue={defaultValue}
         placeholder={placeholder}
         {...props}
       />
