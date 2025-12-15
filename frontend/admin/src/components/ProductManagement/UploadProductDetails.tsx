@@ -1,16 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from "../Card/Card";
 import { Input } from "../Input/Input";
 import { useFormContext } from "react-hook-form";
 export const UploadProductDetails = () => {
   const [preview, setPreview] = useState<string>("");
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     const imgUrl = URL.createObjectURL(file);
     setPreview(imgUrl);
   };
-  const { register } = useFormContext();
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useFormContext();
+  const selectedCategory = watch("productCategories");
+
   return (
     <Card
       className="shadow-[0px_1px_3px_0px_#00000033] w-full h-auto py-4 sm:py-6 px-4 sm:px-6 rounded-xl"
@@ -42,10 +54,14 @@ export const UploadProductDetails = () => {
               id="productImage"
               type="file"
               accept="image/*"
-              {...register("productImage")}
-              onChange={handleFileChange}
+              {...register("productImage", { onChange: handleFileChange })}
               className="hidden"
             />
+            {errors.productImage && (
+              <p className="text-sm text-red-500 mt-1">
+                {errors.productImage?.message as string}
+              </p>
+            )}
           </div>
         </div>
         <div className="flex flex-col gap-3 ">
@@ -72,7 +88,55 @@ export const UploadProductDetails = () => {
                   <option value="clothes">Clothing</option>
                 </select>
               </div>
+
+              {errors.productCategories && (
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.productCategories?.message as string}
+                </p>
+              )}
             </div>
+            {selectedCategory === "groceries" && (
+              <div className="flex flex-col gap-3">
+                <label className="block text-sm font-bold text-gray-700">
+                  Expiration
+                </label>
+                <div className="grid grid-cols-2 w-full gap-5">
+                  <div className="flex flex-col gap-3 w-full">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Start
+                    </label>
+                    <Input
+                      type="date"
+                      placeholder="Start"
+                      className="w-full"
+                      {...register("expirationStart")}
+                    />
+                    {errors.expirationStart && (
+                      <p className="text-sm text-red-500 mt-1">
+                        {errors.expirationStart?.message as string}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-3 w-full">
+                    <label className="block text-sm font-medium text-gray-700">
+                      End
+                    </label>
+                    <Input
+                      type="date"
+                      placeholder="End"
+                      className="w-full"
+                      {...register("expirationEnd")}
+                    />
+                    {errors.expirationEnd && (
+                      <p className="text-sm text-red-500 mt-1">
+                        {errors.expirationEnd?.message as string}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="flex flex-col gap-3">
               <label className="block text-sm font-medium text-gray-700">
                 Product Tags
@@ -83,6 +147,11 @@ export const UploadProductDetails = () => {
                 className="w-full bg-[#F9FAFB] h-9 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 {...register("productTags")}
               />
+              {errors.productTags && (
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.productTags?.message as string}
+                </p>
+              )}
             </div>
           </div>
         </div>
