@@ -13,8 +13,8 @@ export const UploadProductDetails = () => {
   const { register } = useFormContext();
   return (
     <Card
-      className="shadow-[0px_1px_3px_0px_#00000033] w-auto h-auto py-6 px-6"
-      cardClassName="p-0 h-auto"
+      className="shadow-[0px_1px_3px_0px_#00000033] w-full h-auto py-4 sm:py-6 px-4 sm:px-6 rounded-xl"
+      cardClassName="p-0 border-none shadow-none rounded-xl w-full"
     >
       <div className="font-bold text-[22px] leading-[26px] tracking-[0%]">
         Upload Product Details
