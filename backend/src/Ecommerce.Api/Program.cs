@@ -15,8 +15,11 @@ builder.Services.AddMediatR(
     );
 
 
+builder.Services.AddAutoMapper(typeof(Ecommerce.Application.Mapping.AutoMapperProfile).Assembly);
 
 // Add services to the container.
+// In Program.cs
+
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
