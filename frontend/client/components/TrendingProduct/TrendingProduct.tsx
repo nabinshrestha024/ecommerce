@@ -1,3 +1,9 @@
+import { ProductCard } from "./component/ProductCard";
+
 export const TrendingProduct = () => {
-  return <div>Trending Product</div>;
+  return (
+    <div className="w-full px-6">
+      <ProductCard />
+    </div>
+  );
 };
