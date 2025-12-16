@@ -2,7 +2,7 @@ export const deals = [
   {
     id: "1",
     image: "/Deals/img1.svg",
-    title: "Samsung Galazy S24",
+    title: "Samsung Galaxy S24",
     desc: "Gentle yet effective, our radiance boosting foaming device you required for you daily activities.",
     review: "342",
     dealPrice: "$799.99",
@@ -11,7 +11,7 @@ export const deals = [
   {
     id: "2",
     image: "/Deals/img2.svg",
-    title: "Samsung Galazy S24",
+    title: "Samsung Galaxy S24",
     desc: "Gentle yet effective, our radiance boosting foaming device you required for you daily activities.",
     review: "342",
     dealPrice: "$799.99",
@@ -20,7 +20,7 @@ export const deals = [
   {
     id: "3",
     image: "/Deals/img3.svg",
-    title: "Samsung Galazy S24",
+    title: "Samsung Galaxy S24",
     desc: "Gentle yet effective, our radiance boosting foaming device you required for you daily activities.",
     review: "342",
     dealPrice: "$799.99",
@@ -29,7 +29,7 @@ export const deals = [
   {
     id: "4",
     image: "/Deals/img4.svg",
-    title: "Samsung Galazy S24",
+    title: "Samsung Galaxy S24",
     desc: "Gentle yet effective, our radiance boosting foaming device you required for you daily activities.",
     review: "342",
     dealPrice: "$799.99",

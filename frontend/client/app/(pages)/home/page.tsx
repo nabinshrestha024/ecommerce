@@ -9,7 +9,7 @@ import { TrendingProduct } from "@/components/TrendingProduct/TrendingProduct";
 
 export default function Page() {
   return (
-    <div>
+    <div className="space-y-10">
       <ProductSlider />
       <Advertisement />
       <TrendingProduct />
