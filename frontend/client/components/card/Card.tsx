@@ -11,7 +11,7 @@ interface CardProps {
 
 export const Card = ({ children, className, rootClassName }: CardProps) => {
   return (
-    <Root className={`${rootClassName}`}>
+    <Root className={`${rootClassName} p-0`}>
       <CardContent className={className}>{children}</CardContent>
     </Root>
   );
