@@ -7,8 +7,8 @@ import { IoIosHeartEmpty } from "react-icons/io";
 
 export const Deal = () => {
   return (
-    <div className="w-full flex items-center justify-center">
-      <div className="px-20 w-full max-w-[1216px]">
+    <div className="w-full px-6 mx-auto flex items-center justify-center">
+      <div className="w-full max-w-[1216px]">
         <div className="w-full flex justify-between items-center">
           <h1 className="font-bold text-xl">Limited-Time Deal</h1>
           <Button
@@ -20,9 +20,9 @@ export const Deal = () => {
         </div>
         <div className="w-full grid grid-cols-4 gap-5 mt-8">
           {deals.map((val) => (
-            <Card key={val.id} className="p-2 overflow-x-auto max-w-[250px]">
+            <Card key={val.id} className="p-2 overflow-x-auto">
               <div className="relative">
-                <div className="w-[230px] h-[180px] relative rounded-2xl">
+                <div className="w-[270px] h-[180px] relative rounded-2xl">
                   <Image
                     src={val.image}
                     alt="Image"

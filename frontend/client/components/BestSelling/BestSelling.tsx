@@ -4,8 +4,8 @@ import { bestSelling } from "./bestSelling.import";
 
 export const BestSelling = () => {
   return (
-    <div className="w-full flex items-center justify-center">
-      <div className="px-20 w-full max-w-[1216px]">
+    <div className="w-full px-6 mx-auto flex items-center justify-center">
+      <div className="w-full max-w-[1216px]">
         <div className="w-full flex justify-between items-center">
           <h1 className="font-bold text-xl">Best selling product</h1>
           <Button
