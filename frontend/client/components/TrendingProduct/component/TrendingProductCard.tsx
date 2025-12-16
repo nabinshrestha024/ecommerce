@@ -8,60 +8,58 @@ import Link from "next/link";
 export const TrendingProductCard = () => {
   return (
     <div>
-      <div className="grid grid-cols-3 gap-5">
+      <div className="grid grid-cols-3 gap-4">
         {ProductDatas.map((productData) => (
           <Card
             className="p-3 w-full max-w-[285px] border-0 shadow-none"
             key={productData.id}
-            rootClassName="py-0 border-0 shadow-xl"
+            rootClassName="py-0 border shadow-xl"
           >
-            <div className="flex flex-col gap-5">
-              <div className="flex flex-col gap-2">
-                <div className="relative">
-                  <Image
-                    src={productData.image}
-                    alt="image"
-                    width={248}
-                    height={185}
-                    className="w-full rounded-[12px]"
-                  />
-                  <div className="absolute top-3 right-3 rounded-full bg-white w-6 h-6 shadow-sm flex justify-center items-center">
-                    <IoIosHeartEmpty />
-                  </div>
-                </div>
-                <div className="flex flex-col gap-5"></div>
-                <div className="flex flex-col gap-2">
-                  <div className="text-[22px] font-bold ">
-                    {productData.name}
-                  </div>
-                  <div className="text-[16px] font-normal leading-[22px] text-[#00000099]/60">
-                    {productData.shortDescription}
-                  </div>
-                  <div className="text-[14px] font-bold leading-5 text-[#6B7280]">
-                    {productData.rating}
-                  </div>
-                  <div>
-                    <span className="text-[22px] text-[#4EA674] font-bold">
-                      Rs. {productData.price.newPrice}
-                    </span>
-                    &nbsp;
-                    <span className="line-through text-[14px] text-[red] font-medium">
-                      Rs. {productData.price.oldPrice}
-                    </span>
-                  </div>
+            <div className="flex flex-col gap-2">
+              <div className="w-full h-[185px] relative">
+                <Image
+                  src={productData.image}
+                  alt="image"
+                  fill
+                  className="w-full h-full object-cover rounded-[12px]"
+                />
+                <div className="absolute top-3 right-3 rounded-full bg-white w-6 h-6 shadow-sm flex justify-center items-center">
+                  <IoIosHeartEmpty />
                 </div>
               </div>
-              <div className="flex justify-between">
-                <Link href="/productDetails">
-                  <div className="text-[16px] text-[#6467F2] font-normal">
-                    View Details
-                  </div>
-                </Link>
 
-                <Button className="px-5 py-4 text-[15px] font-bold leading-3 bg-[#4EA674] text-white  rounded-[200px] hover:bg-[#4EA674]">
-                  Add to cart
-                </Button>
+              <div className="flex flex-col gap-2">
+                <div className="text-[20px] font-medium ">
+                  {productData.name}
+                </div>
+                <div className="text-[16px] font-normal leading-[22px] text-[#00000099]/60">
+                  {productData.shortDescription}
+                </div>
+                <div className="text-[12px] font-bold leading-5 text-[#6B7280]">
+                  {" "}
+                  ⭐️⭐️⭐️⭐️⭐️⭐️ ( {productData.rating})
+                </div>
+                <div>
+                  <span className="text-[14px] text-[#4EA674] font-bold">
+                    Rs. {productData.price.newPrice}
+                  </span>
+                  &nbsp;&nbsp;&nbsp;
+                  <span className="line-through text-[12px] text-[red] font-medium">
+                    Rs. {productData.price.oldPrice}
+                  </span>
+                </div>
               </div>
+            </div>
+            <div className="flex justify-between items-center mt-2">
+              <Link href="/productDetails">
+                <div className="text-[14px] text-[#6467F2] font-normal">
+                  View Details
+                </div>
+              </Link>
+
+              <Button className="px-5 py-4 text-[14px] font-bold leading-3 bg-[#4EA674] text-white  rounded-[200px] hover:bg-[#4EA674]">
+                Add to cart
+              </Button>
             </div>
           </Card>
         ))}

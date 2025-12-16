@@ -1,7 +1,7 @@
 export const TrendData = [
   {
     id: 0,
-    image: "/trendingProduct/image1.png",
+    image: "/trendingProduct/image5.jpg",
   },
   {
     id: 1,

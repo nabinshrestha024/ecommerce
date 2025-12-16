@@ -35,28 +35,4 @@ export const ProductDatas = [
       "Compact speaker with powerful bass, clear sound, and water-resistant design.",
     rating: 4.0,
   },
-  {
-    id: 4,
-    name: "Gaming Mechanical Keyboard",
-    image: "/trendingProduct/image.png",
-    price: {
-      newPrice: 7299,
-      oldPrice: 8999,
-    },
-    shortDescription:
-      "RGB mechanical keyboard with fast response keys, perfect for gaming and coding.",
-    rating: 4.7,
-  },
-  {
-    id: 5,
-    name: "Noise Cancelling Earbuds",
-    image: "/trendingProduct/image.png",
-    price: {
-      newPrice: 2999,
-      oldPrice: 3999,
-    },
-    shortDescription:
-      "True wireless earbuds with active noise cancellation and immersive sound.",
-    rating: 4.3,
-  },
 ];
