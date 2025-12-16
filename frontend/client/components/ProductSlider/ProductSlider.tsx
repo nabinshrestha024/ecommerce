@@ -1,36 +1,43 @@
-import { Carousel } from "../carousel/Carousel";
+"use client";
 
+import { Carousel } from "../carousel/Carousel";
+import Autoplay from "embla-carousel-autoplay";
+import { useMemo } from "react";
+import { Slides } from "./constants/Slides";
 export const ProductSlider = () => {
+  const autoplay = useMemo(
+    () => Autoplay({ delay: 6000, stopOnInteraction: true }),
+    [],
+  );
+
   return (
     <Carousel
-      rootClassName="p-0 shadow-none"
-      contentClassName="p-0 border-0"
-      items={[
-        <img
-          key="electronics"
-          src="/ProductSlider/electronics.jpg"
-          alt="Electronics"
-          className="w-full h-64 object-cover rounded-lg"
-        />,
-        <img
-          key="groceries"
-          src="/ProductSlider/groceries.jpg"
-          alt="Groceries"
-          className="w-full h-64 object-cover rounded-lg"
-        />,
-        <img
-          key="shoes"
-          src="/ProductSlider/shoes.jpg"
-          alt="Shoes"
-          className="w-full h-64 object-cover rounded-lg"
-        />,
-        <img
-          key="sweater"
-          src="/ProductSlider/sweater.jpg"
-          alt="Sweater"
-          className="w-full h-64 object-cover rounded-lg"
-        />,
-      ]}
+      rootClassName="relative w-full h-80"
+      contentClassName=""
+      previousClassName="absolute left-4 top-1/2 -translate-y-1/2 bg-white text-gray-700 p-2 rounded-full shadow hover:bg-gray-100"
+      nextClassName="absolute right-4 top-1/2 -translate-y-1/2 bg-white text-gray-700 p-2 rounded-full shadow hover:bg-gray-100"
+      opts={{ loop: true }}
+      plugins={[autoplay]}
+      items={Slides.map((slide) => (
+        <div key={slide.key}>
+          <img
+            src={slide.src}
+            alt={slide.alt}
+            className="w-full h-80 object-cover rounded-lg"
+          />
+          {slide.overlay && (
+            <div className="absolute inset-0 flex items-center px-12 bg-black/30">
+              <div className="text-white max-w-md pl-12">
+                <h2 className="text-4xl font-bold">{slide.overlay.title}</h2>
+                <p className="mt-2">{slide.overlay.description}</p>
+                <button className="mt-4 bg-white text-black px-6 py-2 rounded">
+                  {slide.overlay.buttonText}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
     />
   );
 };
