@@ -6,10 +6,11 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/ui/carousel"
-import { Carousel as Root} from "@/ui/carousel"
+} from "@/ui/carousel";
+import { Carousel as Root, type CarouselApi } from "@/ui/carousel";
 import { Card } from "../card/Card";
 import { CardContent } from "@/ui/card";
+import type { EmblaOptionsType } from "embla-carousel";
 
 interface CarouselProps {
   contentClassName?: string;
@@ -17,6 +18,8 @@ interface CarouselProps {
   rootClassName?: string;
   previousClassName?: string;
   nextClassName?: string;
+  opts?: EmblaOptionsType;
+  plugins?: any[];
 }
 
 export const Carousel = ({
@@ -24,25 +27,21 @@ export const Carousel = ({
   items,
   rootClassName,
   previousClassName,
-  nextClassName
+  nextClassName,
+  opts,
+  plugins,
 }: CarouselProps) => {
   return (
-    <Root className={rootClassName}>
+    <Root className={rootClassName} opts={opts} plugins={plugins}>
       <CarouselContent className={contentClassName}>
         {items.map((item, index) => (
-          <CarouselItem key={index}>
-            <div className="p-1">
-              <Card>
-                <CardContent className={contentClassName}>
-                  {item}
-                </CardContent>
-              </Card>
-            </div>
+          <CarouselItem key={index} className="p-0">
+            <div className="w-full">{item}</div>
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className={previousClassName}/>
-      <CarouselNext className={nextClassName}/>
+      <CarouselPrevious className={previousClassName} />
+      <CarouselNext className={nextClassName} />
     </Root>
   );
 };
