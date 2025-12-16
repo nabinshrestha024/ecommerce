@@ -11,7 +11,7 @@ export const TrendingProductCard = () => {
       <div className="grid grid-cols-3 gap-5">
         {ProductDatas.map((productData) => (
           <Card
-            className="p-3 w-full max-w-[272px] border-0 shadow-none"
+            className="p-3 w-full max-w-[285px] border-0 shadow-none"
             key={productData.id}
             rootClassName="py-0 border-0 shadow-xl"
           >
@@ -22,7 +22,7 @@ export const TrendingProductCard = () => {
                     src={productData.image}
                     alt="image"
                     width={248}
-                    height={180}
+                    height={185}
                     className="w-full rounded-[12px]"
                   />
                   <div className="absolute top-3 right-3 rounded-full bg-white w-6 h-6 shadow-sm flex justify-center items-center">
