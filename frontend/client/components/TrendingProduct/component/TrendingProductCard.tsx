@@ -2,45 +2,65 @@ import { Card } from "@/components/card/Card";
 import { Button } from "@/ui/button";
 import { ProductDatas } from "./ProductData.import";
 import Image from "next/image";
+import { IoIosHeartEmpty } from "react-icons/io";
+import Link from "next/link";
 
 export const TrendingProductCard = () => {
   return (
-    <div className="flex flex-col gap-8 pt-20 pr-9 pb-[100px] pl-[100px]">
-      <div className="flex justify-between">
-        <div className="text-[32px] font-bold text-[#000000]">
-          Trending Product
-        </div>
-        <Button className="border border-black px-6 py-3 rounded-[200px] bg-white hover:bg-white text-black">
-          View All
-        </Button>
-      </div>
-      <div className="grid grid-cols-3 gap-8">
+    <div>
+      <div className="grid grid-cols-3 gap-5">
         {ProductDatas.map((productData) => (
           <Card
-            className="p-3 w-full"
+            className="p-3 w-full max-w-[272px] border-0 shadow-none"
             key={productData.id}
-            rootClassName="py-0"
+            rootClassName="py-0 border-0 shadow-xl"
           >
-            <div className="flex flex-col gap-2">
-              <Image
-                src={productData.image}
-                alt="image"
-                width={248}
-                height={180}
-                className="w-full rounded-[12px]"
-              />
-              <div className="">
-                <div>{productData.name}</div>
-                <div>{productData.shortDescription}</div>
-                <div>{productData.rating}</div>
-                <div>
-                  <span className="text-[22px] text-[#4EA674] font-bold">
-                    Rs. {productData.price.newPrice}
-                  </span>
-                  <span className="line-through text-[22px] text-[#00000099]/60 font-bold">
-                    Rs. {productData.price.oldPrice}
-                  </span>
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-2">
+                <div className="relative">
+                  <Image
+                    src={productData.image}
+                    alt="image"
+                    width={248}
+                    height={180}
+                    className="w-full rounded-[12px]"
+                  />
+                  <div className="absolute top-3 right-3 rounded-full bg-white w-6 h-6 shadow-sm flex justify-center items-center">
+                    <IoIosHeartEmpty />
+                  </div>
                 </div>
+                <div className="flex flex-col gap-5"></div>
+                <div className="flex flex-col gap-2">
+                  <div className="text-[22px] font-bold ">
+                    {productData.name}
+                  </div>
+                  <div className="text-[16px] font-normal leading-[22px] text-[#00000099]/60">
+                    {productData.shortDescription}
+                  </div>
+                  <div className="text-[14px] font-bold leading-5 text-[#6B7280]">
+                    {productData.rating}
+                  </div>
+                  <div>
+                    <span className="text-[22px] text-[#4EA674] font-bold">
+                      Rs. {productData.price.newPrice}
+                    </span>
+                    &nbsp;
+                    <span className="line-through text-[14px] text-[red] font-medium">
+                      Rs. {productData.price.oldPrice}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-between">
+                <Link href="/productDetails">
+                  <div className="text-[16px] text-[#6467F2] font-normal">
+                    View Details
+                  </div>
+                </Link>
+
+                <Button className="px-5 py-4 text-[15px] font-bold leading-3 bg-[#4EA674] text-white  rounded-[200px] hover:bg-[#4EA674]">
+                  Add to cart
+                </Button>
               </div>
             </div>
           </Card>
