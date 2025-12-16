@@ -2,7 +2,12 @@ import { Card } from "../Card/Card";
 import { Input } from "../Input/Input";
 import { useFormContext } from "react-hook-form";
 export const BasicDetails = () => {
-  const { register } = useFormContext();
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useFormContext();
+  const selectedCategory = watch("stockStatus");
   return (
     <Card
       className="flex flex-col shadow-[0px_1px_3px_0px_#00000033] w-full py-4 sm:py-6 px-4 sm:px-6 rounded-xl"
@@ -22,17 +27,26 @@ export const BasicDetails = () => {
             className="w-full bg-[#F9FAFB] h-12"
             {...register("productName")}
           />
+          {errors.productName && (
+            <p className="text-sm text-red-500 mt-1">
+              {errors.productName?.message as string}
+            </p>
+          )}
         </div>
         <div className="flex flex-col gap-3">
           <label className="block text-sm font-medium text-gray-700">
             Product Description
           </label>
-          <Input
-            type="textarea"
+          <textarea
             placeholder="Enter product description...."
-            className="w-full bg-[#F9FAFB] h-full p-3"
+            className="w-full bg-[#F9FAFB] h-24 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             {...register("productDescription")}
           />
+          {errors.productDescription && (
+            <p className="text-sm text-red-500 mt-1">
+              {errors.productDescription?.message as string}
+            </p>
+          )}
         </div>
         <div className="flex flex-col gap-3 ">
           <div className="font-bold text-[22px] leading-[26px] tracking-[0%]">
@@ -54,6 +68,11 @@ export const BasicDetails = () => {
                   {...register("productPrice")}
                 />
               </div>
+              {errors.productPrice && (
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.productPrice?.message as string}
+                </p>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-5">
               <div className="flex flex-col gap-3 ">
@@ -72,6 +91,11 @@ export const BasicDetails = () => {
                     {...register("discountedPrice")}
                   />
                 </div>
+                {errors.discountedPrice && (
+                  <p className="text-sm text-red-500 mt-1">
+                    {errors.discountedPrice?.message as string}
+                  </p>
+                )}
               </div>
               <div className="flex flex-col gap-3 ">
                 <label className="block text-sm font-medium text-gray-700">
@@ -99,29 +123,6 @@ export const BasicDetails = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col gap-3">
-              <label className="block text-sm font-medium text-gray-700">
-                Expiration
-              </label>
-              <div className="grid grid-cols-2 w-full gap-5">
-                <div className="flex flex-col gap-3 w-full">
-                  <Input
-                    type="date"
-                    placeholder="Start"
-                    className="w-full"
-                    {...register("expirationStart")}
-                  />
-                </div>
-                <div className="flex flex-col gap-3 w-full">
-                  <Input
-                    type="date"
-                    placeholder="End"
-                    className="w-full"
-                    {...register("expirationEnd")}
-                  />
-                </div>
-              </div>
-            </div>
           </div>
         </div>
         <div className="flex flex-col gap-3">
@@ -131,30 +132,43 @@ export const BasicDetails = () => {
           <div className="grid grid-cols-2 mt-6 gap-5">
             <div className="flex flex-col gap-3">
               <label className="block text-sm font-medium text-gray-700">
-                Stock Quantity
-              </label>
-              <Input
-                type="number"
-                placeholder="Stock quantity..."
-                {...register("stockQuantity")}
-                className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
-              />
-            </div>
-            <div className="flex flex-col gap-3">
-              <label className="block text-sm font-medium text-gray-700">
                 Stock Status
               </label>
               <select
                 {...register("stockStatus")}
+                defaultValue=""
                 className="w-full bg-[#F9FAFB] h-9 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent flex items-center"
               >
-                <option value="" disabled selected>
+                <option value="" disabled>
                   Select stock status...
                 </option>
                 <option value="in-stock">In Stock</option>
                 <option value="out-of-stock">Out of Stock</option>
               </select>
+              {errors.stockStatus && (
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.stockStatus?.message as string}
+                </p>
+              )}
             </div>
+            {selectedCategory === "in-stock" && (
+              <div className="flex flex-col gap-3">
+                <label className="block text-sm font-medium text-gray-700">
+                  Stock Quantity
+                </label>
+                <Input
+                  type="number"
+                  placeholder="Stock quantity..."
+                  {...register("stockQuantity")}
+                  className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                />
+                {errors.stockQuantity && (
+                  <p className="text-sm text-red-500 mt-1">
+                    {errors.stockQuantity?.message as string}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -162,7 +176,14 @@ export const BasicDetails = () => {
             type="checkbox"
             {...register("highlightFeatured")}
             className="h-4 w-4"
+            required
           />
+          {errors.highlightFeatured && (
+            <p className="text-sm text-red-500 mt-1">
+              {errors.highlightFeatured?.message as string}
+            </p>
+          )}
+
           <label className="text-sm font-medium text-gray-700">
             Highlight this product in featured section
           </label>

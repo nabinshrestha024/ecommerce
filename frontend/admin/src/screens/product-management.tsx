@@ -4,9 +4,17 @@ import { UploadProductDetails } from "@/components/ProductManagement/UploadProdu
 import { Button } from "@/ui/button";
 import { Save } from "lucide-react";
 import { useForm, FormProvider } from "react-hook-form";
-
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ProductFormSchema } from "@/components/ProductManagement/schema/ProductForm.zod";
 export const ProductManagement = () => {
-  const methods = useForm();
+  const methods = useForm({
+    resolver: zodResolver(ProductFormSchema),
+    defaultValues: {
+      taxIncluded: "yes",
+      highlightFeatured: false,
+    },
+    mode: "all",
+  });
   const handleFormSubmit = (data: any) => {
     console.log(data);
   };
@@ -17,6 +25,7 @@ export const ProductManagement = () => {
       </div>
       <FormProvider {...methods}>
         <form
+          id="productForm"
           onSubmit={methods.handleSubmit(handleFormSubmit)}
           className="w-full"
         >

@@ -22,21 +22,7 @@ namespace Ecommerce.Application.Features.Categories.Queries
 
         public async Task<IEnumerable<CategoryDto>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
         {
-            var categories = await _repository.GetAllAsync();
-
-            return categories.Select(c => new CategoryDto
-            {
-                CategoryId = c.CategoryId,
-                ParentCategoryId = c.ParentCategoryId,
-                Name = c.Name,
-                Slug = c.Slug,
-                CategoryImage = c.CategoryImage,
-                IsFeatured = c.IsFeatured,
-                DisplayOrder = c.DisplayOrder,
-                SortOrder = c.SortOrder,
-                Description = c.Description,
-                IsActive = c.IsActive
-            });
+            return await _repository.GetAllAsync(request.Filter);
         }
     }
 }
