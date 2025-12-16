@@ -15,7 +15,12 @@ export const Header = () => {
         />
       </div>
       <div className="flex flex-row gap-2 sm:gap-4 shrink-0 w-full lg:w-auto">
-        <Button variant="default" className="h-12 flex-1 sm:flex-initial">
+        <Button
+          variant="default"
+          className="h-12 flex-1 sm:flex-initial"
+          type="submit"
+          form="productForm"
+        >
           <span className="hidden sm:inline">Publish Product</span>
           <span className="sm:hidden">Publish</span>
         </Button>
