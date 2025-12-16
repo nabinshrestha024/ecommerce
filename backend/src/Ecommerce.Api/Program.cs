@@ -15,8 +15,19 @@ builder.Services.AddMediatR(
     );
 
 
+builder.Services.AddPersistenceServices(builder.Configuration);
+// MediatR registration
+builder.Services.AddMediatR(
+    typeof(GetAllCategoriesQuery).Assembly,
+    typeof(GetOrderByIdQuery).Assembly
+    );
+
+
+builder.Services.AddAutoMapper(typeof(Ecommerce.Application.Mapping.AutoMapperProfile).Assembly);
 
 // Add services to the container.
+// In Program.cs
+
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
