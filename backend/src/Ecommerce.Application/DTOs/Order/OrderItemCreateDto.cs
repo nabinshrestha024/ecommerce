@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ecommerce.Application.DTOs.Order
 {
-    public class UpdateOrderStatusDto
+    public class OrderItemCreateDto
     {
-        public int OrderID { get; set; }
-        public int PaymentStatus { get; set; }
-        public int FulfillmentStatus { get; set; }
-
+        public int? ProductId { get; set; }
+        public int Quantity { get; set; }
+        public decimal UnitPrice { get; set; }
     }
 }

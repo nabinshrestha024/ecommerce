@@ -6,38 +6,25 @@ using System.Threading.Tasks;
 using Ecommerce.Application.Common.Interfaces;
 using Ecommerce.Application.DTOs.Order;
 using MediatR;
+using AutoMapper;
 
 namespace Ecommerce.Application.Features.Orders.Queries
 {
-    public class GetOrderByIdQueryHandler
-        : IRequestHandler<GetOrderByIdQuery, OrderDto?>
+    public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, OrderDto?>
     {
-        private readonly IOrderRepository _repository;
+        private readonly IOrderRepository _orders;
+        private readonly IMapper _mapper;
 
-        public GetOrderByIdQueryHandler(IOrderRepository repository)
+        public GetOrderByIdQueryHandler(IOrderRepository orders, IMapper mapper)
         {
-            _repository = repository;
+            _orders = orders;
+            _mapper = mapper;
         }
 
-        public async Task<OrderDto?> Handle(
-            GetOrderByIdQuery request,
-            CancellationToken cancellationToken)
+        public async Task<OrderDto?> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
         {
-            var order = await _repository.GetByIdAsync(request.OrderId);
-
-            if (order == null)
-                return null;
-
-            return new OrderDto
-            {
-                OrderID = order.OrderID,
-                OrderNumber = order.OrderNumber,
-                ShippingAddress = order.ShippingAddress,
-                Total = order.Total,
-                PaymentStatus = order.PaymentStatus,
-                FulfillmentStatus = order.FulfillmentStatus,
-                PlacedAt = order.PlacedAt
-            };
+            var order = await _orders.GetByIdAsync(request.OrderId);
+            return order is null ? null : _mapper.Map<OrderDto>(order);
         }
     }
 }

@@ -22,8 +22,6 @@ namespace Ecommerce.Application.Features.Categories.Commands
 
         public async Task<int> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
-            
-
             return await _repository.CreateAsync(request.Category);
         }
     }

@@ -19,7 +19,7 @@ namespace Ecommerce.Application.Features.Orders.Commands
 
         public async Task<bool> Handle(CancelOrderCommand request, CancellationToken cancellationToken)
         {
-            return await _repository.CancelAsync(request.OrderId);
+            return await _repository.CancelAsync(request.OrderId, null, request.Notes);
         }
     }
 }

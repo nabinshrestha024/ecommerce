@@ -8,8 +8,5 @@ using MediatR;
 
 namespace Ecommerce.Application.Features.Orders.Commands
 {
-    public class CreateOrderCommand : IRequest<int>
-    {
-        public CreateOrderDto Order { get; set; } = null!;
-    }
+    public record CreateOrderCommand(OrderCreateDto Dto) : IRequest<int>;
 }

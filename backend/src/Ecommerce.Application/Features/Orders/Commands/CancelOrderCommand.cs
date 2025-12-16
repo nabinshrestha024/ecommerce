@@ -7,8 +7,5 @@ using MediatR;
 
 namespace Ecommerce.Application.Features.Orders.Commands
 {
-    public class CancelOrderCommand : IRequest<bool>
-    {
-        public int OrderId { get; set; }
-    }
+    public record CancelOrderCommand(int OrderId, string? Notes) : IRequest<bool>;
 }

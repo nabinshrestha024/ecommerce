@@ -17,6 +17,7 @@ namespace Ecommerce.Persistence.Extensions
         {
             services.AddSingleton<DapperContext>();
             services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
+
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
 

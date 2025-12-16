@@ -10,22 +10,21 @@ namespace Ecommerce.Application.Features.Orders.Commands
 {
     public class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrderStatusCommand, bool>
     {
-        private readonly IOrderRepository _repository;
-
-        public UpdateOrderStatusCommandHandler(IOrderRepository repository)
+        private readonly IOrderRepository _orders;
+        
+        public UpdateOrderStatusCommandHandler(IOrderRepository orders)
         {
-            _repository = repository;
+            _orders = orders;
         }
 
         public async Task<bool> Handle(UpdateOrderStatusCommand request, CancellationToken cancellationToken)
         {
-            var dto = request.Order;
-            return await _repository.UpdateStatusAsync(
-                dto.OrderID,
-                dto.PaymentStatus,
-                dto.FulfillmentStatus
+            return await _orders.UpdateStatusAsync(
+                request.OrderId,
+                request.NewStatus,
+                changedBy: null,
+                notes: request.Notes
             );
         }
     }
-
 }

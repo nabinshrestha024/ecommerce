@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using Ecommerce.Application.DTOs.Order;
 using MediatR;
 
-namespace Ecommerce.Application.Features.Orders.Commands
+namespace Ecommerce.Application.Features.Orders.Queries
 {
-    public record UpdateOrderStatusCommand(int OrderId, short NewStatus, string? Notes) : IRequest<bool>;
+    public record GetOrderSummaryQuery() : IRequest<OrderSummaryDto>;
 }
-

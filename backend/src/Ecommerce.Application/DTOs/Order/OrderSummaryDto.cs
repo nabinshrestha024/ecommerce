@@ -8,10 +8,9 @@ namespace Ecommerce.Application.DTOs.Order
 {
     public class OrderSummaryDto
     {
-        public int OrderID { get; set; }
-        public string? OrderNumber { get; set; }
-        public decimal Total { get; set; }
-        public int FulfillmentStatus { get; set; }
-        public DateTime PlacedAt { get; set; }
+        public int TotalOrders { get; set; }
+        public decimal TotalRevenue { get; set; }
+        public decimal DeliveredRevenue { get; set; }
     }
+
 }

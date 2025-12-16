@@ -9,6 +9,6 @@ using MediatR;
 
 namespace Ecommerce.Application.Features.Orders.Queries
 {
-    public record GetAllOrdersQuery(OrderFilterParams Filter, PaginationParams Pagination)
-        : IRequest<PagedResult<OrderDto>>;
+    public record GetOrdersByUserQuery(int UserId, PaginationParams Pagination)
+    : IRequest<PagedResult<OrderDto>>;
 }

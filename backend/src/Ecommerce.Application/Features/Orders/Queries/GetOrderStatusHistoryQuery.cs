@@ -8,9 +8,7 @@ using MediatR;
 
 namespace Ecommerce.Application.Features.Orders.Queries
 {
-    public class GetUserOrdersQuery : IRequest<IEnumerable<OrderSummaryDto>>
-    {
-        public int UserId { get; }
-        public GetUserOrdersQuery(int userId) => UserId = userId;
-    }
+    public record GetOrderStatusHistoryQuery(int OrderId)
+    : IRequest<IEnumerable<OrderStatusHistoryDto>>;
+
 }
