@@ -1,3 +1,9 @@
+import { TrendingProductCard } from "./component/TrendingProductCard";
+
 export const TrendingProduct = () => {
-  return <div>Trending Product</div>;
+  return (
+    <div>
+      <TrendingProductCard />
+    </div>
+  );
 };
