@@ -1,6 +1,6 @@
-﻿namespace EcommerceProject.Models.Entities
-{
+﻿namespace EcommerceProject.Models.Entities;
+
     public class Product
     {
     }
-}
+

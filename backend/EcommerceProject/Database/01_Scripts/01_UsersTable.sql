@@ -4,7 +4,7 @@ GO
 CREATE TABLE Users (
     UserId           INT IDENTITY(1,1) PRIMARY KEY,
     Email            VARCHAR(100) NOT NULL UNIQUE, 
-    FullName        VARCHAR(100) NOT NULL,      
+    FullName         VARCHAR(100) NOT NULL,      
     PasswordHash     VARCHAR(MAX) NULL,                   
     Status           SMALLINT NOT NULL DEFAULT 1,   -- Active, Inactive, Banned  
     ProfileImageUrl  VARCHAR(1024) NULL,    
