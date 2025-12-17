@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\v1\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
