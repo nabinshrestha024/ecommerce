@@ -4,7 +4,7 @@ export const FirstCard = () => {
   return (
     <Card
       rootClassName="p-0 shadow-none border-none"
-      className="pt-2 h-full pb-5 border shadow-[0px_1px_3px_0px_#00000033] w-auto rounded-xl"
+      className="pt-2 h-full pb-5 border shadow-[0px_1px_3px_0px_#00000033] w-full rounded-xl"
     >
       <div className="flex flex-col justify-center items-center gap-2 pt-2">
         <div>
