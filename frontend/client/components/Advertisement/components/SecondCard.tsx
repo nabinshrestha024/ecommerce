@@ -1,4 +1,5 @@
 import { Card } from "@/components/card/Card";
+import Image from "next/image";
 
 export const SecondCard = () => {
   return (
@@ -12,30 +13,38 @@ export const SecondCard = () => {
         </h2>
         <div className="grid grid-cols-2 gap-4 px-2">
           <div className="overflow-hidden rounded-lg shadow-md h-25 hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-            <img
+            <Image
               src="/advertisement/headphone.png"
               alt="Gaming accessory 1"
+              width={220}
+              height={180}
               className="w-full h-auto object-contain rounded-lg hover:scale-105 transition-transform duration-300"
             />
           </div>
           <div className="overflow-hidden rounded-lg shadow-md h-25 hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-            <img
+            <Image
               src="/advertisement/mouse.png"
               alt="Gaming accessory 2"
+              width={220}
+              height={180}
               className="w-full h-auto object-contain rounded-lg hover:scale-105 transition-transform duration-300"
             />
           </div>
           <div className="overflow-hidden rounded-lg shadow-md h-25 hover:shadow-xl transition-shadow duration-300 cursor-pointer flex justify-center items-center">
-            <img
+            <Image
               src="/advertisement/controller.png"
               alt="Gaming accessory 3"
+              width={220}
+              height={180}
               className="w-full h-auto object-contain rounded-lg hover:scale-105 transition-transform duration-300"
             />
           </div>
           <div className="overflow-hidden rounded-lg shadow-md h-25 hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-            <img
+            <Image
               src="/advertisement/chair.png"
               alt="Gaming accessory 4"
+              width={220}
+              height={180}
               className="w-full h-auto object-contain rounded-lg hover:scale-105 transition-transform duration-300"
             />
           </div>

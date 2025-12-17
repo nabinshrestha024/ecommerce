@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export const FourthCard = () => {
   const advertisements = [
     { src: "/advertisement/trousers.png", alt: "Sample Advertisement 1" },
@@ -7,12 +9,14 @@ export const FourthCard = () => {
   ];
 
   return (
-    <div className="grid grid-cols-4 gap-2 pr-2">
+    <div className="grid grid-cols-4 gap-2 pr-2 hover:cursor-pointer">
       {advertisements.map((ad, index) => (
         <div key={index}>
-          <img
+          <Image
             src={ad.src}
             alt={ad.alt}
+            width={220}
+            height={192}
             className="w-full h-48 object-fit rounded-xl shadow-[0px_1px_3px_0px_rgba(0,0,0,0.2)]"
           />
         </div>
