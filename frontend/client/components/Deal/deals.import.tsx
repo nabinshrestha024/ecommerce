@@ -7,6 +7,7 @@ export const deals = [
     review: "342",
     dealPrice: "$799.99",
     actualPrice: "$1100.99",
+    rating: 4,
   },
   {
     id: "2",
@@ -16,6 +17,7 @@ export const deals = [
     review: "342",
     dealPrice: "$799.99",
     actualPrice: "$1100.99",
+    rating: 4,
   },
   {
     id: "3",
@@ -25,6 +27,7 @@ export const deals = [
     review: "342",
     dealPrice: "$799.99",
     actualPrice: "$1100.99",
+    rating: 4,
   },
   {
     id: "4",
@@ -34,5 +37,6 @@ export const deals = [
     review: "342",
     dealPrice: "$799.99",
     actualPrice: "$1100.99",
+    rating: 4,
   },
 ];

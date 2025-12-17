@@ -4,6 +4,7 @@ import { ProductDatas } from "./ProductData.import";
 import Image from "next/image";
 import { IoIosHeartEmpty } from "react-icons/io";
 import Link from "next/link";
+import { Star } from "lucide-react";
 
 export const TrendingProductCard = () => {
   return (
@@ -32,12 +33,21 @@ export const TrendingProductCard = () => {
                 <div className="text-[20px] font-medium ">
                   {productData.name}
                 </div>
-                <div className="text-[16px] font-normal leading-[22px] text-[#00000099]/60">
+                <div className="text-[16px] font-normal leading-[22px] text-[#00000099]/60 line-clamp-2">
                   {productData.shortDescription}
                 </div>
-                <div className="text-[12px] font-bold leading-5 text-[#6B7280]">
-                  {" "}
-                  ⭐️⭐️⭐️⭐️⭐️⭐️ ( {productData.rating})
+                <div className="flex items-center mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      size={16}
+                      className={
+                        i < productData.rating
+                          ? "fill-yellow-400 text-yellow-400"
+                          : "text-gray-300"
+                      }
+                    />
+                  ))}
                 </div>
                 <div>
                   <span className="text-[14px] text-[#4EA674] font-bold">

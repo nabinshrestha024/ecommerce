@@ -10,9 +10,9 @@ export const AboutUsPage: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="bg-linear-to-r from-[#4EA674] to-[#3d8a5d] text-white py-20 px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl font-bold mb-6">About TapaikoBazar</h1>
+          <h1 className="text-5xl font-bold mb-6">About तपाइकोBazar</h1>
           <p className="text-xl leading-relaxed opacity-95">
-            Founded in 2025, TapaikoBazar has been dedicated to bringing you the
+            Founded in 2025, तपाइकोBazar has been dedicated to bringing you the
             finest selection of products that combine quality, innovation, and
             value. We're more than just an online store – we're your trusted
             partner in finding products that truly make a difference.
@@ -75,7 +75,8 @@ export const AboutUsPage: React.FC = () => {
           </h2>
           <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
             Behind every great shopping experience is a dedicated team working
-            to make it happen. Get to know the people who bring ShopHub to life.
+            to make it happen. Get to know the people who bring तपाइकोBazar to
+            life.
           </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {teamMembers.map((member, index) => (
