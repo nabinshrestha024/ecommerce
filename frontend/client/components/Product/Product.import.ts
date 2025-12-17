@@ -33,6 +33,7 @@ export const products = [
     description:
       "Handcrafted genuine leather backpack with laptop compartment and multiple pockets.",
     price: 149.99,
+    originalPrice: 200,
     image:
       "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&h=500&fit=crop",
     rating: 5,

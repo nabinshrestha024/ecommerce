@@ -5,13 +5,13 @@ import { ThirdCard } from "./components/ThirdCard";
 
 export const Advertisement = () => {
   return (
-    <div className="flex flex-col px-20 pt-3 gap-3">
-      <div className="grid grid-cols-3 gap-6 h-[328px] items-center">
+    <div className="flex flex-col px-6 gap-3 w-full items-center">
+      <div className="grid grid-cols-3 gap-6 h-[328px] max-w-[1216px] justify-center items-center">
         <FirstCard />
         <SecondCard />
         <ThirdCard />
       </div>
-      <div>
+      <div className="max-w-[1216px]">
         <FourthCard />
       </div>
     </div>

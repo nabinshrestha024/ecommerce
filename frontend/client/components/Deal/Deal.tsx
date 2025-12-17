@@ -4,6 +4,7 @@ import { Card } from "../card/Card";
 import Image from "next/image";
 import Link from "next/link";
 import { IoIosHeartEmpty } from "react-icons/io";
+import { Star } from "lucide-react";
 
 export const Deal = () => {
   return (
@@ -19,44 +20,66 @@ export const Deal = () => {
           </Button>
         </div>
         <div className="w-full grid grid-cols-4 gap-5 mt-8">
-          {deals.map((val) => (
-            <Card key={val.id} className="p-2 overflow-x-auto">
-              <div className="relative">
-                <div className="w-[270px] h-[180px] relative rounded-2xl">
+          {deals.map((productData) => (
+            <Card
+              className="p-3 w-full max-w-[285px] border-0 shadow-none"
+              key={productData.id}
+              rootClassName="py-0 border shadow-xl"
+            >
+              <div className="flex flex-col gap-2">
+                <div className="w-full h-[185px] relative">
                   <Image
-                    src={val.image}
-                    alt="Image"
+                    src={productData.image}
+                    alt="image"
                     fill
-                    className="object-cover rounded-2xl"
+                    className="w-full h-full object-cover rounded-[12px]"
                   />
-                </div>
-                <div>
-                  <h1 className="font-bold text-lg mt-2">{val.title}</h1>
-                  <h2 className="text-[14px] line-clamp-2">{val.desc}</h2>
-                  <p className="text-[12px] font-medium mt-2">
-                    ({val.review}reviews)
-                  </p>
-                  <div className="flex gap-3">
-                    <p className="text-[16px] text-green-600">
-                      {val.dealPrice}
-                    </p>
-                    <p className="line-through text-gray-400">
-                      ({val.actualPrice})
-                    </p>
-                  </div>
-                  <div className="flex justify-between items-center mt-2">
-                    <Link
-                      href="/product"
-                      className="text-blue-500 underline hover:cursor-pointer"
-                    >
-                      View Details
-                    </Link>
-                    <Button>Add to cart</Button>
+                  <div className="absolute top-3 right-3 rounded-full bg-white w-6 h-6 shadow-sm flex justify-center items-center">
+                    <IoIosHeartEmpty />
                   </div>
                 </div>
-                <div className="absolute p-1 bg-white rounded-full top-2 right-2">
-                  <IoIosHeartEmpty />
+
+                <div className="flex flex-col gap-2">
+                  <div className="text-[20px] font-medium ">
+                    {productData.title}
+                  </div>
+                  <div className="text-[16px] font-normal leading-[22px] text-[#00000099]/60 line-clamp-2">
+                    {productData.desc}
+                  </div>
+                  <div className="flex items-center mb-2">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        size={16}
+                        className={
+                          i < productData.rating
+                            ? "fill-yellow-400 text-yellow-400"
+                            : "text-gray-300"
+                        }
+                      />
+                    ))}
+                  </div>
+                  <div>
+                    <span className="text-[14px] text-[#4EA674] font-bold">
+                      Rs. {productData.dealPrice}
+                    </span>
+                    &nbsp;&nbsp;&nbsp;
+                    <span className="line-through text-[12px] text-[red] font-medium">
+                      Rs. {productData.actualPrice}
+                    </span>
+                  </div>
                 </div>
+              </div>
+              <div className="flex justify-between items-center mt-2">
+                <Link href="/productDetails">
+                  <div className="text-[14px] text-[#6467F2] font-normal">
+                    View Details
+                  </div>
+                </Link>
+
+                <Button className="px-5 py-4 text-[14px] font-bold leading-3 bg-[#4EA674] text-white  rounded-[200px] hover:bg-[#4EA674]">
+                  Add to cart
+                </Button>
               </div>
             </Card>
           ))}
