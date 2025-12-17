@@ -62,9 +62,9 @@ wwwroot/coverage/
 !env.example
 
 ## Secrets
-secrets.json
-appsettings.Local.json
-appsettings.Development.local.json
+# secrets.json
+# appsettings.Local.json
+# appsettings.Development.local.json
 
 #############################
 ##       FRONTEND          ##
