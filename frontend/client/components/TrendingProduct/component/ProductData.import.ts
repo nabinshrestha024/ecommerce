@@ -9,7 +9,7 @@ export const ProductDatas = [
     },
     shortDescription:
       "High-quality wireless headphones with noise cancellation and long battery life.",
-    rating: 4.5,
+    rating: 4,
   },
   {
     id: 2,
@@ -21,7 +21,7 @@ export const ProductDatas = [
     },
     shortDescription:
       "Track your health, workouts, heart rate, and sleep with this smart fitness watch.",
-    rating: 4.2,
+    rating: 4,
   },
   {
     id: 3,
@@ -33,6 +33,6 @@ export const ProductDatas = [
     },
     shortDescription:
       "Compact speaker with powerful bass, clear sound, and water-resistant design.",
-    rating: 4.0,
+    rating: 3,
   },
 ];
