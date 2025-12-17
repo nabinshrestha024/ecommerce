@@ -4,13 +4,13 @@ export const FirstCard = () => {
   return (
     <Card
       rootClassName="p-0 shadow-none border-none"
-      className="pt-2 h-full pb-5 border shadow-[0px_1px_3px_0px_#00000033] w-full rounded-xl"
+      className="pt-4 h-full pb-6 border shadow-[0px_1px_3px_0px_#00000033] w-full rounded-xl"
     >
       <div className="flex flex-col justify-center items-center gap-2 pt-2">
         <div>
           <h2 className="text-2xl font-bold mb-2">New Year! New Fashion</h2>
         </div>
-        <div className="flex relative justify-center w-60 h-56">
+        <div className="flex relative justify-center w-90 h-56">
           <img
             src="/advertisement/newyear.png"
             alt="Fashion models wearing trendy New Year collection clothing against a festive background with celebratory decorations and New Year! New Fashion promotional text"
