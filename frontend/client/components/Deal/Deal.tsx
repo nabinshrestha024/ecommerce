@@ -40,7 +40,7 @@ export const Deal = () => {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <div className="text-[20px] font-medium ">
+                  <div className="text-[20px] font-medium line-clamp-1">
                     {productData.title}
                   </div>
                   <div className="text-[16px] font-normal leading-[22px] text-[#00000099]/60 line-clamp-2">
@@ -77,7 +77,7 @@ export const Deal = () => {
                   </div>
                 </Link>
 
-                <Button className="px-5 py-4 text-[14px] font-bold leading-3 bg-[#4EA674] text-white  rounded-[200px] hover:bg-[#4EA674]">
+                <Button className="px-5 py-4 text-[14px] font-bold leading-3 bg-white border border-[#4EA674] text-[#4EA674]  rounded-[200px] hover:bg-[#fffcfc]">
                   Add to cart
                 </Button>
               </div>
