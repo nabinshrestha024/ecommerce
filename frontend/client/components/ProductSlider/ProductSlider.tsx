@@ -1,6 +1,6 @@
 "use client";
 
-import { Carousel } from "../carousel/Carousel";
+import { Carousel } from "../Carousel/Carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { useMemo } from "react";
 import { Slides } from "./constants/Slides";
@@ -12,18 +12,18 @@ export const ProductSlider = () => {
 
   return (
     <Carousel
-      rootClassName="relative w-full h-80"
+      rootClassName="relative w-full h-100 overflow-hidden"
       contentClassName=""
       previousClassName="absolute left-4 top-1/2 -translate-y-1/2 bg-white text-gray-700 p-2 rounded-full shadow hover:bg-gray-100"
       nextClassName="absolute right-4 top-1/2 -translate-y-1/2 bg-white text-gray-700 p-2 rounded-full shadow hover:bg-gray-100"
       opts={{ loop: true }}
       plugins={[autoplay]}
       items={Slides.map((slide) => (
-        <div key={slide.key}>
+        <div key={slide.key} className="realtive">
           <img
             src={slide.src}
             alt={slide.alt}
-            className="w-full relative h-80 object-cover rounded-lg"
+            className="w-full h-100 object-cover overflow-hidden"
           />
           {slide.showOverlay && (
             <div className="absolute inset-0 flex items-center px-12 bg-black/30">

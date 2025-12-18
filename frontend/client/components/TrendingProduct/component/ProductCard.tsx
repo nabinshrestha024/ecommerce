@@ -5,11 +5,12 @@ export const ProductCard = () => {
   return (
     <div>
       <div className="w-full flex flex-col  gap-4 lg:gap-8 mx-auto max-w-[1216px]">
-        <div className="flex justify-between">
-          <div className="text-[32px] font-bold text-[#000000]">
-            Trending Product
-          </div>
-          <Button className="border border-black px-6 py-3 rounded-[200px] bg-white hover:bg-white text-black">
+        <div className="flex justify-between items-center">
+          <div className="font-bold text-xl">Trending Product</div>
+          <Button
+            variant={"outline"}
+            className="rounded-2xl border border-black text-xs"
+          >
             View All
           </Button>
         </div>
