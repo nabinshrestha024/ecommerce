@@ -12,6 +12,5 @@ namespace EcommerceProject.Models.Entities;
         public string? TransactionId { get; set; }
         public string? PaymentGateway { get; set; }
         
-        // navigation property
         public Order? Order { get; set; }
     }
