@@ -85,6 +85,7 @@ export const AboutUsPage: React.FC = () => {
                 name={member.name}
                 role={member.role}
                 image={member.image}
+                link={member.link}
               />
             ))}
           </div>

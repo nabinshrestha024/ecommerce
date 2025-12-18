@@ -247,7 +247,11 @@ export const CategoryTable = () => {
           />
           <div className="p-2 rounded-sm border shadow-2xl bg-[#F9FAFB]">
             <DropDown
-              trigger={<IoFilter className="text-[#4B5563] text-[20px]" />}
+              trigger={
+                <div>
+                  <IoFilter className="text-[#4B5563] text-[20px]" />
+                </div>
+              }
               className="p-2 flex flex-col gap-2"
             >
               <div
