@@ -138,12 +138,6 @@ namespace EcommerceProject.Services.Implementations
             var newPasswordHash = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
             using var connection = _connectionFactory.CreateConnection();
 
-            //var parameters = new 
-            //{
-            //    UserId = userId,
-            //    PasswordHash = newPasswordHash
-            //};
-
             await connection.ExecuteAsync(
                 "spUSer_UpdateUser",
                 new
