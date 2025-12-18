@@ -8,7 +8,7 @@ CREATE TABLE Orders (
     TotalAmount     DECIMAL(10,2) NOT NULL,
     Status          VARCHAR(20) DEFAULT 'Pending',
     
-    -- shipping address (snapshot at time of order)
+    -- shipping address
     ShippingName    VARCHAR(100),
     ShippingAddress VARCHAR(300) NOT NULL,
     ShippingCity    VARCHAR(50) NOT NULL,
@@ -16,6 +16,7 @@ CREATE TABLE Orders (
     
     PaymentMethod   VARCHAR(20),
     PaymentStatus   VARCHAR(20) DEFAULT 'Pending',
+    PaymentGateway  VARCHAR(50),
     
     Notes           VARCHAR(500),
     FOREIGN KEY (UserID) REFERENCES Users(UserID)
