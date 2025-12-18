@@ -1,4 +1,18 @@
-export const products = [
+export type ProductType = {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  originalPrice: number;
+  discount: number;
+  image: string;
+  rating: number;
+  reviews: number;
+  stock: number;
+  category: string;
+};
+
+export const products: ProductType[] = [
   {
     id: 1,
     name: "Wireless Bluetooth Headphones",
@@ -36,6 +50,7 @@ export const products = [
       "Handcrafted genuine leather backpack with laptop compartment and multiple pockets.",
     price: 149.99,
     originalPrice: 200,
+    discount: 20,
     image:
       "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&h=500&fit=crop",
     rating: 5,
@@ -67,6 +82,8 @@ export const products = [
     image:
       "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=500&h=500&fit=crop",
     rating: 5,
+    originalPrice: 50,
+    discount: 20,
     reviews: 428,
     stock: 93,
     category: "electronics",
@@ -110,6 +127,8 @@ export const products = [
     image:
       "https://images.unsplash.com/photo-1625948515291-69613efd103f?w=500&h=500&fit=crop",
     rating: 5,
+    discount: 50,
+    originalPrice: 100,
     reviews: 342,
     stock: 78,
     category: "electronics",

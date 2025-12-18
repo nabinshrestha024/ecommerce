@@ -55,11 +55,11 @@ export const TrendingProductCard = () => {
                     </div>
                     <div>
                       <span className="text-[14px] text-[#4EA674] font-bold">
-                        Rs. {products[randomNumber].price}
+                        $ {products[randomNumber].price}
                       </span>
                       &nbsp;&nbsp;&nbsp;
                       <span className="line-through text-[12px] text-[red] font-medium">
-                        Rs. {products[randomNumber].originalPrice}
+                        $ {products[randomNumber].originalPrice}
                       </span>
                     </div>
                   </div>
