@@ -1,7 +1,7 @@
-import { Card } from "@/components/card/Card";
 import Image from "next/image";
 import { SecondCardContent } from "../constants/SecondCardContent";
 import type { SecondCardItem } from "../constants/SecondCardContent";
+import { Card } from "@/components/Card/Card";
 export const SecondCard = () => {
   return (
     <Card

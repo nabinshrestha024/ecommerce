@@ -14,17 +14,33 @@ export const Slides = [
     key: "groceries",
     src: "/ProductSlider/groceries.jpg",
     alt: "Groceries",
+    overlay: {
+      title: "Fresh Groceries",
+      description: "Get fresh groceries delivered to your door",
+      buttonText: "Shop Now",
+      href: "/products/groceries",
+    },
   },
   {
     key: "shoes",
     src: "/ProductSlider/Shoes.jpg",
     alt: "Shoes",
-    showOverlay: false,
+    overlay: {
+      title: "Stylish Shoes",
+      description: "Step into style with our latest collection",
+      buttonText: "Shop Now",
+      href: "/products/shoes",
+    },
   },
   {
     key: "sweater",
     src: "/ProductSlider/sweater.jpg",
     alt: "Sweater",
-    showOverlay: true,
+    overlay: {
+      title: "Cozy Sweaters",
+      description: "Stay warm this winter with our cozy sweaters",
+      buttonText: "Shop Now",
+      href: "/products/sweaters",
+    },
   },
 ];
