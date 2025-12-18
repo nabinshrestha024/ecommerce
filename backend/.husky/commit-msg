@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Check if any backend files are staged
+backend_files=$(git diff --cached --name-only | grep "^backend/" || true)
+
+if [ -z "$backend_files" ]; then
+  echo "⏭️  No backend files staged, skipping commit message validation"
+  exit 0
+fi
+
+commit_regex='^BE-(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\([a-z-]+\))?: .{1,72}$'
+
+if ! grep -qE "$commit_regex" "$1"; then
+    echo "❌ Invalid commit message format!"
+    echo ""
+    echo "Expected format: BE-<type>(<scope>): <subject>"
+    echo ""
+    echo "Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore"
+    echo "Example: BE-feat(auth): add login form"
+    echo ""
+    exit 1
+fi
+    

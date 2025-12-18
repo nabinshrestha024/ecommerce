@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Husky</id>
+    <version>0.8.0</version>
+    <title>Husky</title>
+    <authors>AliReza Sabouri</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <readme>README.md</readme>
+    <description>Git hooks made easy with Husky.Net internal task runner! 🐶 It brings the dev-dependency concept to the .NET world!</description>
+    <copyright>2021</copyright>
+    <packageTypes>
+      <packageType name="DotnetTool" />
+    </packageTypes>
+    <repository type="git" url="https://github.com/alirezanet/husky.net" branch="refs/heads/master" commit="dac6a4d988ce4c1fc4068a48c82046ad0c962e90" />
+  </metadata>
+</package>
