@@ -1,6 +1,10 @@
 using System.Text;
+using EcommerceProject.Repositories.Interfaces;
+using EcommerceProject.Repositories.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using EcommerceProject.Models.DTOs.Stock;
+using EcommerceProject.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -11,6 +15,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+builder.Services.AddScoped<IVendorRepository, VendorRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
+builder.Services.AddScoped<IStockRepository, StockRepository>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

@@ -1,24 +1,17 @@
-﻿namespace EcommerceProject.Models.Entities
+﻿namespace EcommerceProject.Models.DTOs.Product
 {
-   
-    public class Product
+    public class UpdateProductRequest
     {
-        public int ProductID { get; set; }
-        public string Name { get; set; } = default!;
-        public string Slug { get; set; } = default!;
+        public string Name {  get; set; }
+        public string Slug { get; set; }
         public string? Description { get; set; }
         public string? ShortDescription { get; set; }
         public decimal Price { get; set; }
         public int CategoryID { get; set; }
         public int StockQuantity { get; set; }
-        public string SKU { get; set; } = default!;
+        public string SKU { get; set; }
         public string? Brand { get; set; }
         public string? ProductImageURL { get; set; }
         public bool IsActive { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
     }
-
 }
-
-
