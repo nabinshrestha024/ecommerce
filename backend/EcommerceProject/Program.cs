@@ -7,6 +7,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 using System.Text;
+using EcommerceProject.Models.DTOs.Stock;
+using EcommerceProject.Repositories;
+using EcommerceProject.Services.Interfaces;
+using EcommerceProject.Services.Implementations;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -34,6 +38,16 @@ builder.Services.AddSwaggerGen(x =>
     };
 
     x.AddSecurityDefinition("Bearer", securityScheme);
+builder.Services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
+builder.Services.AddScoped<IStockRepository, StockRepository>();
+builder.Services.AddScoped<IVendorRepository, VendorRepository>();
+
+builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+builder.Services.AddScoped<IStockService, StockService>();
+builder.Services.AddScoped<IVendorService, VendorService>();
+
+
+
 
     x.AddSecurityRequirement(new OpenApiSecurityRequirement
      {
