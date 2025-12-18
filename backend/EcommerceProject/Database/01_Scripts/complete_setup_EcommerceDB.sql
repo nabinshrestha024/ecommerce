@@ -89,8 +89,7 @@ PRINT 'Table PaymentMethods created successfully.';
 INSERT INTO PaymentMethods (Name, Code, Description, IsActive, SortOrder) VALUES
 ('eSewa', 'esewa', 'Digital Wallet - eSewa', 1, 1),
 ('Khalti', 'khalti', 'Digital Wallet - Khalti', 1, 2),
-('Cash on Delivery', 'cod', 'Cash on Delivery', 1, 3),
-('Bank Transfer', 'bank_transfer', 'Direct Bank Transfer', 1, 4);
+('Cash on Delivery', 'cod', 'Cash on Delivery', 1, 3);
 PRINT 'Default payment methods inserted.';
 GO
 
