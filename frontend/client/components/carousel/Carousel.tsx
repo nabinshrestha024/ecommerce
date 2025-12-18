@@ -8,7 +8,7 @@ import {
   CarouselPrevious,
 } from "@/ui/carousel";
 import { Carousel as Root, type CarouselApi } from "@/ui/carousel";
-import { Card } from "../card/Card";
+import { Card } from "../Card/Card";
 import { CardContent } from "@/ui/card";
 import type { EmblaOptionsType } from "embla-carousel";
 

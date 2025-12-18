@@ -1,6 +1,6 @@
 import { Button } from "@/ui/button";
 import Image from "next/image";
-import { Card } from "../card/Card";
+import { Card } from "../Card/Card";
 import { IoIosHeartEmpty } from "react-icons/io";
 import Link from "next/link";
 import { Star } from "lucide-react";
