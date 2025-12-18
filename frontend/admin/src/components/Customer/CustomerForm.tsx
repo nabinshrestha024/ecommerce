@@ -1,42 +1,43 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  productSchema,
-  type ProductFormValues,
-} from "../Category/ProductZodVAlidation.tsx";
+  customerSchema,
+  type CustomerFormValues,
+} from "../Customer/CustomerFormZod.ts";
 import { Input } from "../Input/Input.tsx";
 
 interface Person {
   id: string;
-  phone: string;
-  address: string;
-  avatar: string;
   name: string;
-  email: string;
-  registration: string;
-  lastPurchase: string;
+  phone: string;
   orderCount: string;
   totalSpend: string;
   status: string;
 }
+type Props = {
+  customer: Person;
+  onSave: (customer: Person) => void;
+};
 
-export const CustomerForm = ({ customer }: { customer: Person }) => {
+export const CustomerForm = ({ customer, onSave }: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<ProductFormValues>({
-    resolver: zodResolver(productSchema),
-    defaultValues: {
-      isActive: true,
-      createdAt: new Date().toISOString().split("T")[0],
-    },
+  } = useForm<CustomerFormValues>({
+    resolver: zodResolver(customerSchema),
+    mode: "onChange",
   });
 
-  const onSubmit = (data: ProductFormValues) => {
+  const onSubmit = (data: CustomerFormValues) => {
     console.log("Form Data:", data);
-    reset();
+    const updatedProduct: Person = {
+      ...customer,
+      ...data,
+    };
+    onSave(updatedProduct);
+    reset(updatedProduct);
   };
 
   return (
@@ -55,12 +56,12 @@ export const CustomerForm = ({ customer }: { customer: Person }) => {
               type="text"
               defaultValue={customer.id}
               placeholder=""
-              {...register("productId")}
+              {...register("customerId")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
-            {errors.productId && (
+            {errors.customerId && (
               <p className="text-[12px] text-red-500 ">
-                {errors.productId.message}
+                {errors.customerId.message}
               </p>
             )}
           </div>
@@ -73,13 +74,11 @@ export const CustomerForm = ({ customer }: { customer: Person }) => {
               type="text"
               defaultValue={customer.name}
               placeholder=""
-              {...register("categoryId")}
+              {...register("name")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
-            {errors.categoryId && (
-              <p className="text-[12px] text-red-500 ">
-                {errors.categoryId.message}
-              </p>
+            {errors.name && (
+              <p className="text-[12px] text-red-500 ">{errors.name.message}</p>
             )}
           </div>
         </div>
@@ -91,11 +90,13 @@ export const CustomerForm = ({ customer }: { customer: Person }) => {
               type="phone"
               defaultValue={customer.phone}
               placeholder=""
-              {...register("name")}
+              {...register("phone")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
-            {errors.name && (
-              <p className="text-[12px] text-red-500 ">{errors.name.message}</p>
+            {errors.phone && (
+              <p className="text-[12px] text-red-500 ">
+                {errors.phone.message}
+              </p>
             )}
           </div>
         </div>
@@ -107,12 +108,12 @@ export const CustomerForm = ({ customer }: { customer: Person }) => {
               type="text"
               defaultValue={customer.orderCount}
               placeholder=""
-              {...register("brand")}
+              {...register("orderCount")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
-            {errors.brand && (
+            {errors.orderCount && (
               <p className="text-[12px] text-red-500 ">
-                {errors.brand.message}
+                {errors.orderCount.message}
               </p>
             )}
           </div>
@@ -125,12 +126,12 @@ export const CustomerForm = ({ customer }: { customer: Person }) => {
               type="text"
               defaultValue={customer.totalSpend}
               placeholder=""
-              {...register("description")}
+              {...register("totalSpend")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded resize-none focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
-            {errors.description && (
+            {errors.totalSpend && (
               <p className="text-[12px] text-red-500 ">
-                {errors.description.message}
+                {errors.totalSpend.message}
               </p>
             )}
           </div>
