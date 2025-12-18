@@ -14,7 +14,7 @@
       "name": "backend-build",
       "group": "pre-push",
       "command": "dotnet",
-      "args": ["build", "backend/EcommerceProject/EcommerceProject.csproj"]
+      "args": ["build", "EcommerceProject/EcommerceProject.csproj"]
     }
   ]
 }

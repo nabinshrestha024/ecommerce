@@ -1,6 +1,7 @@
 #!/bin/sh
 
+# Move to backend folder explicitly
 cd "$(dirname "$0")/.."
 
-dotnet restore ecommerce/backend/EcommerceProject/EcommerceProject.csproj || exit 1
-dotnet build ecommerce/backend/EcommerceProject/EcommerceProject.csproj || exit 1
+# Run husky.exe using backend context
+./.husky/husky.exe
