@@ -8,8 +8,7 @@ namespace EcommerceProject.Repositories.Interfaces
     {
         Task<List<StockDto>> GetAllStockAsync();
         Task<List<LowStockAlertDto>> GetLowStockProductsAsync();
-        Task<StockAdjustmentHistoryDto> AdjustStockAsync(StockAdjustmentRequestDto request, int adjustedBy);
-        Task<List<StockAdjustmentHistoryDto>> GetStockAdjustmentHistoryAsync(int productId = 0, int pageNumber = 1, int pageSize = 20);
+        Task<StockAdjustmentResultDto> AdjustStockAsync(StockAdjustmentRequestDto request, int adjustedBy);
         Task<int> GetProductStockAsync(int productId);
         Task UpdateProductStockAsync(int productId, int newStockQuantity);
     }
