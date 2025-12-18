@@ -2,5 +2,5 @@
 
 cd "$(dirname "$0")/.."
 
-dotnet restore ./backend/EcommerceProject/EcommerceProject.csproj || exit 1
-dotnet build ./backend/EcommerceProject/EcommerceProject.csproj || exit 1
+dotnet restore ecommerce/backend/EcommerceProject/EcommerceProject.csproj || exit 1
+dotnet build ecommerce/backend/EcommerceProject/EcommerceProject.csproj || exit 1
