@@ -2,9 +2,14 @@ import { Button } from "@/ui/button";
 import { Card } from "../Card/Card";
 import { Input } from "../Input/Input";
 import { useForm } from "react-hook-form";
-
+import { zodResolver } from "@hookform/resolvers/zod";
+import { PasswordSchema } from "../profile/schemas/Password.zod";
 export const ChangePassword = () => {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(PasswordSchema), mode: "all" });
 
   const onSubmit = (data: any) => {
     console.log(data);
@@ -30,6 +35,11 @@ export const ChangePassword = () => {
               className="w-full mt-2"
               placeholder="Current password..."
             />
+            {errors.currentPassword && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors.currentPassword.message}
+              </p>
+            )}
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm sm:text-base">New Password</label>
@@ -39,6 +49,11 @@ export const ChangePassword = () => {
               className="w-full mt-2"
               placeholder="New password..."
             />
+            {errors.newPassword && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors.newPassword.message}
+              </p>
+            )}
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm sm:text-base">Confirm Password</label>
@@ -49,6 +64,11 @@ export const ChangePassword = () => {
               placeholder="Confirm password..."
             />
           </div>
+          {errors.confirmPassword && (
+            <p className="text-sm text-red-600 mt-1">
+              {errors.confirmPassword.message}
+            </p>
+          )}
           <Button
             className="mt-3 sm:mt-4 h-10 w-full text-sm sm:text-base"
             variant={"default"}
