@@ -23,6 +23,7 @@ type Person = {
 };
 
 export const CustomerTable = () => {
+  const [products, setProducts] = useState<Person[]>(data);
   const columnHelper = createColumnHelper<Person>();
 
   const [pagination, setPagination] = useState({
@@ -42,6 +43,10 @@ export const CustomerTable = () => {
 
   const handleEdit = (row: Person) => {
     setSelectedCustomer(row);
+  };
+
+  const handleDelete = (id: string) => {
+    setProducts((prev) => prev.filter((product) => product.id !== id));
   };
 
   const columns = [
@@ -145,9 +150,23 @@ export const CustomerTable = () => {
               />
             }
           >
-            {selectedCustomer && <CustomerForm customer={selectedCustomer} />}
+            {selectedCustomer && (
+              <CustomerForm
+                customer={selectedCustomer}
+                onSave={(updatedProduct) => {
+                  setProducts((prev) =>
+                    prev.map((p) =>
+                      p.id === updatedProduct.id ? updatedProduct : p,
+                    ),
+                  );
+                }}
+              />
+            )}
           </Dialog>
-          <MdDelete className="text-[#6A717F] text-[20px]" />
+          <MdDelete
+            className="text-[#6A717F] text-[20px]"
+            onClick={() => handleDelete(info.row.original.id)}
+          />
         </div>
       ),
     }),
@@ -155,7 +174,7 @@ export const CustomerTable = () => {
 
   const table = useReactTable({
     columns,
-    data,
+    data: products,
     state: { pagination },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

@@ -24,6 +24,7 @@ type ProductData = {
   createdAt: string;
   order: number;
   image: string;
+  status: string;
   category?: string;
 };
 
@@ -34,6 +35,7 @@ const status = {
 };
 
 export const CategoryTable = () => {
+  const [products, setProducts] = useState<ProductData[]>(data);
   const [searchProduct, setSearchProduct] = useState("");
   const [sortType, setSortType] = useState<"date" | "order" | null>(null);
   const navigate = useNavigate();
@@ -64,6 +66,10 @@ export const CategoryTable = () => {
     pageIndex: 0,
     pageSize: 10,
   });
+
+  const handleDelete = (id: string) => {
+    setProducts((prev) => prev.filter((product) => product.productId !== id));
+  };
 
   const columns = [
     columnHelper.accessor("productId", {
@@ -111,9 +117,25 @@ export const CategoryTable = () => {
               />
             }
           >
-            {selectedProduct && <ProductForm product={selectedProduct} />}
+            {selectedProduct && (
+              <ProductForm
+                product={selectedProduct}
+                onSave={(updatedProduct) => {
+                  setProducts((prev) =>
+                    prev.map((p) =>
+                      p.productId === updatedProduct.productId
+                        ? updatedProduct
+                        : p,
+                    ),
+                  );
+                }}
+              />
+            )}
           </Dialog>
-          <MdDelete className="text-[#6A717F] text-[20px]" />
+          <MdDelete
+            className="text-[#6A717F] text-[20px]"
+            onClick={() => handleDelete(info.row.original.productId)}
+          />
         </div>
       ),
     }),
@@ -145,18 +167,20 @@ export const CategoryTable = () => {
     };
 
     return {
-      all: sortProduct(filterBySearch(data)),
+      all: sortProduct(filterBySearch(products)),
       featuredProduct: sortProduct(
-        filterBySearch(data.filter((d) => d.status === status.FEATURED)),
+        filterBySearch(products.filter((d) => d.status === status.FEATURED)),
       ),
       onSale: sortProduct(
-        filterBySearch(data.filter((d) => d.status === status.ONSALE)),
+        filterBySearch(products.filter((d) => d.status === status.ONSALE)),
       ),
       outofStock: sortProduct(
-        filterBySearch(data.filter((d) => d.status === status.OUTOFPRODUCT)),
+        filterBySearch(
+          products.filter((d) => d.status === status.OUTOFPRODUCT),
+        ),
       ),
     };
-  }, [searchProduct, sortType]);
+  }, [products, searchProduct, sortType]);
 
   const table = useReactTable({
     data: filteredData.all,
