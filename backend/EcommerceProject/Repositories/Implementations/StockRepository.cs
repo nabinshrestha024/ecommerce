@@ -77,7 +77,7 @@ namespace EcommerceProject.Repositories.Implementations
                     commandType: CommandType.StoredProcedure
                 );
                 
-                return adjustment;    //git commit -m "feat(inventory-vendor-procure): add database
+                return adjustment;
             }
             catch (Exception ex)
             {
