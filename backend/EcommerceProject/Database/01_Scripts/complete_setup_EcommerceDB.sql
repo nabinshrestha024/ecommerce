@@ -1,22 +1,17 @@
-USE master;
-GO
-
-IF EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'EcommerceDB')
+IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'EcommerceDB')
 BEGIN
-    -- Set database to single user mode to drop connections
-    ALTER DATABASE [EcommerceDB] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-    DROP DATABASE [EcommerceDB];
-    PRINT 'Existing EcommerceDB dropped.';
+    CREATE DATABASE [EcommerceDB]; 
+    PRINT 'Database EcommerceDB created successfully.';
 END
-
-CREATE DATABASE [EcommerceDB]; 
-PRINT 'Database EcommerceDB created successfully.';
+ELSE
+BEGIN
+    PRINT 'Database EcommerceDB already exists.';
+END
 GO
 
 USE [EcommerceDB];
 GO
 
--- Users table first (referenced by many other tables)
 CREATE TABLE Users (
     UserId           INT IDENTITY(1,1) PRIMARY KEY,
     Email            VARCHAR(100) NOT NULL UNIQUE, 
@@ -36,7 +31,6 @@ CREATE TABLE Users (
 PRINT 'Table Users created successfully.';
 GO
 
--- Categories table (referenced by Products)
 CREATE TABLE Categories (
     CategoryId          INT IDENTITY(1,1) PRIMARY KEY,
     Name                VARCHAR(300) NOT NULL,
@@ -51,7 +45,6 @@ CREATE TABLE Categories (
 PRINT 'Table Categories created successfully.';
 GO
 
--- Products table (depends on Categories)
 CREATE TABLE Products (
     ProductID           INT PRIMARY KEY IDENTITY(1,1),
     Name                VARCHAR(200) NOT NULL,
@@ -72,7 +65,6 @@ CREATE TABLE Products (
 PRINT 'Table Products created successfully.';
 GO
 
--- PaymentMethods table (needed before Orders and Payments)
 CREATE TABLE PaymentMethods (
     PaymentMethodID INT PRIMARY KEY IDENTITY(1,1),
     Name VARCHAR(50) NOT NULL,
@@ -93,7 +85,6 @@ INSERT INTO PaymentMethods (Name, Code, Description, IsActive, SortOrder) VALUES
 PRINT 'Default payment methods inserted.';
 GO
 
--- Orders table (depends on Users)
 CREATE TABLE Orders (
     OrderID         INT PRIMARY KEY IDENTITY(1001,1),
     UserID          INT NOT NULL,
@@ -117,7 +108,6 @@ CREATE TABLE Orders (
 PRINT 'Table Orders created successfully.';
 GO
 
--- OrderItems table (depends on Orders and Products)
 CREATE TABLE OrderItems (
     OrderItemID     INT PRIMARY KEY IDENTITY(1,1),
     OrderID         INT NOT NULL,
@@ -131,7 +121,6 @@ CREATE TABLE OrderItems (
 PRINT 'Table OrderItems created successfully.';
 GO
 
--- UPDATED Payments table with expanded columns for eSewa/Khalti
 CREATE TABLE Payments (
     PaymentID               INT PRIMARY KEY IDENTITY(1,1),
     OrderID                 INT NOT NULL,
@@ -139,17 +128,16 @@ CREATE TABLE Payments (
     Amount                  DECIMAL(10,2) NOT NULL,
     PaymentMethod           VARCHAR(20) NOT NULL,
     PaymentStatus           VARCHAR(20) DEFAULT 'Pending',
-    TransactionID           VARCHAR(200) NULL, -- Increased from 100 to 200
-    PaymentGateway          VARCHAR(50) NULL,  -- Increased from 20 to 50
-    PaymentURL              VARCHAR(500) NULL, -- For storing payment initiation URLs
-    PaymentProviderReference VARCHAR(200) NULL, -- Provider's transaction ID
-    Metadata                NVARCHAR(MAX) NULL, -- JSON data for additional info
+    TransactionID           VARCHAR(200) NULL, 
+    PaymentGateway          VARCHAR(50) NULL,  
+    PaymentURL              VARCHAR(500) NULL, 
+    PaymentProviderReference VARCHAR(200) NULL, 
+    Metadata                NVARCHAR(MAX) NULL,
     FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
 );
 PRINT 'Table Payments created successfully.';
 GO
 
--- PaymentLogs table for tracking payment events
 CREATE TABLE PaymentLogs (
     LogID BIGINT PRIMARY KEY IDENTITY(1,1),
     PaymentID INT NULL,
@@ -167,7 +155,6 @@ CREATE TABLE PaymentLogs (
 PRINT 'Table PaymentLogs created successfully.';
 GO
 
--- ShoppingCarts table (depends on Users and Products)
 CREATE TABLE ShoppingCarts (
     CartID      INT PRIMARY KEY IDENTITY(1,1),
     UserID      INT NOT NULL,
@@ -181,7 +168,6 @@ CREATE TABLE ShoppingCarts (
 PRINT 'Table ShoppingCarts created successfully.';
 GO
 
--- Wishlists table (depends on Users and Products)
 CREATE TABLE Wishlists (
     WishlistID      INT PRIMARY KEY IDENTITY(1,1),
     UserID          INT NOT NULL,
@@ -194,7 +180,6 @@ CREATE TABLE Wishlists (
 PRINT 'Table Wishlists created successfully.';
 GO
 
--- Notifications table (depends on Users and Orders)
 CREATE TABLE Notifications (
     NotificationID      INT PRIMARY KEY IDENTITY(1,1),
     UserID              INT NULL,
@@ -209,7 +194,6 @@ CREATE TABLE Notifications (
 PRINT 'Table Notifications created successfully.';
 GO
 
--- Vendors table (independent)
 CREATE TABLE Vendors (
     VendorID        INT PRIMARY KEY IDENTITY(1,1),
     Name            VARCHAR(200) NOT NULL,
@@ -223,7 +207,6 @@ CREATE TABLE Vendors (
 PRINT 'Table Vendors created successfully.';
 GO
 
--- PurchaseOrders table (depends on Vendors and Users)
 CREATE TABLE PurchaseOrders (
     POID            INT PRIMARY KEY IDENTITY(1001,1),
     VendorID        INT NOT NULL,
@@ -238,7 +221,6 @@ CREATE TABLE PurchaseOrders (
 PRINT 'Table PurchaseOrders created successfully.';
 GO
 
--- PurchaseOrderItems table (depends on PurchaseOrders and Products)
 CREATE TABLE PurchaseOrderItems (
     POItemID    INT PRIMARY KEY IDENTITY(1,1),
     POID        INT NOT NULL,
@@ -251,7 +233,6 @@ CREATE TABLE PurchaseOrderItems (
 PRINT 'Table PurchaseOrderItems created successfully.';
 GO
 
--- Reviews table (depends on Products and Users)
 CREATE TABLE Reviews (
     ReviewId        BIGINT IDENTITY(1,1) PRIMARY KEY,
     ProductId       INT NOT NULL,
@@ -266,10 +247,7 @@ CREATE TABLE Reviews (
 PRINT 'Table Reviews created successfully.';
 GO
 
-PRINT '============================================';
 PRINT 'DATABASE SETUP COMPLETED SUCCESSFULLY';
-PRINT '============================================';
-PRINT '';
 
 -- List all created tables
 SELECT 
@@ -286,19 +264,5 @@ FROM INFORMATION_SCHEMA.TABLES
 WHERE TABLE_CATALOG = 'EcommerceDB' 
     AND TABLE_TYPE = 'BASE TABLE';
 
-PRINT '';
 PRINT 'Total tables created: ' + CAST(@TableCount AS VARCHAR(10));
-PRINT '';
-PRINT 'Payment Integration Tables Summary:';
-PRINT '1. Payments - Updated with columns for eSewa/Khalti integration';
-PRINT '   - TransactionID: VARCHAR(200)';
-PRINT '   - PaymentGateway: VARCHAR(50)';
-PRINT '   - PaymentURL: VARCHAR(500)';
-PRINT '   - PaymentProviderReference: VARCHAR(200)';
-PRINT '   - Metadata: NVARCHAR(MAX)';
-PRINT '2. PaymentMethods - Stores available payment methods';
-PRINT '3. PaymentLogs - Tracks all payment events for debugging';
-PRINT '4. Orders - Added PaymentGateway column';
-PRINT '';
-PRINT 'Database ready for payment integration implementation!';
 GO
