@@ -1,16 +1,17 @@
 using EcommerceProject.Database;
+using EcommerceProject.Models.DTOs.Stock;
+using EcommerceProject.Repositories;
+using EcommerceProject.Repositories.Implementations;
+using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Implementations;
+using EcommerceProject.Services.Implementations;
+using EcommerceProject.Services.Interfaces;
 using EcommerceProject.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
 using System.Text;
-using EcommerceProject.Models.DTOs.Stock;
-using EcommerceProject.Repositories;
-using EcommerceProject.Services.Interfaces;
-using EcommerceProject.Services.Implementations;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -38,13 +39,7 @@ builder.Services.AddSwaggerGen(x =>
     };
 
     x.AddSecurityDefinition("Bearer", securityScheme);
-builder.Services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
-builder.Services.AddScoped<IStockRepository, StockRepository>();
-builder.Services.AddScoped<IVendorRepository, VendorRepository>();
 
-builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
-builder.Services.AddScoped<IStockService, StockService>();
-builder.Services.AddScoped<IVendorService, VendorService>();
 
 
 
@@ -95,6 +90,13 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
+builder.Services.AddScoped<IStockRepository, StockRepository>();
+builder.Services.AddScoped<IVendorRepository, VendorRepository>();
+
+builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+builder.Services.AddScoped<IStockService, StockService>();
+builder.Services.AddScoped<IVendorService, VendorService>();
 
 
 builder.Services.AddScoped<IAuthService, AuthService>();
