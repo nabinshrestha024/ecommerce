@@ -1,4 +1,4 @@
-import { Card } from "@/components/card/Card";
+import { Card } from "@/components/Card/Card";
 import { Button } from "@/ui/button";
 import { ProductDatas } from "./ProductData.import";
 import Image from "next/image";

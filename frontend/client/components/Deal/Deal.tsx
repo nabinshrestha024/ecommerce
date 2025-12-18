@@ -1,6 +1,6 @@
 import { Button } from "@/ui/button";
 import { deals } from "./deals.import";
-import { Card } from "../card/Card";
+import { Card } from "../Card/Card";
 import Image from "next/image";
 import Link from "next/link";
 import { IoIosHeartEmpty } from "react-icons/io";

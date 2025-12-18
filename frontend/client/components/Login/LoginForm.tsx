@@ -25,9 +25,12 @@ export const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="py-6 flex flex-col gap-2"
+    >
       <div className="text-3xl font-semibold mb-5">Login</div>
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-3">
         <Label htmlFor="username">Username</Label>
         <Input
           id="username"
@@ -36,7 +39,7 @@ export const LoginForm = () => {
         />
         <p className="text-red-500">{errors.username?.message}</p>
       </div>
-      <div className="grid gap-2">
+      <div className="flex flex-col gap-3">
         <Label htmlFor="password">Password</Label>
         <Input
           id="password"
@@ -52,7 +55,7 @@ export const LoginForm = () => {
         </Button>
       </div>
       <div className="mt-5 text-sm">
-        Don't have an account?{" "}
+        Don&apos;t have an account?{" "}
         <Link
           href={"/signup"}
           className="text-blue-500 underline cursor-pointer"
