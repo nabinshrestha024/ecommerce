@@ -44,20 +44,24 @@ export const teamMembers = [
     name: "Utsarga Manandhar",
     role: "Frontend Developer",
     image: "/Utsarga.jpg",
+    link: "https://www.linkedin.com/in/utsargamanandhar/",
   },
   {
     name: "Pranawa KC",
     role: "Frontend Developer",
     image: "/Pranawa.jpeg",
+    link: "https://www.linkedin.com/in/pranawa-kc-a38606333/",
   },
   {
     name: "Simran Maharjan",
     role: "Frontend Developer",
     image: "/s.JPG",
+    link: "https://www.linkedin.com/in/simran-maharjan-57b865253/",
   },
   {
     name: "Amardeep Limbu",
     role: "Frontend Engineer",
     image: "/Amardeep.jpg",
+    link: "https://www.instagram.com/amardeep.limbu/",
   },
 ];
