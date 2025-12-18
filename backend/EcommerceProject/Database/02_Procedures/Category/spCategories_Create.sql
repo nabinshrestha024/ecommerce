@@ -7,19 +7,20 @@ CREATE OR ALTER PROCEDURE spCategories_Create
     @CategoryImageURL VARCHAR(500),
     @Description VARCHAR(1000),
     @IsFeatured BIT,
-    @SortOrder INT
+    @SortOrder INT,
+    @IsActive BIT
 )
 AS
 BEGIN
     INSERT INTO Categories
     (
         Name, Slug, CategoryImageURL, Description,
-        IsFeatured, SortOrder
+        IsFeatured, SortOrder, IsActive
     )
     VALUES
     (
         @Name, @Slug, @CategoryImageURL, @Description,
-        @IsFeatured, @SortOrder
+        @IsFeatured, @SortOrder, @IsActive
     );
 
     SELECT SCOPE_IDENTITY() AS CategoryId;
