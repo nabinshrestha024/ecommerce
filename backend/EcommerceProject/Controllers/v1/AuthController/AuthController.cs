@@ -8,7 +8,7 @@ namespace EcommerceProject.Controllers.v1.AuthController
 {
     [Route("api/auth/")]
     [ApiController]
-    public class AuthController : ControllerBas
+    public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
 
