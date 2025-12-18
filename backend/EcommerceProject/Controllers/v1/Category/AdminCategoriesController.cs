@@ -59,14 +59,14 @@ namespace EcommerceProject.Controllers.v1.Category
         public async Task<IActionResult> Update(int id, CategoryUpsertDto dto)
         {
             await _service.UpdateAsync(id, dto);
-            return NoContent();
+            return Ok("Update Successful");
         }
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteAsync(id);
-            return NoContent();
+            return Ok("Delete Successful");
         }
     }
 
