@@ -7,16 +7,10 @@ using EcommerceProject.Models.DTOs.Stock;
 using EcommerceProject.Repositories;
 using EcommerceProject.Services.Interfaces;
 using EcommerceProject.Services.Implementations;
+
 var builder = WebApplication.CreateBuilder(args);
 
-
-
-// Add services to the container.
-// In Program.cs
-
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
 builder.Services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
 builder.Services.AddScoped<IStockRepository, StockRepository>();
@@ -25,9 +19,6 @@ builder.Services.AddScoped<IVendorRepository, VendorRepository>();
 builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
 builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<IVendorService, VendorService>();
-
-
-
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -51,7 +42,7 @@ if (!builder.Services.Any(s => s.ServiceType == typeof(JwtBearerHandler)))
             ValidateIssuerSigningKey = true,
             ValidIssuer = jwtSettings["Issuer"],
             ValidAudience = jwtSettings["Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Secret"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Secret"] ?? throw new InvalidOperationException("JWT Secret is not configured")))
         };
     });
 }
