@@ -13,6 +13,7 @@ export const ProductManagement = () => {
       taxIncluded: "yes",
       highlightFeatured: false,
     },
+    shouldUnregister: true,
     mode: "all",
   });
   const handleFormSubmit = (data: any) => {
