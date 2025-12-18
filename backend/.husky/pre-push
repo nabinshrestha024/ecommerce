@@ -1,0 +1,43 @@
+#!/bin/sh
+
+echo "--------------------------------------------------"
+echo "🚀 Pre-push checks started"
+echo "📂 Resolving backend directory..."
+echo "--------------------------------------------------"
+
+# Get git root directory
+GIT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
+
+if [ -z "$GIT_ROOT" ]; then
+  echo "❌ Failed to locate git root"
+  exit 1
+fi
+
+# Move to backend directory
+cd "$GIT_ROOT/backend" || {
+  echo "❌ Failed to switch to backend directory"
+  exit 1
+}
+
+PROJECT_PATH="EcommerceProject/EcommerceProject.csproj"
+
+echo "📦 Restoring .NET dependencies..."
+if ! dotnet restore "$PROJECT_PATH"; then
+  echo "❌ dotnet restore failed"
+  echo "⛔ Push aborted"
+  exit 1
+fi
+
+echo "🔨 Building backend project..."
+if ! dotnet build "$PROJECT_PATH"; then
+  echo "❌ dotnet build failed"
+  echo "⛔ Push aborted"
+  exit 1
+fi
+
+echo "--------------------------------------------------"
+echo "✅ Pre-push checks passed"
+echo "🚢 Proceeding with git push..."
+echo "--------------------------------------------------"
+
+exit 0
