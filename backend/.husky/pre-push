@@ -1,4 +1,6 @@
 #!/bin/sh
 
 cd "$(dirname "$0")/.."
-dotnet husky run --group pre-push
+
+dotnet restore backend/EcommerceProject/EcommerceProject.csproj || exit 1
+dotnet build backend/EcommerceProject/EcommerceProject.csproj || exit 1
