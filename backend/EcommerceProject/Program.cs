@@ -1,4 +1,8 @@
+using System.Text;
 using EcommerceProject.Database;
+using EcommerceProject.Filters;
+using EcommerceProject.Repositories.Implementations;
+using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Implementations;
 using EcommerceProject.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -6,17 +10,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-using System.Text;
-
-using EcommerceProject.Repositories.Interfaces;
-using EcommerceProject.Repositories.Implementations;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers();
-
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<GlobalExceptionFilter>();
+});
 builder.Services.AddEndpointsApiExplorer();
 
 
@@ -55,6 +56,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IFileStorageService, FileStorageService>();
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();

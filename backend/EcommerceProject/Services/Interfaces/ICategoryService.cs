@@ -8,8 +8,8 @@ namespace EcommerceProject.Services.Interfaces
         Task<IEnumerable<Category>> GetCategoriesAsync(CategoryFilterDto filter);
         Task<IEnumerable<Category>> AdminGetCategoriesAsync(AdminCategoryFilterDto filter);
 
-        Task<int> CreateAsync(CategoryUpsertDto dto);
-        Task UpdateAsync(int id, CategoryUpsertDto dto);
+        Task<int> CreateAsync(CategoryUpsertDto dto, CancellationToken ct);
+        Task UpdateAsync(int id, CategoryUpsertDto dto, CancellationToken ct);
         Task DeleteAsync(int id);
     }
 }

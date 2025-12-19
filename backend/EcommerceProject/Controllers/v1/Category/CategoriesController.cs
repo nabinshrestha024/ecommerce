@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EcommerceProject.Controllers.v1.Category
 {
     [ApiController]
-    [Route("api/v1/categories")]
+    [Route("v1/categories")]
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _service;

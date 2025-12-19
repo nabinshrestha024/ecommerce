@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EcommerceProject.Controllers.v1.Category
 {
     [ApiController]
-    [Route("api/v1/admin/categories")]
+    [Route("v1/admin/categories")]
     public class AdminCategoriesController : ControllerBase
     {
         private readonly ICategoryService _service;
@@ -49,16 +49,17 @@ namespace EcommerceProject.Controllers.v1.Category
 
 
         [HttpPost]
-        public async Task<IActionResult> Create(CategoryUpsertDto dto)
+        public async Task<IActionResult> Create(CategoryUpsertDto dto, CancellationToken ct)
         {
-            var id = await _service.CreateAsync(dto);
+            var id = await _service.CreateAsync(dto, ct);
+            
             return CreatedAtAction(nameof(Create), new { id }, null);
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, CategoryUpsertDto dto)
+        public async Task<IActionResult> Update(int id, CategoryUpsertDto dto, CancellationToken ct)
         {
-            await _service.UpdateAsync(id, dto);
+            await _service.UpdateAsync(id, dto, ct);
             return Ok("Update Successful");
         }
 

@@ -1,5 +1,7 @@
-﻿using Dapper;
+﻿using System.Data;
+using Dapper;
 using EcommerceProject.Database;
+using EcommerceProject.Models.DTOs;
 using EcommerceProject.Models.DTOs.EcommerceProject.Models.DTOs;
 using EcommerceProject.Models.DTOs.Product;
 using EcommerceProject.Models.Entities;
@@ -14,122 +16,130 @@ namespace EcommerceProject.Repositories.Implementations
         {
             _factory = factory;
         }
-        public async Task<PagedResult<Product>> GetPagedAsync(ProductFilterDto filter, CancellationToken ct)
+        public async Task<PagedResult<ProductListItemDto>> GetPagedAsync(int? categoryId, string? search, int page, int pageSize, bool onlyActive, CancellationToken ct)
         {
-            using var con = _factory.CreateConnection();
+            using var conn = _factory.CreateConnection();
 
             var p = new DynamicParameters();
-            p.Add("@Page", filter.Page);
-            p.Add("@PageSize", filter.PageSize);
-            p.Add("@Search", filter.Search);
-            p.Add("@CategoryID", filter.CategoryID);
-            p.Add("@IsActive", filter.IsActive);
-            p.Add("@MinPrice", filter.MinPrice);
-            p.Add("@MaxPrice", filter.MaxPrice);
-            p.Add("@SortBy", filter.SortBy);
-            p.Add("@SortDir", filter.SortDir);
+            p.Add("@CategoryId", categoryId);
+            p.Add("@Search", search);
+            p.Add("@Page", page);
+            p.Add("@PageSize", pageSize);
+            p.Add("@OnlyActive", onlyActive);
 
-            var rows = (await con.QueryAsync<ProductRowWithTotal>(
-                "dbo.spProducts_GetPaged",
-                p,
-                commandType: System.Data.CommandType.StoredProcedure
-            )).ToList();
-
-            var total = rows.Count == 0 ? 0 : rows[0].TotalCount;
-            var items = rows.Select(r => r.ToProduct()).ToList();
-
-            return new PagedResult<Product>(items, filter.Page, filter.PageSize, total);
-        }
-
-        public async Task<Product?> GetByIdAsync(int productId, CancellationToken ct)
-        {
-            using var con = _factory.CreateConnection();
-            return await con.QueryFirstOrDefaultAsync<Product>(
-                "dbo.spProducts_GetById",
-                new { ProductID = productId },
-                commandType: System.Data.CommandType.StoredProcedure
+            using var multi = await conn.QueryMultipleAsync(
+                new CommandDefinition("spProducts_GetPaged", p, commandType: CommandType.StoredProcedure, cancellationToken: ct)
             );
-        }
 
-        public async Task<int> CreateAsync(CreateProductRequest req, CancellationToken ct)
-        {
-            using var con = _factory.CreateConnection();
-            return await con.QuerySingleAsync<int>(
-                "dbo.spProducts_Create",
-                new
-                {
-                    req.Name,
-                    req.Slug,
-                    req.Description,
-                    req.ShortDescription,
-                    req.Price,
-                    req.CategoryID,
-                    req.StockQuantity,
-                    req.SKU,
-                    req.Brand,
-                    req.ProductImageURL,
-                    req.IsActive
-                },
-                commandType: System.Data.CommandType.StoredProcedure
-            );
-        }
+            var items = (await multi.ReadAsync<ProductListItemDto>()).ToList();
+            var total = await multi.ReadFirstAsync<int>();
 
-        public async Task<bool> UpdateAsync(int productId, UpdateProductRequest req, CancellationToken ct)
-        {
-            using var con = _factory.CreateConnection();
-            var affected = await con.QuerySingleAsync<int>(
-                "dbo.spProducts_Update",
-                new
-                {
-                    ProductID = productId,
-                    req.Name,
-                    req.Slug,
-                    req.Description,
-                    req.ShortDescription,
-                    req.Price,
-                    req.CategoryID,
-                    req.StockQuantity,
-                    req.SKU,
-                    req.Brand,
-                    req.ProductImageURL,
-                    req.IsActive
-                },
-                commandType: System.Data.CommandType.StoredProcedure
-            );
-            return affected > 0;
-        }
-
-        public async Task<bool> DeleteAsync(int productId, CancellationToken ct)
-        {
-            using var con = _factory.CreateConnection();
-            var affected = await con.QuerySingleAsync<int>(
-                "dbo.spProducts_Delete",
-                new { ProductID = productId },
-                commandType: System.Data.CommandType.StoredProcedure
-            );
-            return affected > 0;
-        }
-
-        private sealed class ProductRowWithTotal : Product
-        {
-            public int TotalCount { get; set; }
-            public Product ToProduct() => new()
+            return new PagedResult<ProductListItemDto>
             {
-                ProductID = ProductID,
-                Name = Name,
-                Slug = Slug,
-                Description = Description,
-                ShortDescription = ShortDescription,
-                Price = Price,
-                CategoryID = CategoryID,
-                StockQuantity = StockQuantity,
-                SKU = SKU,
-                Brand = Brand,
-                ProductImageURL = ProductImageURL,
-                IsActive = IsActive,
-                CreatedAt = CreatedAt,
-                UpdatedAt = UpdatedAt
+                Items = items,
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = total
             };
+        }
+        public async Task InsertImageAsync(int productId, string imageUrl, bool isPrimary,int sortOrder,CancellationToken ct)
+        {
+            using var conn = _factory.CreateConnection();
+
+            await conn.ExecuteAsync(
+                "spProductImages_Insert",
+                new
+                {
+                    ProductId = productId,
+                    ImageUrl = imageUrl,
+                    IsPrimary = isPrimary,
+                    SortOrder = sortOrder
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public async Task<ProductDetailsDto?> GetBySlugOrIdAsync(string slugOrId, bool onlyActive, CancellationToken ct)
+        {
+            using var conn = _factory.CreateConnection();
+
+            var p = new DynamicParameters();
+            p.Add("@SlugOrId", slugOrId);
+            p.Add("@OnlyActive", onlyActive);
+
+            using var multi = await conn.QueryMultipleAsync(
+                new CommandDefinition("spProducts_GetBySlugOrId", p, commandType: CommandType.StoredProcedure, cancellationToken: ct)
+            );
+
+            var product = await multi.ReadFirstOrDefaultAsync<ProductDetailsDto>();
+            if (product is null) return null;
+
+            var images = (await multi.ReadAsync<ProductImageDto>()).ToList();
+            product.Images = images;
+            return product;
+        }
+
+        public async Task<int> CreateAsync(ProductCreateDto dto, CancellationToken ct)
+        {
+            using var conn = _factory.CreateConnection();
+
+            var p = new DynamicParameters(dto);
+            var id = await conn.ExecuteScalarAsync<int>(
+                new CommandDefinition("spProducts_Create", p, commandType: CommandType.StoredProcedure, cancellationToken: ct)
+            );
+            return id;
+        }
+
+        public async Task<bool> UpdateAsync(int id, ProductUpdateDto dto, CancellationToken ct)
+        {
+            using var conn = _factory.CreateConnection();
+
+            var p = new DynamicParameters(dto);
+            p.Add("@ProductId", id);
+
+            var affected = await conn.ExecuteScalarAsync<int>(
+                new CommandDefinition("spProducts_Update", p, commandType: CommandType.StoredProcedure, cancellationToken: ct)
+            );
+
+            return affected > 0;
+        }
+
+        public async Task<bool> DeleteAsync(int id, CancellationToken ct)
+        {
+            using var conn = _factory.CreateConnection();
+
+            var p = new DynamicParameters();
+            p.Add("@ProductId", id);
+
+            var affected = await conn.ExecuteScalarAsync<int>(
+                new CommandDefinition("spProducts_Delete", p, commandType: CommandType.StoredProcedure, cancellationToken: ct)
+            );
+
+            return affected > 0;
+        }
+
+        public async Task InsertImagesBulkAsync(int productId, IReadOnlyList<(string url, bool isPrimary, int sortOrder)> images, CancellationToken ct)
+        {
+            if (images.Count == 0) return;
+
+            using var conn = _factory.CreateConnection();
+
+
+            foreach (var img in images)
+            {
+                await conn.ExecuteAsync(
+                    "spProductImages_Insert",
+                    new
+                    {
+                        ProductId = productId,
+                        ImageUrl = img.url,
+                        IsPrimary = img.isPrimary,
+                        SortOrder = img.sortOrder
+                    },
+                    commandType: CommandType.StoredProcedure
+                );
+            }
+
         }
     }
 }

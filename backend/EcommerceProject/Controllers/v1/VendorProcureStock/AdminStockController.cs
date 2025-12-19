@@ -10,7 +10,6 @@ namespace EcommerceProject.Controllers.v1.Admin
 {
     [ApiController]
     [Route("v1/admin/stock")]
-    [Authorize(Roles = "Admin")]
     public class StockController : ControllerBase
     {
         private readonly IStockService _stockService;
