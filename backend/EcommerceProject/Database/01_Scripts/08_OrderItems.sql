@@ -2,16 +2,13 @@ USE [EcommerceDB];
 GO
 
 CREATE TABLE OrderItems (
-    OrderItemID     INT PRIMARY KEY IDENTITY(1,1),
-    OrderID         INT NOT NULL,
-    ProductID       INT NOT NULL,
-    ProductName     VARCHAR(200) NOT NULL, -- Snapshot
+    OrderItemId     INT IDENTITY(1,1) PRIMARY KEY,
+    OrderId         INT NOT NULL,
+    ProductId       INT NOT NULL,
     Quantity        INT NOT NULL,
     UnitPrice       DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID) ON DELETE CASCADE,
-    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+    FOREIGN KEY (OrderId) REFERENCES Orders(OrderId) ON DELETE CASCADE,
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE NO ACTION
 );
-GO
-
-PRINT 'Table OrderItems created successfully.';
+PRINT 'Table OrderItems created.';
 GO
