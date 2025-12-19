@@ -119,7 +119,7 @@ export const VendorTable = () => {
       cell: (info) => (
         <div
           onClick={() => handleRowClick(info.row.original)}
-          className="cursor-pointer"
+          className="cursor-pointer flex justify-start items-center"
         >
           {info.getValue()}
         </div>
@@ -130,7 +130,7 @@ export const VendorTable = () => {
       cell: (info) => (
         <div
           onClick={() => handleRowClick(info.row.original)}
-          className="cursor-pointer"
+          className="cursor-pointer flex justify-start items-center"
         >
           {info.getValue()}
         </div>
@@ -197,7 +197,7 @@ export const VendorTable = () => {
         return (
           <div
             onClick={() => handleRowClick(info.row.original)}
-            className="flex gap-3 justify-center items-center cursor-pointer"
+            className="flex gap-3 justify-start items-center cursor-pointer"
           >
             <div className={`w-2 h-2 rounded-full ${style.dot}`} />
             <div className={`${style.text} capitalize`}>{value}</div>
@@ -219,18 +219,20 @@ export const VendorTable = () => {
             }
           >
             {selectedVendor && (
-              <VendorForm
-                vendor={mapTableToVendor(selectedVendor) as any}
-                onSave={(updatedVendor: any) => {
-                  setVendor((prev) =>
-                    prev.map((v) =>
-                      v.id === updatedVendor.id
-                        ? mapVendorToTable(updatedVendor)
-                        : v,
-                    ),
-                  );
-                }}
-              />
+              <div className="max-h-[70vh] overflow-y-auto px-4 py-3">
+                <VendorForm
+                  vendor={mapTableToVendor(selectedVendor) as any}
+                  onSave={(updatedVendor: any) => {
+                    setVendor((prev) =>
+                      prev.map((v) =>
+                        v.id === updatedVendor.id
+                          ? mapVendorToTable(updatedVendor)
+                          : v,
+                      ),
+                    );
+                  }}
+                />
+              </div>
             )}
           </Dialog>
           <MdDelete
@@ -253,9 +255,7 @@ export const VendorTable = () => {
 
   return (
     <div>
-      <div className="text-[16px] leading-normal font-bold text-[#23272E]">
-        Vendors Table
-      </div>
+      <div className="text-[16px] leading-normal font-bold ">Vendors Table</div>
 
       <div className="flex gap-4 max-lg:flex-col">
         <div className="flex-1">
