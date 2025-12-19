@@ -30,7 +30,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       rootClassName="py-0 border shadow-xl"
     >
       <div className="flex flex-col gap-2">
-        <div className="w-full h-[185px] relative">
+        <div className="w-full h-[185px] relative ">
           <Image
             src={product.image}
             alt="image"
@@ -67,17 +67,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
           <div>
             <span className="text-[14px] text-[#4EA674] font-bold">
-              Rs. {product.price}
+              $ {product.price}
             </span>
             &nbsp;&nbsp;&nbsp;
             <span className="line-through text-[12px] text-[red] font-medium">
-              Rs. {product.originalPrice}
+              $ {product.originalPrice}
             </span>
           </div>
         </div>
       </div>
-      <div className="flex justify-between items-center mt-2">
-        <Link href="/product">
+      <div className="flex justify-between flex-col md:flex-row items-center mt-2">
+        <Link href={`/product/id/${product.sslug}`}>
           <div className="text-[14px] text-[#6467F2] font-normal">
             View Details
           </div>

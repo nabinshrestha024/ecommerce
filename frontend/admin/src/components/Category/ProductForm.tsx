@@ -7,15 +7,21 @@ import {
 import { Input } from "../Input/Input.tsx";
 
 type ProductData = {
-  productId?: string;
-  name?: string;
-  createdAt?: string;
-  order?: number;
-  image?: string;
+  productId: string;
+  name: string;
+  createdAt: string;
+  order: number;
+  image: string;
+  status: string;
   category?: string;
 };
 
-export const ProductForm = ({ product }: { product: ProductData }) => {
+type Props = {
+  product: ProductData;
+  onSave: (product: ProductData) => void;
+};
+
+export const ProductForm = ({ product, onSave }: Props) => {
   const {
     register,
     handleSubmit,
@@ -27,11 +33,16 @@ export const ProductForm = ({ product }: { product: ProductData }) => {
       isActive: true,
       createdAt: new Date().toISOString().split("T")[0],
     },
+    mode: "onChange",
   });
-
   const onSubmit = (data: ProductFormValues) => {
     console.log("Form Data:", data);
-    reset();
+    const updatedProduct: ProductData = {
+      ...product,
+      ...data,
+    };
+    onSave(updatedProduct);
+    reset(updatedProduct);
   };
 
   return (

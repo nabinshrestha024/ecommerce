@@ -5,6 +5,10 @@ import { usePathname } from "next/navigation";
 
 const data = [
   {
+    title: "All",
+    url: "/product",
+  },
+  {
     title: "Groceries",
     url: "/product/groceries",
   },
@@ -26,10 +30,11 @@ export const Category = () => {
   const pathname = usePathname();
   return (
     <div>
-      <div className="text-xl font-semibold underline mb-10">Categories</div>
-      <div className="flex flex-col gap-3 justify-center py-5 border-b">
+      <div className="text-xl font-semibold underline mb-5">Categories</div>
+      <div className="flex md:flex-col gap-3 justify-center py-5 border-b">
         {data.map((val) => {
-          const isActive = pathname === val.url;
+          const isActive =
+            pathname === val.url || (val.title === "All" && pathname === "/");
 
           return (
             <Link

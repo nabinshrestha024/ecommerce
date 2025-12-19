@@ -10,7 +10,7 @@ import { products } from "@/components/Product/Product.import";
 export const TrendingProductCard = () => {
   return (
     <div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         {ProductDatas.map((_, index) => {
           const randomNumber = Math.floor(Math.random() * 29);
           return (
@@ -55,16 +55,16 @@ export const TrendingProductCard = () => {
                     </div>
                     <div>
                       <span className="text-[14px] text-[#4EA674] font-bold">
-                        Rs. {products[randomNumber].price}
+                        $ {products[randomNumber].price}
                       </span>
                       &nbsp;&nbsp;&nbsp;
                       <span className="line-through text-[12px] text-[red] font-medium">
-                        Rs. {products[randomNumber].originalPrice}
+                        $ {products[randomNumber].originalPrice}
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-between items-center mt-2">
+                <div className="flex flex-col lg:flex-row justify-between items-center mt-2">
                   <Link href="/productDetails">
                     <div className="text-[14px] text-[#6467F2] font-normal">
                       View Details

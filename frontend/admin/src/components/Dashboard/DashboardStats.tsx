@@ -2,7 +2,7 @@ import { CardComponent } from "./CardComponent";
 
 export const DashboardStats = () => {
   return (
-    <div className="grid grid-cols-3 w-full gap-5 mt-5">
+    <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-3 w-full lg:gap-5 mt-5 ">
       <CardComponent title="Total Sales">
         <>
           <div className="text-3xl font-semibold mt-5">$350K</div>
@@ -22,14 +22,18 @@ export const DashboardStats = () => {
       </CardComponent>
 
       <CardComponent title="Pending & Canceled">
-        <div className="grid grid-cols-2 gap-5 mt-5 mb-1">
+        <div className="grid grid-cols-2 gap-2 lg:gap-5 mt-5 mb-1">
           <div>
-            <div className="text-lg font-semibold">Pending</div>
-            <div className="text-2xl font-semibold text-green-500">509</div>
+            <div className="text-[14px] lg:text-lg font-semibold">Pending</div>
+            <div className="text-[16px] lg:text-2xl font-semibold text-green-500">
+              509
+            </div>
           </div>
           <div>
-            <div className="text-lg font-semibold">Canceled</div>
-            <div className="text-2xl font-semibold text-red-500">94</div>
+            <div className="text-[14px] lg:text-lg font-semibold">Canceled</div>
+            <div className="text-[16px] lg:text-2xl font-semibold text-red-500">
+              94
+            </div>
           </div>
         </div>
       </CardComponent>

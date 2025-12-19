@@ -78,6 +78,10 @@ CREATE TABLE Products (
     Price               DECIMAL(10,2) NOT NULL,
     StockQuantity       INT DEFAULT 0,
     SKU                 VARCHAR(50) NOT NULL UNIQUE,
+<<<<<<< HEAD
+=======
+    ProductImageURL     VARCHAR(500) NULL, -- kept for simplicity
+>>>>>>> 7bd7c4bf5ab5e901bcf5087c924ec70c6ebc9d7e
     IsActive            BIT NOT NULL DEFAULT 1,
     CreatedAt           DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
     UpdatedAt           DATETIME2(3) NULL,
@@ -268,12 +272,20 @@ PRINT 'Table PurchaseOrders created.';
 GO
 
 CREATE TABLE PurchaseOrderItems (
+<<<<<<< HEAD
     POItemId            INT IDENTITY(1,1) PRIMARY KEY,
     POId                INT NOT NULL,
     ProductId           INT NOT NULL,
     Quantity            INT NOT NULL,
     ReceivedQuantity    INT NOT NULL DEFAULT 0,
     UnitCost            DECIMAL(10,2) NOT NULL,
+=======
+    POItemId    INT IDENTITY(1,1) PRIMARY KEY,
+    POId        INT NOT NULL,
+    ProductId   INT NOT NULL,
+    Quantity    INT NOT NULL,
+    UnitCost    DECIMAL(10,2) NOT NULL,
+>>>>>>> 7bd7c4bf5ab5e901bcf5087c924ec70c6ebc9d7e
     FOREIGN KEY (POId) REFERENCES PurchaseOrders(POId) ON DELETE CASCADE,
     FOREIGN KEY (ProductId) REFERENCES Products(ProductId)
 );
