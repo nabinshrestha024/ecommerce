@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+
+using EcommerceProject.Repositories.Interfaces;
+using EcommerceProject.Repositories.Implementations;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -34,9 +39,7 @@ builder.Services.AddSwaggerGen(x =>
     };
 
     x.AddSecurityDefinition("Bearer", securityScheme);
-
-
-
+ 
 
 
     x.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -48,6 +51,23 @@ builder.Services.AddSwaggerGen(x =>
      });
     x.CustomSchemaIds(type => type.FullName);
 });
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
+builder.Services.AddScoped<IStockRepository, StockRepository>();
+builder.Services.AddScoped<IVendorRepository, VendorRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+builder.Services.AddScoped<IStockService, StockService>();
+builder.Services.AddScoped<IVendorService, VendorService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 
@@ -85,19 +105,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
-builder.Services.AddScoped<IStockRepository, StockRepository>();
-builder.Services.AddScoped<IVendorRepository, VendorRepository>();
 
-builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
-builder.Services.AddScoped<IStockService, StockService>();
-builder.Services.AddScoped<IVendorService, VendorService>();
-
-
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
-builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-builder.Services.AddScoped<IUserService, UserService>();
 
 
 

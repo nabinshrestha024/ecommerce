@@ -19,7 +19,7 @@ interface TransactionType {
   customer_id: string;
   name: string;
   date: string;
-  total: string;
+  total: number;
   method: string;
   status: string;
 }
@@ -31,6 +31,7 @@ const status = {
 };
 
 export const TransactionTable = () => {
+  const [sortType, setSortType] = useState<"date" | "total" | null>(null);
   const columnHelper = createColumnHelper<TransactionType>();
   const columns = [
     columnHelper.accessor("customer_id", { header: "Customer Id" }),
@@ -97,17 +98,33 @@ export const TransactionTable = () => {
       );
     };
 
+    const sortTransaction = (transaction: TransactionType[]) => {
+      if (sortType === "date") {
+        return [...transaction].sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        );
+      }
+      if (sortType === "total") {
+        return [...transaction].sort(
+          (a, b) => Number(a.total) - Number(b.total),
+        ); // ascending order
+      }
+      return transaction;
+    };
+
     return {
-      all: filterBySearch(data),
-      completed: filterBySearch(
-        data.filter((d) => d.status === status.COMPLETED),
+      all: sortTransaction(filterBySearch(data)),
+      completed: sortTransaction(
+        filterBySearch(data.filter((d) => d.status === status.COMPLETED)),
       ),
-      pending: filterBySearch(data.filter((d) => d.status === status.PENDING)),
-      cancelled: filterBySearch(
-        data.filter((d) => d.status === status.CANCELLED),
+      pending: sortTransaction(
+        filterBySearch(data.filter((d) => d.status === status.PENDING)),
+      ),
+      cancelled: sortTransaction(
+        filterBySearch(data.filter((d) => d.status === status.CANCELLED)),
       ),
     };
-  }, [searchTerm]);
+  }, [searchTerm, sortType]);
 
   const tableAll = useReactTable({
     columns,
@@ -187,8 +204,6 @@ export const TransactionTable = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
-  const handleSortDate = () => {};
-  const handleSortPrice = () => {};
 
   return (
     <div className="p-3 rounded-lg">
@@ -206,11 +221,29 @@ export const TransactionTable = () => {
           />
           <div className="p-2 rounded-lg border shadow-2xl">
             <DropDown
-              trigger={<IoFilter />}
+              trigger={
+                <div>
+                  <IoFilter className="text-[#4B5563] text-[20px]" />
+                </div>
+              }
               className="p-2 flex flex-col gap-2"
             >
-              <div onClick={handleSortDate}>Sort by date</div>
-              <div onClick={handleSortPrice}>Sort by price</div>
+              <div
+                className="cursor-pointer hover:text-green-600"
+                onClick={() => {
+                  setSortType("date");
+                }}
+              >
+                Sort by Date
+              </div>
+              <div
+                className="cursor-pointer hover:text-green-600"
+                onClick={() => {
+                  setSortType("total");
+                }}
+              >
+                Sort by Price
+              </div>
             </DropDown>
           </div>
           <div className="p-2 rounded-lg border shadow-2xl">

@@ -4,12 +4,22 @@ import { SquarePen } from "lucide-react";
 import { Input } from "../Input/Input";
 import { Button } from "@/ui/button";
 import { useRef } from "react";
-
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ProfileUpdateSchema } from "../profile/schemas/Profile.zod";
 export const ProfileUpdate = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(ProfileUpdateSchema), mode: "all" });
   const [preview, setPreview] = useState<string>("");
   const [isEditing, setIsEditing] = useState(false);
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
+  };
+  const onSubmit = (data: any) => {
+    console.log(data);
   };
   const imageInputRef = useRef<HTMLInputElement>(null);
   const handleImageInput = () => {
@@ -48,11 +58,14 @@ export const ProfileUpdate = () => {
           </button>
         </div>
 
-        <form className="space-y-4 sm:space-y-6">
+        <form
+          className="space-y-4 sm:space-y-6"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className="flex flex-col sm:flex-row items-center gap-4 pb-4 sm:pb-6 border-b border-gray-200">
             <div className="relative">
               <img
-                src={preview || "https://via.placeholder.com/64"}
+                src={preview || "profile.webp"}
                 alt="Profile"
                 className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover border-2 border-gray-200 shadow-sm"
               />
@@ -68,6 +81,7 @@ export const ProfileUpdate = () => {
               type="button"
               disabled={!isEditing}
               onClick={handleImageInput}
+              {...register("profilePicture")}
               className={`w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-lg border transition-all duration-200 ${
                 !isEditing
                   ? "border-gray-200 text-gray-400 cursor-not-allowed bg-gray-50"
@@ -87,8 +101,14 @@ export const ProfileUpdate = () => {
                 type="text"
                 placeholder="Wade"
                 disabled={!isEditing}
+                {...register("firstName")}
                 className={!isEditing ? "cursor-not-allowed" : ""}
               />
+              {errors.firstName && (
+                <p className="text-red-600 text-sm">
+                  {errors.firstName.message}
+                </p>
+              )}
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium text-gray-700">
@@ -100,6 +120,11 @@ export const ProfileUpdate = () => {
                 disabled={!isEditing}
                 className={!isEditing ? "cursor-not-allowed" : ""}
               />
+              {errors.lastName && (
+                <p className="text-red-600 text-sm">
+                  {errors.lastName.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -114,6 +139,11 @@ export const ProfileUpdate = () => {
                 disabled={!isEditing}
                 className={!isEditing ? "cursor-not-allowed" : ""}
               />
+              {errors.password && (
+                <p className="text-red-600 text-sm">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium text-gray-700">
@@ -125,6 +155,11 @@ export const ProfileUpdate = () => {
                 disabled={!isEditing}
                 className={!isEditing ? "cursor-not-allowed" : ""}
               />
+              {errors.phoneNumber && (
+                <p className="text-red-600 text-sm">
+                  {errors.phoneNumber.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -137,6 +172,9 @@ export const ProfileUpdate = () => {
                 disabled={!isEditing}
                 className={!isEditing ? "cursor-not-allowed" : ""}
               />
+              {errors.email && (
+                <p className="text-red-600 text-sm">{errors.email.message}</p>
+              )}
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium text-gray-700">
@@ -148,6 +186,11 @@ export const ProfileUpdate = () => {
                 disabled={!isEditing}
                 className={!isEditing ? "cursor-not-allowed" : ""}
               />
+              {errors.dateOfBirth && (
+                <p className="text-red-600 text-sm">
+                  {errors.dateOfBirth.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -161,6 +204,9 @@ export const ProfileUpdate = () => {
               disabled={!isEditing}
               className={!isEditing ? "cursor-not-allowed" : ""}
             />
+            {errors.address && (
+              <p className="text-red-600 text-sm">{errors.address.message}</p>
+            )}
           </div>
 
           <div className="flex flex-col gap-2">
@@ -176,10 +222,17 @@ export const ProfileUpdate = () => {
                   : "text-gray-900"
               }`}
             />
+            {errors.biography && (
+              <p className="text-red-600 text-sm">{errors.biography.message}</p>
+            )}
           </div>
 
           {isEditing && (
-            <Button className="h-11 w-full font-medium" variant="default">
+            <Button
+              className="h-11 w-full font-medium"
+              variant="default"
+              type="submit"
+            >
               Save Changes
             </Button>
           )}

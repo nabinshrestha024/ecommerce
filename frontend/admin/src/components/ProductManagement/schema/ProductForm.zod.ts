@@ -5,7 +5,6 @@ const stringField = (message: string) =>
     (val) => (val === undefined || val === null ? "" : val),
     z.string().min(1, message),
   );
-
 export const ProductFormSchema = z
   .object({
     productName: stringField("Product name is required"),
@@ -14,7 +13,7 @@ export const ProductFormSchema = z
 
     productPrice: z.coerce
       .number({ message: "Product price must be a number" })
-      .min(1, "Product price is rerquired"),
+      .min(1, "Product price is required"),
 
     discountedPrice: z
       .union([
@@ -28,12 +27,12 @@ export const ProductFormSchema = z
 
     productImage: z
       .instanceof(FileList)
-      .optional()
-      .transform((files) => (files && files.length > 0 ? files[0] : undefined)),
+      .refine((files) => files.length > 0, "Product image is required")
+      .transform((files) => files[0]),
 
     stockQuantity: z.coerce
       .number({ message: "Stock quantity must be a number" })
-      .min(0, "Stock quantity must be at least 0"),
+      .optional(),
 
     expirationStart: z
       .union([z.string().length(0), z.string().date()])
@@ -63,6 +62,16 @@ export const ProductFormSchema = z
       path: ["discountedPrice"],
     },
   )
+  .superRefine((data, ctx) => {
+    if (data.stockStatus === "in-stock") {
+      if (!data.stockQuantity || data.stockQuantity < 1) {
+        ctx.addIssue({
+          path: ["stockQuantity"],
+          message: "Stock quantity must be at least 1",
+        });
+      }
+    }
+  })
   .refine(
     (data) => {
       if (!data.expirationStart || !data.expirationEnd) return true;
