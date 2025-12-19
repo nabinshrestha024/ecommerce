@@ -1,14 +1,9 @@
 using EcommerceProject.Database;
-using EcommerceProject.Models.DTOs.Stock;
-using EcommerceProject.Repositories;
 using EcommerceProject.Repositories.Implementations;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Implementations;
-using EcommerceProject.Services.Implementations;
-using EcommerceProject.Services.Interfaces;
 using EcommerceProject.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
