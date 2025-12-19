@@ -20,7 +20,7 @@ export const Deal = () => {
             View All
           </Button>
         </div>
-        <div className="w-full grid grid-cols-4 gap-5 mt-8">
+        <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
           {products.map((_, index) => {
             const randomNumber = Math.floor(Math.random() * 29);
             return (
@@ -74,7 +74,7 @@ export const Deal = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex justify-between items-center mt-2">
+                  <div className="flex flex-col lg:flex-row justify-between items-center mt-2">
                     <Link href="/productDetails">
                       <div className="text-[14px] text-[#6467F2] font-normal">
                         View Details

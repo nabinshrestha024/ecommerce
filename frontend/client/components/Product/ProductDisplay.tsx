@@ -14,9 +14,9 @@ export const ProductDisplay = ({ category }: { category: string }) => {
     }
   });
   return (
-    <div className="min-h-screen bg-gray-50 p-8 flex gap-5 items-start">
+    <div className="min-h-screen bg-gray-50 p-8 flex flex-col md:flex-row gap-5 items-start w-screen">
       <Category />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+      <div className="grid grid-cols-2  md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
         {filteredData.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

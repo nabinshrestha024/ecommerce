@@ -5,7 +5,9 @@ export const Navbar = () => {
   return (
     <div>
       <TopNav />
-      <NavRoutes />
+      <div className="hidden md:block">
+        <NavRoutes />
+      </div>
     </div>
   );
 };
