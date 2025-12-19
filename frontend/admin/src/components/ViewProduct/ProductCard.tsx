@@ -31,9 +31,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <img
             src={product.image}
             alt="image"
-            className="w-full h-full object-cover rounded-[12px]"
+            className="w-full h-full object-cover rounded-xl"
           />
-          <div className="absolute top-3 right-3 rounded-full bg-white w-6 h-6 shadow-sm flex justify-center items-center">
+          <div className="absolute top-3 right-3 rounded-full bg-background w-6 h-6 shadow-sm flex justify-center items-center">
             <IoIosHeartEmpty />
           </div>
         </div>
@@ -42,7 +42,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <div className="text-[20px] font-medium line-clamp-1">
             {product.name}
           </div>
-          <div className="text-[16px] font-normal leading-[22px] text-[#00000099]/60 line-clamp-2">
+          <div className="text-[16px] font-normal leading-[22px] line-clamp-2">
             {product.description}
           </div>
           <div className="flex items-center mb-2">

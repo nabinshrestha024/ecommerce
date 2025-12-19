@@ -41,7 +41,7 @@ export const Category = ({
           return (
             <div
               key={val.Name}
-              className={`font-semibold relative transition-colors duration-300 ${
+              className={`font-semibold relative transition-colors duration-300 cursor-pointer${
                 isActive ? "text-green-700" : ""
               }`}
               onClick={() => onSelectCategory(val.Name)}

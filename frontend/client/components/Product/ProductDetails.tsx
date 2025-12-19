@@ -23,7 +23,7 @@ const ProductDetails = () => {
     setQuantity(quantity + 1);
   };
   return (
-    <div className="w-full p-20">
+    <div className="w-full px-20 py-10">
       {filteredData.map((product: ProductType) => (
         <Card key={product.id} className="p-0">
           <div className="grid grid-cols-2 gap-3 py-5">

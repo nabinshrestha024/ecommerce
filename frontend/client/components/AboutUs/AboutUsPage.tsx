@@ -9,18 +9,18 @@ export const AboutUsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-linear-to-r from-[#4EA674] to-[#3d8a5d] text-white py-20 px-8">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="mx-auto text-center">
           <h1 className="text-5xl font-bold mb-6">About तपाइकोBazar</h1>
           <p className="text-xl leading-relaxed opacity-95">
             Founded in 2025, तपाइकोBazar has been dedicated to bringing you the
             finest selection of products that combine quality, innovation, and
-            value. We're more than just an online store – we're your trusted
-            partner in finding products that truly make a difference.
+            value. We&apos;re more than just an online store – we&apos;re your
+            trusted partner in finding products that truly make a difference.
           </p>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-8 py-16">
+      <div className="mx-auto px-8 py-16">
         <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
           <div>
             <h2 className="text-3xl font-bold text-gray-800 mb-6">Our Story</h2>

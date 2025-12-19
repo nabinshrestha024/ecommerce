@@ -21,7 +21,7 @@ export const ProductDisplay = () => {
   }, [selectedCategory]);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8 flex gap-5 items-start">
+    <div className="min-h-screen p-8 flex gap-5 items-start">
       <Category
         selectedCategory={selectedCategory}
         onSelectCategory={setSelectedCategory}

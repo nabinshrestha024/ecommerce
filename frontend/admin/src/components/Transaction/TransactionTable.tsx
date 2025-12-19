@@ -7,7 +7,6 @@ import {
 } from "@tanstack/react-table";
 import { Table } from "../Table/Table";
 import { data } from "./transactionData.import";
-import { LuArrowDownUp } from "react-icons/lu";
 import { Tabs } from "../Tabs/Tabs";
 import { useState, useMemo } from "react";
 import { Input } from "@/ui/input";
@@ -244,15 +243,6 @@ export const TransactionTable = () => {
               >
                 Sort by Price
               </div>
-            </DropDown>
-          </div>
-          <div className="p-2 rounded-lg border shadow-2xl">
-            <DropDown
-              trigger={<LuArrowDownUp />}
-              className="p-2 flex flex-col gap-2"
-            >
-              <div>Ascending</div>
-              <div>Descending</div>
             </DropDown>
           </div>
         </div>
