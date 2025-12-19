@@ -19,7 +19,7 @@ cd "$GIT_ROOT/backend" || {
   exit 1
 }
 
-PROJECT_PATH="EcommerceProject/EcommerceProject.csproj"
+PROJECT_PATH="$GIT_ROOT/backend/EcommerceProject/EcommerceProject.csproj"
 
 echo "📦 Restoring .NET dependencies..."
 if ! dotnet restore "$PROJECT_PATH"; then
