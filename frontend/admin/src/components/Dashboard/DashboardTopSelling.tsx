@@ -7,7 +7,6 @@ import {
 import { Card } from "../Card/Card";
 import { useState } from "react";
 import { Button } from "@/ui/button";
-import { IoFilter } from "react-icons/io5";
 import { Table } from "../Table/Table";
 import { Link } from "react-router-dom";
 
@@ -184,9 +183,6 @@ export const DashboardTopSelling = () => {
         <div>
           <div className="flex justify-between items-center">
             <div className="text-xl font-semibold">Best Selling Products</div>
-            <Button>
-              Filter <IoFilter />
-            </Button>
           </div>
           <Table table={table} pageIndex={pagination.pageIndex} />
         </div>
