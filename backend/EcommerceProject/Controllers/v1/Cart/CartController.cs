@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EcommerceProject.Controllers.v1.Cart
 {
     [ApiController]
-    [Route("api/cart/")]
+    [Route("v1/cart/")]
     
     public class CartController : ControllerBase
     {

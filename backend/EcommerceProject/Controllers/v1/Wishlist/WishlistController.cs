@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceProject.Controllers.v1.Wishlist
 {
-    [Route("api/[controller]")]
+    [Route("v1/wishlist")]
     [ApiController]
     public class WishlistController : ControllerBase
     {

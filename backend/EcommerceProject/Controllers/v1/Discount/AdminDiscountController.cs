@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceProject.Controllers.v1.Discount
 {
-    [Route("api/admin/discounts")]
+    [Route("v1/admin/discounts")]
     [ApiController]
     public class AdminDiscountController : ControllerBase
     {
