@@ -1,5 +1,8 @@
+"use client";
 import { ProductDisplay } from "@/components/Product/ProductDisplay";
+import { useParams } from "next/navigation";
 
 export default function Page() {
-  return <ProductDisplay />;
+  const { category } = useParams();
+  return <ProductDisplay category={category as string} />;
 }

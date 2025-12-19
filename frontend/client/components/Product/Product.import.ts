@@ -10,6 +10,7 @@ export type ProductType = {
   reviews: number;
   stock: number;
   category: string;
+  sslug: string;
 };
 
 export const products: ProductType[] = [
@@ -17,7 +18,7 @@ export const products: ProductType[] = [
     id: 1,
     name: "Wireless Bluetooth Headphones",
     description:
-      "Premium noise-canceling headphones with 30-hour battery life and superior sound quality.",
+      "Premium noise-canceling headphones with 30-hour battery life and superior sound quality. ",
     price: 79.99,
     originalPrice: 99.99,
     discount: 20,
@@ -26,6 +27,7 @@ export const products: ProductType[] = [
     rating: 5,
     reviews: 234,
     stock: 45,
+    sslug: "wireless-bluetooth-headphones",
     category: "electronics",
   },
   {
@@ -41,6 +43,7 @@ export const products: ProductType[] = [
     rating: 4,
     reviews: 189,
     stock: 28,
+    sslug: "smart-watch-series-7",
     category: "electronics",
   },
   {
@@ -56,6 +59,7 @@ export const products: ProductType[] = [
     rating: 5,
     reviews: 156,
     stock: 17,
+    sslug: "minimalist-leather-backpack",
     category: "clothes",
   },
   {
@@ -71,6 +75,7 @@ export const products: ProductType[] = [
     rating: 4,
     reviews: 312,
     stock: 62,
+    sslug: "4k-action-camera",
     category: "electronics",
   },
   {
@@ -86,6 +91,7 @@ export const products: ProductType[] = [
     discount: 20,
     reviews: 428,
     stock: 93,
+    sslug: "portable-power-bank-20000mah",
     category: "electronics",
   },
   {
@@ -101,6 +107,7 @@ export const products: ProductType[] = [
     rating: 5,
     reviews: 267,
     stock: 34,
+    sslug: "ergonomic-mechanical-keyboard",
     category: "electronics",
   },
   {
@@ -116,6 +123,7 @@ export const products: ProductType[] = [
     rating: 4,
     reviews: 198,
     stock: 56,
+    sslug: "wireless-gaming-mouse",
     category: "electronics",
   },
   {
@@ -131,6 +139,7 @@ export const products: ProductType[] = [
     originalPrice: 100,
     reviews: 342,
     stock: 78,
+    sslug: "usb-c-hub-adapter",
     category: "electronics",
   },
   {
@@ -146,6 +155,7 @@ export const products: ProductType[] = [
     rating: 5,
     reviews: 521,
     stock: 41,
+    sslug: "bluetooth-speaker",
     category: "electronics",
   },
   {
@@ -161,6 +171,7 @@ export const products: ProductType[] = [
     rating: 4.5,
     reviews: 310,
     stock: 75,
+    sslug: "wireless-earbuds",
     category: "electronics",
   },
   {
@@ -175,6 +186,7 @@ export const products: ProductType[] = [
     rating: 4.7,
     reviews: 214,
     stock: 50,
+    sslug: "smartwatch",
     category: "electronics",
   },
   {
@@ -189,6 +201,7 @@ export const products: ProductType[] = [
     rating: 4.6,
     reviews: 128,
     stock: 60,
+    sslug: "laptop-backpack",
     category: "electronics",
   },
   {
@@ -204,6 +217,7 @@ export const products: ProductType[] = [
     rating: 4.8,
     reviews: 402,
     stock: 100,
+    sslug: "running-shoes",
     category: "shoes",
   },
   {
@@ -219,6 +233,7 @@ export const products: ProductType[] = [
     rating: 4.5,
     reviews: 215,
     stock: 80,
+    sslug: "leather-sneakers",
     category: "shoes",
   },
   {
@@ -233,6 +248,7 @@ export const products: ProductType[] = [
     rating: 4.4,
     reviews: 142,
     stock: 55,
+    sslug: "high-heels",
     category: "shoes",
   },
   {
@@ -247,6 +263,7 @@ export const products: ProductType[] = [
     rating: 4.6,
     reviews: 305,
     stock: 120,
+    sslug: "mens-t-shirt",
     category: "clothes",
   },
   {
@@ -261,6 +278,7 @@ export const products: ProductType[] = [
     rating: 4.7,
     reviews: 220,
     stock: 75,
+    sslug: "womens-hoodie",
     category: "clothes",
   },
   {
@@ -275,6 +293,7 @@ export const products: ProductType[] = [
     rating: 4.5,
     reviews: 198,
     stock: 90,
+    sslug: "jeans",
     category: "clothes",
   },
   {
@@ -289,6 +308,7 @@ export const products: ProductType[] = [
     rating: 4.6,
     reviews: 145,
     stock: 60,
+    sslug: "summer-dress",
     category: "clothes",
   },
   {
@@ -303,6 +323,7 @@ export const products: ProductType[] = [
     rating: 4.9,
     reviews: 310,
     stock: 200,
+    sslug: "organic-apples",
     category: "groceries",
   },
   {
@@ -317,6 +338,7 @@ export const products: ProductType[] = [
     rating: 4.8,
     reviews: 178,
     stock: 150,
+    sslug: "almonds",
     category: "groceries",
   },
   {
@@ -331,6 +353,7 @@ export const products: ProductType[] = [
     rating: 4.7,
     reviews: 120,
     stock: 100,
+    sslug: "whole-wheat-bread",
     category: "groceries",
   },
   {
@@ -344,6 +367,7 @@ export const products: ProductType[] = [
     rating: 4.8,
     reviews: 250,
     stock: 180,
+    sslug: "bananas",
     category: "groceries",
   },
   {
@@ -359,6 +383,7 @@ export const products: ProductType[] = [
     rating: 4.9,
     reviews: 140,
     stock: 85,
+    sslug: "cheddar-cheese",
     category: "groceries",
   },
   {
@@ -373,6 +398,7 @@ export const products: ProductType[] = [
     rating: 4.6,
     reviews: 190,
     stock: 45,
+    sslug: "tablet",
     category: "electronics",
   },
   {
@@ -388,6 +414,7 @@ export const products: ProductType[] = [
     rating: 4.7,
     reviews: 210,
     stock: 70,
+    sslug: "bluetooth-headphones",
     category: "electronics",
   },
   {
@@ -402,6 +429,7 @@ export const products: ProductType[] = [
     rating: 4.5,
     reviews: 160,
     stock: 95,
+    sslug: "sports-sneakers",
     category: "shoes",
   },
   {
@@ -416,6 +444,7 @@ export const products: ProductType[] = [
     rating: 4.6,
     reviews: 200,
     stock: 100,
+    sslug: "casual-shirt",
     category: "clothes",
   },
   {
@@ -430,6 +459,7 @@ export const products: ProductType[] = [
     rating: 4.9,
     reviews: 130,
     stock: 120,
+    sslug: "spinach",
     category: "groceries",
   },
 ];
