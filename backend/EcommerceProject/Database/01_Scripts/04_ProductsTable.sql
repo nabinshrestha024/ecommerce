@@ -2,22 +2,21 @@ USE [EcommerceDB];
 GO
 
 CREATE TABLE Products (
-    ProductID           INT PRIMARY KEY IDENTITY(1,1),
+    ProductId           INT IDENTITY(1,1) PRIMARY KEY,
+    CategoryId          INT NOT NULL,
     Name                VARCHAR(200) NOT NULL,
-    Slug                VARCHAR(200) UNIQUE NOT NULL,
-    Description         VARCHAR(MAX),
-    ShortDescription    VARCHAR(500),
+    Slug                VARCHAR(200) NOT NULL UNIQUE,
+    Description         VARCHAR(MAX) NULL,
+    ShortDescription    VARCHAR(500) NULL,
     Price               DECIMAL(10,2) NOT NULL,
-    CategoryID          INT NOT NULL,
     StockQuantity       INT DEFAULT 0,
-    SKU                 VARCHAR(50) UNIQUE NOT NULL,
-    Brand               VARCHAR(100),
-    ProductImageURL     VARCHAR(500),
-    IsActive            BIT DEFAULT 1,
-    CreatedAt           DATETIME DEFAULT GETDATE(),
-    UpdatedAt           DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID) ON DELETE CASCADE
+    SKU                 VARCHAR(50) NOT NULL UNIQUE,
+    ProductImageURL     VARCHAR(500) NULL, 
+    IsActive            BIT NOT NULL DEFAULT 1,
+    CreatedAt           DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
+    UpdatedAt           DATETIME2(3) NULL,
+    FOREIGN KEY (CategoryId) REFERENCES Categories(CategoryId) ON DELETE NO ACTION
 );
 
-PRINT 'Table Products created successfully.';
+PRINT 'Table Products created.';
 GO

@@ -1,6 +1,6 @@
 IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'EcommerceDB')
 BEGIN
-    CREATE DATABASE [EcommerceDB]; 
+    CREATE DATABASE [EcommerceDB];
     PRINT 'Database EcommerceDB created successfully.';
 END
 ELSE
@@ -14,255 +14,284 @@ GO
 
 CREATE TABLE Users (
     UserId           INT IDENTITY(1,1) PRIMARY KEY,
-    Email            VARCHAR(100) NOT NULL UNIQUE, 
-    FullName         VARCHAR(100) NOT NULL,      
-    PasswordHash     VARCHAR(MAX) NULL,                   
-    Status           SMALLINT NOT NULL DEFAULT 1,   -- Active, Inactive, Banned  
-    ProfileImageUrl  VARCHAR(1024) NULL,    
+    Email            VARCHAR(100) NOT NULL UNIQUE,
+    FullName         VARCHAR(100) NOT NULL,
+    PasswordHash     VARCHAR(MAX) NULL,
+    Status           SMALLINT NOT NULL DEFAULT 1, -- Active, Inactive, Banned
+    ProfileImageUrl  VARCHAR(1024) NULL,
     Phone            VARCHAR(20) NULL,
     Address          VARCHAR(500) NULL,
     City             VARCHAR(100) NULL,
     Role             BIT NOT NULL DEFAULT 1, -- Admin = 0, Customer = 1
-    IsActive         BIT NOT NULL DEFAULT 1,   
+    RefreshToken     VARCHAR(500) NULL,
+    AccessToken      VARCHAR(500) NULL,
+    IsActive         BIT NOT NULL DEFAULT 1,
     CreatedAt        DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
     UpdatedAt        DATETIME2(3) NULL,
     DeletedAt        DATETIME2(3) NULL
 );
-PRINT 'Table Users created successfully.';
+PRINT 'Table Users created.';
+GO
+
+CREATE TABLE UserProfiles (
+    UserId              INT PRIMARY KEY,
+    DateOfBirth         DATE NULL,
+    Gender              VARCHAR(20) NULL,
+    Bio                 VARCHAR(500) NULL,
+    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE
+);
+PRINT 'Table UserProfiles created.';
+GO
+
+CREATE TABLE UserSocialLinks (
+    SocialLinkId    INT IDENTITY(1,1) PRIMARY KEY,
+    UserId          INT NOT NULL,
+    Platform        VARCHAR(50) NOT NULL,
+    ProfileUrl      VARCHAR(300) NOT NULL,
+    CreatedAt       DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
+    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE
+);
+PRINT 'Table UserSocialLinks created.';
 GO
 
 CREATE TABLE Categories (
     CategoryId          INT IDENTITY(1,1) PRIMARY KEY,
     Name                VARCHAR(300) NOT NULL,
-    Slug                VARCHAR(300) NULL,
+    Slug                VARCHAR(300) NOT NULL UNIQUE,
     CategoryImageURL    VARCHAR(500) NULL,
     Description         VARCHAR(1000) NULL,
     IsFeatured          BIT NOT NULL DEFAULT 0,
-    SortOrder           INT DEFAULT 0, 
+    SortOrder           INT DEFAULT 0,
     IsActive            BIT NOT NULL DEFAULT 1,
-    CreatedAt           DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()
+    CreatedAt           DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME()
 );
-PRINT 'Table Categories created successfully.';
+PRINT 'Table Categories created.';
 GO
 
 CREATE TABLE Products (
-    ProductID           INT PRIMARY KEY IDENTITY(1,1),
+    ProductId           INT IDENTITY(1,1) PRIMARY KEY,
+    CategoryId          INT NOT NULL,
     Name                VARCHAR(200) NOT NULL,
-    Slug                VARCHAR(200) UNIQUE NOT NULL,
-    Description         VARCHAR(MAX),
-    ShortDescription    VARCHAR(500),
+    Slug                VARCHAR(200) NOT NULL UNIQUE,
+    Description         VARCHAR(MAX) NULL,
+    ShortDescription    VARCHAR(500) NULL,
     Price               DECIMAL(10,2) NOT NULL,
-    CategoryID          INT NOT NULL,
     StockQuantity       INT DEFAULT 0,
-    SKU                 VARCHAR(50) UNIQUE NOT NULL,
-    Brand               VARCHAR(100),
-    ProductImageURL     VARCHAR(500),
-    IsActive            BIT DEFAULT 1,
-    CreatedAt           DATETIME DEFAULT GETDATE(),
-    UpdatedAt           DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID) ON DELETE CASCADE
+    SKU                 VARCHAR(50) NOT NULL UNIQUE,
+    ProductImageURL     VARCHAR(500) NULL, -- kept for simplicity
+    IsActive            BIT NOT NULL DEFAULT 1,
+    CreatedAt           DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
+    UpdatedAt           DATETIME2(3) NULL,
+    FOREIGN KEY (CategoryId) REFERENCES Categories(CategoryId) ON DELETE NO ACTION
 );
-PRINT 'Table Products created successfully.';
+PRINT 'Table Products created.';
+GO
+
+CREATE TABLE ProductImages (
+    ProductImageId     INT IDENTITY(1,1) PRIMARY KEY,
+    ProductId          INT NOT NULL,
+    ImageUrl           VARCHAR(500) NOT NULL,
+    IsPrimary          BIT NOT NULL DEFAULT 0,
+    SortOrder          INT DEFAULT 0,
+    CreatedAt          DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE
+);
+PRINT 'Table ProductImages created.';
 GO
 
 CREATE TABLE PaymentMethods (
-    PaymentMethodID INT PRIMARY KEY IDENTITY(1,1),
-    Name VARCHAR(50) NOT NULL,
-    Code VARCHAR(20) NOT NULL UNIQUE,
-    Description VARCHAR(500) NULL,
-    IsActive BIT DEFAULT 1,
-    SortOrder INT DEFAULT 0,
-    Config NVARCHAR(MAX) NULL, -- JSON configuration
-    CreatedAt DATETIME DEFAULT GETDATE()
+    PaymentMethodId INT IDENTITY(1,1) PRIMARY KEY,
+    Name            VARCHAR(50) NOT NULL,
+    Code            VARCHAR(20) NOT NULL UNIQUE,
+    IsActive        BIT NOT NULL DEFAULT 1,
+    CreatedAt       DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME()
 );
-PRINT 'Table PaymentMethods created successfully.';
+PRINT 'Table PaymentMethods created.';
+GO
 
--- Insert default payment methods
-INSERT INTO PaymentMethods (Name, Code, Description, IsActive, SortOrder) VALUES
-('eSewa', 'esewa', 'Digital Wallet - eSewa', 1, 1),
-('Khalti', 'khalti', 'Digital Wallet - Khalti', 1, 2),
-('Cash on Delivery', 'cod', 'Cash on Delivery', 1, 3);
-PRINT 'Default payment methods inserted.';
+INSERT INTO PaymentMethods (Name, Code)
+VALUES
+('eSewa', 'esewa'),
+('Khalti', 'khalti'),
+('Cash on Delivery', 'cod');
 GO
 
 CREATE TABLE Orders (
-    OrderID         INT PRIMARY KEY IDENTITY(1001,1),
-    UserID          INT NOT NULL,
-    OrderDate       DATETIME DEFAULT GETDATE(),
+    OrderId         INT IDENTITY(1001,1) PRIMARY KEY,
+    UserId          INT NOT NULL,
+    OrderDate       DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
     TotalAmount     DECIMAL(10,2) NOT NULL,
-    Status          VARCHAR(20) DEFAULT 'Pending',
-    
-    -- shipping address (snapshot at time of order)
-    ShippingName    VARCHAR(100),
+    Status          VARCHAR(20) NOT NULL DEFAULT 'Pending',
+
+    ShippingName    VARCHAR(100) NULL,
     ShippingAddress VARCHAR(300) NOT NULL,
     ShippingCity    VARCHAR(50) NOT NULL,
     ShippingPhone   VARCHAR(20) NOT NULL,
-    
-    PaymentMethod   VARCHAR(20) NOT NULL DEFAULT 'cod',
-    PaymentStatus   VARCHAR(20) DEFAULT 'Pending',
-    PaymentGateway  VARCHAR(50) NULL, -- eSewa, Khalti, etc.
-    
-    Notes           VARCHAR(500),
-    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+
+    PaymentMethodId INT NOT NULL,
+    PaymentStatus   VARCHAR(20) NOT NULL DEFAULT 'Pending',
+    PaymentGateway  VARCHAR(50) NULL,
+    Notes           VARCHAR(500) NULL,
+
+    FOREIGN KEY (UserId) REFERENCES Users(UserId),
+    FOREIGN KEY (PaymentMethodId) REFERENCES PaymentMethods(PaymentMethodId)
 );
-PRINT 'Table Orders created successfully.';
+PRINT 'Table Orders created.';
 GO
 
 CREATE TABLE OrderItems (
-    OrderItemID     INT PRIMARY KEY IDENTITY(1,1),
-    OrderID         INT NOT NULL,
-    ProductID       INT NOT NULL,
-    ProductName     VARCHAR(200) NOT NULL,
+    OrderItemId     INT IDENTITY(1,1) PRIMARY KEY,
+    OrderId         INT NOT NULL,
+    ProductId       INT NOT NULL,
     Quantity        INT NOT NULL,
     UnitPrice       DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID) ON DELETE CASCADE,
-    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+    FOREIGN KEY (OrderId) REFERENCES Orders(OrderId) ON DELETE CASCADE,
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId)
 );
-PRINT 'Table OrderItems created successfully.';
+PRINT 'Table OrderItems created.';
 GO
 
 CREATE TABLE Payments (
-    PaymentID               INT PRIMARY KEY IDENTITY(1,1),
-    OrderID                 INT NOT NULL,
-    PaymentDate             DATETIME DEFAULT GETDATE(),
+    PaymentId               INT IDENTITY(1,1) PRIMARY KEY,
+    OrderId                 INT NOT NULL,
+    PaymentDate             DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
     Amount                  DECIMAL(10,2) NOT NULL,
+    Status                  VARCHAR(20) NOT NULL DEFAULT 'Pending',
     PaymentMethod           VARCHAR(20) NOT NULL,
-    PaymentStatus           VARCHAR(20) DEFAULT 'Pending',
-    TransactionID           VARCHAR(200) NULL, 
-    PaymentGateway          VARCHAR(50) NULL,  
-    PaymentURL              VARCHAR(500) NULL, 
-    PaymentProviderReference VARCHAR(200) NULL, 
-    Metadata                NVARCHAR(MAX) NULL,
-    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
+    PaymentStatus           VARCHAR(20) NOT NULL DEFAULT 'Pending',
+    TransactionId           VARCHAR(200) NULL,
+    PaymentGateway          VARCHAR(50) NULL,
+    PaymentURL              VARCHAR(500) NULL,
+    GatewayReference        VARCHAR(200) NULL,
+    Metadata                VARCHAR(MAX) NULL,
+    FOREIGN KEY (OrderId) REFERENCES Orders(OrderId)
 );
-PRINT 'Table Payments created successfully.';
+PRINT 'Table Payments created.';
 GO
 
-CREATE TABLE PaymentLogs (
-    LogID BIGINT PRIMARY KEY IDENTITY(1,1),
-    PaymentID INT NULL,
-    OrderID INT NULL,
-    EventType VARCHAR(50) NOT NULL, -- Initiated, Callback, Verification, etc.
-    PaymentGateway VARCHAR(50) NULL,
-    RequestData NVARCHAR(MAX) NULL,
-    ResponseData NVARCHAR(MAX) NULL,
-    Status VARCHAR(50) NULL,
-    ErrorMessage VARCHAR(1000) NULL,
-    CreatedAt DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (PaymentID) REFERENCES Payments(PaymentID),
-    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
+CREATE TABLE PaymentGatewayTransactions (
+    Id                   INT IDENTITY(1,1) PRIMARY KEY,
+    GatewayName          VARCHAR(200) NOT NULL,
+    GatewayTransactionId VARCHAR(200) NULL,
+    PaymentId            INT NOT NULL,
+    TransactionId        VARCHAR(200) NOT NULL,
+    Amount               DECIMAL(18,2) NOT NULL,
+    Status               VARCHAR(50) NOT NULL,
+    GatewayStatus        VARCHAR(100) NULL,
+    RetryCount           INT NOT NULL DEFAULT 0,
+    CreatedAt            DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
+    UpdatedAt            DATETIME2(3) NULL,
+    FOREIGN KEY (PaymentId) REFERENCES Payments(PaymentId)
 );
-PRINT 'Table PaymentLogs created successfully.';
+PRINT 'Table PaymentGatewayTransactions created.';
+GO
+
+CREATE TABLE Transactions (
+    TransactionId  BIGINT IDENTITY(1,1) PRIMARY KEY,
+    OrderId        INT NOT NULL,
+    PaymentId      INT NULL,
+    Type           VARCHAR(20) NOT NULL, -- Debit, Credit, Refund
+    Amount         DECIMAL(18,2) NOT NULL,
+    Currency       VARCHAR(10) DEFAULT 'NPR',
+    Status         VARCHAR(20) NOT NULL,
+    Reference      VARCHAR(200) NULL,
+    CreatedAt      DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
+    FOREIGN KEY (OrderId) REFERENCES Orders(OrderId),
+    FOREIGN KEY (PaymentId) REFERENCES Payments(PaymentId)
+);
+PRINT 'Table Transactions created.';
 GO
 
 CREATE TABLE ShoppingCarts (
-    CartID      INT PRIMARY KEY IDENTITY(1,1),
-    UserID      INT NOT NULL,
-    ProductID   INT NOT NULL,
+    CartId      INT IDENTITY(1,1) PRIMARY KEY,
+    UserId      INT NOT NULL,
+    ProductId   INT NOT NULL,
     Quantity    INT NOT NULL DEFAULT 1,
-    AddedDate   DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE,
-    FOREIGN KEY (ProductID) REFERENCES Products(ProductID) ON DELETE CASCADE,
-    UNIQUE (UserID, ProductID)
+    AddedDate   DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
+    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE,
+    UNIQUE (UserId, ProductId)
 );
-PRINT 'Table ShoppingCarts created successfully.';
+PRINT 'Table ShoppingCarts created.';
 GO
 
 CREATE TABLE Wishlists (
-    WishlistID      INT PRIMARY KEY IDENTITY(1,1),
-    UserID          INT NOT NULL,
-    ProductID       INT NOT NULL,
-    AddedDate       DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (UserID) REFERENCES Users(UserID),
-    FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
-    UNIQUE (UserID, ProductID)
+    WishlistId  INT IDENTITY(1,1) PRIMARY KEY,
+    UserId      INT NOT NULL,
+    ProductId   INT NOT NULL,
+    AddedDate   DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
+    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE,
+    UNIQUE (UserId, ProductId)
 );
-PRINT 'Table Wishlists created successfully.';
+PRINT 'Table Wishlists created.';
 GO
 
 CREATE TABLE Notifications (
-    NotificationID      INT PRIMARY KEY IDENTITY(1,1),
-    UserID              INT NULL,
-    Title               VARCHAR(200) NOT NULL,
-    Message             VARCHAR(500) NOT NULL,
-    IsRead              BIT DEFAULT 0,
-    CreatedAt           DATETIME DEFAULT GETDATE(),
-    OrderID             INT NULL,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID),
-    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
+    NotificationId  INT IDENTITY(1,1) PRIMARY KEY,
+    UserId          INT NULL,
+    Title           VARCHAR(200) NOT NULL,
+    Message         VARCHAR(500) NOT NULL,
+    IsRead          BIT NOT NULL DEFAULT 0,
+    CreatedAt       DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
+    OrderId         INT NULL,
+    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE SET NULL,
+    FOREIGN KEY (OrderId) REFERENCES Orders(OrderId) ON DELETE SET NULL
 );
-PRINT 'Table Notifications created successfully.';
+PRINT 'Table Notifications created.';
 GO
 
 CREATE TABLE Vendors (
-    VendorID        INT PRIMARY KEY IDENTITY(1,1),
-    Name            VARCHAR(200) NOT NULL,
-    ContactPerson   VARCHAR(100),
-    Phone           VARCHAR(20),
-    Email           VARCHAR(100),
-    Address         VARCHAR(300),
-    IsActive BIT DEFAULT 1,
-    CreatedAt DATETIME DEFAULT GETDATE()
+    VendorId    INT IDENTITY(1,1) PRIMARY KEY,
+    Name        VARCHAR(200) NOT NULL,
+    ContactPerson VARCHAR(100) NULL,
+    Phone       VARCHAR(20) NULL,
+    Email       VARCHAR(100) NULL,
+    Address     VARCHAR(300) NULL,
+    IsActive    BIT NOT NULL DEFAULT 1,
+    CreatedAt   DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME()
 );
-PRINT 'Table Vendors created successfully.';
+PRINT 'Table Vendors created.';
 GO
 
 CREATE TABLE PurchaseOrders (
-    POID            INT PRIMARY KEY IDENTITY(1001,1),
-    VendorID        INT NOT NULL,
-    OrderDate       DATETIME DEFAULT GETDATE(),
-    Status          VARCHAR(20) DEFAULT 'Pending',
-    TotalAmount     DECIMAL(10,2),
-    Notes           VARCHAR(500),
-    CreatedBy       INT,
-    FOREIGN KEY (VendorID) REFERENCES Vendors(VendorID),
-    FOREIGN KEY (CreatedBy) REFERENCES Users(UserID)
+    POId        INT IDENTITY(1001,1) PRIMARY KEY,
+    VendorId    INT NOT NULL,
+    OrderDate   DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
+    Status      VARCHAR(20) NOT NULL DEFAULT 'Pending',
+    TotalAmount DECIMAL(10,2) NULL,
+    Notes       VARCHAR(500) NULL,
+    CreatedBy   INT NULL,
+    FOREIGN KEY (VendorId) REFERENCES Vendors(VendorId),
+    FOREIGN KEY (CreatedBy) REFERENCES Users(UserId)
 );
-PRINT 'Table PurchaseOrders created successfully.';
+PRINT 'Table PurchaseOrders created.';
 GO
 
 CREATE TABLE PurchaseOrderItems (
-    POItemID    INT PRIMARY KEY IDENTITY(1,1),
-    POID        INT NOT NULL,
-    ProductID   INT NOT NULL,
+    POItemId    INT IDENTITY(1,1) PRIMARY KEY,
+    POId        INT NOT NULL,
+    ProductId   INT NOT NULL,
     Quantity    INT NOT NULL,
     UnitCost    DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (POID) REFERENCES PurchaseOrders(POID) ON DELETE CASCADE,
-    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+    FOREIGN KEY (POId) REFERENCES PurchaseOrders(POId) ON DELETE CASCADE,
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId)
 );
-PRINT 'Table PurchaseOrderItems created successfully.';
+PRINT 'Table PurchaseOrderItems created.';
 GO
 
 CREATE TABLE Reviews (
-    ReviewId        BIGINT IDENTITY(1,1) PRIMARY KEY,
-    ProductId       INT NOT NULL,
-    UserId          INT NULL,
-    Title           VARCHAR(250) NULL,
-    Content         VARCHAR(4000) NULL,
-    Rating          TINYINT NOT NULL CHECK (Rating BETWEEN 1 AND 5),
-    CreatedAt       DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
-    CONSTRAINT FK_Reviews_Product FOREIGN KEY (ProductId) REFERENCES Products(ProductId),
-    CONSTRAINT FK_Reviews_User FOREIGN KEY (UserId) REFERENCES Users(UserId)
+    ReviewId    BIGINT IDENTITY(1,1) PRIMARY KEY,
+    ProductId   INT NOT NULL,
+    UserId      INT NULL,
+    Title       VARCHAR(250) NULL,
+    Content     VARCHAR(4000) NULL,
+    Rating      TINYINT NOT NULL CHECK (Rating BETWEEN 1 AND 5),
+    CreatedAt   DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId),
+    FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
-PRINT 'Table Reviews created successfully.';
+PRINT 'Table Reviews created.';
 GO
 
 PRINT 'DATABASE SETUP COMPLETED SUCCESSFULLY';
-
--- List all created tables
-SELECT 
-    TABLE_NAME,
-    'Created' as Status
-FROM INFORMATION_SCHEMA.TABLES 
-WHERE TABLE_CATALOG = 'EcommerceDB' 
-    AND TABLE_TYPE = 'BASE TABLE'
-ORDER BY TABLE_NAME;
-
-DECLARE @TableCount INT;
-SELECT @TableCount = COUNT(*) 
-FROM INFORMATION_SCHEMA.TABLES 
-WHERE TABLE_CATALOG = 'EcommerceDB' 
-    AND TABLE_TYPE = 'BASE TABLE';
-
-PRINT 'Total tables created: ' + CAST(@TableCount AS VARCHAR(10));
-GO

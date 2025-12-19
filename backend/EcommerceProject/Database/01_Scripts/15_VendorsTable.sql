@@ -2,15 +2,15 @@ USE EcommerceDB;
 GO
 
 CREATE TABLE Vendors (
-    VendorID        INT PRIMARY KEY IDENTITY(1,1),
+    VendorId        INT IDENTITY(1,1) PRIMARY KEY,
     Name            VARCHAR(200) NOT NULL,
-    ContactPerson   VARCHAR(100),
-    Phone           VARCHAR(20),
-    Email           VARCHAR(100),
-    Address         VARCHAR(300),
-    IsActive BIT DEFAULT 1,
-    CreatedAt DATETIME DEFAULT GETDATE()
+    ContactPerson   VARCHAR(100) NULL,
+    Phone           VARCHAR(20) NULL,
+    Email           VARCHAR(100) NULL,
+    Address         VARCHAR(300) NULL,
+    IsActive        BIT NOT NULL DEFAULT 1,
+    CreatedAt       DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME()
 );
 
-PRINT 'Table Vendors created successfully.';
+PRINT 'Table Vendors created.';
 GO
