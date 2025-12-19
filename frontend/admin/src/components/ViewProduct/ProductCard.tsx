@@ -27,7 +27,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       cardClassName="py-0 border shadow-xl"
     >
       <div className="flex flex-col gap-2">
-        <div className="w-full h-[185px]">
+        <div className="w-full h-[185px] relative">
           <img
             src={product.image}
             alt="image"
