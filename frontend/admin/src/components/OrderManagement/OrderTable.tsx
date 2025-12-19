@@ -33,6 +33,7 @@ const status = {
 };
 
 export const OrderTable = () => {
+  const [sortType, setSortType] = useState<"date" | "price" | null>(null);
   const columnHelper = createColumnHelper<OrderType>();
   const columns = [
     columnHelper.accessor("no", { header: "No." }),
@@ -142,19 +143,34 @@ export const OrderTable = () => {
           order.status.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     };
+    const sortOrder = (orders: OrderType[]) => {
+      if (sortType === "date") {
+        return [...orders].sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        );
+      }
+      if (sortType === "price") {
+        return [...orders].sort((a, b) => Number(a.price) - Number(b.price));
+      }
+      return orders;
+    };
 
     return {
-      all: filterBySearch(data),
-      delivered: filterBySearch(
-        data.filter((d) => d.status === status.DELIVERED),
+      all: sortOrder(filterBySearch(data)),
+      delivered: sortOrder(
+        filterBySearch(data.filter((d) => d.status === status.DELIVERED)),
       ),
-      pending: filterBySearch(data.filter((d) => d.status === status.PENDING)),
-      shipped: filterBySearch(data.filter((d) => d.status === status.SHIPPED)),
-      cancelled: filterBySearch(
-        data.filter((d) => d.status === status.CANCELLED),
+      pending: sortOrder(
+        filterBySearch(data.filter((d) => d.status === status.PENDING)),
+      ),
+      shipped: sortOrder(
+        filterBySearch(data.filter((d) => d.status === status.SHIPPED)),
+      ),
+      cancelled: sortOrder(
+        filterBySearch(data.filter((d) => d.status === status.CANCELLED)),
       ),
     };
-  }, [searchTerm]);
+  }, [searchTerm, sortType]);
 
   const tableAll = useReactTable({
     columns,
@@ -251,8 +267,6 @@ export const OrderTable = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
-  const handleSortDate = () => {};
-  const handleSortPrice = () => {};
 
   return (
     <div className="p-3 rounded-lg">
@@ -270,11 +284,29 @@ export const OrderTable = () => {
           />
           <div className="p-2 rounded-lg border shadow-2xl">
             <DropDown
-              trigger={<IoFilter />}
+              trigger={
+                <div>
+                  <IoFilter className="text-[#4B5563] text-[20px]" />
+                </div>
+              }
               className="p-2 flex flex-col gap-2"
             >
-              <div onClick={handleSortDate}>Sort by date</div>
-              <div onClick={handleSortPrice}>Sort by price</div>
+              <div
+                className="cursor-pointer hover:text-green-600"
+                onClick={() => {
+                  setSortType("date");
+                }}
+              >
+                Sort by Date
+              </div>
+              <div
+                className="cursor-pointer hover:text-green-600"
+                onClick={() => {
+                  setSortType("price");
+                }}
+              >
+                Sort by Price
+              </div>
             </DropDown>
           </div>
           <div className="p-2 rounded-lg border shadow-2xl">

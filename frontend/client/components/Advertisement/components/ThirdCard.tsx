@@ -1,37 +1,51 @@
-import { Card } from "@/components/card/Card";
+import Image from "next/image";
+import Link from "next/link";
+
+const advertisements = [
+  { src: "/advertisement/bethewinner.png", alt: "Advertisement 3" },
+  { src: "/advertisement/redmi.png", alt: "Advertisement 4" },
+];
 
 export const ThirdCard = () => {
   return (
-    <div className="h-full pt-2">
-      <div className="grid grid-cols-2 h-auto gap-4 px-4 pt-2">
-        <div className="flex justify-center items-center rounded-2xl shadow-[0px_1px_3px_0px_#00000033]">
-          <img
-            src="/advertisement/bethewinner.png"
-            alt="Advertisement 3"
-            className="w-full h-full object-contain rounded-xl"
-          />
-        </div>
-        <div className="flex justify-center items-center rounded-2xl shadow-[0px_1px_3px_0px_#00000033]">
-          <img
-            src="/advertisement/redmi.png"
-            alt="Advertisement 4"
-            className="w-full h-full object-contain rounded-xl"
-          />
-        </div>
+    <div className="pt-2 h-[350px]">
+      <div className="grid grid-cols-2 gap-4 px-4 pt-2">
+        {advertisements.map((ad, index) => (
+          <div
+            key={index}
+            className="flex justify-center items-center rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300"
+          >
+            <div className="relative w-[188px] h-[146px] overflow-hidden rounded-xl">
+              <Image
+                src={ad.src}
+                alt={ad.alt}
+                fill
+                className="object-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
+              />
+            </div>
+          </div>
+        ))}
       </div>
-      <div className="flex flex-row justify-center items-center rounded-2xl px-3  ">
-        <div className="flex flex-row justify-between items-center border-none rounded-xl mt-4 w-full shadow-[0px_1px_3px_0px_#00000033]">
-          <img
-            src="/advertisement/tb.png"
-            alt="Advertisement 5"
-            className="w-40 h-32 object-contain rounded-xl"
-          />
-          <div className="flex flex-col justify-center px-4">
-            <div className="font-semibold text-lg">Phillips 4k Smart TV</div>
-            <div className="text-xl font-bold text-blue-600">$499.99</div>
-            <button className="flex justify-center mt-1 mb-1 bg-[#EAF8E7] text-[#023337] px-2 py-0.5 rounded-2xl w-max">
-              Buy Now
-            </button>
+      <div className="flex justify-center items-center px-3">
+        <div className="flex flex-row justify-between items-center rounded-xl w-full shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+          <div className="relative w-[221px] h-[163px]">
+            <Image
+              src="/advertisement/tb.png"
+              alt="Advertisement 5"
+              fill
+              className="object-cover cursor-pointer"
+            />
+          </div>
+          <div className="flex flex-col justify-center px-4 py-3">
+            <h3 className="font-semibold text-lg text-gray-800">
+              Phillips 4k Smart TV
+            </h3>
+            <p className="text-xl font-bold text-blue-600 mt-1">$499.99</p>
+            <Link href="/product">
+              <button className="mt-3 bg-[#EAF8E7] text-[#023337] px-4 py-2 rounded-2xl font-medium hover:bg-[#d4f0cf] transition-colors duration-200 cursor-pointer">
+                Buy Now
+              </button>
+            </Link>
           </div>
         </div>
       </div>

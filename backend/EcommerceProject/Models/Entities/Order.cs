@@ -16,6 +16,5 @@ namespace EcommerceProject.Models.Entities;
         public string? PaymentStatus { get; set; }
         public string? Notes { get; set; }
         
-        // navagation property
         public User? User { get; set; }
     }

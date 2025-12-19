@@ -1,6 +1,6 @@
 import { Button } from "@/ui/button";
 import Image from "next/image";
-import { Card } from "../card/Card";
+import { Card } from "../Card/Card";
 import { IoIosHeartEmpty } from "react-icons/io";
 import Link from "next/link";
 import { Star } from "lucide-react";
@@ -67,11 +67,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
           <div>
             <span className="text-[14px] text-[#4EA674] font-bold">
-              Rs. {product.price}
+              $ {product.price}
             </span>
             &nbsp;&nbsp;&nbsp;
             <span className="line-through text-[12px] text-[red] font-medium">
-              Rs. {product.originalPrice}
+              $ {product.originalPrice}
             </span>
           </div>
         </div>

@@ -176,7 +176,6 @@ export const BasicDetails = () => {
             type="checkbox"
             {...register("highlightFeatured")}
             className="h-4 w-4"
-            required
           />
           {errors.highlightFeatured && (
             <p className="text-sm text-red-500 mt-1">

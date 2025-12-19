@@ -1,5 +1,7 @@
-import { Card } from "@/components/card/Card";
-
+import Image from "next/image";
+import { SecondCardContent } from "../constants/SecondCardContent";
+import type { SecondCardItem } from "../constants/SecondCardContent";
+import { Card } from "@/components/Card/Card";
 export const SecondCard = () => {
   return (
     <Card
@@ -11,34 +13,21 @@ export const SecondCard = () => {
           Gaming accessories
         </h2>
         <div className="grid grid-cols-2 gap-4 px-2">
-          <div className="overflow-hidden rounded-lg shadow-md h-25 hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-            <img
-              src="/advertisement/headphone.png"
-              alt="Gaming accessory 1"
-              className="w-full h-auto object-contain rounded-lg hover:scale-105 transition-transform duration-300"
-            />
-          </div>
-          <div className="overflow-hidden rounded-lg shadow-md h-25 hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-            <img
-              src="/advertisement/mouse.png"
-              alt="Gaming accessory 2"
-              className="w-full h-auto object-contain rounded-lg hover:scale-105 transition-transform duration-300"
-            />
-          </div>
-          <div className="overflow-hidden rounded-lg shadow-md h-25 hover:shadow-xl transition-shadow duration-300 cursor-pointer flex justify-center items-center">
-            <img
-              src="/advertisement/controller.png"
-              alt="Gaming accessory 3"
-              className="w-full h-auto object-contain rounded-lg hover:scale-105 transition-transform duration-300"
-            />
-          </div>
-          <div className="overflow-hidden rounded-lg shadow-md h-25 hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-            <img
-              src="/advertisement/chair.png"
-              alt="Gaming accessory 4"
-              className="w-full h-auto object-contain rounded-lg hover:scale-105 transition-transform duration-300"
-            />
-          </div>
+          {SecondCardContent.map((ad, index) => (
+            <div
+              key={ad.id}
+              className="overflow-hidden flex items-center justify-center  rounded-lg shadow-md  hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+            >
+              <div className="relative h-25 w-[81px] ">
+                <Image
+                  src={ad.src}
+                  alt={ad.alt}
+                  fill
+                  className="max-w-full  object-contain rounded-lg hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </Card>

@@ -1,6 +1,6 @@
 import { Button } from "@/ui/button";
 import { exploreData } from "./exploreData.import";
-import { Card } from "../card/Card";
+import { Card } from "../Card/Card";
 import Image from "next/image";
 
 export const Explore = () => {

@@ -24,6 +24,7 @@ export const data = [
     createdAt: "2025-01-14",
     order: 3,
     image: "/CategoryImage/beauty.webp",
+    category: "Electronic",
   },
   {
     productId: "p004",
@@ -32,6 +33,7 @@ export const data = [
     createdAt: "2025-01-20",
     order: 4,
     image: "/CategoryImage/beauty.webp",
+    category: "Electronic",
   },
   {
     productId: "p005",
@@ -48,6 +50,7 @@ export const data = [
     createdAt: "2025-01-25",
     order: 6,
     image: "/CategoryImage/beauty.webp",
+    category: "Electronic",
   },
   {
     productId: "c001",
