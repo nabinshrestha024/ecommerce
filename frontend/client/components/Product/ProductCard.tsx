@@ -16,6 +16,7 @@ interface Product {
   rating: number;
   reviews: number;
   stock: number;
+  sslug: string;
 }
 
 interface ProductCardProps {
