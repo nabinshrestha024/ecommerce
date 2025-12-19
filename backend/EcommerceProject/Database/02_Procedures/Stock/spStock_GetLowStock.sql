@@ -7,7 +7,7 @@ BEGIN
     SET NOCOUNT ON;
     
     SELECT 
-        p.ProductID AS ProductId,
+        p.ProductId,
         p.Name AS ProductName,
         p.SKU,
         p.StockQuantity AS CurrentStock,
@@ -15,10 +15,10 @@ BEGIN
         c.Name AS CategoryName,
         (SELECT MAX(o.OrderDate) 
          FROM OrderItems oi 
-         INNER JOIN Orders o ON oi.OrderID = o.OrderID 
-         WHERE oi.ProductID = p.ProductID) AS LastSoldDate
+         INNER JOIN Orders o ON oi.OrderId = o.OrderId 
+         WHERE oi.ProductId = p.ProductId) AS LastSoldDate
     FROM Products p
-    LEFT JOIN Categories c ON p.CategoryID = c.CategoryID
+    LEFT JOIN Categories c ON p.CategoryId = c.CategoryId
     WHERE p.IsActive = 1 
         AND p.StockQuantity <= 10
     ORDER BY p.StockQuantity ASC, p.Name;

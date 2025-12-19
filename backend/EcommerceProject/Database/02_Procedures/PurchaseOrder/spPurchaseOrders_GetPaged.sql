@@ -12,16 +12,14 @@ BEGIN
     
     DECLARE @Offset INT = (@PageNumber - 1) * @PageSize;
     
-    -- Get total count
     SELECT COUNT(*) AS TotalCount
     FROM PurchaseOrders po
     WHERE (@Status IS NULL OR po.Status = @Status)
-        AND (@VendorId IS NULL OR po.VendorID = @VendorId);
+        AND (@VendorId IS NULL OR po.VendorId = @VendorId);
     
-    -- Get paginated data
     SELECT 
-        po.POID AS POId,
-        po.VendorID AS VendorId,
+        po.POId,
+        po.VendorId,
         v.Name AS VendorName,
         po.OrderDate,
         po.Status,
@@ -31,10 +29,10 @@ BEGIN
         u.FullName AS CreatedByName,
         (SELECT COUNT(*) FROM PurchaseOrderItems poi WHERE poi.POID = po.POID) AS ItemCount
     FROM PurchaseOrders po
-    LEFT JOIN Vendors v ON po.VendorID = v.VendorID
-    LEFT JOIN Users u ON po.CreatedBy = u.UserID
+    LEFT JOIN Vendors v ON po.VendorId = v.VendorId
+    LEFT JOIN Users u ON po.CreatedBy = u.UserId
     WHERE (@Status IS NULL OR po.Status = @Status)
-        AND (@VendorId IS NULL OR po.VendorID = @VendorId)
+        AND (@VendorId IS NULL OR po.VendorId = @VendorId)
     ORDER BY po.OrderDate DESC
     OFFSET @Offset ROWS
     FETCH NEXT @PageSize ROWS ONLY;

@@ -24,10 +24,10 @@ BEGIN
             Email = ISNULL(@Email, Email),
             Address = ISNULL(@Address, Address),
             IsActive = ISNULL(@IsActive, IsActive)
-        WHERE VendorID = @VendorId;
+        WHERE VendorId = @VendorId;
         
         SELECT 
-            VendorID AS VendorId,
+            VendorId,
             Name,
             ContactPerson,
             Phone,
@@ -36,7 +36,7 @@ BEGIN
             IsActive,
             CreatedAt
         FROM Vendors
-        WHERE VendorID = @VendorId;
+        WHERE VendorId = @VendorId;
         
         COMMIT TRANSACTION;
     END TRY

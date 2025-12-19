@@ -10,7 +10,6 @@ namespace EcommerceProject.Controllers.v1.Admin
 {
     [ApiController]
     [Route("v1/admin/stock")]
-    [Authorize(Roles = "Admin")]
     public class StockController : ControllerBase
     {
         private readonly IStockService _stockService;
@@ -22,7 +21,6 @@ namespace EcommerceProject.Controllers.v1.Admin
             _logger = logger;
         }
 
-        // GET v1/admin/stock
         [HttpGet]
         public async Task<IActionResult> GetAllStock()
         {
@@ -38,7 +36,6 @@ namespace EcommerceProject.Controllers.v1.Admin
             }
         }
 
-        // POST v1/admin/stock/adjust
         [HttpPost("adjust")]
         public async Task<IActionResult> AdjustStock([FromBody] StockAdjustmentRequestDto request)
         {
@@ -63,7 +60,6 @@ namespace EcommerceProject.Controllers.v1.Admin
             }
         }
 
-        // Additional useful endpoint: low-stock alerts
         [HttpGet("low-stock")]
         public async Task<IActionResult> GetLowStockAlerts()
         {
