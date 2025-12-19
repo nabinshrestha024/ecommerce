@@ -14,8 +14,8 @@ export const AboutUsPage: React.FC = () => {
           <p className="text-xl leading-relaxed opacity-95">
             Founded in 2025, तपाइकोBazar has been dedicated to bringing you the
             finest selection of products that combine quality, innovation, and
-            value. We're more than just an online store – we're your trusted
-            partner in finding products that truly make a difference.
+            value. We&apos;re more than just an online store – we&apos;re your
+            trusted partner in finding products that truly make a difference.
           </p>
         </div>
       </div>
