@@ -10,19 +10,19 @@ const data = [
   },
   {
     title: "Groceries",
-    url: "/product/category/groceries",
+    url: "/product/groceries",
   },
   {
     title: "Clothes",
-    url: "/product/category/clothes",
+    url: "/product/clothes",
   },
   {
     title: "Shoes",
-    url: "/product/category/shoes",
+    url: "/product/shoes",
   },
   {
     title: "Electronics",
-    url: "/product/category/electronics",
+    url: "/product/electronics",
   },
 ];
 

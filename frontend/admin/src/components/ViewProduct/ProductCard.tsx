@@ -1,8 +1,5 @@
-import { Button } from "@/ui/button";
-import Image from "next/image";
 import { Card } from "../Card/Card";
 import { IoIosHeartEmpty } from "react-icons/io";
-import Link from "next/link";
 import { Star } from "lucide-react";
 
 interface Product {
@@ -27,14 +24,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <Card
       className="p-3 w-full max-w-[285px] border-0 shadow-none"
       key={product.id}
-      rootClassName="py-0 border shadow-xl"
+      cardClassName="py-0 border shadow-xl"
     >
       <div className="flex flex-col gap-2">
         <div className="w-full h-[185px] relative">
-          <Image
+          <img
             src={product.image}
             alt="image"
-            fill
             className="w-full h-full object-cover rounded-[12px]"
           />
           <div className="absolute top-3 right-3 rounded-full bg-white w-6 h-6 shadow-sm flex justify-center items-center">
@@ -76,17 +72,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
         </div>
       </div>
-      <div className="flex justify-between flex-col md:flex-row items-center mt-2">
-        <Link href={`/product/id/${product.sslug}`}>
-          <div className="text-[14px] text-[#6467F2] font-normal">
-            View Details
-          </div>
-        </Link>
-
-        <Button className="px-5 py-4 text-[14px] font-bold leading-3 bg-white border border-[#4EA674] text-[#4EA674]  rounded-[200px] hover:bg-[#fffcfc]">
-          Add to cart
-        </Button>
-      </div>
+      <div className="flex justify-between items-center mt-2"></div>
     </Card>
   );
 };
