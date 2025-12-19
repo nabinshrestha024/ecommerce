@@ -51,6 +51,10 @@ const items = [
     group: "User",
     data: [{ title: "User Profile", url: "/profile", icon: CgProfile }],
   },
+  {
+    group: "Vendor",
+    data: [{ title: "Vendor", url: "/vendor", icon: CgProfile }],
+  },
 ];
 
 export const Sidebar = () => {
