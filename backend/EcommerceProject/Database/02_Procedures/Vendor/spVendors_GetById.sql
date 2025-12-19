@@ -8,7 +8,7 @@ BEGIN
     SET NOCOUNT ON;
     
     SELECT 
-        VendorID AS VendorId,
+        VendorId,
         Name,
         ContactPerson,
         Phone,
@@ -17,7 +17,7 @@ BEGIN
         IsActive,
         CreatedAt
     FROM Vendors
-    WHERE VendorID = @VendorId;
+    WHERE VendorId = @VendorId;
 END
 GO
 

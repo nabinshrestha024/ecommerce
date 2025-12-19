@@ -85,7 +85,7 @@ namespace EcommerceProject.Repositories.Implementations
             }
         }
 
-        public async Task<PurchaseOrderDetailDto> CreatePurchaseOrderAsync(CreatePurchaseOrderRequestDto request, int createdBy)
+        public async Task<PurchaseOrderDetailDto?> CreatePurchaseOrderAsync(CreatePurchaseOrderRequestDto request, int createdBy)
         {
             try
             {
@@ -152,7 +152,6 @@ namespace EcommerceProject.Repositories.Implementations
         {
             try
             {
-                // Convert received items to JSON for stored procedure
                 var receivedItemsJson = JsonSerializer.Serialize(request.ReceivedItems);
 
                 using var connection = _connectionFactory.CreateConnection();

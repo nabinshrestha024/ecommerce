@@ -8,17 +8,17 @@ BEGIN
     SET NOCOUNT ON;
     
     SELECT 
-        poi.POItemID AS POItemId,
-        poi.POID AS POId,
-        poi.ProductID AS ProductId,
+        poi.POItemId,
+        poi.POId,
+        poi.ProductId,
         p.Name AS ProductName,
         p.SKU,
         poi.Quantity,
         poi.UnitCost,
         (poi.Quantity * poi.UnitCost) AS ItemTotal
     FROM PurchaseOrderItems poi
-    INNER JOIN Products p ON poi.ProductID = p.ProductID
-    WHERE poi.POID = @POId;
+    INNER JOIN Products p ON poi.ProductId = p.ProductId
+    WHERE poi.POId = @POId;
 END
 GO
 

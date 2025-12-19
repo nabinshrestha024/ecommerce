@@ -1,11 +1,11 @@
 ﻿CREATE OR ALTER PROCEDURE spProducts_GetById
-    @ProductID INT
+    @ProductId INT
 AS
 BEGIN
     SET NOCOUNT ON;
     SELECT TOP 1 *
     FROM dbo.Products
-    WHERE ProductID = @ProductID;
+    WHERE ProductId = @ProductId;
 END
 GO
 

@@ -7,11 +7,11 @@ BEGIN
     SET NOCOUNT ON;
     
     SELECT 
-        p.ProductID AS ProductId,
+        ProductId,
         p.Name AS ProductName,
         p.SKU,
         p.StockQuantity AS CurrentStock,
-        10 AS ReorderLevel, -- Default reorder level
+        10 AS ReorderLevel, 
         p.Price,
         c.Name AS CategoryName,
         p.UpdatedAt AS LastUpdated,
@@ -21,9 +21,9 @@ BEGIN
             ELSE 'In Stock'
         END AS Status
     FROM Products p
-    LEFT JOIN Categories c ON p.CategoryID = c.CategoryID
+    LEFT JOIN Categories c ON p.CategoryId = c.CategoryId
     WHERE p.IsActive = 1
-    ORDER BY p.Name;
+    ORDER BY p.Name
 END
 GO
 
