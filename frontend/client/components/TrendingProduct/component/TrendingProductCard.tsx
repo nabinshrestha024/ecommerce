@@ -65,7 +65,7 @@ export const TrendingProductCard = () => {
                   </div>
                 </div>
                 <div className="flex flex-col lg:flex-row justify-between items-center mt-2">
-                  <Link href="/productDetails">
+                  <Link href={`/product/id/${products[randomNumber].sslug}`}>
                     <div className="text-[14px] text-[#6467F2] font-normal">
                       View Details
                     </div>
