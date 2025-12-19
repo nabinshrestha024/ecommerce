@@ -133,7 +133,11 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
               type="number"
               placeholder="Enter total products"
               {...register("totalProducts")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded
+             focus-visible:border-[#DFE0E1] focus-visible:ring-0
+             appearance-none
+             [&::-webkit-inner-spin-button]:appearance-none
+             [&::-webkit-outer-spin-button]:appearance-none"
             />
             {errors.totalProducts && (
               <p className="text-[12px] text-red-500">
@@ -150,7 +154,11 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
               type="number"
               placeholder="Enter completed orders"
               {...register("completedOrders")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded
+             focus-visible:border-[#DFE0E1] focus-visible:ring-0
+             appearance-none
+             [&::-webkit-inner-spin-button]:appearance-none
+             [&::-webkit-outer-spin-button]:appearance-none"
             />
             {errors.completedOrders && (
               <p className="text-[12px] text-red-500">
@@ -167,7 +175,11 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
               type="number"
               placeholder="Enter canceled orders"
               {...register("canceledOrders")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded
+             focus-visible:border-[#DFE0E1] focus-visible:ring-0
+             appearance-none
+             [&::-webkit-inner-spin-button]:appearance-none
+             [&::-webkit-outer-spin-button]:appearance-none"
             />
             {errors.canceledOrders && (
               <p className="text-[12px] text-red-500">

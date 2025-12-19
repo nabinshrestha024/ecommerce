@@ -16,7 +16,8 @@ export const VendorHeader = () => {
               </div>
             }
           >
-            <div className="max-h-[70vh] overflow-y-auto px-4 py-3">
+            <div className="max-h-[70vh] overflow-y-auto px-4 py-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              {" "}
               <AddVendorForm />
             </div>
           </Dialog>
