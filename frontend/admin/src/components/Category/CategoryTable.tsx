@@ -259,7 +259,7 @@ export const CategoryTable = () => {
         <Tabs
           defaultValue="All"
           data={tabDatas}
-          tabsListClassName="bg-[#EAF8E7] flex"
+          tabsListClassName="bg-[#EAF8E7] flex dark:bg-accent"
         ></Tabs>
         <div className="absolute top-0 right-0  flex gap-2 justify-end items-center">
           <Input

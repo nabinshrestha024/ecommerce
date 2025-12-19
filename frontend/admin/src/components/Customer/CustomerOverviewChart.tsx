@@ -12,7 +12,7 @@ export const CustomerOverviewChart = () => {
     >
       <div className="flex flex-col gap-6">
         <div className="flex justify-between">
-          <div className="text-[18px] leading-6 font-bold text-[#23272E]">
+          <div className="text-[18px] leading-6 font-bold ">
             Customer Overview
           </div>
           <div className="flex gap-2 items-center">
