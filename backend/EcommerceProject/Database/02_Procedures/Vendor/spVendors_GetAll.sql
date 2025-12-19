@@ -8,7 +8,7 @@ BEGIN
     SET NOCOUNT ON;
     
     SELECT 
-        VendorID AS VendorId,
+        VendorId,
         Name,
         ContactPerson,
         Phone,

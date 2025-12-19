@@ -1,12 +1,11 @@
 import Image from "next/image";
 import { SecondCardContent } from "../constants/SecondCardContent";
-import type { SecondCardItem } from "../constants/SecondCardContent";
 import { Card } from "@/components/Card/Card";
 export const SecondCard = () => {
   return (
     <Card
       rootClassName="p-0 shadow-none border-none"
-      className="p-4 pb-6 h-full border shadow-lg w-auto rounded-2xl bg-white"
+      className="p-4 pb-6 h-full border shadow-lg w-full lg:w-auto rounded-2xl bg-white"
     >
       <div>
         <h2 className="text-2xl font-bold mb-4 text-gray-800">

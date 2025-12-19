@@ -43,9 +43,7 @@ export const UploadProductDetails = () => {
                     className="max-h-40 object-cover"
                   />
                 ) : (
-                  <span className="text-gray-500 text-sm text-left">
-                    Upload Image
-                  </span>
+                  <span className=" text-sm text-left">Upload Image</span>
                 )}
               </div>
             </label>
@@ -70,14 +68,14 @@ export const UploadProductDetails = () => {
           </div>
           <div className="flex flex-col mt-6 gap-5">
             <div className="flex flex-col gap-3">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium ">
                 Product Categories
               </label>
               <div className="w-full">
                 <select
                   {...register("productCategories")}
                   defaultValue=""
-                  className="w-full bg-[#F9FAFB] h-9 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent flex items-center"
+                  className="w-full h-9 px-3 border border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent flex items-center"
                 >
                   <option value="" disabled>
                     Select product categories...
@@ -97,14 +95,10 @@ export const UploadProductDetails = () => {
             </div>
             {selectedCategory === "groceries" && (
               <div className="flex flex-col gap-3">
-                <label className="block text-sm font-bold text-gray-700">
-                  Expiration
-                </label>
+                <label className="block text-sm font-bold ">Expiration</label>
                 <div className="grid grid-cols-2 w-full gap-5">
                   <div className="flex flex-col gap-3 w-full">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Start
-                    </label>
+                    <label className="block text-sm font-medium ">Start</label>
                     <Input
                       type="date"
                       placeholder="Start"
@@ -119,9 +113,7 @@ export const UploadProductDetails = () => {
                   </div>
 
                   <div className="flex flex-col gap-3 w-full">
-                    <label className="block text-sm font-medium text-gray-700">
-                      End
-                    </label>
+                    <label className="block text-sm font-medium">End</label>
                     <Input
                       type="date"
                       placeholder="End"
@@ -138,9 +130,7 @@ export const UploadProductDetails = () => {
               </div>
             )}
             <div className="flex flex-col gap-3">
-              <label className="block text-sm font-medium text-gray-700">
-                Product Tags
-              </label>
+              <label className="block text-sm font-medium ">Product Tags</label>
               <Input
                 type="text"
                 placeholder="Enter product tags..."

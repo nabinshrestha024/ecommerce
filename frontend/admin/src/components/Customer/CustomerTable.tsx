@@ -118,7 +118,7 @@ export const CustomerTable = () => {
         return (
           <div
             onClick={() => handleRowClick(info.row.original)}
-            className="flex gap-3 justify-center items-center cursor-pointer"
+            className="flex gap-3  items-center cursor-pointer"
           >
             <div
               className={`w-2 h-2 rounded-full ${

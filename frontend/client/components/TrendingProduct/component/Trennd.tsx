@@ -7,14 +7,14 @@ export const Trennd = () => {
   return (
     <div>
       <Card
-        className=" py-3 px-5 w-[392px] border-0 shadow-none "
+        className=" py-3 px-5 w-full lg:w-[392px] border-0 shadow-none "
         rootClassName="py-0 border shadow-xl"
       >
         <div className="flex flex-col gap-[15px]">
           <div className="text-[20px] font-medium text-[#000000]">
             Trend collection for men
           </div>
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid grid-cols-2 gap-5 w-full">
             {TrendData.map((trendData) => (
               <div key={trendData.id} className="relative h-[159px] w-full">
                 <Image

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Card } from "../Card/Card";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { CustomerChart } from "./CustomerChart";
+import { CustomerLastWeekChart } from "./CustomerlastWeekChart";
 export const CustomerOverviewChart = () => {
   const [weeklyDetails, setWeeklyDetails] = useState("This week");
   return (
@@ -11,7 +12,7 @@ export const CustomerOverviewChart = () => {
     >
       <div className="flex flex-col gap-6">
         <div className="flex justify-between">
-          <div className="text-[18px] leading-6 font-bold text-[#23272E]">
+          <div className="text-[18px] leading-6 font-bold ">
             Customer Overview
           </div>
           <div className="flex gap-2 items-center">
@@ -40,7 +41,11 @@ export const CustomerOverviewChart = () => {
             <BsThreeDotsVertical className="text-[#6A717F] text-[20px]" />
           </div>
         </div>
-        <CustomerChart />
+        {weeklyDetails === "This week" ? (
+          <CustomerChart />
+        ) : (
+          <CustomerLastWeekChart />
+        )}
       </div>
     </Card>
   );

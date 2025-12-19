@@ -1,11 +1,11 @@
 ﻿CREATE OR ALTER PROCEDURE spProducts_Update
-    @ProductID INT,
+    @ProductId INT,
     @Name NVARCHAR(200),
     @Slug VARCHAR(200),
     @Description NVARCHAR(MAX) = NULL,
     @ShortDescription NVARCHAR(500) = NULL,
     @Price DECIMAL(10,2),
-    @CategoryID INT,
+    @CategoryId INT,
     @StockQuantity INT,
     @SKU VARCHAR(50),
     @Brand NVARCHAR(100) = NULL,
@@ -29,7 +29,7 @@ BEGIN
         ProductImageURL=@ProductImageURL,
         IsActive=@IsActive,
         UpdatedAt=GETDATE()
-    WHERE ProductID=@ProductID;
+    WHERE ProductId=@ProductId;
 
     SELECT @@ROWCOUNT AS Affected;
 END

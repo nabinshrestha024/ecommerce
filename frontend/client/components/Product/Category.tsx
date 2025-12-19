@@ -10,19 +10,19 @@ const data = [
   },
   {
     title: "Groceries",
-    url: "/product/groceries",
+    url: "/product/category/groceries",
   },
   {
     title: "Clothes",
-    url: "/product/clothes",
+    url: "/product/category/clothes",
   },
   {
     title: "Shoes",
-    url: "/product/shoes",
+    url: "/product/category/shoes",
   },
   {
     title: "Electronics",
-    url: "/product/electronics",
+    url: "/product/category/electronics",
   },
 ];
 
@@ -30,8 +30,8 @@ export const Category = () => {
   const pathname = usePathname();
   return (
     <div>
-      <div className="text-xl font-semibold underline mb-10">Categories</div>
-      <div className="flex flex-col gap-3 justify-center py-5 border-b">
+      <div className="text-xl font-semibold underline mb-5">Categories</div>
+      <div className="flex md:flex-col gap-3 justify-center py-5 border-b">
         {data.map((val) => {
           const isActive =
             pathname === val.url || (val.title === "All" && pathname === "/");

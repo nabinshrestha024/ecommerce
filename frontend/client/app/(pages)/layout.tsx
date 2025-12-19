@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/Navbar/Navbar";
+import { SidebarProvider } from "@/ui/sidebar";
 
 export default function Layout({
   children,
@@ -6,9 +7,11 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <Navbar />
-      {children}
-    </>
+    <SidebarProvider>
+      <div>
+        <Navbar />
+        {children}
+      </div>
+    </SidebarProvider>
   );
 }

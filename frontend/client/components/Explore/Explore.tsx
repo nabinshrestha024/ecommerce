@@ -16,11 +16,11 @@ export const Explore = () => {
             View All
           </Button>
         </div>
-        <div className="flex gap-5 justify-start text-center mt-8">
+        <div className="flex gap-5 justify-start text-center mt-8 flex-wrap">
           {exploreData.map((val) => (
             <Card key={val.id} className="shadow-none py-2">
               <div>
-                <Image src={val.image} alt="Image" width={130} height={130} />
+                <Image src={val.image} alt="Image" width={100} height={100} />
                 <p className="font-medium">{val.title}</p>
               </div>
             </Card>

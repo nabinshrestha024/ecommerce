@@ -84,7 +84,7 @@ export const ProfileUpdate = () => {
               {...register("profilePicture")}
               className={`w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-lg border transition-all duration-200 ${
                 !isEditing
-                  ? "border-gray-200 text-gray-400 cursor-not-allowed bg-gray-50"
+                  ? "border-gray-200 text-gray-400 cursor-not-allowed "
                   : "border-blue-600 text-blue-600 hover:bg-blue-50"
               }`}
             >
@@ -94,9 +94,7 @@ export const ProfileUpdate = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-gray-700">
-                First Name
-              </label>
+              <label className="text-sm font-medium ">First Name</label>
               <Input
                 type="text"
                 placeholder="Wade"
@@ -111,9 +109,7 @@ export const ProfileUpdate = () => {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-gray-700">
-                Last Name
-              </label>
+              <label className="text-sm font-medium ">Last Name</label>
               <Input
                 type="text"
                 placeholder="Warren"
@@ -130,9 +126,7 @@ export const ProfileUpdate = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-gray-700">
-                Password
-              </label>
+              <label className="text-sm font-medium ">Password</label>
               <Input
                 type="password"
                 placeholder="********"
@@ -146,9 +140,7 @@ export const ProfileUpdate = () => {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-gray-700">
-                Phone Number
-              </label>
+              <label className="text-sm font-medium ">Phone Number</label>
               <Input
                 type="tel"
                 placeholder="1234567890"
@@ -165,7 +157,7 @@ export const ProfileUpdate = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-gray-700">Email</label>
+              <label className="text-sm font-medium ">Email</label>
               <Input
                 type="email"
                 placeholder="wade@example.com"
@@ -177,9 +169,7 @@ export const ProfileUpdate = () => {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-gray-700">
-                Date of Birth
-              </label>
+              <label className="text-sm font-medium ">Date of Birth</label>
               <Input
                 type="date"
                 placeholder="01/01/2003"
@@ -195,9 +185,7 @@ export const ProfileUpdate = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-gray-700">
-              Location
-            </label>
+            <label className="text-sm font-medium ">Location</label>
             <Input
               type="text"
               placeholder="1234 Main St, City, Country"
@@ -210,16 +198,12 @@ export const ProfileUpdate = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-gray-700">
-              Biography
-            </label>
+            <label className="text-sm font-medium">Biography</label>
             <textarea
               placeholder="Tell us about yourself"
               disabled={!isEditing}
-              className={`w-full bg-gray-50 border border-gray-300 rounded-lg p-3 h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm sm:text-base ${
-                !isEditing
-                  ? "text-gray-400 cursor-not-allowed"
-                  : "text-gray-900"
+              className={`w-full border rounded-lg p-3 h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm sm:text-base ${
+                !isEditing ? " cursor-not-allowed" : ""
               }`}
             />
             {errors.biography && (

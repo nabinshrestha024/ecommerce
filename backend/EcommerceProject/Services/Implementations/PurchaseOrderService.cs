@@ -58,7 +58,6 @@ namespace EcommerceProject.Services.Implementations
             {
                 _logger.LogInformation("Creating purchase order for vendor: {VendorId}", request.VendorId);
                 
-                // Validate items
                 if (request.Items == null || request.Items.Count == 0)
                 {
                     throw new ArgumentException("At least one item is required for purchase order");
@@ -81,7 +80,6 @@ namespace EcommerceProject.Services.Implementations
             {
                 _logger.LogInformation("Updating purchase order status: PO={POId}, Status={Status}", poId, status);
                 
-                // Validate status
                 var validStatuses = new List<string> { "Pending", "Approved", "Cancelled", "Received" };
                 if (!validStatuses.Contains(status))
                 {
@@ -105,7 +103,6 @@ namespace EcommerceProject.Services.Implementations
             {
                 _logger.LogInformation("Receiving purchase order: PO={POId}", poId);
                 
-                // Validate received items
                 if (request.ReceivedItems == null || request.ReceivedItems.Count == 0)
                 {
                     throw new ArgumentException("At least one received item is required");

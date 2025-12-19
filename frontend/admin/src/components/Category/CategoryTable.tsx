@@ -259,7 +259,7 @@ export const CategoryTable = () => {
         <Tabs
           defaultValue="All"
           data={tabDatas}
-          tabsListClassName="bg-[#EAF8E7] flex"
+          tabsListClassName="bg-[#EAF8E7] flex dark:bg-accent"
         ></Tabs>
         <div className="absolute top-0 right-0  flex gap-2 justify-end items-center">
           <Input
@@ -267,9 +267,9 @@ export const CategoryTable = () => {
             value={searchProduct}
             onChange={handleChange}
             placeholder="Search product"
-            className="pt-2.5 pb-2.5 pl-3 pr-2  border-none bg-[#F9FAFB] focus-visible:border-0 focus-visible:ring-0"
+            className="pt-2.5 pb-2.5 pl-3 pr-2  border-none focus-visible:border-0 focus-visible:ring-0"
           />
-          <div className="p-2 rounded-sm border shadow-2xl bg-[#F9FAFB]">
+          <div className="p-2 rounded-sm border shadow-2xl">
             <DropDown
               trigger={
                 <div>
@@ -295,12 +295,12 @@ export const CategoryTable = () => {
           </div>
 
           <div
-            className="p-2 rounded-sm border shadow-2xl bg-[#F9FAFB]"
+            className="p-2 rounded-sm border shadow-2xl "
             onClick={() => navigate("/product-management")}
           >
             <MdAddCircleOutline className="text-[#4B5563] text-[24px]" />
           </div>
-          <div className="p-2 rounded-sm border shadow-2xl bg-[#F9FAFB]">
+          <div className="p-2 rounded-sm border shadow-2xl">
             <BsThreeDotsVertical className="text-[#4B5563] text-[20px]" />
           </div>
         </div>

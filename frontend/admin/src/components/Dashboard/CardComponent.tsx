@@ -10,9 +10,9 @@ interface CardComponentProps {
 
 export const CardComponent = ({ title, children }: CardComponentProps) => {
   return (
-    <Card className="p-5 w-full" cardClassName="p-0 w-full">
+    <Card className="p-2.5 lg:p-5 w-full" cardClassName="p-0 w-full">
       <div>
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <div className="text-lg font-semibold">{title}</div>
           <div>
             <BsThreeDotsVertical />
