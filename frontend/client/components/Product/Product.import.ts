@@ -25,7 +25,7 @@ export const products: ProductType[] = [
     image:
       "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=500&fit=crop",
     rating: 5,
-    reviews: 234,
+    reviews: 235,
     stock: 45,
     sslug: "wireless-bluetooth-headphones",
     category: "electronics",
