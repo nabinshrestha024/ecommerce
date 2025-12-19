@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Card } from "../Card/Card";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { CustomerChart } from "./CustomerChart";
+import { CustomerLastWeekChart } from "./CustomerlastWeekChart";
 export const CustomerOverviewChart = () => {
   const [weeklyDetails, setWeeklyDetails] = useState("This week");
   return (
@@ -40,7 +41,11 @@ export const CustomerOverviewChart = () => {
             <BsThreeDotsVertical className="text-[#6A717F] text-[20px]" />
           </div>
         </div>
-        <CustomerChart />
+        {weeklyDetails === "This week" ? (
+          <CustomerChart />
+        ) : (
+          <CustomerLastWeekChart />
+        )}
       </div>
     </Card>
   );
