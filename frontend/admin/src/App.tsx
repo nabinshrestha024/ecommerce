@@ -10,6 +10,7 @@ import { Login } from "./screens/login";
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { Navbar } from "./components/Navbar/Navbar";
 import { ViewProduct } from "./screens/view-product";
+import { Vendor } from "./screens/vendor";
 
 export const App = () => {
   return (
@@ -28,6 +29,7 @@ export const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/view-products" element={<ViewProduct />} />
+          <Route path="/vendor" element={<Vendor />} />
         </Routes>
       </div>
     </>
