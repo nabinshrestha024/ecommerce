@@ -10,7 +10,7 @@ BEGIN
     
     UPDATE PurchaseOrders 
     SET Status = @Status
-    WHERE POID = @POId;
+    WHERE POId = @POId;
     
     EXEC spPurchaseOrders_GetById @POId;
 END

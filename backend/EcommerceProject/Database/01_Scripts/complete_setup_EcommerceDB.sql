@@ -268,11 +268,20 @@ PRINT 'Table PurchaseOrders created.';
 GO
 
 CREATE TABLE PurchaseOrderItems (
+<<<<<<< HEAD
+    POItemId            INT IDENTITY(1,1) PRIMARY KEY,
+    POId                INT NOT NULL,
+    ProductId           INT NOT NULL,
+    Quantity            INT NOT NULL,
+    ReceivedQuantity    INT NOT NULL DEFAULT 0,
+    UnitCost            DECIMAL(10,2) NOT NULL,
+=======
     POItemId    INT IDENTITY(1,1) PRIMARY KEY,
     POId        INT NOT NULL,
     ProductId   INT NOT NULL,
     Quantity    INT NOT NULL,
     UnitCost    DECIMAL(10,2) NOT NULL,
+>>>>>>> 7bd7c4bf5ab5e901bcf5087c924ec70c6ebc9d7e
     FOREIGN KEY (POId) REFERENCES PurchaseOrders(POId) ON DELETE CASCADE,
     FOREIGN KEY (ProductId) REFERENCES Products(ProductId)
 );

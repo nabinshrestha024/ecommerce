@@ -1,4 +1,3 @@
-import { Button } from "@/ui/button";
 import { Card } from "../Card/Card";
 import {
   createColumnHelper,
@@ -8,7 +7,7 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { Table } from "../Table/Table";
-import { IoFilter, IoSearch } from "react-icons/io5";
+import { IoSearch } from "react-icons/io5";
 import { Input } from "@/ui/input";
 
 const data = [
@@ -188,14 +187,11 @@ export const DashboardTransaction = () => {
     onPaginationChange: setPagination,
   });
   return (
-    <div className="grid grid-cols-[80%_20%] gap-5 pr-5">
+    <div className="grid grid-cols-1 lg:grid-cols-[80%_20%] gap-5 pr-5">
       <Card>
         <div>
           <div className="flex justify-between">
             <div className="text-xl font-semibold">Transactions</div>
-            <Button>
-              Filter <IoFilter />
-            </Button>
           </div>
           <Table table={table} pageIndex={pagination.pageIndex} />
         </div>

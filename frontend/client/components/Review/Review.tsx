@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ReviewData } from "./components/ReviewData.import";
+import { Star } from "lucide-react";
 export const Review = () => {
   return (
     <section className="mx-auto max-w-7xl px-5 py-20 text-center">
@@ -31,10 +32,21 @@ export const Review = () => {
                 <h4 className="text-lg font-semibold text-gray-900">
                   {item.name}
                 </h4>
-                <div className="text-sm text-yellow-400">
-                  {Array.from({ length: item.rating }).map((_, i) => (
-                    <span key={i}>★</span>
+                <div className="flex items-center mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      size={16}
+                      className={
+                        i < item.rating
+                          ? "fill-yellow-400 text-yellow-400"
+                          : "text-gray-300"
+                      }
+                    />
                   ))}
+                  <span className="ml-2 text-sm text-gray-600">
+                    ({item.message})
+                  </span>
                 </div>
               </div>
             </div>

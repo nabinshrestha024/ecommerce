@@ -1,5 +1,6 @@
 "use client";
 
+import { useSidebar } from "@/ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -23,9 +24,10 @@ const data = [
 ];
 
 export const NavRoutes = () => {
+  const { setOpen } = useSidebar();
   const pathname = usePathname();
   return (
-    <div className="flex gap-10 justify-center items-center py-5 border-b">
+    <div className="flex flex-col md:flex-row gap-10 justify-center items-center py-5 border-b">
       {data.map((val) => {
         const isActive = pathname.startsWith(val.url);
 
@@ -36,6 +38,9 @@ export const NavRoutes = () => {
             className={`font-semibold relative transition-colors duration-300 ${
               isActive ? "text-green-700" : ""
             }`}
+            onClick={() => {
+              if (setOpen) setOpen(false);
+            }}
           >
             {val.title}
 

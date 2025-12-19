@@ -18,9 +18,7 @@ export const BasicDetails = () => {
       </div>
       <div className="flex flex-col mt-6 gap-8">
         <div className="flex flex-col gap-3">
-          <label className="block text-sm font-medium text-gray-700">
-            Product Name
-          </label>
+          <label className="block text-sm font-medium ">Product Name</label>
           <Input
             type="text"
             placeholder="Enter product name...."
@@ -34,12 +32,12 @@ export const BasicDetails = () => {
           )}
         </div>
         <div className="flex flex-col gap-3">
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium ">
             Product Description
           </label>
           <textarea
             placeholder="Enter product description...."
-            className="w-full bg-[#F9FAFB] h-24 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full h-24 p-3 border rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
             {...register("productDescription")}
           />
           {errors.productDescription && (
@@ -54,9 +52,7 @@ export const BasicDetails = () => {
           </div>
           <div className="flex flex-col mt-6 gap-5">
             <div className="flex flex-col gap-3">
-              <label className="block text-sm font-medium text-gray-700">
-                Product Price
-              </label>
+              <label className="block text-sm font-medium">Product Price</label>
               <div className="relative w-full">
                 <div className="absolute left-3 top-1/2 transform -translate-y-1/2 font-bold">
                   Rs
@@ -76,7 +72,7 @@ export const BasicDetails = () => {
             </div>
             <div className="grid grid-cols-2 gap-5">
               <div className="flex flex-col gap-3 ">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium ">
                   Discounted Price{" "}
                   <span className="font-normal">(Optional)</span>
                 </label>
@@ -98,7 +94,7 @@ export const BasicDetails = () => {
                 )}
               </div>
               <div className="flex flex-col gap-3 ">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium">
                   Tax Included
                 </label>
                 <div>
@@ -131,13 +127,11 @@ export const BasicDetails = () => {
           </div>
           <div className="grid grid-cols-2 mt-6 gap-5">
             <div className="flex flex-col gap-3">
-              <label className="block text-sm font-medium text-gray-700">
-                Stock Status
-              </label>
+              <label className="block text-sm font-medium ">Stock Status</label>
               <select
                 {...register("stockStatus")}
                 defaultValue=""
-                className="w-full bg-[#F9FAFB] h-9 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent flex items-center"
+                className="w-full  h-9 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent flex items-center"
               >
                 <option value="" disabled>
                   Select stock status...
@@ -183,7 +177,7 @@ export const BasicDetails = () => {
             </p>
           )}
 
-          <label className="text-sm font-medium text-gray-700">
+          <label className="text-sm font-medium ">
             Highlight this product in featured section
           </label>
         </div>

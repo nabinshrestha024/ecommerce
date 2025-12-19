@@ -66,6 +66,7 @@ export const ProductFormSchema = z
     if (data.stockStatus === "in-stock") {
       if (!data.stockQuantity || data.stockQuantity < 1) {
         ctx.addIssue({
+          code: "custom",
           path: ["stockQuantity"],
           message: "Stock quantity must be at least 1",
         });
