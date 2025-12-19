@@ -1,31 +1,24 @@
 "use client";
-
-import { Link } from "react-router-dom";
 const data = [
   {
     CategoryId: 0,
     Name: "All",
-    url: "/view-products",
   },
   {
     CategoryId: 1,
     Name: "Groceries",
-    url: "/view-products",
   },
   {
     CategoryId: 2,
     Name: "Clothes",
-    url: "/view-products",
   },
   {
     CategoryId: 3,
     Name: "Shoes",
-    url: "/view-products",
   },
   {
     CategoryId: 4,
     Name: "Electronics",
-    url: "/view-products",
   },
 ];
 
@@ -46,8 +39,7 @@ export const Category = ({
           const isActive = selectedCategory === val.Name;
 
           return (
-            <Link
-              to={val.url}
+            <div
               key={val.Name}
               className={`font-semibold relative transition-colors duration-300 ${
                 isActive ? "text-green-700" : ""
@@ -55,7 +47,7 @@ export const Category = ({
               onClick={() => onSelectCategory(val.Name)}
             >
               {val.Name}
-            </Link>
+            </div>
           );
         })}
       </div>
