@@ -13,7 +13,7 @@ import { IoSearch } from "react-icons/io5";
 
 export const Footer = () => {
   return (
-    <div className="bg-[#EAF8E7]">
+    <div className="bg-[#EAF8E7] hidden">
       <div className="flex justify-between px-10 items-center border-b py-5">
         <Image src={"/logo.png"} alt="Logo" height={80} width={200} />
         <div className="relative">

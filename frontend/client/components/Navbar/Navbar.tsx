@@ -5,7 +5,9 @@ export const Navbar = () => {
   return (
     <div>
       <TopNav />
-      <NavRoutes />
+      <div className="hidden lg:block">
+        <NavRoutes />
+      </div>
     </div>
   );
 };

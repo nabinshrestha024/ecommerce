@@ -20,7 +20,7 @@ export const Deal = () => {
             View All
           </Button>
         </div>
-        <div className="w-full grid grid-cols-4 gap-5 mt-8">
+        <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
           {products.map((_, index) => {
             const randomNumber = Math.floor(Math.random() * 29);
             return (

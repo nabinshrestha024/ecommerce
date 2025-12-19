@@ -10,7 +10,7 @@ import { products } from "@/components/Product/Product.import";
 export const TrendingProductCard = () => {
   return (
     <div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         {ProductDatas.map((_, index) => {
           const randomNumber = Math.floor(Math.random() * 29);
           return (

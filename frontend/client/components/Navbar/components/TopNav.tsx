@@ -5,12 +5,26 @@ import Link from "next/link";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoPerson, IoSearch } from "react-icons/io5";
+import { Sidebar } from "./Sidebar";
 
 export const TopNav = () => {
   return (
-    <div className="flex justify-between px-10 items-center py-5 border-b">
+    <div className="flex justify-between px-5 lg:px-10 items-center py-5 border-b">
       <div className="flex gap-2 divide-x-2">
-        <Image src={"/logo.png"} alt="Logo" height={80} width={200} />
+        <Image
+          src={"/logo.png"}
+          alt="Logo"
+          height={80}
+          width={200}
+          className="hidden lg:block"
+        />
+        <Image
+          src={"/logo.png"}
+          alt="Logo"
+          height={80}
+          width={120}
+          className="lg:hidden"
+        />
         <div className="flex items-center gap-2">
           <FaLocationDot className="text-2xl" />
           <div>
@@ -19,7 +33,7 @@ export const TopNav = () => {
           </div>
         </div>
       </div>
-      <div className="flex gap-4 items-center">
+      <div className="gap-4 items-center hidden lg:flex">
         <div className="relative">
           <Input
             type={"text"}
@@ -41,6 +55,10 @@ export const TopNav = () => {
           <FaShoppingCart />
           <div className="text-sm font-semibold">Cart</div>
         </div>
+      </div>
+
+      <div className="lg:hidden">
+        <Sidebar />
       </div>
     </div>
   );
