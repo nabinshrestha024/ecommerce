@@ -16,6 +16,7 @@ interface Product {
   rating: number;
   reviews: number;
   stock: number;
+  sslug: string;
 }
 
 interface ProductCardProps {
@@ -76,13 +77,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col md:flex-row justify-between items-center mt-2">
-        <Link href="/product">
+      <div className="flex justify-between flex-col md:flex-row items-center mt-2">
+        <Link href={`/product/id/${product.sslug}`}>
           <div className="text-[14px] text-[#6467F2] font-normal">
             View Details
           </div>
         </Link>
-
         <Button className="px-5 py-4 text-[14px] font-bold leading-3 bg-white border border-[#4EA674] text-[#4EA674]  rounded-[200px] hover:bg-[#fffcfc]">
           Add to cart
         </Button>
