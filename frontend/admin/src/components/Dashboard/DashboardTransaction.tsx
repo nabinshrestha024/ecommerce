@@ -188,7 +188,7 @@ export const DashboardTransaction = () => {
     onPaginationChange: setPagination,
   });
   return (
-    <div className="grid grid-cols-[80%_20%] gap-5 pr-5">
+    <div className="grid grid-cols-1 lg:grid-cols-[80%_20%] gap-5 pr-5">
       <Card>
         <div>
           <div className="flex justify-between">

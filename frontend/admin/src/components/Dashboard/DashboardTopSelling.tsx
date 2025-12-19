@@ -179,10 +179,10 @@ export const DashboardTopSelling = () => {
     onPaginationChange: setPagination,
   });
   return (
-    <div className="grid grid-cols-[70%_30%] gap-5">
-      <Card>
+    <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-5">
+      <Card cardClassName="px-4" className="px-0">
         <div>
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center">
             <div className="text-xl font-semibold">Best Selling Products</div>
             <Button>
               Filter <IoFilter />
@@ -194,8 +194,10 @@ export const DashboardTopSelling = () => {
 
       <div>
         <Card>
-          <div className="flex justify-between">
-            <div className="text-xl font-semibold">Add new product</div>
+          <div className="flex justify-between items-center">
+            <div className="text-[14px] lg:text-xl font-semibold">
+              Add new product
+            </div>
             <Button>
               <Link to={"/product-management"}>+ Add Product</Link>
             </Button>
