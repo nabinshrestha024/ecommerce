@@ -77,7 +77,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
         </div>
       </div>
-      <div className="flex justify-between items-center mt-2">
+      <div className="flex justify-between flex-col md:flex-row items-center mt-2">
         <Link href={`/product/id/${product.sslug}`}>
           <div className="text-[14px] text-[#6467F2] font-normal">
             View Details
