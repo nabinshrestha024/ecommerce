@@ -2,7 +2,7 @@ import { FaRegBell } from "react-icons/fa";
 import { Input } from "@/ui/input";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Button } from "@/ui/button";
+import { IoMoonOutline, IoSunnyOutline } from "react-icons/io5";
 
 export const Navbar = () => {
   const { pathname } = useLocation();
@@ -47,7 +47,12 @@ export const Navbar = () => {
           <FaRegBell className="text-xl text-gray-600" />
           <div className="absolute w-2 h-2 bg-red-500 rounded-full top-[9px] right-[9px]"></div>
         </div>
-        <Button onClick={() => setDarkMode(!darkMode)}>Dark mode</Button>
+        <div
+          className=" h-10 w-10 flex items-center justify-center text-2xl bg-(--bg) text-(--text)"
+          onClick={() => setDarkMode((prev) => !prev)}
+        >
+          {darkMode ? <IoMoonOutline /> : <IoSunnyOutline />}
+        </div>
 
         <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
           <img
