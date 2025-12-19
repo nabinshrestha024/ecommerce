@@ -57,7 +57,7 @@ export const TopNav = () => {
         </div>
       </div>
 
-      <div className="lg:hidden">
+      <div className="md:hidden">
         <Sidebar />
       </div>
     </div>
