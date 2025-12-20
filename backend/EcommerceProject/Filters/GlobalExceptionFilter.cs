@@ -1,4 +1,5 @@
 ﻿
+using System.Net;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -22,6 +23,15 @@ namespace EcommerceProject.Filters
                 context.ExceptionHandled = true;
                 return;
             }
+            context.Result = new ObjectResult(new
+            {
+                message = "An unexpected error occurred."
+            })
+            {
+                StatusCode = (int)HttpStatusCode.InternalServerError
+            };
+
+            context.ExceptionHandled = true;
         }
     }
 }

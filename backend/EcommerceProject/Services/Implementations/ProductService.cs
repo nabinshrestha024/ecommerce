@@ -96,7 +96,10 @@ namespace EcommerceProject.Services.Implementations
             return true;
         }
 
-        public Task<bool> DeleteAsync(int id, CancellationToken ct) => _repo.DeleteAsync(id, ct);
+        public Task<bool> DeleteAsync(int id, CancellationToken ct)
+        {
+            return _repo.DeleteAsync(id, ct);
+        }
 
     }
 }

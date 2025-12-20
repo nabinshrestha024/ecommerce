@@ -32,7 +32,7 @@ namespace EcommerceProject.Services.Implementations
 
         public async Task<int> CreateAsync(CategoryUpsertDto dto, CancellationToken ct)
         {
-            await new CategoryValidator().ValidateAsync(dto, ct);
+            await new CategoryValidator().ValidateAndThrowAsync(dto, ct);
             
 
             return await _repo.CreateAsync(dto);
