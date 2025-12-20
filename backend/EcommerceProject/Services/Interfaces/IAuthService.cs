@@ -8,6 +8,8 @@ namespace EcommerceProject.Services.Interfaces
         Task<AuthResponseDto> LoginAsync(LoginDto loginDto);
         Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto changePasswordDto);
 
+        Task<AuthResponseDto> RefreshTokenAsync(string refreshToken);
+
         Task LogoutAsync(int userId);
     }
 }

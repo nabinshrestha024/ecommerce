@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace EcommerceProject.Controllers.v1.AuthController
 {
-    [Route("api/auth/")]
+    [Route("v1/auth/")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -42,12 +42,14 @@ namespace EcommerceProject.Controllers.v1.AuthController
             try
             {
                 var result = await _authService.LoginAsync(loginDto);
-                return Ok(new
-                {
-                    token = result.Token,
-                    expiration = result.Expiration,
-                    user = result.user
-                });
+                //return Ok(new
+                //{
+                //    token = result.Token,
+                //    refreshToken = result.RefreshToken,
+                //    expiration = result.Expiration,
+                //    user = result.user
+                //});
+                return Ok(result);
             }
             catch(UnauthorizedAccessException ex)
             {
@@ -58,6 +60,13 @@ namespace EcommerceProject.Controllers.v1.AuthController
                 return StatusCode(500, new { message = "An error Occured", error = ex.Message });
             }
 
+        }
+
+        [HttpPost("refresh_token")]
+        public async Task<IActionResult> Refresh([FromBody] string refreshToken)
+        {
+            var result = await _authService.RefreshTokenAsync(refreshToken);
+            return Ok(result);
         }
 
 
