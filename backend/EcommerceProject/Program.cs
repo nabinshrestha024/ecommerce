@@ -1,12 +1,12 @@
 using EcommerceProject.Database;
+using EcommerceProject.Repositories.Implementations;
+using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Implementations;
 using EcommerceProject.Services.Interfaces;
 using System.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
 using System.Text;
 
 using EcommerceProject.Repositories.Interfaces;
@@ -43,7 +43,7 @@ builder.Services.AddSwaggerGen(x =>
     };
 
     x.AddSecurityDefinition("Bearer", securityScheme);
- 
+
 
 
     x.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -72,7 +72,8 @@ builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
 builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<IVendorService, VendorService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddHttpContextAccessor(); // registers IHttpContextAccessor
 
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -117,13 +118,19 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+//if (app.Environment.IsDevelopment())
+//{
+app.UseStaticFiles();
+app.UseSwagger();
+//app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ECommerce v1");
+    c.RoutePrefix = "swagger"; // optional, default is "swagger"
+});
+//}
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 
 app.UseAuthentication();

@@ -43,16 +43,12 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
   };
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center items-center">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-        <h2 className="text-[24px] font-bold text-[#23272E] mb-6 text-center">
-          Edit Vendor
-        </h2>
+        <h2 className="text-[24px] font-bold mb-6 text-center">Edit Vendor</h2>
 
         <div className="grid grid-cols-4 gap-4 items-center">
-          <label className="col-span-1 font-medium text-gray-700">
-            Vendor ID
-          </label>
+          <label className="col-span-1 font-medium ">Vendor ID</label>
           <div className="col-span-3">
             <Input
               type="text"
@@ -67,7 +63,7 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium text-gray-700">Business Name</label>
+          <label className="font-medium ">Business Name</label>
           <div className="col-span-3">
             <Input
               type="text"
@@ -84,7 +80,7 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium text-gray-700">Email</label>
+          <label className="font-medium ">Email</label>
           <div className="col-span-3">
             <Input
               type="email"
@@ -99,7 +95,7 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium text-gray-700">Phone</label>
+          <label className="font-medium ">Phone</label>
           <div className="col-span-3">
             <Input
               type="text"
@@ -114,7 +110,7 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium text-gray-700">Address</label>
+          <label className="font-medium ">Address</label>
           <div className="col-span-3">
             <Input
               type="text"
@@ -131,13 +127,17 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium text-gray-700">Total Products</label>
+          <label className="font-medium ">Total Products</label>
           <div className="col-span-3">
             <Input
               type="number"
               placeholder="Enter total products"
               {...register("totalProducts")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded
+             focus-visible:border-[#DFE0E1] focus-visible:ring-0
+             appearance-none
+             [&::-webkit-inner-spin-button]:appearance-none
+             [&::-webkit-outer-spin-button]:appearance-none"
             />
             {errors.totalProducts && (
               <p className="text-[12px] text-red-500">
@@ -148,13 +148,17 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium text-gray-700">Completed Orders</label>
+          <label className="font-medium ">Completed Orders</label>
           <div className="col-span-3">
             <Input
               type="number"
               placeholder="Enter completed orders"
               {...register("completedOrders")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded
+             focus-visible:border-[#DFE0E1] focus-visible:ring-0
+             appearance-none
+             [&::-webkit-inner-spin-button]:appearance-none
+             [&::-webkit-outer-spin-button]:appearance-none"
             />
             {errors.completedOrders && (
               <p className="text-[12px] text-red-500">
@@ -165,13 +169,17 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium text-gray-700">Canceled Orders</label>
+          <label className="font-medium ">Canceled Orders</label>
           <div className="col-span-3">
             <Input
               type="number"
               placeholder="Enter canceled orders"
               {...register("canceledOrders")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded
+             focus-visible:border-[#DFE0E1] focus-visible:ring-0
+             appearance-none
+             [&::-webkit-inner-spin-button]:appearance-none
+             [&::-webkit-outer-spin-button]:appearance-none"
             />
             {errors.canceledOrders && (
               <p className="text-[12px] text-red-500">
@@ -180,13 +188,14 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
             )}
           </div>
         </div>
-
-        <button
-          type="submit"
-          className="bg-green-600 hover:bg-green-700 text-white px-10 py-2 rounded transition mt-5"
-        >
-          Save Vendor
-        </button>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="bg-green-600 hover:bg-green-700 text-white px-10 py-2 rounded transition mt-5"
+          >
+            Save Vendor
+          </button>
+        </div>
       </form>
     </div>
   );

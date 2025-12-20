@@ -24,12 +24,12 @@ BEGIN
             UnitCost DECIMAL(10,2) '$.UnitCost'
         );
         
-        INSERT INTO PurchaseOrders (VendorID, OrderDate, Status, TotalAmount, Notes, CreatedBy)
+        INSERT INTO PurchaseOrders (VendorId, OrderDate, Status, TotalAmount, Notes, CreatedBy)
         VALUES (@VendorId, GETDATE(), 'Pending', @TotalAmount, @Notes, @CreatedBy);
         
         SET @POId = SCOPE_IDENTITY();
         
-        INSERT INTO PurchaseOrderItems (POID, ProductID, Quantity, UnitCost)
+        INSERT INTO PurchaseOrderItems (POId, ProductId, Quantity, UnitCost)
         SELECT @POId, ProductId, Quantity, UnitCost
         FROM OPENJSON(@ItemsJson)
         WITH (

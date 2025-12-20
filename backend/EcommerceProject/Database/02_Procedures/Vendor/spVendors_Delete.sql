@@ -9,7 +9,7 @@ BEGIN
     
     UPDATE Vendors 
     SET IsActive = 0 
-    WHERE VendorID = @VendorId;
+    WHERE VendorId = @VendorId;
     
     SELECT @@ROWCOUNT AS RowsAffected;
 END

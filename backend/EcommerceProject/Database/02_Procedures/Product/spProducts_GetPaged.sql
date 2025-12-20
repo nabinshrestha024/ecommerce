@@ -2,7 +2,7 @@
     @Page           INT = 1,
     @PageSize       INT = 20,
     @Search         NVARCHAR(200) = NULL,
-    @CategoryID     INT = NULL,
+    @CategoryId     INT = NULL,
     @IsActive       BIT = NULL,
     @MinPrice       DECIMAL(10,2) = NULL,
     @MaxPrice       DECIMAL(10,2) = NULL,
@@ -20,7 +20,7 @@ BEGIN
         FROM dbo.Products p
         WHERE
             (@Search IS NULL OR p.Name LIKE '%' + @Search + '%' OR p.Slug LIKE '%' + @Search + '%' OR p.SKU LIKE '%' + @Search + '%')
-            AND (@CategoryID IS NULL OR p.CategoryID = @CategoryID)
+            AND (@CategoryId IS NULL OR p.CategoryId = @CategoryId)
             AND (@IsActive IS NULL OR p.IsActive = @IsActive)
             AND (@MinPrice IS NULL OR p.Price >= @MinPrice)
             AND (@MaxPrice IS NULL OR p.Price <= @MaxPrice)
@@ -44,6 +44,6 @@ BEGIN
         CASE WHEN @SortBy='createdAt' AND @SortDir='desc' THEN q.CreatedAt END DESC,
         q.ProductID DESC
     OFFSET (@Page - 1) * @PageSize ROWS
-    FETCH NEXT @PageSize ROWS ONLY;
+    FETCH NEXT @PageSize ROWS ONLY
 END
 GO

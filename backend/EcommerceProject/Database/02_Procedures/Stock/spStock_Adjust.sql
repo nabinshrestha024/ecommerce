@@ -18,15 +18,14 @@ BEGIN
         DECLARE @NewStock INT;
         DECLARE @ProductName VARCHAR(200);
         DECLARE @CategoryName VARCHAR(300);
-        
-        -- Get current stock, product name, and category
+
         SELECT 
             @CurrentStock = p.StockQuantity,
             @ProductName = p.Name,
             @CategoryName = c.Name
         FROM Products p
-        LEFT JOIN Categories c ON p.CategoryID = c.CategoryID
-        WHERE p.ProductID = @ProductId;
+        LEFT JOIN Categories c ON p.CategoryId = c.CategoryId
+        WHERE p.ProductId = @ProductId;
         
         IF @CurrentStock IS NULL
         BEGIN
@@ -34,8 +33,7 @@ BEGIN
             RETURN;
         END
         
-        -- Calculate new stock
-        SET @NewStock = @CurrentStock + @AdjustmentQuantity;
+        SET @NewStock = @AdjustmentQuantity;
         
         IF @NewStock < 0
         BEGIN
@@ -43,14 +41,12 @@ BEGIN
             RETURN;
         END
         
-        -- Update product stock
         UPDATE Products 
         SET 
             StockQuantity = @NewStock,
             UpdatedAt = GETDATE()
-        WHERE ProductID = @ProductId;
+        WHERE ProductId = @ProductId;
         
-        -- Return adjustment information (without saving to history table)
         SELECT 
             @ProductId AS ProductId,
             @ProductName AS ProductName,

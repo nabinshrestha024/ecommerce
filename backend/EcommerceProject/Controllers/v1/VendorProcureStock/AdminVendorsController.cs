@@ -10,7 +10,6 @@ namespace EcommerceProject.Controllers.v1.Admin
 {
     [ApiController]
     [Route("v1/admin/vendors")]
-    [Authorize(Roles = "Admin")]
     public class VendorsController : ControllerBase
     {
         private readonly IVendorService _vendorService;
@@ -22,7 +21,6 @@ namespace EcommerceProject.Controllers.v1.Admin
             _logger = logger;
         }
 
-        // GET v1/admin/vendors
         [HttpGet]
         public async Task<IActionResult> GetAllVendors([FromQuery] bool? isActive = null)
         {
@@ -38,7 +36,6 @@ namespace EcommerceProject.Controllers.v1.Admin
             }
         }
 
-        // POST v1/admin/vendors
         [HttpPost]
         public async Task<IActionResult> CreateVendor([FromBody] CreateVendorRequestDto request)
         {
@@ -60,7 +57,6 @@ namespace EcommerceProject.Controllers.v1.Admin
             }
         }
 
-        // Additional endpoints (not in original spec but useful)
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVendorById(int id)
         {
@@ -113,7 +109,7 @@ namespace EcommerceProject.Controllers.v1.Admin
                 if (!result)
                     return NotFound(new { Success = false, Message = "Vendor not found" });
 
-                return Ok(new { Success = true, Message = "Vendor deleted successfully" });
+                return Ok(new { Success = true, Message = "Vendor set inactive successfully" });
             }
             catch (System.Exception ex)
             {
@@ -121,7 +117,7 @@ namespace EcommerceProject.Controllers.v1.Admin
                 return StatusCode(500, new { Success = false, Message = "Internal server error" });
             }
         }
-
+        
         private int GetCurrentUserId()
         {
             var userIdClaim = User.FindFirst("UserId")?.Value;

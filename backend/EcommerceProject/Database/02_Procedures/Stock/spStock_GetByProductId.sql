@@ -8,7 +8,7 @@ BEGIN
     SET NOCOUNT ON;
     
     SELECT 
-        p.ProductID AS ProductId,
+        p.ProductId,
         p.Name AS ProductName,
         p.SKU,
         p.StockQuantity AS CurrentStock,
@@ -22,9 +22,9 @@ BEGIN
             ELSE 'In Stock'
         END AS Status
     FROM Products p
-    LEFT JOIN Categories c ON p.CategoryID = c.CategoryID
-    WHERE p.ProductID = @ProductId
-        AND p.IsActive = 1;
+    LEFT JOIN Categories c ON p.CategoryId = c.CategoryId
+    WHERE p.ProductId = @ProductId
+        AND p.IsActive = 1
 END
 GO
 

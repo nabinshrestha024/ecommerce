@@ -63,7 +63,7 @@ export const AddVendorForm = () => {
                   className="max-h-40 object-cover"
                 />
               ) : (
-                <span className="text-gray-500 text-sm">Upload Logo</span>
+                <span className=" text-sm">Upload Logo</span>
               )}
             </div>
           </label>
@@ -82,9 +82,7 @@ export const AddVendorForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Vendor Name
-          </label>
+          <label className="block text-sm font-medium ">Vendor Name</label>
           <input
             type="text"
             placeholder="Enter vendor name"
@@ -99,9 +97,7 @@ export const AddVendorForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Contact Email
-          </label>
+          <label className="block text-sm font-medium ">Contact Email</label>
           <input
             type="email"
             placeholder="Enter contact email"
@@ -122,9 +118,7 @@ export const AddVendorForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Phone Number
-          </label>
+          <label className="block text-sm font-medium ">Phone Number</label>
           <input
             type="tel"
             placeholder="Enter phone number"
@@ -141,9 +135,7 @@ export const AddVendorForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Address
-          </label>
+          <label className="block text-sm font-medium ">Address</label>
           <input
             type="text"
             placeholder="Enter address"
@@ -157,7 +149,7 @@ export const AddVendorForm = () => {
           )}
         </div>
 
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-center mt-4">
           <button
             type="submit"
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"

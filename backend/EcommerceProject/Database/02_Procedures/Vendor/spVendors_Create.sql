@@ -18,7 +18,7 @@ BEGIN
         VALUES (@Name, @ContactPerson, @Phone, @Email, @Address, 1, GETDATE());
         
         SELECT 
-            VendorID AS VendorId,
+            VendorId,
             Name,
             ContactPerson,
             Phone,
@@ -27,7 +27,7 @@ BEGIN
             IsActive,
             CreatedAt
         FROM Vendors
-        WHERE VendorID = SCOPE_IDENTITY();
+        WHERE VendorId = SCOPE_IDENTITY();
         
         COMMIT TRANSACTION;
     END TRY
