@@ -35,12 +35,12 @@ namespace EcommerceProject.Repositories.Implementations
             var total = await multi.ReadFirstAsync<int>();
 
             return new PagedResult<ProductListItemDto>
-            {
-                Items = items,
-                Page = page,
-                PageSize = pageSize,
-                TotalCount = total
-            };
+            (
+                items,
+                page,
+                pageSize,
+                total
+            );
         }
         public async Task InsertImageAsync(int productId, string imageUrl, bool isPrimary,int sortOrder,CancellationToken ct)
         {

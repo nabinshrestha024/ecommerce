@@ -1,4 +1,5 @@
 ﻿using EcommerceProject.Models.DTOs.Category;
+using EcommerceProject.Models.DTOs.Common;
 using EcommerceProject.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +17,9 @@ namespace EcommerceProject.Controllers.v1.Category
             _service = service;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] AdminCategoryFilterDto filter)
+        public async Task<IActionResult> GetAll([FromQuery] AdminCategoryFilterDto filter, [FromQuery] PaginationDto pagination)
         {
-            var result = await _service.AdminGetCategoriesAsync(filter);
+            var result = await _service.AdminGetCategoriesAsync(filter, pagination);
             return Ok(result);
         }
         [HttpPost("upload-image")]
@@ -66,8 +67,12 @@ namespace EcommerceProject.Controllers.v1.Category
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _service.DeleteAsync(id);
-            return Ok("Delete Successful");
+            var deleted = await _service.DeleteAsync(id);
+
+            if (!deleted)
+                return NotFound(new { message = "Category not found or already inactive." });
+
+            return Ok(new { message = "Category deactivated successfully." });
         }
     }
 

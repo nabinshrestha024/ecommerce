@@ -1,9 +1,7 @@
-﻿using EcommerceProject.Models.DTOs;
-using EcommerceProject.Models.DTOs.EcommerceProject.Models.DTOs;
+﻿using EcommerceProject.Models.DTOs.Common;
 using EcommerceProject.Models.DTOs.Product;
 using EcommerceProject.Services.Interfaces;
-using FluentValidation;
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceProject.Controllers.v1.Product
@@ -37,15 +35,17 @@ namespace EcommerceProject.Controllers.v1.Product
             if (product is null) return NotFound();
             return Ok(product);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] AdminProductFilterDto filter, [FromQuery] PaginationDto pagination, CancellationToken ct)
+        {
+            var result = await _service.AdminGetProductsAsync(filter, pagination, ct);
+            return Ok(result);
+        }
+
 
         [HttpPut("{id:int}")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Update(
-            int id,
-            [FromForm] ProductUpdateDto body,
-            [FromForm] IFormFileCollection? images,
-            [FromForm] int? primaryIndex,
-            CancellationToken ct)
+        public async Task<IActionResult> Update(int id, [FromForm] ProductUpdateDto body, [FromForm] IFormFileCollection? images, [FromForm] int? primaryIndex, CancellationToken ct)
         {
             var ok = await _service.UpdateAsync(id, body, images, primaryIndex, ct);
             if (!ok) return NotFound(new { message = "Product not found." });

@@ -1,4 +1,5 @@
 ﻿using EcommerceProject.Models.DTOs.Category;
+using EcommerceProject.Models.DTOs.Common;
 using EcommerceProject.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +18,9 @@ namespace EcommerceProject.Controllers.v1.Category
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] CategoryFilterDto filter)
+        public async Task<IActionResult> Get([FromQuery] CategoryFilterDto filter, [FromQuery] PaginationDto pagination)
         {
-            var result = await _service.GetCategoriesAsync(filter);
+            var result = await _service.GetCategoriesAsync(filter, pagination);
             return Ok(result);
         }
     }

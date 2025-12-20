@@ -1,4 +1,6 @@
 ﻿using EcommerceProject.Models.DTOs.Category;
+using EcommerceProject.Models.DTOs.Common;
+using EcommerceProject.Models.DTOs.EcommerceProject.Models.DTOs;
 using EcommerceProject.Models.Entities;
 using EcommerceProject.Models.Validators.Category;
 using EcommerceProject.Models.Validators.Product;
@@ -18,13 +20,13 @@ namespace EcommerceProject.Services.Implementations
             _repo = repo;
         }
 
-        public Task<IEnumerable<Category>> GetCategoriesAsync(CategoryFilterDto filter)
+        public Task<PagedResult<Category>> GetCategoriesAsync(CategoryFilterDto filter, PaginationDto  pagination)
         {
-            return _repo.GetAllAsync(filter);
+            return _repo.GetAllAsync(filter, pagination);
         }
-        public Task<IEnumerable<Category>> AdminGetCategoriesAsync(AdminCategoryFilterDto filter)
+        public Task<PagedResult<Category>> AdminGetCategoriesAsync(AdminCategoryFilterDto filter, PaginationDto pagination)
         {
-            return _repo.AdminGetAllAsync(filter);
+            return _repo.AdminGetAllAsync(filter, pagination);
         }
 
 
@@ -44,7 +46,7 @@ namespace EcommerceProject.Services.Implementations
         }
            
 
-        public Task DeleteAsync(int id)
+        public Task<bool> DeleteAsync(int id)
         {
             return _repo.DeleteAsync(id);
         }

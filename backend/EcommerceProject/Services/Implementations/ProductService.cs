@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using EcommerceProject.Models.DTOs;
+using EcommerceProject.Models.DTOs.Common;
 using EcommerceProject.Models.DTOs.EcommerceProject.Models.DTOs;
 using EcommerceProject.Models.DTOs.Product;
 using EcommerceProject.Models.Validators.Product;
@@ -31,7 +32,18 @@ namespace EcommerceProject.Services.Implementations
             return _repo.GetBySlugOrIdAsync(slugOrId, onlyActive: true, ct);
         }
 
-        
+        public Task<PagedResult<ProductListItemDto>> AdminGetProductsAsync(AdminProductFilterDto filter, PaginationDto pagination, CancellationToken ct)
+        {
+            return _repo.GetPagedAsync(
+                filter.CategoryId,
+                filter.Search,
+                pagination.Page,
+                pagination.PageSize,
+                filter.OnlyActive,
+                ct
+            );
+        }
+
 
         public async Task<int> CreateAsync(ProductCreateDto dto, IFormFileCollection? images, int? primaryIndex, CancellationToken ct)
         {

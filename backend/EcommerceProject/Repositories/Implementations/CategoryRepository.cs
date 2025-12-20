@@ -2,6 +2,8 @@
 using Dapper;
 using EcommerceProject.Database;
 using EcommerceProject.Models.DTOs.Category;
+using EcommerceProject.Models.DTOs.Common;
+using EcommerceProject.Models.DTOs.EcommerceProject.Models.DTOs;
 using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
 
@@ -16,32 +18,56 @@ namespace EcommerceProject.Repositories.Implementations
             _connectionFactory = connectionFactory;
         }
 
-        public async Task<IEnumerable<Category>> GetAllAsync(CategoryFilterDto filter)
+        public async Task<PagedResult<Category>> GetAllAsync(CategoryFilterDto filter, PaginationDto pagination)
         {
             using var conn = _connectionFactory.CreateConnection();
 
-            return await conn.QueryAsync<Category>(
-                "spCategories_GetAll",
-                new
-                {
-                    filter.Search,
-                    filter.OnlyActive
-                },
-                commandType: CommandType.StoredProcedure
+            using var multi = await conn.QueryMultipleAsync(
+        "spCategories_GetAll",
+        new
+        {
+            filter.Search,
+            filter.OnlyActive,
+            Page = pagination.Page,
+            PageSize = pagination.PageSize
+        },
+        commandType: CommandType.StoredProcedure
+    );
+
+            var total = await multi.ReadSingleAsync<int>();
+            var items = (await multi.ReadAsync<Category>()).ToList();
+
+            return new PagedResult<Category>(
+                items,
+                pagination.Page,
+                pagination.PageSize,
+                total
             );
         }
-        public async Task<IEnumerable<Category>> AdminGetAllAsync(AdminCategoryFilterDto filter)
+        public async Task<PagedResult<Category>> AdminGetAllAsync(AdminCategoryFilterDto filter, PaginationDto pagination)
         {
             using var conn = _connectionFactory.CreateConnection();
 
-            return await conn.QueryAsync<Category>(
-                "spCategories_Admin_GetAll",
-                new
-                {
-                    filter.Search,
-                    filter.IsActive
-                },
-                commandType: CommandType.StoredProcedure
+            using var multi = await conn.QueryMultipleAsync(
+        "spCategories_Admin_GetAll",
+        new
+        {
+            filter.Search,
+            filter.IsActive,
+            Page = pagination.Page,
+            PageSize = pagination.PageSize
+        },
+        commandType: CommandType.StoredProcedure
+    );
+
+            var total = await multi.ReadSingleAsync<int>();
+            var items = (await multi.ReadAsync<Category>()).ToList();
+
+            return new PagedResult<Category>(
+                items,
+                pagination.Page,
+                pagination.PageSize,
+                total
             );
         }
 
@@ -78,15 +104,16 @@ namespace EcommerceProject.Repositories.Implementations
             );
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             using var conn = _connectionFactory.CreateConnection();
 
-            await conn.ExecuteAsync(
+            var rows = await conn.ExecuteAsync(
                 "spCategories_Delete",
                 new { CategoryId = id },
                 commandType: CommandType.StoredProcedure
             );
+            return rows > 0;
         }
     }
 

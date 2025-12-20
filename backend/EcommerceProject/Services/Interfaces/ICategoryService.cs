@@ -1,15 +1,17 @@
 ﻿using EcommerceProject.Models.DTOs.Category;
+using EcommerceProject.Models.DTOs.Common;
+using EcommerceProject.Models.DTOs.EcommerceProject.Models.DTOs;
 using EcommerceProject.Models.Entities;
 
 namespace EcommerceProject.Services.Interfaces
 {
     public interface ICategoryService
     {
-        Task<IEnumerable<Category>> GetCategoriesAsync(CategoryFilterDto filter);
-        Task<IEnumerable<Category>> AdminGetCategoriesAsync(AdminCategoryFilterDto filter);
+        Task<PagedResult<Category>> GetCategoriesAsync(CategoryFilterDto filter, PaginationDto pagination);
+        Task<PagedResult<Category>> AdminGetCategoriesAsync(AdminCategoryFilterDto filter, PaginationDto pagination);
 
         Task<int> CreateAsync(CategoryUpsertDto dto, CancellationToken ct);
         Task UpdateAsync(int id, CategoryUpsertDto dto, CancellationToken ct);
-        Task DeleteAsync(int id);
+        Task<bool> DeleteAsync(int id);
     }
 }
