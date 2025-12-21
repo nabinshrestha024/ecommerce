@@ -9,10 +9,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
-using EcommerceProject.Repositories.Interfaces;
-using EcommerceProject.Repositories.Implementations;
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
@@ -72,6 +68,7 @@ builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
 builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<IVendorService, VendorService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddHttpContextAccessor(); // registers IHttpContextAccessor
 

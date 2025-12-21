@@ -5,7 +5,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-ALTER PROCEDURE [dbo].[spUser_RevokeRefreshToken]
+CREATE OR ALTER PROCEDURE [dbo].[spUser_RevokeRefreshToken]
     @UserId INT
 AS
 BEGIN

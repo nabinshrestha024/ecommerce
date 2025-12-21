@@ -1,10 +1,12 @@
 ﻿USE [EcommerceDB]
 GO
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-ALTER PROC [dbo].[spUser_GetByRefreshToken] 
+
+CREATE OR ALTER PROCEDURE [dbo].[spUser_GetByRefreshToken] 
 (
 	@refreshToken varchar(max)
 )

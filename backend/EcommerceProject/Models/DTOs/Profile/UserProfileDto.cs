@@ -1,6 +1,5 @@
-
-namespace EcommerceProject.Models.DTOs.Profile;
-
+namespace EcommerceProject.Models.DTOs.Profile
+{
     public class UserProfileDto
     {
         public int UserId { get; set; }
@@ -15,4 +14,6 @@ namespace EcommerceProject.Models.DTOs.Profile;
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-    }
+    }  
+}
+
