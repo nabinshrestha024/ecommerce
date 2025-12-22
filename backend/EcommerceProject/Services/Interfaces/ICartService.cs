@@ -4,9 +4,9 @@ namespace EcommerceProject.Services.Interfaces
 {
     public interface ICartService
     {
-        Task<IEnumerable<CartItemDto>> GetCartAsync(int userId);
-        Task AddCartItemAsync(int userId, int productId, int quantity);
-        Task UpdateCartItemAsync(int cartItemId, int quantity);
-        Task DeleteCartItemAsync(int cartItemId);
+        Task<ShoppingCartResponseDto> GetCartAsync(int userId);
+        Task AddToCartAsync(int userId, int productId, int quantity);
+        Task UpdateQuantityAsync(int cartItemId, int quantity);
+        Task RemoveItemAsync(int cartItemId);
     }
 }
