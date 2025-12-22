@@ -279,7 +279,7 @@ CREATE TABLE PurchaseOrderItems (
 );
 PRINT 'Table PurchaseOrderItems created.';
 GO
-
+x
 CREATE TABLE Reviews (
     ReviewId    BIGINT IDENTITY(1,1) PRIMARY KEY,
     ProductId   INT NOT NULL,
