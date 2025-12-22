@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using EcommerceProject.Database;
 using EcommerceProject.Models.DTOs.Cart;
+using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -8,26 +10,27 @@ namespace EcommerceProject.Repositories.Implementations
 {
     public class CartRepository : ICartRepository
     {
-        private readonly string _connectionString;
+        private readonly ISqlConnectionFactory _connectionFactory;
 
-        public CartRepository(IConfiguration configuration)
+        public CartRepository(ISqlConnectionFactory configurationFactory)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _connectionFactory = configurationFactory;
         }
 
-        public async Task<IEnumerable<CartItemDto>> GetCart(int userId)
+        public async Task<IEnumerable<ShoppingCartItem>> GetCartAsync(int userId)
         {
-            using var conn = new SqlConnection(_connectionString);
-            return await conn.QueryAsync<CartItemDto>("spCard_GetCartItems",
+            using var conn = _connectionFactory.CreateConnection();
+            
+            return await conn.QueryAsync<ShoppingCartItem>("spCart_GetCartByUser",
                 new {
                     UserId = userId },
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task AddCartItem(int userId, int productId, int quantity)
+        public async Task AddToCartAsync(int userId, int productId, int quantity)
         {
-            using var conn = new SqlConnection(_connectionString);
-            await conn.ExecuteAsync("spCart_AddCartItem",
+            using var conn = _connectionFactory.CreateConnection();
+            await conn.ExecuteAsync("spCart_AddToCart",
                 new { 
                     UserId = userId,
                     ProductId = productId,
@@ -35,20 +38,20 @@ namespace EcommerceProject.Repositories.Implementations
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task UpdateCartItem(int cartItemId, int quantity)
+        public async Task UpdateQuantityAsync(int cartItemId, int quantity)
         {
-            using var conn = new SqlConnection(_connectionString);
-            await conn.ExecuteAsync("spCart_UpdateCartItem",
+            using var conn = _connectionFactory.CreateConnection();
+            await conn.ExecuteAsync("spCart_UpdateQuantiy",
                 new { 
                     CartItemId = cartItemId,
                     Quantity = quantity },
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task DeleteCartItem(int cartItemId)
+        public async Task RemoveCartAsync(int cartItemId)
         {
-            using var conn = new SqlConnection(_connectionString);
-            await conn.ExecuteAsync("spCart_DeleteCartItem",
+            using var conn = _connectionFactory.CreateConnection();
+            await conn.ExecuteAsync("spCart_RemoveCartItem",
                 new { 
                     CartItemId = cartItemId },
                 commandType: CommandType.StoredProcedure);

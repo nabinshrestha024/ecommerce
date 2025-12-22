@@ -1,5 +1,6 @@
 ﻿using EcommerceProject.Database;
 using EcommerceProject.Models.DTOs.Cart;
+using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
 
@@ -15,7 +16,7 @@ namespace EcommerceProject.Services.Implementations
             _discountRepo = discountRepo;
         }
 
-        public async Task<decimal> ApplyDiscountsAsync(int userId, CartItemDto item)
+        public async Task<decimal> ApplyDiscountsAsync(int userId, ShoppingCartItem item)
         {
             decimal totalDiscount = 0;
             var discounts = await _discountRepo.GetActiveDiscountsAsync(item.ProductId);
@@ -37,7 +38,7 @@ namespace EcommerceProject.Services.Implementations
                     continue;
                 }
 
-                decimal discountAmount = discount.IsPercentage ? (item.ProductPrice * item.Quantity) * (discount.DiscountValue / 100) : discount.DiscountValue;
+                decimal discountAmount = discount.IsPercentage ? (item.Price * item.Quantity) * (discount.DiscountValue / 100) : discount.DiscountValue;
                 totalDiscount += discountAmount;
 
                 await _discountRepo.AddUsageAsync(discount.DiscountId, userId);

@@ -1,4 +1,5 @@
 ﻿using EcommerceProject.Models.DTOs.Cart;
+using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -28,9 +29,9 @@ namespace EcommerceProject.Controllers.v1.Cart
         }
 
         [HttpPost("/addcart")]
-        public async Task<IActionResult> AddCart([FromBody] CartItemDto item)
+        public async Task<IActionResult> AddCart([FromBody] ShoppingCartItem item)
         {
-            await _cartService.AddCartItemAsync(item.UserId, item.ProductId, item.Quantity);
+            await _cartService.AddToCartAsync(item.UserId, item.ProductId, item.Quantity);
             return Ok("Item added to cart");
         }
 
@@ -39,7 +40,7 @@ namespace EcommerceProject.Controllers.v1.Cart
         public async Task<IActionResult> UpdateCartAsync(int cartItemId, [FromBody] int quantity)
         {
 
-            await _cartService.UpdateCartItemAsync(cartItemId, quantity);
+            await _cartService.UpdateQuantityAsync(cartItemId, quantity);
             return Ok("Card updated");
 
         }
@@ -47,7 +48,7 @@ namespace EcommerceProject.Controllers.v1.Cart
         [HttpDelete("{cartitemId}")]
         public async Task<IActionResult> DeleteItem(int cartItemId)
         {
-            await _cartService.DeleteCartItemAsync(cartItemId);
+            await _cartService.RemoveItemAsync(cartItemId);
             return Ok("Item removed");
         }
 
