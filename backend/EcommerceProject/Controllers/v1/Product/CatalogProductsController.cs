@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceProject.Controllers.v1.Product
 {
-    [Route("api/v1/catalog/products")]
+    [Route("v1/catalog/products")]
     [ApiController]
     public class CatalogProductsController : ControllerBase
     {
@@ -19,16 +19,20 @@ namespace EcommerceProject.Controllers.v1.Product
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedResult<ProductListItemDto>>> List([FromQuery] ProductFilterDto filter, CancellationToken ct)
+        public async Task<IActionResult> GetProducts([FromQuery] int? categoryId, [FromQuery] string? search, [FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
         {
-            return Ok(await _service.CatalogListAsync(filter, ct));
+            pageSize = Math.Clamp(pageSize, 1, 100);
+
+            var result = await _service.GetPagedAsync(categoryId, search, page, pageSize, ct);
+            return Ok(result);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<ProductDetailDto>> Get(int id, CancellationToken ct)
+        [HttpGet("{slugOrId}")]
+        public async Task<IActionResult> GetProductDetails(string slugOrId, CancellationToken ct)
         {
-            var dto = await _service.GetDetailAsync(id, admin: false, ct);
-            return dto is null ? NotFound() : Ok(dto);
+            var product = await _service.GetDetailsAsync(slugOrId, ct);
+            if (product is null) return NotFound(new { message = "Product not found." });
+            return Ok(product);
         }
     }
 }

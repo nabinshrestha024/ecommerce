@@ -2,7 +2,7 @@
 {
     public class CategoryUpsertDto
     {
-        public string Name { get; set; } = default!;
+        public string? Name { get; set; }
         public string? Slug { get; set; }
         public string? CategoryImageURL { get; set; }
         public string? Description { get; set; }
