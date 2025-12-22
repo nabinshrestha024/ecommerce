@@ -1,15 +1,15 @@
 USE [EcommerceDB];
 GO
 
-CREATE TABLE ShoppingCarts (
-    CartID      INT PRIMARY KEY IDENTITY(1,1),
-    UserID      INT NOT NULL,
-    ProductID   INT NOT NULL,
+CREATE TABLE CartItems (
+    CartId      INT PRIMARY KEY IDENTITY(1,1),
+    UserId      INT NOT NULL,
+    ProductId   INT NOT NULL,
     Quantity    INT NOT NULL DEFAULT 1,
     AddedDate   DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE,
-    FOREIGN KEY (ProductID) REFERENCES Products(ProductID) ON DELETE CASCADE,
-    UNIQUE (UserID, ProductID)
+    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE,
+    UNIQUE (UserId, ProductId)
 );
 
 PRINT 'Table ShoppingCarts created successfully.';

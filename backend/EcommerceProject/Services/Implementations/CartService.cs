@@ -13,33 +13,43 @@ namespace EcommerceProject.Services.Implementations
             _cartRepository = cartRepository;
         }
 
-        public async Task<IEnumerable<CartItemDto>> GetCartAsync(int userId)
+        public async Task<ShoppingCartResponseDto> GetCartAsync(int userId)
         {
-            var item = await _cartRepository.GetCart(userId);
-            return item;
+            var item = await _cartRepository.GetCartAsync(userId);
+            decimal subTotal = item.Sum(i => i.Price * i.Quantity);
+
+            decimal discount = subTotal >= 10000 ? subTotal * 0.10m : 0m;
+
+            return new ShoppingCartResponseDto
+            {
+                Items = item,
+                SubTotal = subTotal,
+                Discount = discount,
+                GrandTotal = subTotal - discount
+            };
         }
 
-        public async Task AddCartItemAsync(int userId, int productId, int quantity)
+        public async Task AddToCartAsync(int userId, int productId, int quantity)
         {
             if(quantity <= 0)
             {
                 throw new ArgumentException("Quantity must be greater than zero.");
             }
-            await _cartRepository.AddCartItem(userId, productId, quantity);
+            await _cartRepository.AddToCartAsync(userId, productId, quantity);
         }
 
-        public async Task UpdateCartItemAsync(int cartItemId, int quantity)
+        public async Task UpdateQuantityAsync(int cartItemId, int quantity)
         {
             if (quantity <= 0)
             {
                 throw new ArgumentException("Quantity must be greater than zero.");
             }
-            await _cartRepository.UpdateCartItem(cartItemId, quantity);
+            await _cartRepository.UpdateQuantityAsync(cartItemId, quantity);
         }
 
-        public async Task DeleteCartItemAsync(int cartItemId)
+        public async Task RemoveItemAsync(int cartItemId)
         {
-            await _cartRepository.DeleteCartItem(cartItemId);
+            await _cartRepository.RemoveCartAsync(cartItemId);
         }
     }
 }
