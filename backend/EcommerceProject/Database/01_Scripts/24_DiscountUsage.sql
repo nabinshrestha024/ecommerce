@@ -1,7 +1,7 @@
 ﻿CREATE TABLE DiscountUsages (
-    UsageID INT PRIMARY KEY IDENTITY,
-    DiscountID INT,
-    UserID INT,
+    UsageId INT PRIMARY KEY IDENTITY,
+    DiscountId INT,
+    UserId INT,
     UsedDate DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (DiscountID) REFERENCES Discounts(DiscountID)
+    FOREIGN KEY (DiscountId) REFERENCES Discounts(DiscountId)
 );
