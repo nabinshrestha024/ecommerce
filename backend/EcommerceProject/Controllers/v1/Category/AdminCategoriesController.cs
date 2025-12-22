@@ -1,4 +1,5 @@
 ﻿using EcommerceProject.Models.DTOs.Category;
+using EcommerceProject.Models.DTOs.Common;
 using EcommerceProject.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EcommerceProject.Controllers.v1.Category
 {
     [ApiController]
-    [Route("api/v1/admin/categories")]
+    [Route("v1/admin/categories")]
     public class AdminCategoriesController : ControllerBase
     {
         private readonly ICategoryService _service;
@@ -16,9 +17,9 @@ namespace EcommerceProject.Controllers.v1.Category
             _service = service;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] AdminCategoryFilterDto filter)
+        public async Task<IActionResult> GetAll([FromQuery] AdminCategoryFilterDto filter, [FromQuery] PaginationDto pagination)
         {
-            var result = await _service.AdminGetCategoriesAsync(filter);
+            var result = await _service.AdminGetCategoriesAsync(filter, pagination);
             return Ok(result);
         }
         [HttpPost("upload-image")]
@@ -49,24 +50,29 @@ namespace EcommerceProject.Controllers.v1.Category
 
 
         [HttpPost]
-        public async Task<IActionResult> Create(CategoryUpsertDto dto)
+        public async Task<IActionResult> Create(CategoryUpsertDto dto, CancellationToken ct)
         {
-            var id = await _service.CreateAsync(dto);
+            var id = await _service.CreateAsync(dto, ct);
+            
             return CreatedAtAction(nameof(Create), new { id }, null);
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, CategoryUpsertDto dto)
+        public async Task<IActionResult> Update(int id, CategoryUpsertDto dto, CancellationToken ct)
         {
-            await _service.UpdateAsync(id, dto);
+            await _service.UpdateAsync(id, dto, ct);
             return Ok("Update Successful");
         }
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _service.DeleteAsync(id);
-            return Ok("Delete Successful");
+            var deleted = await _service.DeleteAsync(id);
+
+            if (!deleted)
+                return NotFound(new { message = "Category not found or already inactive." });
+
+            return Ok(new { message = "Category deactivated successfully." });
         }
     }
 

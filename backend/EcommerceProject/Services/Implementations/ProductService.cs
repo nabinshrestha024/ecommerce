@@ -1,91 +1,105 @@
-﻿using EcommerceProject.Models.DTOs;
+﻿using System.Data;
+using EcommerceProject.Models.DTOs;
+using EcommerceProject.Models.DTOs.Common;
 using EcommerceProject.Models.DTOs.EcommerceProject.Models.DTOs;
 using EcommerceProject.Models.DTOs.Product;
+using EcommerceProject.Models.Validators.Product;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
+using FluentValidation;
 
 namespace EcommerceProject.Services.Implementations
 {
     public class ProductService : IProductService
     {
         private readonly IProductRepository _repo;
+        private readonly IFileStorageService _files;
 
-        public ProductService(IProductRepository repo)
+        public ProductService(IProductRepository repo, IFileStorageService files)
         {
             _repo = repo;
+            _files = files;
         }
 
-        public async Task<PagedResult<ProductListItemDto>> CatalogListAsync(
-            ProductFilterDto filter,
-            CancellationToken ct)
+        public Task<PagedResult<ProductListItemDto>> GetPagedAsync(int? categoryId, string? search, int page, int pageSize, CancellationToken ct)
         {
-            filter.IsActive = true;
+            return _repo.GetPagedAsync(categoryId, search, page, pageSize, onlyActive: true, ct);
+        }
+       
 
-            var paged = await _repo.GetPagedAsync(filter, ct);
+        public Task<ProductDetailsDto?> GetDetailsAsync(string slugOrId, CancellationToken ct)
+        {
+            return _repo.GetBySlugOrIdAsync(slugOrId, onlyActive: true, ct);
+        }
 
-            var items = paged.Items.Select(p => new ProductListItemDto
+        public Task<PagedResult<ProductListItemDto>> AdminGetProductsAsync(AdminProductFilterDto filter, PaginationDto pagination, CancellationToken ct)
+        {
+            return _repo.GetPagedAsync(
+                filter.CategoryId,
+                filter.Search,
+                pagination.Page,
+                pagination.PageSize,
+                filter.OnlyActive,
+                ct
+            );
+        }
+
+
+        public async Task<int> CreateAsync(ProductCreateDto dto, IFormFileCollection? images, int? primaryIndex, CancellationToken ct)
+        {
+            await new ProductCreateValidator().ValidateAndThrowAsync(dto, ct);
+            var productId = await _repo.CreateAsync(dto, ct);
+
+            if (images is not { Count: > 0 })
+                return productId;
+
+            var urls = await _files.SaveProductImagesAsync(images, ct);
+
+            for (int i = 0; i < urls.Count; i++)
             {
-                ProductID = p.ProductID,
-                Name = p.Name,
-                Slug = p.Slug,
-                Price = p.Price,
-                CategoryID = p.CategoryID,
-                StockQuantity = p.StockQuantity,
-                SKU = p.SKU,
-                Brand = p.Brand,
-                ProductImageURL = p.ProductImageURL
-            }).ToList();
+                bool isPrimary = primaryIndex.HasValue
+                    ? i == primaryIndex.Value
+                    : i == 0; 
 
-            return new PagedResult<ProductListItemDto>(
-                items,
-                paged.Page,
-                paged.PageSize,
-                paged.TotalCount
-            ); 
-            
+                await _repo.InsertImageAsync(
+                    productId,
+                    urls[i],
+                    isPrimary,
+                    i, 
+                    ct
+                );
+            }
 
+            return productId;
         }
-        public async Task<ProductDetailDto?> GetDetailAsync(
-            int productId,
-            bool admin,
-            CancellationToken ct)
+
+
+        public async Task<bool> UpdateAsync(int id, ProductUpdateDto dto, IFormFileCollection? images, int? primaryIndex, CancellationToken ct)
         {
-            var p = await _repo.GetByIdAsync(productId, ct);
-            if (p is null) return null;
+            await new ProductUpdateValidator().ValidateAndThrowAsync(dto, ct);
+            var ok = await _repo.UpdateAsync(id, dto, ct);
+            if (!ok) return false;
 
-            if (!admin && !p.IsActive) return null;
-
-            return new ProductDetailDto
+            if (images is { Count: > 0 })
             {
-                ProductID = p.ProductID,
-                Name = p.Name,
-                Slug = p.Slug,
-                Description = p.Description,
-                ShortDescription = p.ShortDescription,
-                Price = p.Price,
-                CategoryID = p.CategoryID,
-                StockQuantity = p.StockQuantity,
-                SKU = p.SKU,
-                Brand = p.Brand,
-                ProductImageURL = p.ProductImageURL,
-                IsActive = p.IsActive,
-                CreatedAt = p.CreatedAt,
-                UpdatedAt = p.UpdatedAt
-            };
+                var urls = await _files.SaveProductImagesAsync(images, ct);
 
+                var bulk = urls.Select((url, i) => (
+                    url,
+                    isPrimary: primaryIndex.HasValue ? i == primaryIndex.Value : i == 0,
+                    sortOrder: i
+                )).ToList();
+
+                await _repo.InsertImagesBulkAsync(id, bulk, ct);
+            }
+
+            return true;
         }
 
-        public Task<int> CreateAsync(CreateProductRequest req, CancellationToken ct)
-            => _repo.CreateAsync(req, ct);
-
-        public Task<bool> UpdateAsync(int productId, UpdateProductRequest req, CancellationToken ct)
+        public Task<bool> DeleteAsync(int id, CancellationToken ct)
         {
-            return _repo.UpdateAsync(productId, req, ct);
+            return _repo.DeleteAsync(id, ct);
         }
-        public Task<bool> DeleteAsync(int productId, CancellationToken ct)
-        {
-            return _repo.DeleteAsync(productId, ct);
-        }
-            
+
     }
 }
