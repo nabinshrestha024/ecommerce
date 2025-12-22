@@ -1,7 +1,13 @@
 ﻿using EcommerceProject.Models.DTOs.Category;
+using EcommerceProject.Models.DTOs.Common;
+using EcommerceProject.Models.DTOs.EcommerceProject.Models.DTOs;
 using EcommerceProject.Models.Entities;
+using EcommerceProject.Models.Validators.Category;
+using EcommerceProject.Models.Validators.Product;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
+using FluentValidation;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace EcommerceProject.Services.Implementations
 {
@@ -14,29 +20,33 @@ namespace EcommerceProject.Services.Implementations
             _repo = repo;
         }
 
-        public Task<IEnumerable<Category>> GetCategoriesAsync(CategoryFilterDto filter)
+        public Task<PagedResult<Category>> GetCategoriesAsync(CategoryFilterDto filter, PaginationDto  pagination)
         {
-            return _repo.GetAllAsync(filter);
+            return _repo.GetAllAsync(filter, pagination);
         }
-        public Task<IEnumerable<Category>> AdminGetCategoriesAsync(AdminCategoryFilterDto filter)
+        public Task<PagedResult<Category>> AdminGetCategoriesAsync(AdminCategoryFilterDto filter, PaginationDto pagination)
         {
-            return _repo.AdminGetAllAsync(filter);
+            return _repo.AdminGetAllAsync(filter, pagination);
         }
 
 
-        public Task<int> CreateAsync(CategoryUpsertDto dto)
+        public async Task<int> CreateAsync(CategoryUpsertDto dto, CancellationToken ct)
         {
-            return _repo.CreateAsync(dto);
-        }
-           
+            await new CategoryValidator().ValidateAndThrowAsync(dto, ct);
+            
 
-        public Task UpdateAsync(int id, CategoryUpsertDto dto)
-        {
-            return _repo.UpdateAsync(id, dto);
+            return await _repo.CreateAsync(dto);
         }
            
 
-        public Task DeleteAsync(int id)
+        public async Task UpdateAsync(int id, CategoryUpsertDto dto, CancellationToken ct)
+        {
+            await new CategoryValidator().ValidateAndThrowAsync(dto, ct);
+            await _repo.UpdateAsync(id, dto);
+        }
+           
+
+        public Task<bool> DeleteAsync(int id)
         {
             return _repo.DeleteAsync(id);
         }
