@@ -1,10 +1,6 @@
-﻿USE EcommerceDB;
+USE EcommerceDB;
+GO
 
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE OR ALTER PROCEDURE spDiscount_GetActiveDiscountsByProduct
     @ProductId INT
 AS

@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Database\02_Procedures\Discount\spDiscount_GetActiveDiscountByProduct.sql" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="FluentValidation" Version="12.1.1" />
@@ -24,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Database\02_Procedures\NewFolder\" />
     <Folder Include="wwwroot\images\categories\" />
   </ItemGroup>
 

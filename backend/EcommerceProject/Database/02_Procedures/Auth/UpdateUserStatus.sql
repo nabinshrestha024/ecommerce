@@ -7,7 +7,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 -- Stored Procedure: UpdateUserStatus (Block/Unblock)
-ALTER PROCEDURE [dbo].[UpdateUserStatus]
+CREATE OR ALTER PROCEDURE [dbo].[UpdateUserStatus]
     @UserId INT,
     @IsActive BIT
 AS
