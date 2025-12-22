@@ -1,7 +1,7 @@
 USE [EcommerceDB];
 GO
 
-CREATE OR ALTER PROCEDURE spProfile_GetOrderDetails
+CREATE OR ALTER PROCEDURE spOrders_GetDetailsByUserIdAndOrderId
     @OrderId INT,
     @UserId INT
 AS

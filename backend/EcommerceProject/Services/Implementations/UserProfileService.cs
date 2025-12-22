@@ -1,68 +1,3 @@
-// using EcommerceProject.Models.DTOs.Profile;
-// using EcommerceProject.Repositories.Interfaces;
-// using EcommerceProject.Services.Interfaces;
-
-// namespace EcommerceProject.Services.Implementations
-// {
-//     public class UserProfileService : IUserProfileService
-//     {
-//         private readonly IUserProfileRepository _userProfileRepository;
-
-//         public UserProfileService(IUserProfileRepository userProfileRepository)
-//         {
-//             _userProfileRepository = userProfileRepository;
-//         }
-
-//         public async Task<ProfileResponseDto?> GetProfileByUserIdAsync(int userId)
-//         {
-//             if(userId <= 0)
-//             {
-//                 throw new UnauthorizedAccessException("Invalid user ID.");
-//             }
-
-//             var profile = await _userProfileRepository.GetProfileByUserIdAsync(userId);
-
-//             if(profile == null)
-//             {
-//                 throw new KeyNotFoundException("User profile not found.");
-//             }   
-
-//             return profile;
-//         }
-
-//         public async Task PutUpdateProfileAsync(int userId, UpdateProfileRequestDto dto)
-//         {
-//             await _userProfileRepository.PutUpdateProfileAsync(userId, dto);
-//         }
-
-//         public async Task UpdateProfileAsync(int userId, PatchProfileRequestDto dto)
-//         {
-//             if (userId <= 0)
-//                 throw new UnauthorizedAccessException("Invalid user context.");
-//             await _userProfileRepository.UpdateProfileAsync(userId, dto);
-//         }
-
-
-//         public async Task ChangePasswordAsync(int userId, ChangePasswordRequestDto dto)
-//         {
-//             // get existing hash (you likely already have a repo method for this)
-//             var profile = await _userProfileRepository.GetProfileByUserIdAsync(userId);
-
-//             if (profile == null)
-//                 throw new KeyNotFoundException("User not found");
-
-//             if (!BCrypt.Net.BCrypt.Verify(dto.CurrentPassword, profile.PasswordHash))
-//                 throw new UnauthorizedAccessException("Current password is incorrect");
-
-//             var newHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
-//             await _userProfileRepository.ChangePasswordAsync(userId, newHash);
-//         }
-
-
-//     }    
-// }
-
-
 using EcommerceProject.Models.DTOs.Profile;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
@@ -77,8 +12,6 @@ namespace EcommerceProject.Services.Implementations
         {
             _userProfileRepository = userProfileRepository;
         }
-
-        // -------------------- PROFILE --------------------
 
         public async Task<ProfileResponseDto?> GetProfileByUserIdAsync(int userId)
         {
@@ -115,8 +48,6 @@ namespace EcommerceProject.Services.Implementations
             await _userProfileRepository.UpdateProfileAsync(userId, dto);
         }
 
-        // -------------------- PASSWORD --------------------
-
         public async Task ChangePasswordAsync(int userId, ChangePasswordRequestDto dto)
         {
             if (userId <= 0)
@@ -136,8 +67,6 @@ namespace EcommerceProject.Services.Implementations
             var newHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
             await _userProfileRepository.ChangePasswordAsync(userId, newHash);
         }
-
-        // -------------------- SOCIAL LINKS --------------------
 
         public async Task<IEnumerable<UserSocialLinkDto>> GetSocialLinksAsync(int userId)
         {
@@ -177,8 +106,6 @@ namespace EcommerceProject.Services.Implementations
             await _userProfileRepository.DeleteSocialLinkAsync(socialLinkId);
         }
 
-        // -------------------- ORDERS (CUSTOMER SIDE) --------------------
-
         public async Task<IEnumerable<UserOrdersDto>> GetUserOrdersAsync(int userId)
         {
             if (userId <= 0)
@@ -189,18 +116,8 @@ namespace EcommerceProject.Services.Implementations
 
         public async Task<UserOrderDetailsDto?> GetOrderDetailsAsync(int userId, int orderId)
         {
-            if (userId <= 0)
-                throw new UnauthorizedAccessException("Invalid user context.");
-
-            if (orderId <= 0)
-                throw new ArgumentException("Invalid order ID.");
-
-            var order = await _userProfileRepository.GetOrderDetailsAsync(userId, orderId);
-
-            if (order == null)
-                throw new KeyNotFoundException("Order not found.");
-
-            return order;
+            if (userId <= 0 || orderId <= 0) return null;
+            return await _userProfileRepository.GetOrderDetailsAsync(userId, orderId);
         }
     }
 }
