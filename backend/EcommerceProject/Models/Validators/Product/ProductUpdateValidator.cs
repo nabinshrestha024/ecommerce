@@ -3,17 +3,17 @@ using FluentValidation;
 
 namespace EcommerceProject.Models.Validators.Product
 {
-    public sealed class CreateProductRequestValidator : AbstractValidator<CreateProductRequest>
+    public sealed class ProductUpdateValidator : AbstractValidator<ProductUpdateDto>
     {
-        public CreateProductRequestValidator()
+        public ProductUpdateValidator()
         {
+            RuleFor(x => x.CategoryId).GreaterThan(0);
             RuleFor(x => x.Name).NotEmpty().MaximumLength(200);
             RuleFor(x => x.Slug).NotEmpty().MaximumLength(200);
-            RuleFor(x => x.Price).GreaterThan(0);
-            RuleFor(x => x.CategoryID).GreaterThan(0);
             RuleFor(x => x.SKU).NotEmpty().MaximumLength(50);
             RuleFor(x => x.ShortDescription).MaximumLength(500);
-            RuleFor(x => x.ProductImageURL).MaximumLength(500);
+            RuleFor(x => x.Price).GreaterThan(0);
+            RuleFor(x => x.StockQuantity).GreaterThanOrEqualTo(0);
         }
     }
 }
