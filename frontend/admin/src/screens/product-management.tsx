@@ -16,9 +16,31 @@ export const ProductManagement = () => {
     shouldUnregister: true,
     mode: "all",
   });
-  const handleFormSubmit = (data: any) => {
-    console.log(data);
+  const handleFormSubmit = async (data: any) => {
+    const formData = new FormData();
+
+    formData.append("Name", data.productName);
+    formData.append("Description", data.description || "");
+    formData.append("ShortDescription", data.shortDescription || "");
+    formData.append("Price", String(data.productPrice));
+    if (data.productCategories) {
+      formData.append("CategoryId", String(data.productCategories));
+    }
+    if (data.stockQuantity != null) {
+      formData.append("StockQuantity", String(data.stockQuantity));
+    }
+
+    const files: FileList | undefined = data.images;
+    if (files && files.length > 0) {
+      Array.from(files).forEach((file) => formData.append("images", file));
+    }
+    if (typeof data.primaryIndex === "number") {
+      formData.append("primaryIndex", String(data.primaryIndex));
+    }
+    console.log("FormData ready with images and fields.");
+    console.log(files);
   };
+
   return (
     <div className="px-2 sm:px-3 md:px-5 pt-3 md:pt-5 pb-6 md:pb-8 w-full max-w-full">
       <div className="pt-5 pb-2 sm:pb-4">

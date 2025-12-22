@@ -1,28 +1,52 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "../Card/Card";
-import { Input } from "../Input/Input";
 import { useFormContext } from "react-hook-form";
-export const UploadProductDetails = () => {
-  const [preview, setPreview] = useState<string>("");
+import { X } from "lucide-react";
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    const imgUrl = URL.createObjectURL(file);
-    setPreview(imgUrl);
-  };
-  useEffect(() => {
-    return () => {
-      if (preview) URL.revokeObjectURL(preview);
-    };
-  }, [preview]);
+type ImageItem = {
+  file: File;
+  preview: string;
+};
+
+export const UploadProductDetails = () => {
   const {
     register,
-    watch,
+    setValue,
     formState: { errors },
   } = useFormContext();
-  const selectedCategory = watch("productCategories");
 
+  const [images, setImages] = useState<ImageItem[]>([]);
+  const [primaryImage, setPrimaryImage] = useState<number>(0);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    const imageItems = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setImages((prev) => [...prev, ...imageItems]);
+    setValue("primaryIndex", primaryImage, { shouldValidate: false });
+  };
+  const handleDeleteImage = (index: number) => {
+    URL.revokeObjectURL(images[index].preview);
+    setImages((prev) => prev.filter((_, i) => i !== index));
+    if (index === primaryImage) {
+      setPrimaryImage(0);
+    } else if (index < primaryImage) {
+      setPrimaryImage((prev) => prev - 1);
+    }
+  };
+
+  const handleSetPrimaryImage = (index: number) => {
+    setPrimaryImage(index);
+    setValue("primaryIndex", index, { shouldValidate: false });
+  };
+
+  useEffect(() => {
+    return () => {
+      images.forEach((image) => URL.revokeObjectURL(image.preview));
+    };
+  }, [images]);
   return (
     <Card
       className="shadow-[0px_1px_3px_0px_#00000033] w-full h-auto py-4 sm:py-6 px-4 sm:px-6 rounded-xl"
@@ -36,15 +60,7 @@ export const UploadProductDetails = () => {
           <div>
             <label htmlFor="productImage" className="block cursor-pointer">
               <div className="relative border border-gray-300 rounded-md p-2 flex text-left items-center justify-center">
-                {preview ? (
-                  <img
-                    src={preview}
-                    alt="Product preview"
-                    className="max-h-40 object-cover"
-                  />
-                ) : (
-                  <span className=" text-sm text-left">Upload Image</span>
-                )}
+                <span className=" text-sm text-left">Upload Image</span>
               </div>
             </label>
 
@@ -52,14 +68,37 @@ export const UploadProductDetails = () => {
               id="productImage"
               type="file"
               accept="image/*"
-              {...register("productImage", { onChange: handleFileChange })}
+              multiple
+              {...register("images", { onChange: handleFileChange })}
               className="hidden"
             />
-            {errors.productImage && (
+            {errors.images && (
               <p className="text-sm text-red-500 mt-1">
-                {errors.productImage?.message as string}
+                {errors.images?.message as string}
               </p>
             )}
+            <div className="grid grid-cols-3 gap-3 mt-4">
+              {images.map((img, index) => (
+                <div key={index} className="relative">
+                  <img
+                    src={img.preview}
+                    onClick={() => handleSetPrimaryImage(index)}
+                    className={`h-32 w-full object-cover rounded-md cursor-pointer ${index == primaryImage ? "ring-2 ring-blue-500" : ""}`}
+                  />
+                  {index === primaryImage && (
+                    <span className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+                      Primary
+                    </span>
+                  )}
+                  <button
+                    onClick={() => handleDeleteImage(index)}
+                    className="absolute top-1 right-0"
+                  >
+                    <X />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         <div className="flex flex-col gap-3 ">
@@ -80,66 +119,16 @@ export const UploadProductDetails = () => {
                   <option value="" disabled>
                     Select product categories...
                   </option>
-                  <option value="electronics">Electronics</option>
-                  <option value="groceries">Groceries</option>
-                  <option value="shoes">Shoes</option>
-                  <option value="clothes">Clothing</option>
+                  <option value="1">Electronics</option>
+                  <option value="2">Groceries</option>
+                  <option value="3">Shoes</option>
+                  <option value="4">Clothing</option>
                 </select>
               </div>
 
               {errors.productCategories && (
                 <p className="text-sm text-red-500 mt-1">
                   {errors.productCategories?.message as string}
-                </p>
-              )}
-            </div>
-            {selectedCategory === "groceries" && (
-              <div className="flex flex-col gap-3">
-                <label className="block text-sm font-bold ">Expiration</label>
-                <div className="grid grid-cols-2 w-full gap-5">
-                  <div className="flex flex-col gap-3 w-full">
-                    <label className="block text-sm font-medium ">Start</label>
-                    <Input
-                      type="date"
-                      placeholder="Start"
-                      className="w-full"
-                      {...register("expirationStart")}
-                    />
-                    {errors.expirationStart && (
-                      <p className="text-sm text-red-500 mt-1">
-                        {errors.expirationStart?.message as string}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="flex flex-col gap-3 w-full">
-                    <label className="block text-sm font-medium">End</label>
-                    <Input
-                      type="date"
-                      placeholder="End"
-                      className="w-full"
-                      {...register("expirationEnd")}
-                    />
-                    {errors.expirationEnd && (
-                      <p className="text-sm text-red-500 mt-1">
-                        {errors.expirationEnd?.message as string}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-            <div className="flex flex-col gap-3">
-              <label className="block text-sm font-medium ">Product Tags</label>
-              <Input
-                type="text"
-                placeholder="Enter product tags..."
-                className="w-full bg-[#F9FAFB] h-9 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                {...register("productTags")}
-              />
-              {errors.productTags && (
-                <p className="text-sm text-red-500 mt-1">
-                  {errors.productTags?.message as string}
                 </p>
               )}
             </div>
