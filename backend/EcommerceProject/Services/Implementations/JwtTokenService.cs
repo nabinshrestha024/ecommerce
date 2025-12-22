@@ -36,7 +36,6 @@ namespace EcommerceProject.Services.Implementations
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                //NotBefore = DateTime.UtcNow,
                 Expires = DateTime.UtcNow.AddHours(
                     double.Parse(_configuration["Jwt:AccessTokenExpiryInMinutes"])),
                 SigningCredentials = new SigningCredentials(

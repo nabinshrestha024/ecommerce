@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceProject.Controllers.v1.AuthController
 {
-    [Route("api/")]
+    [Route("V1/")]
     [ApiController]
     [Authorize]
     public class UserController : ControllerBase
