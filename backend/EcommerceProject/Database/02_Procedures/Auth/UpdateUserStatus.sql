@@ -1,12 +1,6 @@
 ﻿USE [EcommerceDB]
 GO
 
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
--- Stored Procedure: UpdateUserStatus (Block/Unblock)
 CREATE OR ALTER PROCEDURE UpdateUserStatus
     @UserId INT,
     @IsActive BIT

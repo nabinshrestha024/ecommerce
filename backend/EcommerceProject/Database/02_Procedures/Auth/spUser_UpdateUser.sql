@@ -1,11 +1,6 @@
 ﻿USE [EcommerceDB]
 GO
 
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
 CREATE OR ALTER PROCEDURE spUser_UpdateUser
     @UserId INT,
     @FullName NVARCHAR(255) = NULL,
