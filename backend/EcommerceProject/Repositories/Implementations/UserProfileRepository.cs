@@ -56,7 +56,7 @@ namespace EcommerceProject.Repositories.Implementations
         public async Task UpdateProfileAsync(int userId, PatchProfileRequestDto dto)
         {
             await _dbConnection.ExecuteAsync(
-                "spProfile_Update",
+                "spProfile_PatchUpdate",
             new
             {
                 UserId = userId,
@@ -119,5 +119,7 @@ namespace EcommerceProject.Repositories.Implementations
                 new { UserId = userId, OrderId = orderId },
                 commandType: CommandType.StoredProcedure);
         }
+
+
 }
 }

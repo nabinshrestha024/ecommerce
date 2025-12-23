@@ -1,16 +1,22 @@
 using EcommerceProject.Models.DTOs.Profile;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace EcommerceProject.Services.Implementations
 {
     public class UserProfileService : IUserProfileService
     {
         private readonly IUserProfileRepository _userProfileRepository;
+        private readonly IFileStorageService _files;
+        private readonly ILogger<UserProfileService> _logger;
 
-        public UserProfileService(IUserProfileRepository userProfileRepository)
+        public UserProfileService(IUserProfileRepository userProfileRepository, IFileStorageService files, ILogger<UserProfileService> logger)
         {
             _userProfileRepository = userProfileRepository;
+            _files = files;
+            _logger = logger;
         }
 
         public async Task<ProfileResponseDto?> GetProfileByUserIdAsync(int userId)
@@ -119,5 +125,152 @@ namespace EcommerceProject.Services.Implementations
             if (userId <= 0 || orderId <= 0) return null;
             return await _userProfileRepository.GetOrderDetailsAsync(userId, orderId);
         }
+
+        public async Task<string?> UploadProfileImageAsync(int userId, IFormFile imageFile)
+        {
+            try
+            {
+                var currentProfile = await GetProfileByUserIdAsync(userId);
+                
+                if (!string.IsNullOrEmpty(currentProfile?.ProfileImageUrl))
+                {
+                    await _files.DeleteProfileImageAsync(currentProfile.ProfileImageUrl, CancellationToken.None);
+                }
+
+                var imageUrl = await _files.SaveProfileImageAsync(imageFile, userId, CancellationToken.None);
+                
+                await _userProfileRepository.UpdateProfileAsync(userId, new PatchProfileRequestDto
+                {
+                    ProfileImageUrl = imageUrl
+                });
+
+                _logger.LogInformation("Uploaded profile image for user {UserId}: {ImageUrl}", userId, imageUrl);
+                return imageUrl;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error uploading profile image for user {UserId}", userId);
+                throw;
+            }
+        }
+
+         public async Task<bool> RemoveProfileImageAsync(int userId)
+        {
+            try
+            {
+                var currentProfile = await GetProfileByUserIdAsync(userId);
+                
+                if (!string.IsNullOrEmpty(currentProfile?.ProfileImageUrl))
+                {
+                    await _files.DeleteProfileImageAsync(currentProfile.ProfileImageUrl, CancellationToken.None);
+                    
+                    await _userProfileRepository.UpdateProfileAsync(userId, new PatchProfileRequestDto
+                    {
+                        ProfileImageUrl = null
+                    });
+                    
+                    _logger.LogInformation("Removed profile image for user {UserId}", userId);
+                    return true;
+                }
+                
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error removing profile image for user {UserId}", userId);
+                throw;
+            }
+        }
+
+    public async Task PutUpdateProfileWithImageAsync(
+    int userId, 
+    UpdateProfileRequestDto dto, 
+    IFormFile? profileImage = null,
+    bool? removeProfileImage = false,
+    CancellationToken ct = default)
+    {
+        string? imageUrl = dto.ProfileImageUrl;
+    
+        if (profileImage != null)
+        {
+            imageUrl = await UploadProfileImageAsync(userId, profileImage, ct);
+        }
+        else if (removeProfileImage == true)
+        {
+            await RemoveProfileImageAsync(userId, ct);
+            imageUrl = null;
+        }
+    
+        var updateDto = new UpdateProfileRequestDto
+        {
+            FullName = dto.FullName,
+            Phone = dto.Phone,
+            Address = dto.Address,
+            City = dto.City,
+            Status = dto.Status,
+            DateOfBirth = dto.DateOfBirth,
+            Gender = dto.Gender,
+            Bio = dto.Bio,
+            ProfileImageUrl = imageUrl
+        };
+    
+        await _userProfileRepository.PutUpdateProfileAsync(userId, updateDto);
     }
+
+    public async Task<string?> UploadProfileImageAsync(int userId, IFormFile imageFile, CancellationToken ct = default)
+    {
+        try
+        {
+            var currentProfile = await GetProfileByUserIdAsync(userId);
+        
+            if (!string.IsNullOrEmpty(currentProfile?.ProfileImageUrl))
+            {
+                await _files.DeleteProfileImageAsync(currentProfile.ProfileImageUrl, ct);
+            }
+
+            var imageUrl = await _files.SaveProfileImageAsync(imageFile, userId, ct);
+        
+            await _userProfileRepository.UpdateProfileAsync(userId, new PatchProfileRequestDto
+            {
+                ProfileImageUrl = imageUrl
+            });
+
+            _logger.LogInformation("Uploaded profile image for user {UserId}: {ImageUrl}", userId, imageUrl);
+            return imageUrl;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error uploading profile image for user {UserId}", userId);
+            throw;
+        }
+    }
+
+        public async Task<bool> RemoveProfileImageAsync(int userId, CancellationToken ct = default)
+        {
+        try
+        {
+            var currentProfile = await GetProfileByUserIdAsync(userId);
+        
+            if (!string.IsNullOrEmpty(currentProfile?.ProfileImageUrl))
+            {
+                await _files.DeleteProfileImageAsync(currentProfile.ProfileImageUrl, ct);
+            
+                await _userProfileRepository.UpdateProfileAsync(userId, new PatchProfileRequestDto
+                {
+                    ProfileImageUrl = null
+                });
+            
+                _logger.LogInformation("Removed profile image for user {UserId}", userId);
+                return true;
+            }
+        
+            return false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error removing profile image for user {UserId}", userId);
+            throw;
+        }
+    }
+}
 }
