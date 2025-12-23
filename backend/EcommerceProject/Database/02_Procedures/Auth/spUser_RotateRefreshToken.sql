@@ -1,4 +1,7 @@
-﻿CREATE PROCEDURE spUser_RotateRefreshToken
+﻿USE [EcommerceDB]
+GO
+
+CREATE PROCEDURE spUser_RotateRefreshToken
     @OldRefreshToken VARCHAR(500),
     @NewRefreshToken VARCHAR(500)
 AS

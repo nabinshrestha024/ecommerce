@@ -18,51 +18,33 @@ export const BasicDetails = () => {
       </div>
       <div className="flex flex-col mt-6 gap-8">
         <div className="flex flex-col gap-3">
-          <div>
-            <label className="block text-sm font-medium ">Product Name</label>
-            <Input
-              type="text"
-              placeholder="Enter product name...."
-              className="w-full bg-[#F9FAFB] h-12"
-              {...register("productName")}
-            />
-            {errors.productName && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.productName?.message as string}
-              </p>
-            )}
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <label className="block text-sm font-medium ">
-              Short Description
-            </label>
-            <Input
-              type="textarea"
-              placeholder="Enter short description...."
-              className="w-full h-24 p-3 border rounded-md focus:outline-none bg-[#F9FAFB] focus:ring-2  focus:border-transparent"
-              {...register("shortDescription")}
-            />
-            {errors.shortDescription && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.shortDescription?.message as string}
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col gap-3">
-            <label className="block text-sm font-medium ">Description</label>
-            <Input
-              type="textarea"
-              placeholder="Enter product description...."
-              className="w-full h-24 p-3 border rounded-md focus:outline-none bg-[#F9FAFB] focus:ring-2  focus:border-transparent"
-              {...register("description")}
-            />
-            {errors.description && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.description?.message as string}
-              </p>
-            )}
-          </div>
+          <label className="block text-sm font-medium ">Product Name</label>
+          <Input
+            type="text"
+            placeholder="Enter product name...."
+            className="w-full bg-[#F9FAFB] h-12"
+            {...register("productName")}
+          />
+          {errors.productName && (
+            <p className="text-sm text-red-500 mt-1">
+              {errors.productName?.message as string}
+            </p>
+          )}
+        </div>
+        <div className="flex flex-col gap-3">
+          <label className="block text-sm font-medium ">
+            Product Description
+          </label>
+          <textarea
+            placeholder="Enter product description...."
+            className="w-full h-24 p-3 border rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+            {...register("productDescription")}
+          />
+          {errors.productDescription && (
+            <p className="text-sm text-red-500 mt-1">
+              {errors.productDescription?.message as string}
+            </p>
+          )}
         </div>
         <div className="flex flex-col gap-3 ">
           <div className="font-bold text-[22px] leading-[26px] tracking-[0%]">
@@ -111,6 +93,31 @@ export const BasicDetails = () => {
                   </p>
                 )}
               </div>
+              <div className="flex flex-col gap-3 ">
+                <label className="block text-sm font-medium">
+                  Tax Included
+                </label>
+                <div>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      {...register("taxIncluded")}
+                      className="h-4 w-4"
+                      value="yes"
+                    />
+                    Yes
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      {...register("taxIncluded")}
+                      className="h-4 w-4"
+                      value="no"
+                    />
+                    No
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -129,8 +136,8 @@ export const BasicDetails = () => {
                 <option value="" disabled>
                   Select stock status...
                 </option>
-                <option value="true">In Stock</option>
-                <option value="false">Out of Stock</option>
+                <option value="in-stock">In Stock</option>
+                <option value="out-of-stock">Out of Stock</option>
               </select>
               {errors.stockStatus && (
                 <p className="text-sm text-red-500 mt-1">
@@ -138,9 +145,9 @@ export const BasicDetails = () => {
                 </p>
               )}
             </div>
-            {selectedCategory === "true" && (
+            {selectedCategory === "in-stock" && (
               <div className="flex flex-col gap-3">
-                <label className="block text-sm font-medium ">
+                <label className="block text-sm font-medium text-gray-700">
                   Stock Quantity
                 </label>
                 <Input
@@ -157,22 +164,22 @@ export const BasicDetails = () => {
               </div>
             )}
           </div>
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              {...register("highlightFeatured")}
-              className="h-4 w-4"
-            />
-            {errors.highlightFeatured && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.highlightFeatured?.message as string}
-              </p>
-            )}
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            {...register("highlightFeatured")}
+            className="h-4 w-4"
+          />
+          {errors.highlightFeatured && (
+            <p className="text-sm text-red-500 mt-1">
+              {errors.highlightFeatured?.message as string}
+            </p>
+          )}
 
-            <label className="text-sm font-medium ">
-              Highlight this product in featured section
-            </label>
-          </div>
+          <label className="text-sm font-medium ">
+            Highlight this product in featured section
+          </label>
         </div>
       </div>
     </Card>

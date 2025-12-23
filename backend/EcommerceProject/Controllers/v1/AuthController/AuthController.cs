@@ -42,13 +42,7 @@ namespace EcommerceProject.Controllers.v1.AuthController
             try
             {
                 var result = await _authService.LoginAsync(loginDto);
-                //return Ok(new
-                //{
-                //    token = result.Token,
-                //    refreshToken = result.RefreshToken,
-                //    expiration = result.Expiration,
-                //    user = result.user
-                //});
+
                 return Ok(result);
             }
             catch(UnauthorizedAccessException ex)
@@ -101,13 +95,29 @@ namespace EcommerceProject.Controllers.v1.AuthController
             }
         }
 
+
+        [HttpPost("auth/forgot-password")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
+        {
+            await _authService.GeneratePasswordResetAsync(dto.Email);
+            return Ok(new { message = "If the email exists, a reset link has been sent." });
+        }
+
+        [HttpPost("auth/reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
+        {
+            await _authService.ResetPasswordAsync(dto.Token, dto.NewPassword);
+            return Ok(new { message = "Password reset successful." });
+        }
+
+
         [HttpPost("logout")]
         [Authorize]
         public async Task<IActionResult> Logout()
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var currentuserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-            await _authService.LogoutAsync(userId);
+            await _authService.LogoutAsync(currentuserId);
 
             return Ok(new { message = "Logout successful" });
         }

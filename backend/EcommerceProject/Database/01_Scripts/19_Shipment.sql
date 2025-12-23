@@ -1,0 +1,17 @@
+USE EcommerceDB;
+GO
+CREATE TABLE Shipments 
+( 
+ShipmentId		INT IDENTITY(1,1) PRIMARY KEY, 
+OrderId			INT NOT NULL, 
+Status			VARCHAR(30) NOT NULL DEFAULT 'Pending',
+ShippedAt		DATETIME2(3) NULL, 
+DeliveredAt		DATETIME2(3) NULL, 
+ShippingCost	DECIMAL(10,2) NULL, 
+Notes			VARCHAR(500) NULL, 
+CreatedAt		DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(), 
+UpdatedAt		DATETIME2(3) NULL, 
+FOREIGN KEY (OrderId) REFERENCES Orders(OrderId) ON DELETE CASCADE 
+);
+PRINT 'Table Shipments created.';
+GO

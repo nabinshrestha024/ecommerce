@@ -1,4 +1,7 @@
-﻿CREATE OR ALTER PROCEDURE spProducts_GetById
+﻿USE EcommerceDB;
+GO
+
+CREATE OR ALTER PROCEDURE spProducts_GetById
     @ProductId INT
 AS
 BEGIN
