@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceProject.Controllers.v1.SystemSettings
 {
-    [Route("health")]
+    [Route("v1/health")]
     [ApiController]
     public class HealthController : ControllerBase
     {

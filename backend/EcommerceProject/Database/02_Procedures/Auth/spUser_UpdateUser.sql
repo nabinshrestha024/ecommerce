@@ -1,11 +1,10 @@
 ﻿USE [EcommerceDB]
 GO
-/****** Object:  StoredProcedure [dbo].[spUser_UpdateUser]    Script Date: 12/19/2025 10:51:27 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-ALTER PROCEDURE [dbo].[spUser_UpdateUser]
+CREATE OR ALTER PROCEDURE [dbo].[spUser_UpdateUser]
     @UserId INT,
     @FullName NVARCHAR(255) = NULL,
     @PasswordHash VARCHAR(100),

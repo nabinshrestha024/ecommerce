@@ -9,9 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-
 var builder = WebApplication.CreateBuilder(args);
-
 
 builder.Services.AddControllers(options =>
 {
@@ -51,6 +49,8 @@ builder.Services.AddSwaggerGen(x =>
      });
     x.CustomSchemaIds(type => type.FullName);
 });
+
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
@@ -63,6 +63,7 @@ builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<IVendorRepository, VendorRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
@@ -70,9 +71,8 @@ builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<IVendorService, VendorService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
-builder.Services.AddScoped<IAuthRepository, AuthRepository>();
-builder.Services.AddHttpContextAccessor(); // registers IHttpContextAccessor
-
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddHttpContextAccessor(); 
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 
@@ -116,19 +116,15 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-//if (app.Environment.IsDevelopment())
-//{
 app.UseStaticFiles();
 app.UseSwagger();
-//app.UseSwaggerUI();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "ECommerce v1");
-    c.RoutePrefix = "swagger"; // optional, default is "swagger"
+    c.RoutePrefix = "swagger"; 
 });
-//}
 
-//app.UseHttpsRedirection();
+
 app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
