@@ -92,19 +92,33 @@ export const ProfileUpdate = () => {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium ">Full Name</label>
+              <label className="text-sm font-medium ">First Name</label>
               <Input
                 type="text"
                 placeholder="Wade"
                 disabled={!isEditing}
-                {...register("fullName")}
-                className={"w-full " + (!isEditing ? "cursor-not-allowed" : "")}
+                {...register("firstName")}
+                className={!isEditing ? "cursor-not-allowed" : ""}
               />
-              {errors.fullName && (
+              {errors.firstName && (
                 <p className="text-red-600 text-sm">
-                  {errors.fullName.message}
+                  {errors.firstName.message}
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium ">Last Name</label>
+              <Input
+                type="text"
+                placeholder="Warren"
+                disabled={!isEditing}
+                className={!isEditing ? "cursor-not-allowed" : ""}
+              />
+              {errors.lastName && (
+                <p className="text-red-600 text-sm">
+                  {errors.lastName.message}
                 </p>
               )}
             </div>
@@ -160,7 +174,6 @@ export const ProfileUpdate = () => {
                 type="date"
                 placeholder="01/01/2003"
                 disabled={!isEditing}
-                {...register("dateOfBirth")}
                 className={!isEditing ? "cursor-not-allowed" : ""}
               />
               {errors.dateOfBirth && (

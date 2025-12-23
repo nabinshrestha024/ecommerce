@@ -1,9 +1,6 @@
 ﻿USE [EcommerceDB]
 GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
+
  CREATE OR ALTER PROCEDURE [dbo].[spDiscount_GetDiscountUsage]
     @DiscountId INT,
     @UserId INT

@@ -1,6 +1,5 @@
 ﻿USE [EcommerceDB]
 GO
-
 CREATE OR ALTER PROCEDURE spUser_SaveRefreshToken
     @UserId INT,
     @RefreshToken VARCHAR(500)

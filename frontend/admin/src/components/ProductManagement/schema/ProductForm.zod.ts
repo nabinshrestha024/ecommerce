@@ -9,8 +9,8 @@ export const ProductFormSchema = z
   .object({
     productName: stringField("Product name is required"),
 
-    shortDescription: stringField("Short description is required"),
-    description: stringField("Description is required"),
+    productDescription: stringField("Product description is required"),
+
     productPrice: z.coerce
       .number({ message: "Product price must be a number" })
       .min(1, "Product price is required"),
@@ -25,17 +25,10 @@ export const ProductFormSchema = z
 
     productCategories: z.string().min(1, "Product category is required"),
 
-    images: z
+    productImage: z
       .instanceof(FileList)
-      .refine(
-        (files) => files.length > 0,
-        "At least one product image is required",
-      ),
-
-    primaryIndex: z
-      .union([z.coerce.number().int(), z.string().length(0)])
-      .optional()
-      .transform((val) => (val === "" ? undefined : Number(val))),
+      .refine((files) => files.length > 0, "Product image is required")
+      .transform((files) => files[0]),
 
     stockQuantity: z.coerce
       .number({ message: "Stock quantity must be a number" })
@@ -50,6 +43,8 @@ export const ProductFormSchema = z
       .union([z.string().length(0), z.string().date()])
       .optional()
       .transform((val) => (val === "" ? undefined : val)),
+
+    productTags: z.string().min(1, "At least one tag is required"),
 
     taxIncluded: z.enum(["yes", "no"]).optional(),
 
@@ -77,4 +72,22 @@ export const ProductFormSchema = z
         });
       }
     }
-  });
+  })
+  .refine(
+    (data) => {
+      if (!data.expirationStart || !data.expirationEnd) return true;
+      const start =
+        typeof data.expirationStart === "string"
+          ? new Date(data.expirationStart)
+          : (data.expirationStart as Date);
+      const end =
+        typeof data.expirationEnd === "string"
+          ? new Date(data.expirationEnd)
+          : (data.expirationEnd as Date);
+      return end.getTime() >= start.getTime();
+    },
+    {
+      message: "End date cannot be before start date",
+      path: ["expirationEnd"],
+    },
+  );

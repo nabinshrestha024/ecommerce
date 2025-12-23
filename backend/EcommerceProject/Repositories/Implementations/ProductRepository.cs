@@ -68,7 +68,7 @@ namespace EcommerceProject.Repositories.Implementations
             p.Add("@OnlyActive", onlyActive);
 
             using var multi = await conn.QueryMultipleAsync(
-                new CommandDefinition("spProducts_GetBySlugOrId", p, commandType: CommandType.StoredProcedure, cancellationToken: ct)
+                new CommandDefinition("dbo.spProducts_GetBySlugOrId", p, commandType: CommandType.StoredProcedure, cancellationToken: ct)
             );
 
             var product = await multi.ReadFirstOrDefaultAsync<ProductDetailsDto>();

@@ -9,6 +9,11 @@ namespace EcommerceProject.Services.Implementations
     {
         private readonly IWishlistRepository _wishlistRepository;
 
+        public WishlistService(IWishlistRepository wishlistRepository)
+        {
+            _wishlistRepository = wishlistRepository;
+        }
+
         public async Task<IEnumerable<WishListItemDto>> GetWishlistAsync(int userId)
         {
             return await _wishlistRepository.GetWishlist(userId);
