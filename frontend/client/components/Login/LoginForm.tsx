@@ -22,7 +22,6 @@ export const LoginForm = () => {
   });
 
   const onSubmit = (data: LoginFormSchemaType) => {
-    console.log("Data", data);
     reset();
     mutate(data);
   };
