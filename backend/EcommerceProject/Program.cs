@@ -22,7 +22,6 @@ builder.Services.AddControllers(options =>
 });
 builder.Services.AddEndpointsApiExplorer();
 
-
 builder.Services.AddSwaggerGen(x =>
 {
     x.SwaggerDoc("v1", new OpenApiInfo { Title = "ECommerce", Version = "v1" });
@@ -114,10 +113,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-
-
-
-
 var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
     .Get<string[]>();
@@ -131,9 +126,6 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
-
-
-
 
 
 var app = builder.Build();
