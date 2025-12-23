@@ -272,9 +272,7 @@ CREATE TABLE PurchaseOrderItems (
     POId                INT NOT NULL,
     ProductId           INT NOT NULL,
     Quantity            INT NOT NULL,
-    ReceivedQuantity    INT NOT NULL DEFAULT 0,
     UnitCost            DECIMAL(10,2) NOT NULL,
-
     FOREIGN KEY (POId) REFERENCES PurchaseOrders(POId) ON DELETE CASCADE,
     FOREIGN KEY (ProductId) REFERENCES Products(ProductId)
 );

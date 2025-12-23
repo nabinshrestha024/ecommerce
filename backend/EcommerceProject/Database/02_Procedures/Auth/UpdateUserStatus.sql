@@ -1,7 +1,7 @@
 ﻿USE [EcommerceDB]
 GO
 
-CREATE OR ALTER PROCEDURE [dbo].[UpdateUserStatus]
+CREATE OR ALTER PROCEDURE UpdateUserStatus
     @UserId INT,
     @IsActive BIT
 AS

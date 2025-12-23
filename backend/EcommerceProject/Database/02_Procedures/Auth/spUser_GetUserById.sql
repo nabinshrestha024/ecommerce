@@ -1,7 +1,7 @@
 ﻿USE [EcommerceDB]
 GO
 
-CREATE OR ALTER PROCEDURE [dbo].[spUser_GetUserById]
+CREATE OR ALTER PROCEDURE spUser_GetUserById
     @UserId INT
 AS
 BEGIN

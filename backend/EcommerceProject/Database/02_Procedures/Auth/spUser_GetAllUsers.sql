@@ -1,7 +1,7 @@
 ﻿USE [EcommerceDB]
 GO
 
-CREATE OR ALTER PROCEDURE [dbo].[spUser_GetAllUsers]
+CREATE OR ALTER PROCEDURE spUSer_GetAllUsers
 AS
 BEGIN
     SET NOCOUNT ON;

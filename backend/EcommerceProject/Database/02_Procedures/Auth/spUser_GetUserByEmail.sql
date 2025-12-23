@@ -1,7 +1,7 @@
 ﻿USE [EcommerceDB]
 GO
 
-CREATE OR ALTER PROCEDURE [dbo].[spUser_GetUserByEmail]
+CREATE OR ALTER PROCEDURE spUser_GetUserByEmail
     @Email NVARCHAR(255)
 AS
 BEGIN

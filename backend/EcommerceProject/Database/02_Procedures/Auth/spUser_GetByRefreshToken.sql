@@ -1,7 +1,7 @@
 ﻿USE [EcommerceDB]
-
 GO
-CREATE OR ALTER PROC [dbo].[spUser_GetByRefreshToken] 
+
+CREATE OR ALTER PROCEDURE spUser_GetByRefreshToken
 (
 	@refreshToken varchar(max)
 )

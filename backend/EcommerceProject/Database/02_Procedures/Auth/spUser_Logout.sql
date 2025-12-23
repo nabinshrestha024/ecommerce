@@ -1,7 +1,7 @@
 ﻿USE [EcommerceDB]
 GO
 
-CREATE OR ALTER PROCEDURE [dbo].[spUser_Logout]
+CREATE OR ALTER PROCEDURE spUser_Logout
     @UserId INT
 AS
 BEGIN

@@ -1,6 +1,7 @@
-﻿USE [EcommerceDB];
+﻿USE [EcommerceDB]
 GO
-CREATE OR ALTER PROCEDURE spUser_ValidateRefreshToken
+
+ CREATE OR ALTER PROCEDURE spUser_ValidateRefreshToken
     @RefreshToken VARCHAR(500)
 AS
 BEGIN
