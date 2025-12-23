@@ -1,10 +1,11 @@
-﻿using Dapper;
+﻿using System.Data;
+using Dapper;
 using EcommerceProject.Database;
 using EcommerceProject.Models.DTOs.User;
 using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
 using Microsoft.AspNetCore.Connections;
-using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace EcommerceProject.Repositories.Implementations
 {
@@ -20,11 +21,29 @@ namespace EcommerceProject.Repositories.Implementations
 
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            using var connection = _factory.CreateConnection();
-            return await connection.QueryFirstOrDefaultAsync<User>(
-                "spUser_GetUserByEmail",
-                new { Email = email },
-                commandType: CommandType.StoredProcedure);
+            //using var connection = _factory.CreateConnection();
+            //var dbresp = await connection.QueryFirstOrDefaultAsync<User>(
+            //    "spUser_GetUserByEmail",
+            //    new { Email = email },
+            //    commandType: CommandType.StoredProcedure);
+            //return dbresp;
+
+            try
+            {
+                using var connection = _factory.CreateConnection();
+
+                return await connection.QueryFirstOrDefaultAsync<User>(
+                    "dbo.spUser_GetUserByEmail",
+                    new { Email = email },
+                    commandType: CommandType.StoredProcedure
+                );
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Number);
+                throw;
+            }
         }
 
         public async Task<User?> GetUserByIdAsync(int userId)
