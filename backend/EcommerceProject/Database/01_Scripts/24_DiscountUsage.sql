@@ -1,4 +1,7 @@
-﻿CREATE TABLE DiscountUsages (
+﻿USE [EcommerceDB];
+GO
+
+CREATE TABLE DiscountUsages (
     UsageId INT PRIMARY KEY IDENTITY,
     DiscountId INT,
     UserId INT,

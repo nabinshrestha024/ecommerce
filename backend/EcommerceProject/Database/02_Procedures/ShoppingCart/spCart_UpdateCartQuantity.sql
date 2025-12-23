@@ -1,4 +1,6 @@
-﻿CREATE PROCEDURE spCart_UpdateCartQuantity
+﻿USE [EcommerceDB];
+GO
+CREATE OR ALTER PROCEDURE spCart_UpdateCartQuantity
     @CartId INT,
     @Quantity INT
 AS

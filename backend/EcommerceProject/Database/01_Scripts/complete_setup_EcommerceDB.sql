@@ -272,15 +272,13 @@ CREATE TABLE PurchaseOrderItems (
     POId                INT NOT NULL,
     ProductId           INT NOT NULL,
     Quantity            INT NOT NULL,
-    ReceivedQuantity    INT NOT NULL DEFAULT 0,
     UnitCost            DECIMAL(10,2) NOT NULL,
-
     FOREIGN KEY (POId) REFERENCES PurchaseOrders(POId) ON DELETE CASCADE,
     FOREIGN KEY (ProductId) REFERENCES Products(ProductId)
 );
 PRINT 'Table PurchaseOrderItems created.';
 GO
-x
+
 CREATE TABLE Reviews (
     ReviewId    BIGINT IDENTITY(1,1) PRIMARY KEY,
     ProductId   INT NOT NULL,
@@ -304,4 +302,58 @@ CREATE TABLE SystemSettings (
 PRINT 'Table SystemSettings created.';
 GO
 
+
+CREATE TABLE Shipments 
+( 
+ShipmentId		INT IDENTITY(1,1) PRIMARY KEY, 
+OrderId			INT NOT NULL, 
+Status			VARCHAR(30) NOT NULL DEFAULT 'Pending',
+ShippedAt		DATETIME2(3) NULL, 
+DeliveredAt		DATETIME2(3) NULL, 
+ShippingCost	DECIMAL(10,2) NULL, 
+Notes			VARCHAR(500) NULL, 
+CreatedAt		DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(), 
+UpdatedAt		DATETIME2(3) NULL, 
+FOREIGN KEY (OrderId) REFERENCES Orders(OrderId) ON DELETE CASCADE 
+);
+PRINT 'Table Shipments created.';
+GO
+
+CREATE TABLE DiscountUsages (
+    UsageId INT PRIMARY KEY IDENTITY,
+    DiscountId INT,
+    UserId INT,
+    UsedDate DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (DiscountId) REFERENCES Discounts(DiscountId)
+);
+PRINT 'Table DiscountUsahes created.';
+
+CREATE TABLE Discounts (
+    DiscountId INT PRIMARY KEY IDENTITY,
+    ProductId INT NOT NULL,
+    DiscountType VARCHAR(20), 
+    DiscountValue DECIMAL(10,2), 
+    IsPercentage BIT,
+    MinQuantity INT NULL, 
+    StartDate DATETIME,
+    EndDate DATETIME,
+    MaxUsage INT NULL,
+    PerUserLimit INT NULL,
+    IsActive BIT DEFAULT 1,
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId)
+);
+
+PRINT 'Table Discounttable created.';
+
+
+CREATE TABLE PasswordResetToken
+(
+    UserId INT,
+    Token VARCHAR(500),
+    Expiry DATETIME,
+    PRIMARY KEY(Token)
+);
+PRINT 'Table PasswordResetToken.';
+
 PRINT 'DATABASE SETUP COMPLETED SUCCESSFULLY';
+

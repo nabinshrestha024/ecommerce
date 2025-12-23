@@ -2,6 +2,7 @@
 using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +10,8 @@ namespace EcommerceProject.Controllers.v1.Cart
 {
     [ApiController]
     [Route("v1/cart/")]
-    
+    [Authorize(Roles = "Customer, Admin")]
+
     public class CartController : ControllerBase
     {
         private readonly ICartService _cartService;
@@ -28,7 +30,7 @@ namespace EcommerceProject.Controllers.v1.Cart
             return Ok(cartItems);
         }
 
-        [HttpPost("/addcart")]
+        [HttpPost("v1/addcart")]
         public async Task<IActionResult> AddCart([FromBody] ShoppingCartItem item)
         {
             await _cartService.AddToCartAsync(item.UserId, item.ProductId, item.Quantity);

@@ -19,7 +19,7 @@ namespace EcommerceProject.Repositories.Implementations
         {
             using var conn = _connectionFactory.CreateConnection();
 
-            return await conn.QueryAsync<WishListItemDto>("spWishlist_GetWishlistItems",
+            return await conn.QueryAsync<WishListItemDto>("spWishlist_GetByUser",
                 new
                 {
                     UserId = userId
@@ -30,7 +30,7 @@ namespace EcommerceProject.Repositories.Implementations
         public async Task AddWishlistItem(int userId, int productId)
         {
             using var conn = _connectionFactory.CreateConnection();
-            await conn.ExecuteAsync("spWishlist_AddWishlistItem",
+            await conn.ExecuteAsync("spWishlist_Add",
                 new
                 {
                     UserId = userId,
@@ -42,7 +42,7 @@ namespace EcommerceProject.Repositories.Implementations
         public async Task DeleteWishlistItem(int wishlistItemId)
         {
             using var conn = _connectionFactory.CreateConnection();
-            await conn.ExecuteAsync("spWishlist_DeleteWishlistItem",
+            await conn.ExecuteAsync("spWishlist_Delete",
                 new
                 {
                     WishlistItemId = wishlistItemId

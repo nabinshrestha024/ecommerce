@@ -1,5 +1,5 @@
-using EcommerceProject.Models.DTOs.Payment;
-using EcommerceProject.Services.Implementations;
+using EcommerceProject.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
@@ -7,8 +7,9 @@ using System.Text;
 
 
 [ApiController]
-[Route("api/payments/esewa")]
-public class EsewaController : ControllerBase
+[Route("v1/payments/esewa")]
+[Authorize(Roles = "Customer")]
+public class PaymentController : ControllerBase
 {
     private readonly PaymentService _service;
 

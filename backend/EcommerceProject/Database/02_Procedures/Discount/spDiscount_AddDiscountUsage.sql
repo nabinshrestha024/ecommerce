@@ -1,7 +1,6 @@
-﻿USE EcommerceDB;
+USE [EcommerceDB];
 GO
-
-CREATE OR ALTER PROCEDURE spDiscount_AddDiscountUsage
+CREATE OR ALTER  PROCEDURE spDiscount_AddDiscountUsage
     @DiscountId INT,
     @UserId INT
 AS

@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Database\02_Procedures\NewFolder\" />
+    <Folder Include="Database\02_Procedures\Shipment\" />
     <Folder Include="wwwroot\images\categories\" />
   </ItemGroup>
 

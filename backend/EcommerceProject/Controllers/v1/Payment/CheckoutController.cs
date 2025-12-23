@@ -1,9 +1,11 @@
 using EcommerceProject.Models.DTOs.Payment;
 using EcommerceProject.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("v1/checkout")]
+[Authorize(Roles = "Customer")]
 public class CheckoutController : ControllerBase
 {
     private readonly ICheckoutService _service;

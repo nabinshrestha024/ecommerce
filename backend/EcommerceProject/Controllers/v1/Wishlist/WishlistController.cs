@@ -1,12 +1,15 @@
 ﻿using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EcommerceProject.Controllers.v1.Wishlist
 {
     [Route("v1/wishlist")]
     [ApiController]
+    [Authorize]
     public class WishlistController : ControllerBase
     {
         private readonly IWishlistService _wishlistService;
@@ -19,24 +22,27 @@ namespace EcommerceProject.Controllers.v1.Wishlist
 
 
         [HttpGet("{userId}")]
-        public async Task<IActionResult> GetWishlist(int userId)
+        public async Task<IActionResult> GetWishlist()
         {
-            var wishlistItems = await _wishlistService.GetWishlistAsync(userId);
-            return Ok(wishlistItems);
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            return Ok(await _wishlistService.GetWishlistAsync(userId));
         }
 
-        [HttpPost("addwishlist")]
-        public async Task<IActionResult> AddWishlist(int userId, int productId)
+        [HttpPost("addwishlist/{productId}")]
+        public async Task<IActionResult> AddWishlist(int productId)
         {
+
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             await _wishlistService.AddWishlistItemAsync(userId, productId);
-            return Ok();
+            return Ok("Added to wishlist");
         }
         [HttpDelete("deletewishlist/{wishlistItemId}")]
 
         public async Task<IActionResult> DeleteWishlistItem(int wishlistItemId)
         {
             await _wishlistService.DeleteWishlistItemAsync(wishlistItemId);
-            return Ok();
+            return Ok("Removed From wishlist");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using EcommerceProject.Models.DTOs.SystemSettings;
 using EcommerceProject.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace EcommerceProject.Controllers.v1.SystemSettings
 {
     [ApiController]
     [Route("v1/admin/settings")]
+    [Authorize(Roles = "Admin")]
     public class SettingsController : ControllerBase
     {
         private readonly ISettingsService _service;
