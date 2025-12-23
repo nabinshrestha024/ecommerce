@@ -1,13 +1,14 @@
 ﻿using EcommerceProject.Models.DTOs.Common;
 using EcommerceProject.Models.DTOs.Product;
 using EcommerceProject.Services.Interfaces;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceProject.Controllers.v1.Product
 {
     [Route("v1/admin/products")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class AdminProductsController : ControllerBase
     {
         private readonly IProductService _service;

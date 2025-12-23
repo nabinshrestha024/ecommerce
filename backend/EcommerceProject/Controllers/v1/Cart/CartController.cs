@@ -14,8 +14,8 @@ namespace EcommerceProject.Controllers.v1.Cart
     [Authorize]
     [ApiController]
     [Route("v1/cart/")]
-   
-    
+    [Authorize(Roles = "Customer, Admin")]
+
     public class CartController : ControllerBase
     {
         private readonly ICartService _cartService;
