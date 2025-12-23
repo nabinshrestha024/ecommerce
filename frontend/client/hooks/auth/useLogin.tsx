@@ -10,14 +10,18 @@ export function useLogin() {
     mutationFn: loginFn,
 
     onSuccess: (data) => {
-      if (data.success) {
-        toast.success(data.message);
+      if (data) {
+        toast.success("Login successful!");
         if (typeof window !== "undefined") {
-          localStorage.setItem("user", data.token);
+          localStorage.setItem("token", data.token);
         }
       } else {
-        toast.error(data.message);
+        toast.error("Login failed!");
       }
+    },
+
+    onError: () => {
+      toast.error("An error occurred during login.");
     },
   });
 }
