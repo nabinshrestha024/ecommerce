@@ -1,5 +1,4 @@
-﻿USE EcommerceDB;
-
+USE EcommerceDB;
 GO
 CREATE OR ALTER PROCEDURE spDiscount_GetActiveDiscountsByProduct
     @ProductId INT

@@ -7,14 +7,14 @@ namespace EcommerceProject.Models.Entities;
         public int UserId { get; set; }
         public DateTime OrderDate { get; set; }
         public decimal TotalAmount { get; set; }
-        public string? Status { get; set; }
+        public string? Status { get; set; } = "Pending";
         public string? ShippingName { get; set; }
-        public string? ShippingAddress { get; set; }
-        public string? ShippingCity { get; set; }
-        public string? ShippingPhone { get; set; }
+        public string? ShippingAddress { get; set; } = default!;
+        public string? ShippingCity { get; set; } = default!;
+        public string? ShippingPhone { get; set; } = default!;
         public string? PaymentMethod { get; set; }
-        public string? PaymentStatus { get; set; }
+        public string? PaymentStatus { get; set; } = "Pending";
+        public string? PaymentGateway {  get; set; }
         public string? Notes { get; set; }
         
-        public User? User { get; set; }
     }

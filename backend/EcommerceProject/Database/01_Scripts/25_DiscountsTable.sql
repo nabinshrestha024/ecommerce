@@ -1,5 +1,6 @@
-﻿USE [EcommerceDB];
+﻿USE EcommerceDB;
 GO
+
 CREATE TABLE Discounts (
     DiscountId INT PRIMARY KEY IDENTITY,
     ProductId INT NOT NULL,
