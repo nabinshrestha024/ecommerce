@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using EcommerceProject.Database;
 using EcommerceProject.Models.DTOs.Cart;
+using EcommerceProject.Models.DTOs.ShoppingCart;
 using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
 using Microsoft.Data.SqlClient;
@@ -17,13 +18,11 @@ namespace EcommerceProject.Repositories.Implementations
             _connectionFactory = configurationFactory;
         }
 
-        public async Task<IEnumerable<ShoppingCartItem>> GetCartAsync(int userId)
+        public async Task<IEnumerable<CartItemDto>> GetCartAsync(int userId)
         {
-            using var conn = _connectionFactory.CreateConnection();
-            
-            return await conn.QueryAsync<ShoppingCartItem>("spCart_GetCartByUser",
-                new {
-                    UserId = userId },
+            return await _connectionFactory.CreateConnection().QueryAsync<CartItemDto>(
+                "spCart_GetCartByUser",
+                new { UserId = userId },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -56,5 +55,16 @@ namespace EcommerceProject.Repositories.Implementations
                     CartItemId = cartItemId },
                 commandType: CommandType.StoredProcedure);
         }
+
+
+        public async Task<int?> GetProductIdByNameAsync(string productName)
+        {
+            return await _connectionFactory.CreateConnection().QueryFirstOrDefaultAsync<int?>(
+                "spProduct_GetIdByName",
+                new { ProductName = productName },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
     }
 }

@@ -1,14 +1,20 @@
 ﻿using EcommerceProject.Models.DTOs.Cart;
+using EcommerceProject.Models.DTOs.ShoppingCart;
 using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
+using EcommerceProject.utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceProject.Controllers.v1.Cart
 {
+
+    [Authorize]
     [ApiController]
     [Route("v1/cart/")]
+   
     
     public class CartController : ControllerBase
     {
@@ -20,19 +26,46 @@ namespace EcommerceProject.Controllers.v1.Cart
         }
 
 
-        [HttpGet("{userId}")]
+        [HttpGet("/get/cart")]
 
-        public async Task<IActionResult> GetCart(int userId)
+        public async Task<IActionResult> GetCart()
         {
+
+            int userId = User.GetUserId();
             var cartItems = await _cartService.GetCartAsync(userId);
             return Ok(cartItems);
         }
 
-        [HttpPost("v1/addcart")]
-        public async Task<IActionResult> AddCart([FromBody] ShoppingCartItem item)
+        
+        [HttpPost("/addcart")]
+
+        public async Task<IActionResult> AddCart([FromBody] AddCartRequestDto request)
         {
-            await _cartService.AddToCartAsync(item.UserId, item.ProductId, item.Quantity);
-            return Ok("Item added to cart");
+
+            try
+            {
+                if (string.IsNullOrWhiteSpace(request.ProductName))
+                {
+                    return BadRequest(new { message = "Product name is required" });
+
+                }
+
+                if(request.Quantity <= 0)
+                {
+                    return BadRequest(new { message = "Quantity must be greater than 0" });
+
+                }
+
+                int userId = User.GetUserId();
+
+                await _cartService.AddToCartAsync(userId, request.ProductName, request.Quantity);
+                return Ok(new { message = "Product added to cart" });
+
+            }catch(Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            
         }
 
         [HttpPut("{cartitemId}")]

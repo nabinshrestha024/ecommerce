@@ -141,5 +141,16 @@ namespace EcommerceProject.Repositories.Implementations
             }
 
         }
+
+        public async Task <int?>GetProductIdByNameAsync(string productName)
+        {
+
+
+            return await _factory.CreateConnection().QueryFirstOrDefaultAsync<int?>(
+                "spProduct_GetProductIdByName",
+                new { ProductName = productName },
+                commandType: CommandType.StoredProcedure
+            );
+        }
     }
 }
