@@ -7,8 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/ui/button";
 import Link from "next/link";
+import { useLogin } from "@/hooks/auth/useLogin";
 
 export const LoginForm = () => {
+  const { mutate } = useLogin();
   const {
     register,
     handleSubmit,
@@ -20,8 +22,9 @@ export const LoginForm = () => {
   });
 
   const onSubmit = (data: LoginFormSchemaType) => {
-    console.log(data);
+    console.log("Data", data);
     reset();
+    mutate(data);
   };
 
   return (
@@ -31,13 +34,13 @@ export const LoginForm = () => {
     >
       <div className="text-3xl font-semibold mb-5">Login</div>
       <div className="flex flex-col gap-3">
-        <Label htmlFor="username">Username</Label>
+        <Label htmlFor="email">Email</Label>
         <Input
-          id="username"
-          {...register("username")}
-          placeholder="Enter your username"
+          id="email"
+          {...register("email")}
+          placeholder="Enter your email"
         />
-        <p className="text-red-500">{errors.username?.message}</p>
+        <p className="text-red-500">{errors.email?.message}</p>
       </div>
       <div className="flex flex-col gap-3">
         <Label htmlFor="password">Password</Label>
