@@ -1,6 +1,7 @@
 using FluentValidation;
-using EcommerceProject.Models.DTOs.Profile;
 
+namespace EcommerceProject.Models.Validators.Profile
+{
 public class UserContextValidator : AbstractValidator<int>
 {
     public UserContextValidator()
@@ -8,4 +9,5 @@ public class UserContextValidator : AbstractValidator<int>
         RuleFor(userId => userId)
             .GreaterThan(0).WithMessage("UserId must be a positive integer.");
     }
+}
 }

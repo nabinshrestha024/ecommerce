@@ -1,6 +1,10 @@
 using FluentValidation;
 using EcommerceProject.Models.DTOs.Profile;
 
+
+
+namespace EcommerceProject.Models.Validators.Profile
+{
 public class PatchProfileRequestValidator : AbstractValidator<PatchProfileRequestDto>
 {
     public PatchProfileRequestValidator()
@@ -34,4 +38,5 @@ public class PatchProfileRequestValidator : AbstractValidator<PatchProfileReques
             .InclusiveBetween((short)0, (short)1)
             .When(x => x.Status != null);
     }
+}
 }

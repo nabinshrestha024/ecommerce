@@ -1,6 +1,8 @@
 using FluentValidation;
 using EcommerceProject.Models.DTOs.Profile;
 
+namespace EcommerceProject.Models.Validators.Profile
+{
 public class ChangePasswordRequestValidator : AbstractValidator<ChangePasswordRequestDto>
 {
     public ChangePasswordRequestValidator()
@@ -23,4 +25,5 @@ public class ChangePasswordRequestValidator : AbstractValidator<ChangePasswordRe
             //.Matches(@"[\W_]+")
             //.WithMessage("New password must contain at least one special character.");
     }  
+}
 }
