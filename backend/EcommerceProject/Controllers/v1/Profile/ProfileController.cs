@@ -27,7 +27,7 @@ public class ProfileController : ControllerBase
         [FromBody] UpdateProfileRequestDto dto)
     {
         await _userProfileService.PutUpdateProfileAsync(userId, dto);
-        return NoContent();;
+        return NoContent();
     }
 
     [HttpPatch("{userId:int}")]
