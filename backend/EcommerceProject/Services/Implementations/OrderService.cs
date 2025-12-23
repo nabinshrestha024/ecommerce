@@ -16,7 +16,7 @@ namespace EcommerceProject.Services.Implementations
 
         public async Task<(int OrderId, decimal TotalAmount)> CreateOrderFromCartAsync(int userId, CreateOrderRequestDto dto, CancellationToken ct)
         {
-            await new CreateOrderRequestValidator().ValidateAndThrowAsync(dto, ct);
+            await new CreateOrderRequestValidator().ValidateAsync(dto, ct);
             return await _repo.CreateFromCartAsync(userId, dto, ct);
         }
 
