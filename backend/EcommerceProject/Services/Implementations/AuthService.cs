@@ -1,12 +1,14 @@
 ﻿using Dapper;
 using EcommerceProject.Database;
 using EcommerceProject.Models.DTOs.User;
+using EcommerceProject.Repositories.Implementations;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
 using EcommerceProject.utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Security.Cryptography;
 
 namespace EcommerceProject.Services.Implementations
 {
@@ -18,7 +20,8 @@ namespace EcommerceProject.Services.Implementations
         private readonly IJwtTokenService _jwtService;
         private readonly IAuthRepository _auth;
         private readonly IHttpContextAccessor _httpContext;
-        public AuthService(IConfiguration configuration, ISqlConnectionFactory connectionFactory, IUserService userService, IJwtTokenService jwtService, IAuthRepository auth, IHttpContextAccessor httpcontext)
+        private readonly IPasswordRepository _passwordResetRepository;
+        public AuthService(IConfiguration configuration, ISqlConnectionFactory connectionFactory, IUserService userService, IJwtTokenService jwtService, IAuthRepository auth, IHttpContextAccessor httpcontext,IPasswordRepository passwordRepository)
         {
             _configuration = configuration;
             _connectionFactory = connectionFactory;
@@ -26,12 +29,13 @@ namespace EcommerceProject.Services.Implementations
             _jwtService = jwtService;
             _auth = auth ?? throw new ArgumentNullException(nameof(auth));
             _httpContext = httpcontext ?? throw new ArgumentNullException(nameof(httpcontext));
+            _passwordResetRepository = passwordRepository;
         }
 
         public async Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto)
         {
-            var existingUser = await _userService.GetUserByEmailAsync(registerDto.Email);
-            if (existingUser != null)
+            var existingUser = await _userService.GetUserByEmailAsync(registerDto.Email,false);
+                if (existingUser != null)
             {
                 throw new Exception("User with this email already exists.");
             }
@@ -39,10 +43,6 @@ namespace EcommerceProject.Services.Implementations
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password);
 
             using var connection = _connectionFactory.CreateConnection();
-            using var command = new SqlCommand("spUser_RegisterUser", (SqlConnection)connection)
-            {
-                CommandType = CommandType.StoredProcedure
-            };
 
             var parameters = new DynamicParameters();
             parameters.Add("@FullName", registerDto.FullName);
@@ -62,16 +62,16 @@ namespace EcommerceProject.Services.Implementations
 
             var userId = parameters.Get<int>("@UserId");
 
+            var newUser = await _userService.GetUserByIdAsync(userId);
 
-
-            var user = await _userService.GetUserByIdAsync(userId);
-            if (user == null)
+            if(newUser == null)
             {
-                throw new Exception("User registration failed.");
+                throw new Exception("User registration failed");
             }
 
 
-            var token = _jwtService.GenerateJwtToken(user);
+
+            var token = _jwtService.GenerateJwtToken(newUser);
 
 
             return new AuthResponseDto
@@ -81,14 +81,14 @@ namespace EcommerceProject.Services.Implementations
 
                 user = new UserDto
                 {
-                    UserId = user.UserId,
-                    Email = user.Email!,
-                    FullName = user.FullName!,
-                    Phone = user.Phone,
-                    Address = user.Address,
-                    City = user.City,
-                    Role = user.Role,
-                    CreatedAt = user.CreatedAt
+                    UserId = newUser.UserId,
+                    Email = newUser.Email!,
+                    FullName = newUser.FullName!,
+                    Phone = newUser.Phone,
+                    Address = newUser.Address,
+                    City = newUser.City,
+                    Role = newUser.Role,
+                    CreatedAt = newUser.CreatedAt
                 }
             };
 
@@ -98,7 +98,7 @@ namespace EcommerceProject.Services.Implementations
 
         public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
         {
-            var user = await _userService.GetUserByEmailAsync(loginDto.Email);
+            var user = await _userService.GetUserByEmailAsync(loginDto.Email,true);
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash!))
             {
                 throw new Exception("Invalid email or password.");
@@ -220,15 +220,33 @@ namespace EcommerceProject.Services.Implementations
         }
 
 
+        public async Task GeneratePasswordResetAsync(string email)
+        {
+            var user = await _userService.GetUserByEmailAsync(email,false);
+            if (user == null) return; 
+
+            var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64))
+                                .Replace("/", "")
+                                .Replace("+", "")
+                                .Replace("=", "");
+
+            var expiry = DateTime.UtcNow.AddMinutes(30);
+
+            await _passwordResetRepository.SaveTokenAsync(user.UserId, token, expiry);
+
+            
+        }
+
+        public async Task ResetPasswordAsync(string token, string newPassword)
+        {
+            var hash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            await _passwordResetRepository.ResetPasswordAsync(token, hash);
+        }
+
+
         public async Task LogoutAsync(int userId)
         {
-            using var connection = _connectionFactory.CreateConnection();
-
-            await connection.ExecuteAsync(
-                "spUser_Logout",
-                new { UserId = userId },
-                commandType: CommandType.StoredProcedure
-            );
+            await _auth.RevokeRefreshTokenAsync(userId);
         }
     }
 }

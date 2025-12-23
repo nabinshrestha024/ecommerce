@@ -304,4 +304,41 @@ CREATE TABLE SystemSettings (
 PRINT 'Table SystemSettings created.';
 GO
 
+CREATE TABLE DiscountUsages (
+    UsageId INT PRIMARY KEY IDENTITY,
+    DiscountId INT,
+    UserId INT,
+    UsedDate DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (DiscountId) REFERENCES Discounts(DiscountId)
+);
+PRINT 'Table DiscountUsahes created.';
+
+CREATE TABLE Discounts (
+    DiscountId INT PRIMARY KEY IDENTITY,
+    ProductId INT NOT NULL,
+    DiscountType VARCHAR(20), 
+    DiscountValue DECIMAL(10,2), 
+    IsPercentage BIT,
+    MinQuantity INT NULL, 
+    StartDate DATETIME,
+    EndDate DATETIME,
+    MaxUsage INT NULL,
+    PerUserLimit INT NULL,
+    IsActive BIT DEFAULT 1,
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId)
+);
+
+PRINT 'Table Discounttable created.';
+
+
+CREATE TABLE PasswordResetToken
+(
+    UserId INT,
+    Token VARCHAR(500),
+    Expiry DATETIME,
+    PRIMARY KEY(Token)
+);
+PRINT 'Table PasswordResetToken.';
+
 PRINT 'DATABASE SETUP COMPLETED SUCCESSFULLY';
+

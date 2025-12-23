@@ -8,5 +8,7 @@ namespace EcommerceProject.Repositories.Interfaces
         Task<User?> GetUserByRefreshTokenAsync(string refreshToken);
         Task RotateRefreshTokenAsync(string oldToken, string newToken);
         Task RevokeRefreshTokenAsync(int userId);
+
+
     }
 }

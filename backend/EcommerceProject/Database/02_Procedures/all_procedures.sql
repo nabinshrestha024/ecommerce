@@ -714,3 +714,365 @@ BEGIN
     EXEC spPurchaseOrders_GetById @POId
 END
 GO
+
+
+PRINT 'Running Password/spPasswordReset_Reset.sql'
+GO
+
+CREATE OR ALTER PROCEDURE spPasswordReset_Reset
+    @Token NVARCHAR(500),
+    @NewPasswordHash NVARCHAR(255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @UserId INT;
+
+    SELECT @UserId = UserId
+    FROM PasswordResetTokens
+    WHERE Token = @Token
+      AND Expiry > GETUTCDATE();
+
+    IF @UserId IS NOT NULL
+    BEGIN
+        UPDATE Users
+        SET PasswordHash = @NewPasswordHash,
+            UpdatedAt = GETUTCDATE()
+        WHERE UserId = @UserId;
+
+        DELETE FROM PasswordResetTokens WHERE Token = @Token;
+    END
+END
+
+GO
+
+PRINT 'Running Password/spPasswordReset_Save.sql'
+Go
+
+
+CREATE OR ALTER PROCEDURE spPasswordReset_Save
+    @UserId INT,
+    @Token NVARCHAR(500),
+    @Expiry DATETIME
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DELETE FROM PasswordResetTokens WHERE UserId = @UserId;
+
+    INSERT INTO PasswordResetTokens (UserId, Token, Expiry)
+    VALUES (@UserId, @Token, @Expiry);
+END
+
+GO
+
+PRINT 'Running Auth/spUser_DeleteUser.sql'
+GO
+CREATE OR ALTER PROCEDURE spUser_DeleteUser
+    @UserId INT
+AS
+BEGIN
+    UPDATE Users
+    SET 
+        DeletedAt = GETUTCDATE(),
+        IsActive = 0
+    WHERE UserId = @UserId;
+END
+
+GO
+
+
+PRINT 'Running Auth/spUser_GetAllUsers.sql'
+GO
+CREATE OR ALTER PROCEDURE [dbo].[spUser_GetAllUsers]
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    SELECT 
+        UserId, Email, FullName, Status, 
+        ProfileImageUrl, Phone, Address, City, Role, 
+        IsActive, CreatedAt, UpdatedAt
+    FROM Users 
+    WHERE DeletedAt IS NULL
+    ORDER BY CreatedAt DESC;
+END
+
+GO
+
+    PRINT 'Running Auth/spUser_GetAllUsersPaged.sql'
+        GO
+CREATE OR ALTER PROCEDURE spUser_GetAllUsersPaged
+    @PageNumber INT,
+    @PageSize INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM Users
+    WHERE IsActive = 1 
+    ORDER BY UserId
+    OFFSET (@PageNumber - 1) * @PageSize ROWS
+    FETCH NEXT @PageSize ROWS ONLY;
+
+    
+    SELECT COUNT(*) AS TotalCount FROM Users WHERE IsActive = 1;
+END
+
+    GO
+    PRINT 'Running Auth/spUser_GetByRefreshToken.sql'
+    GO
+
+    CREATE OR ALTER PROC [dbo].[spUser_GetByRefreshToken] 
+(
+	@refreshToken varchar(max)
+)
+AS 
+BEGIN 
+	IF NOT EXISTS(
+		SELECT 1 FROM
+		Users
+		WHERE 
+		refreshToken = @refreshToken
+	)
+	RETURN;
+
+	SELECT 
+	*
+	FROM
+	Users
+	WHERE refreshToken = @refreshToken
+END
+
+
+GO
+
+
+PRINT 'Running Auth/spUser_GetUserByEmail.sql'
+Go
+CREATE OR ALTER PROCEDURE [dbo].[spUser_GetUserByEmail]
+    @Email NVARCHAR(255)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    SELECT 
+        UserId, Email, PasswordHash, FullName, Status, 
+        ProfileImageUrl, Phone, Address, City, Role, 
+        IsActive, CreatedAt, UpdatedAt, DeletedAt
+    FROM Users 
+    WHERE Email = @Email AND DeletedAt IS NULL;
+END
+
+GO
+
+PRINT 'Running Auth/spUser_GetUserById.sql'
+GO
+CREATE OR ALTER PROCEDURE [dbo].[spUser_GetUserById]
+    @UserId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    SELECT 
+        UserId, Email, PasswordHash, FullName, Status, 
+        ProfileImageUrl, Phone, Address, City, Role, 
+        IsActive, CreatedAt, UpdatedAt, DeletedAt
+    FROM Users 
+    WHERE UserId = @UserId AND DeletedAt IS NULL;
+END
+
+GO
+
+PRINT 'Running Auth/spUser_Logout.sql'
+GO
+
+
+CREATE OR ALTER PROCEDURE [dbo].[spUser_Logout]
+    @UserId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE UserRefreshTokens
+    SET IsRevoked = 1
+    WHERE UserId = @UserId;
+
+END;
+
+GO
+
+    PRINT 'Running Auth/spUser_RegisterUser.sql'
+    GO
+
+
+CREATE OR ALTER PROCEDURE [dbo].[spUser_RegisterUser]
+
+    @Email NVARCHAR(255),
+    @PasswordHash NVARCHAR(MAX),
+    @FullName NVARCHAR(255),
+    @Phone NVARCHAR(20) = NULL,
+    @Address NVARCHAR(500) = NULL,
+    @City NVARCHAR(100) = NULL,
+    @Role BIT = 0,
+    @UserId INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    IF EXISTS (SELECT 1 FROM Users WHERE Email = @Email AND DeletedAt IS NULL)
+    BEGIN
+        THROW 50001, 'Email already exists', 1;
+        RETURN;
+    END
+    
+    INSERT INTO Users (Email, PasswordHash, FullName, Phone, Address, City, Role, IsActive, CreatedAt)
+    VALUES (@Email, @PasswordHash, @FullName, @Phone, @Address, @City, @Role, 1, GETDATE());
+    
+    SET @UserId = SCOPE_IDENTITY();
+END
+
+GO
+
+PRINT 'Running Auth/spUser_RevokeRefreshToken.sql'
+Go
+
+CREATE OR ALTER PROCEDURE [dbo].[spUser_RevokeRefreshToken]
+    @UserId INT
+AS
+BEGIN
+    UPDATE Users
+    SET 
+        RefreshToken = NULL,
+        UpdatedAt = SYSUTCDATETIME()
+    WHERE UserId = @UserId;
+END
+
+Go
+PRINT 'Running Auth/spUser_RotateRefreshToken.sql'
+GO
+
+
+CREATE OR ALTER PROCEDURE spUser_RotateRefreshToken
+    @OldRefreshToken VARCHAR(500),
+    @NewRefreshToken VARCHAR(500)
+AS
+BEGIN
+    UPDATE Users
+    SET 
+        RefreshToken = @NewRefreshToken,
+        UpdatedAt = SYSUTCDATETIME()
+    WHERE RefreshToken = @OldRefreshToken;
+END
+GO
+
+PRINT 'Running Auth/spUser_SaveRefreshToken.sql'
+Go
+
+CREATE OR ALTER PROCEDURE spUser_SaveRefreshToken
+
+
+    @UserId INT,
+    @RefreshToken VARCHAR(500)
+AS
+BEGIN
+    UPDATE Users
+    SET 
+        RefreshToken = @RefreshToken,
+        UpdatedAt = SYSUTCDATETIME()
+    WHERE UserId = @UserId AND IsActive = 1;
+END
+GO
+
+
+PRINT 'Running Auth/spUser_ValidateRefreshToken.sql'
+GO
+
+CREATE OR ALTER PROCEDURE spUser_ValidateRefreshToken
+    @RefreshToken VARCHAR(500)
+AS
+BEGIN
+    SELECT 
+        UserId,
+        Email,
+        FullName,
+        Role
+    FROM Users
+    WHERE 
+        RefreshToken = @RefreshToken
+        AND IsActive = 1;
+END
+
+GO
+
+PRINT 'Running Auth/spUser_UpdateUserStatus.sql'
+GO
+
+CREATE OR ALTER PROCEDURE [dbo].[UpdateUserStatus]
+    @UserId INT,
+    @IsActive BIT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    UPDATE Users 
+    SET 
+        IsActive = @IsActive,
+        UpdatedAt = GETDATE()
+    WHERE UserId = @UserId AND DeletedAt IS NULL;
+END
+
+GO
+
+PRINT 'Running Wishlist/whislistAdd.sql'
+GO
+
+CREATE OR ALTER PROCEDURE spWishlist_Add
+    @UserId INT,
+    @ProductId INT
+AS
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM Wishlists 
+        WHERE UserId = @UserId AND ProductId = @ProductId
+    )
+    BEGIN
+        INSERT INTO Wishlists (UserId, ProductId)
+        VALUES (@UserId, @ProductId)
+    END
+END
+GO
+
+PRINT 'Running wishlist/whislistdetele'
+GO
+
+CREATE OR ALTER PROCEDURE spWishlist_Delete
+    @WishlistId INT
+AS
+BEGIN
+    DELETE FROM Wishlists WHERE WishlistId = @WishlistId
+END
+GO
+
+
+PRINT 'Running wishlist/getbyuser'
+Go
+
+CREATE OR ALTER PROCEDURE spWishlist_GetByUser
+    @UserId INT
+AS
+BEGIN
+    SELECT 
+        w.WishlistId,
+        w.ProductId,
+        w.AddedDate,
+        p.Name,
+        p.Price
+    FROM Wishlists w
+    INNER JOIN Products p ON w.ProductId = p.ProductId
+    WHERE w.UserId = @UserId
+END
+GO
+
+
+

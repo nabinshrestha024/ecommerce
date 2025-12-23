@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE spUser_RotateRefreshToken
+﻿CREATE OR ALTER PROCEDURE spUser_RotateRefreshToken
     @OldRefreshToken VARCHAR(500),
     @NewRefreshToken VARCHAR(500)
 AS
