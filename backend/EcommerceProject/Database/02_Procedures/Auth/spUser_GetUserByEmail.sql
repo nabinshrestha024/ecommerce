@@ -1,6 +1,5 @@
 ﻿USE [EcommerceDB]
 GO
-/****** Object:  StoredProcedure [dbo].[spUser_GetUserByEmail]    Script Date: 12/19/2025 10:48:49 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
