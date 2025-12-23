@@ -1,18 +1,19 @@
 import { z } from "zod";
 export const VendorFormSchema = z.object({
-  id: z.string().min(1, "Vendor ID is required"),
   businessName: z
     .string()
     .min(2, "Business Name must be at least 2 characters"),
+  contactPerson: z
+    .string()
+    .min(2, "Contact Person must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   phone: z
     .string()
     .min(10, "Phone number must be at least 10 digits")
     .regex(/^\d+$/, "Phone number must contain only digits"),
   address: z.string().min(5, "Address must be at least 5 characters"),
-  totalProducts: z.number().min(0, "Total Products cannot be negative"),
-  completedOrders: z.number().min(0, "Completed Orders cannot be negative"),
-  canceledOrders: z.number().min(0, "Canceled Orders cannot be negative"),
+  status: z.enum(["active", "inactive"], "Status must be active or inactive"),
+  joinedOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/u, "Date must be YYYY-MM-DD"),
 });
 
 export type VendorFormValues = z.infer<typeof VendorFormSchema>;
