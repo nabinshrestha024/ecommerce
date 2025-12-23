@@ -1,10 +1,12 @@
 "use client";
 
+import { useAuth } from "@/contexts/AuthContext";
 import { loginFn } from "@/lib/auth/LoginFn";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export function useLogin() {
+  const { setToken } = useAuth();
   return useMutation({
     mutationKey: ["login"],
     mutationFn: loginFn,
@@ -12,9 +14,7 @@ export function useLogin() {
     onSuccess: (data) => {
       if (data) {
         toast.success("Login successful!");
-        if (typeof window !== "undefined") {
-          localStorage.setItem("token", data.token);
-        }
+        setToken(data.token);
       } else {
         toast.error("Login failed!");
       }
