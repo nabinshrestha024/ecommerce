@@ -10,6 +10,7 @@ import { IoSearch } from "react-icons/io5";
 import { Sidebar } from "./Sidebar";
 import { Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const TopNav = () => {
   const [open, setOpen] = useState(false);
@@ -66,7 +67,13 @@ export const TopNav = () => {
       category: "clothes",
     },
   ]);
+  const token = localStorage.getItem("token");
+  const isAuth = Boolean(token);
+  const { logout } = useAuth();
 
+  const handleLogout = () => {
+    logout();
+  };
   const [total, setTotal] = useState(0);
 
   const calculateTotal = () => {
@@ -126,9 +133,16 @@ export const TopNav = () => {
             Search
           </Button>
         </div>
-        <Link href="/login">
-          <Button>Login</Button>
-        </Link>
+        {!isAuth && (
+          <Link href="/login">
+            <Button>Login</Button>
+          </Link>
+        )}
+        {isAuth && (
+          <Link href="/home">
+            <Button onClick={handleLogout}>LogOut</Button>
+          </Link>
+        )}
         <div className="flex gap-2 shrink-0 items-center text-xl">
           <div onClick={() => setOpen(true)} className="cursor-pointer">
             <FaShoppingCart />
