@@ -1,4 +1,6 @@
-﻿CREATE OR ALTER PROCEDURE spUser_GetAllUsersPaged
+﻿USE [EcommerceDB];
+GO
+CREATE OR ALTER PROCEDURE spUser_GetAllUsersPaged
     @PageNumber INT,
     @PageSize INT
 AS

@@ -1,4 +1,6 @@
-﻿CREATE PROCEDURE spCart_RemoveCartItem
+﻿USE [EcommerceDB];
+GO
+CREATE OR ALTER PROCEDURE spCart_RemoveCartItem
     @CartId INT
 AS
 BEGIN

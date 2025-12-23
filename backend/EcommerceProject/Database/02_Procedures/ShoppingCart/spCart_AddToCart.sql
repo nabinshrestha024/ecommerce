@@ -1,4 +1,6 @@
-﻿CREATE PROCEDURE spCart_AddToCart
+﻿USE [EcommerceDB];
+GO
+CREATE OR ALTER PROCEDURE spCart_AddToCart
     @UserId INT,
     @ProductId INT,
     @Quantity INT

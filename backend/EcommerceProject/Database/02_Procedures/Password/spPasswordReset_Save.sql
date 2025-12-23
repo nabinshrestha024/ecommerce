@@ -1,4 +1,6 @@
-﻿CREATE OR ALTER PROCEDURE spPasswordReset_Save
+﻿USE [EcommerceDB];
+GO
+CREATE OR ALTER PROCEDURE spPasswordReset_Save
     @UserId INT,
     @Token NVARCHAR(500),
     @Expiry DATETIME

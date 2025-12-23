@@ -1,4 +1,6 @@
-﻿CREATE PROCEDURE spCart_GetCartByUser
+﻿USE [EcommerceDB];
+GO
+CREATE OR ALTER PROCEDURE spCart_GetCartByUser
     @UserId INT
 AS
 BEGIN

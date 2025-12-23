@@ -1,4 +1,7 @@
-﻿CREATE OR ALTER PROCEDURE spWishlist_GetByUser
+﻿USE [EcommerceDB];
+GO
+
+CREATE OR ALTER PROCEDURE spWishlist_GetByUser
     @UserId INT
 AS
 BEGIN

@@ -1,4 +1,6 @@
-﻿CREATE OR ALTER PROCEDURE spUser_DeleteUser
+﻿USE [EcommerceDB];
+GO
+CREATE OR ALTER PROCEDURE spUser_DeleteUser
     @UserId INT
 AS
 BEGIN

@@ -1,4 +1,6 @@
-﻿CREATE OR ALTER PROCEDURE spPasswordReset_Reset
+﻿USE [EcommerceDB];
+GO
+CREATE OR ALTER PROCEDURE spPasswordReset_Reset
     @Token NVARCHAR(500),
     @NewPasswordHash NVARCHAR(255)
 AS

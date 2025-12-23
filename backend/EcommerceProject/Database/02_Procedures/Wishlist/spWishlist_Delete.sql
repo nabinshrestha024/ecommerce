@@ -1,4 +1,6 @@
-﻿CREATE OR ALTER PROCEDURE spWishlist_Delete
+﻿USE [EcommerceDB];
+GO
+CREATE OR ALTER PROCEDURE spWishlist_Delete
     @WishlistId INT
 AS
 BEGIN

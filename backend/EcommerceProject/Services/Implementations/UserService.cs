@@ -23,14 +23,7 @@ namespace EcommerceProject.Services.Implementations
         public async Task<User> GetUserByEmailAsync(string email,bool IsLogin)
         {
             var user = await _userRepository.GetUserByEmailAsync(email);
-            //if(user == null && IsLogin)
-            //{
-            //    throw new KeyNotFoundException("User not found");
-            //}
-            //if (user != null && !IsLogin)     
-            //{
-            //    throw new KeyNotFoundException("User already exists");
-            //}
+
             return user;
         }
         public async Task<User> GetUserByIdAsync(int userId)
