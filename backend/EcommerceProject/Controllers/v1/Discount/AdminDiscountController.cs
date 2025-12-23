@@ -1,5 +1,6 @@
 ﻿using EcommerceProject.Models.DTOs.Discount;
 using EcommerceProject.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace EcommerceProject.Controllers.v1.Discount
 {
     [Route("v1/admin/discounts")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class AdminDiscountController : ControllerBase
     {
         private readonly IAdminDiscountService _service;

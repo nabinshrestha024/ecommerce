@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using EcommerceProject.Models.DTOs.Orders;
 using EcommerceProject.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace EcommerceProject.Controllers.v1.Orders
 {
     [Route("v1/orders")]
     [ApiController]
+    [Authorize(Roles = "Admin, Customer")]
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
