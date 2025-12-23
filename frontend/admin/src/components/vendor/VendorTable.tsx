@@ -10,74 +10,54 @@ import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import { Table } from "../Table/Table";
 import { Dialog } from "../Dialog/Dialog.tsx";
-import { VendorProfile } from "./VendorProfile.tsx";
 import { VendorForm } from "./VendorForm.tsx";
 export interface VendorTableProps {
   id: string;
-  name: string;
+  companyName: string;
+  contactPerson: string;
   email: string;
   phone: string;
-  status: "active" | "pending" | "inactive" | "blocked";
-  products: number;
-  lastActive: string;
+  address: string;
+  status: "active" | "inactive";
   joinedOn: string;
 }
 
 type Vendor = {
   id: string;
   businessName: string;
-  name?: string;
+  contactPerson?: string;
   email: string;
   phone: string;
-  status: "active" | "pending" | "inactive" | "blocked";
+  status: "active" | "inactive";
   totalProducts: number;
   products?: number;
-  lastActive: string;
   joinedOn: string;
   address: string;
   completedOrders?: number;
   canceledOrders?: number;
-  avatar?: string;
 };
 
-const mapToVendorProfile = (vendor: VendorTableProps) => ({
-  name: vendor.name,
-  email: vendor.email,
-  phone: vendor.phone,
-  status: vendor.status,
-  businessName: vendor.name,
-  totalProducts: vendor.products,
-  joinedOn: vendor.joinedOn,
-  lastActive: vendor.lastActive,
-  avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(vendor.name)}&background=random`,
-  address: "N/A",
-});
+// Profile mapping removed; table no longer displays profile sidebar
 
 const mapTableToVendor = (v: VendorTableProps): any => ({
   id: v.id,
-  businessName: v.name,
-  name: v.name,
+  businessName: v.companyName,
+  contactPerson: v.contactPerson,
   email: v.email,
   phone: v.phone,
   status: v.status,
-  totalProducts: v.products,
-  products: v.products,
-  lastActive: v.lastActive,
   joinedOn: v.joinedOn,
-  address: "N/A",
-  completedOrders: 0,
-  canceledOrders: 0,
-  avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(v.name)}&background=random`,
+  address: v.address,
 });
 
 const mapVendorToTable = (v: Partial<Vendor> | any): VendorTableProps => ({
   id: v.id ?? "",
-  name: v.businessName ?? v.name ?? "",
+  companyName: v.businessName ?? "",
+  contactPerson: v.contactPerson ?? "",
   email: v.email ?? "",
   phone: v.phone ?? "",
+  address: v.address ?? "",
   status: v.status ?? "inactive",
-  products: v.totalProducts ?? v.products ?? 0,
-  lastActive: v.lastActive ?? "",
   joinedOn: v.joinedOn ?? "",
 });
 
@@ -114,8 +94,19 @@ export const VendorTable = () => {
       header: "Vendor Id",
       cell: (info) => <div className="cursor-pointer">{info.getValue()}</div>,
     }),
-    columnHelper.accessor("name", {
-      header: "Name",
+    columnHelper.accessor("companyName", {
+      header: "Company Name",
+      cell: (info) => (
+        <div
+          onClick={() => handleRowClick(info.row.original)}
+          className="cursor-pointer flex justify-start items-center"
+        >
+          {info.getValue()}
+        </div>
+      ),
+    }),
+    columnHelper.accessor("contactPerson", {
+      header: "Contact Person",
       cell: (info) => (
         <div
           onClick={() => handleRowClick(info.row.original)}
@@ -147,19 +138,8 @@ export const VendorTable = () => {
         </div>
       ),
     }),
-    columnHelper.accessor("products", {
-      header: "Products",
-      cell: (info) => (
-        <div
-          onClick={() => handleRowClick(info.row.original)}
-          className="cursor-pointer"
-        >
-          {info.getValue()}
-        </div>
-      ),
-    }),
-    columnHelper.accessor("lastActive", {
-      header: "Last Active",
+    columnHelper.accessor("address", {
+      header: "Address",
       cell: (info) => (
         <div
           onClick={() => handleRowClick(info.row.original)}
@@ -187,9 +167,7 @@ export const VendorTable = () => {
 
         const statusStyles: Record<string, { dot: string; text: string }> = {
           active: { dot: "bg-[#21C45D]", text: "text-[#21C45D]" },
-          pending: { dot: "bg-[#F59E0B]", text: "text-[#F59E0B]" },
           inactive: { dot: "bg-[#9CA3AF]", text: "text-[#9CA3AF]" },
-          blocked: { dot: "bg-[#EF4343]", text: "text-[#EF4343]" },
         };
 
         const style = statusStyles[value] ?? statusStyles.inactive;
@@ -262,12 +240,6 @@ export const VendorTable = () => {
         <div className="flex-1">
           <Table table={table} pageIndex={pagination.pageIndex} />
         </div>
-
-        {selectedVendor && (
-          <div className="w-[350px] mt-5">
-            <VendorProfile vendor={mapToVendorProfile(selectedVendor)} />
-          </div>
-        )}
       </div>
     </div>
   );
