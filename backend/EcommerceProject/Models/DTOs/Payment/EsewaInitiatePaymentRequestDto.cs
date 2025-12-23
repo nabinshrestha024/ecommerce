@@ -1,6 +1,6 @@
 namespace EcommerceProject.Models.DTOs.Payment
 {
-    public class EsewaInitiateRequestDto
+    public class EsewaInitiatePaymentRequestDto
     {
         public int OrderId { get; set; }
     } 

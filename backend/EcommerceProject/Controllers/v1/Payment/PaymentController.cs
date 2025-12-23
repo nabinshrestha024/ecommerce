@@ -1,28 +1,42 @@
-using EcommerceProject.Services.Interfaces;
+using EcommerceProject.Models.DTOs.Payment;
+using EcommerceProject.Services.Implementations;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Text;
+
+
 
 [ApiController]
-[Route("v1/payments/esewa")]
-public class PaymentController : ControllerBase
+[Route("api/payments/esewa")]
+public class EsewaController : ControllerBase
 {
-    private readonly IPaymentService _service;
+    private readonly PaymentService _service;
 
-    public PaymentController(IPaymentService service)
+    public EsewaController(PaymentService service)
     {
         _service = service;
     }
 
-    [HttpGet("success")]
-    public IActionResult Success(int oid, string refId)
+    [HttpPost("initiate")]
+    public IActionResult Initiate(EsewaInitiatePaymentRequestDto dto)
     {
-        _service.EsewaSuccess(oid, refId, refId);
-        return Ok("Payment Success");
+        return Ok(_service.InitiateEsewaPayment(dto.OrderId, dto.Amount));
     }
 
-    [HttpGet("failure")]
-    public IActionResult Failure(int oid)
+    [HttpPost("success")]
+    public async Task<IActionResult> Success([FromForm] string data)
     {
-        _service.EsewaFailure(oid);
-        return Ok("Payment Failed");
+        var json = Encoding.UTF8.GetString(Convert.FromBase64String(data));
+        var cb = JsonConvert.DeserializeObject<EsewaCallbackResponseDto>(json);
+
+        await _service.HandleEsewaSuccessAsync(cb);
+        return Ok("Payment successful");
+    }
+
+    [HttpPost("failure")]
+    public async Task<IActionResult> Failure([FromForm] string transaction_uuid)
+    {
+        await _service.HandleEsewaFailureAsync(transaction_uuid);
+        return Ok("Payment failed");
     }
 }
