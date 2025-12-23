@@ -1,11 +1,7 @@
 ﻿USE [EcommerceDB]
 GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 
-CREATE OR ALTER PROCEDURE [dbo].[UpdateUserStatus]
+CREATE OR ALTER PROCEDURE UpdateUserStatus
     @UserId INT,
     @IsActive BIT
 AS

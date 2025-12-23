@@ -1,10 +1,7 @@
 ﻿USE [EcommerceDB]
 GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE OR ALTER PROCEDURE [dbo].[spUser_RegisterUser]
+
+CREATE OR ALTER PROCEDURE spUser_RegisterUser
     @Email NVARCHAR(255),
     @PasswordHash NVARCHAR(MAX),
     @FullName NVARCHAR(255),
