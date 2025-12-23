@@ -33,7 +33,7 @@ namespace EcommerceProject.Controllers
         public async Task<IActionResult> PutUpdateProfile(
         int userId,
         [FromForm] UpdateProfileWithImageRequestDto body           
-        )  // Move CancellationToken to the end
+        ) 
         {
                 try
                 {
@@ -42,7 +42,7 @@ namespace EcommerceProject.Controllers
                     body, 
                     body.ProfileImageFile,
                     body.RemoveProfileImage
-                    );  // Pass the CancellationToken
+                    ); 
                 
                     return NoContent();
                 }
