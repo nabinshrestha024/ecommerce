@@ -1,12 +1,14 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Dispatch, SetStateAction } from "react";
+import { useForm } from "react-hook-form";
 import { RegisterFormSchema, RegisterFormSchemaType } from "./registerForm.zod";
 import { Label } from "@/ui/label";
 import { Input } from "@/ui/input";
 import { Button } from "@/ui/button";
+import { useRegister } from "@/hooks/auth/useRegister";
+
+export type RegisterPayload = Omit<RegisterFormSchemaType, "repassword">;
 
 export const RegisterForm = ({}: {
   setOpen?: Dispatch<SetStateAction<boolean>>;
@@ -14,19 +16,18 @@ export const RegisterForm = ({}: {
   const {
     register,
     handleSubmit,
-    control,
     reset,
     formState: { errors },
   } = useForm<RegisterFormSchemaType>({
     resolver: zodResolver(RegisterFormSchema),
-    mode: "onChange",
+    mode: "onBlur",
   });
 
-  const [previewUrl, setPreviewUrl] = useState<string>("");
-  const imageRef = useRef<HTMLInputElement>(null);
+  const { mutate } = useRegister();
 
   const onSubmit = (data: RegisterFormSchemaType) => {
-    console.log(data);
+    const { repassword, ...payload } = data;
+    mutate(payload as RegisterPayload);
     reset();
   };
 
@@ -39,13 +40,13 @@ export const RegisterForm = ({}: {
       <div className="">
         <div className="flex flex-col gap-6 px-2 max-h-[300px] overflow-scroll overflow-x-hidden">
           <div className="grid gap-2">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="fullName">Full name</Label>
             <Input
-              id="name"
-              {...register("name")}
-              placeholder="Enter your name"
+              id="fullName"
+              {...register("fullName")}
+              placeholder="Enter your full name"
             />
-            <p className="text-red-500">{errors.name?.message}</p>
+            <p className="text-red-500">{errors.fullName?.message}</p>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
@@ -58,13 +59,13 @@ export const RegisterForm = ({}: {
             <p className="text-red-500">{errors.email?.message}</p>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="phoneNumber">Phone number</Label>
+            <Label htmlFor="phone">Phone number</Label>
             <Input
               type="text"
               inputMode="numeric"
               maxLength={10}
               pattern="[0-9]{10}"
-              {...register("phoneNumber", {
+              {...register("phone", {
                 required: "Phone number is required",
                 pattern: {
                   value: /^\d{10}$/,
@@ -74,7 +75,7 @@ export const RegisterForm = ({}: {
               placeholder="Enter your phone number"
               className="no-spinner"
             />
-            <p className="text-red-500">{errors.phoneNumber?.message}</p>
+            <p className="text-red-500">{errors.phone?.message}</p>
           </div>
           <div className="grid gap-2">
             <Label htmlFor="password">Password</Label>
@@ -116,56 +117,6 @@ export const RegisterForm = ({}: {
             />
             <p className="text-red-500">{errors.city?.message}</p>
           </div>
-          <Controller
-            name="profilePicture"
-            control={control}
-            render={({ field }) => (
-              <div className="grid gap-2">
-                <Label htmlFor="profilePicture">Profile Picture</Label>
-
-                {previewUrl ? (
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="h-24 w-24 rounded-full overflow-hidden border">
-                      <Image
-                        src={previewUrl}
-                        alt="Profile Preview"
-                        width={200}
-                        height={200}
-                        className="object-cover"
-                      />
-                    </div>
-                    <Button
-                      variant="secondary"
-                      type="button"
-                      onClick={() => imageRef.current?.click()}
-                    >
-                      Choose Another
-                    </Button>
-                  </div>
-                ) : null}
-
-                <Input
-                  type="file"
-                  accept="image/*"
-                  ref={(e) => {
-                    field.ref(e);
-                    imageRef.current = e;
-                  }}
-                  style={{ display: previewUrl ? "none" : "block" }}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      field.onChange(file);
-                      setPreviewUrl(URL.createObjectURL(file));
-                    }
-                  }}
-                />
-                <p className="text-red-500 text-sm">
-                  {errors.profilePicture?.message}
-                </p>
-              </div>
-            )}
-          />
         </div>
         <div>
           <Button type="submit" className="mt-5 w-full" value={"Register"}>
