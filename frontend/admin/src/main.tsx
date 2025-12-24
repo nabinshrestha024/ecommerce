@@ -6,14 +6,17 @@ import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
 import { SidebarProvider } from "./ui/sidebar.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthProvider } from "./context/AuthContext.tsx";
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <SidebarProvider>
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>
-          <App />
-          <Toaster />
+          <AuthProvider>
+            <App />
+            <Toaster />
+          </AuthProvider>
         </QueryClientProvider>
       </BrowserRouter>
     </SidebarProvider>
