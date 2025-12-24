@@ -44,9 +44,6 @@ export const Review = () => {
                       }
                     />
                   ))}
-                  <span className="ml-2 text-sm text-gray-600">
-                    ({item.message})
-                  </span>
                 </div>
               </div>
             </div>
