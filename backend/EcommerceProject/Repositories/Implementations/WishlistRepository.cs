@@ -39,13 +39,13 @@ namespace EcommerceProject.Repositories.Implementations
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task DeleteWishlistItem(int wishlistItemId)
+        public async Task DeleteWishlistItem(int wishlistId)
         {
             using var conn = _connectionFactory.CreateConnection();
             await conn.ExecuteAsync("spWishlist_Delete",
                 new
                 {
-                    WishlistItemId = wishlistItemId
+                    WishlistId = wishlistId
                 },
                 commandType: CommandType.StoredProcedure);
         }
