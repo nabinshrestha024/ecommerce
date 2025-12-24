@@ -1,6 +1,6 @@
 ﻿USE [EcommerceDB]
 GO
-ALTER PROCEDURE [dbo].[spUser_SaveRefreshToken]
+CREATE OR ALTER PROCEDURE [dbo].[spUser_SaveRefreshToken]
     @UserId INT,
     @RefreshToken VARCHAR(500),
     @Expiry DATETIME2
