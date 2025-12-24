@@ -9,7 +9,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
 import { Sidebar } from "./Sidebar";
 import { Trash2, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export const TopNav = () => {
@@ -84,10 +84,9 @@ export const TopNav = () => {
     return total;
   };
 
-  useEffect(() => {
-    let t = calculateTotal();
-    setTotal(t);
-  }, [cartItems, total]);
+  const token = localStorage.getItem("token");
+  const isAuth = Boolean(token);
+  const { logout } = useAuth();
 
   const handleDelete = (id: number) => {
     setCartItems((prev) => prev.filter((val) => val.id !== id));
@@ -133,16 +132,16 @@ export const TopNav = () => {
             Search
           </Button>
         </div>
-        {!isAuth && (
+        {isAuth ? (
+          <Link href="/home">
+            <Button onClick={logout}>Logout</Button>
+          </Link>
+        ) : (
           <Link href="/login">
             <Button>Login</Button>
           </Link>
         )}
-        {isAuth && (
-          <Link href="/home">
-            <Button onClick={handleLogout}>LogOut</Button>
-          </Link>
-        )}
+
         <div className="flex gap-2 shrink-0 items-center text-xl">
           <div onClick={() => setOpen(true)} className="cursor-pointer">
             <FaShoppingCart />
@@ -206,7 +205,9 @@ export const TopNav = () => {
               ))}
               <div className="text-xl font-semibold flex items-center gap-2">
                 Grand Total:{" "}
-                <span className="text-3xl text-green-500">${total}</span>
+                <span className="text-3xl text-green-500">
+                  ${calculateTotal()}
+                </span>
               </div>
             </div>
           </div>

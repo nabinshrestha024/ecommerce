@@ -7,8 +7,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/ui/button";
 import Link from "next/link";
+import { useLogin } from "@/hooks/auth/useLogin";
+import { useRouter } from "next/navigation";
 
 export const LoginForm = () => {
+  const router = useRouter();
+  const { mutate } = useLogin();
   const {
     register,
     handleSubmit,
@@ -22,6 +26,8 @@ export const LoginForm = () => {
   const onSubmit = (data: LoginFormSchemaType) => {
     console.log(data);
     reset();
+    mutate(data);
+    router.push("/");
   };
 
   return (
