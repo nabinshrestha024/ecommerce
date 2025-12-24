@@ -8,7 +8,6 @@ CREATE OR ALTER PROCEDURE spNotifications_Create
 AS
 BEGIN
     SET NOCOUNT ON;
-
     INSERT INTO Notifications(UserId, Title, Message, IsRead, CreatedAt, OrderId)
     VALUES (@UserId, @Title, @Message, 0, SYSUTCDATETIME(), @OrderId);
 
