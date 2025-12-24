@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/contexts/AuthContext";
-import { loginFn } from "@/lib/auth/LoginFn";
+import { loginFn } from "@/lib/auth/loginFunction";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";

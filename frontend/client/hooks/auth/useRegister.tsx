@@ -1,6 +1,6 @@
 "use client";
 
-import { registerFn } from "@/lib/auth/RegisterFn";
+import { registerFn } from "@/lib/auth/registerFunction";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
