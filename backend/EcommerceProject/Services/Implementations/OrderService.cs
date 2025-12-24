@@ -12,12 +12,31 @@ namespace EcommerceProject.Services.Implementations
     public class OrderService : IOrderService
     {
         private readonly IOrderRepository _repo;
-        public OrderService(IOrderRepository repo) => _repo = repo;
-
+        private readonly INotificationService _notification;
+        public OrderService(IOrderRepository repo, INotificationService notification)
+        {
+            _repo = repo;
+            _notification = notification;
+        }
         public async Task<(int OrderId, decimal TotalAmount)> CreateOrderFromCartAsync(int userId, CreateOrderRequestDto dto, CancellationToken ct)
         {
             await new CreateOrderRequestValidator().ValidateAsync(dto, ct);
-            return await _repo.CreateFromCartAsync(userId, dto, ct);
+            var (orderId, totalAmount) = await _repo.CreateFromCartAsync(userId, dto, ct);
+            await _notification.NotifyUserAsync(
+                userId,
+                "Order Placed",
+                $"Your order #{orderId} has been placed successfully.",
+                orderId,
+                sendEmail: true,
+                ct);
+
+            await _notification.NotifyAdminsAsync(
+                "New Order",
+                $"New order placed: #{orderId}",
+                orderId,
+                ct);
+
+            return (orderId, totalAmount);
         }
 
         public Task<List<OrderSummaryDto>> GetMyOrdersAsync(int userId, CancellationToken ct)
