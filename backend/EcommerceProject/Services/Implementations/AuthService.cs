@@ -79,17 +79,6 @@ namespace EcommerceProject.Services.Implementations
                 Token = token,
                 Expiration = DateTime.UtcNow.AddHours(Convert.ToDouble(_configuration["Jwt:AccessTokenExpiryInMinutes"])),
 
-                user = new UserDto
-                {
-                    UserId = newUser.UserId,
-                    Email = newUser.Email!,
-                    FullName = newUser.FullName!,
-                    Phone = newUser.Phone,
-                    Address = newUser.Address,
-                    City = newUser.City,
-                    Role = newUser.Role,
-                    CreatedAt = newUser.CreatedAt
-                }
             };
 
 
@@ -136,25 +125,12 @@ namespace EcommerceProject.Services.Implementations
                 }
     );
 
-
             return new AuthResponseDto
             {
                 Token = accesstoken,
                 RefreshToken = refreshToken,
-                Expiration = DateTime.UtcNow.AddHours(Convert.ToDouble(_configuration["Jwt:ExpireHours"])),
-                user = new UserDto
-                {
-                    UserId = user.UserId,
-                    Email = user.Email!,
-                    FullName = user.FullName!,
-                    Phone = user.Phone,
-                    Address = user.Address,
-                    City = user.City,
-                    Role = user.Role,
-                    CreatedAt = user.CreatedAt,
-
-
-                }
+                Expiration = DateTime.UtcNow.AddHours(Convert.ToDouble(_configuration["Jwt:ExpireHours"]))
+                
             };
         }
 
@@ -177,17 +153,6 @@ namespace EcommerceProject.Services.Implementations
                 Token = newAccessToken,
                 RefreshToken = newRefreshToken,
                 Expiration = DateTime.UtcNow.AddHours(Convert.ToDouble(_configuration["Jwt:ExpireHours"])),
-                user = new UserDto
-                {
-                    UserId = user.UserId,
-                    Email = user.Email!,
-                    FullName = user.FullName!,
-                    Phone = user.Phone,
-                    Address = user.Address,
-                    City = user.City,
-                    Role = user.Role,
-                    CreatedAt = user.CreatedAt
-                }
             };
         }
 
