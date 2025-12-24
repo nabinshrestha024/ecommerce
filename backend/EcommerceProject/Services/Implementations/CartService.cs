@@ -14,6 +14,7 @@ namespace EcommerceProject.Services.Implementations
         public CartService(ICartRepository cartRepository, IProductRepository productRepository )
         {
             _cartRepository = cartRepository;
+            _productRepository = productRepository;
         }
 
         public async Task<IEnumerable<CartItemDto>> GetCartAsync(int userId)
@@ -24,39 +25,31 @@ namespace EcommerceProject.Services.Implementations
             return await _cartRepository.GetCartAsync(userId);
         }
 
-        public async Task AddToCartAsync(int userId, int productId, int quantity)
+        public async Task AddToCartAsync(int userId, string productName, int quantity)
         {
-            if(quantity <= 0)
+            int? productId = await _productRepository.GetProductIdByNameAsync(productName);
+
+            if(productId == null)
             {
-                throw new ArgumentException("Quantity must be greater than zero.");
+                throw new Exception($"Product'{productName}' not found");
+
+
             }
-            await _cartRepository.AddToCartAsync(userId, productId, quantity);
+            await _cartRepository.AddToCartAsync(userId, productId.Value, quantity);
         }
 
-        public async Task UpdateQuantityAsync(int cartItemId, int quantity)
+        public async Task UpdateQuantityAsync(int cartId, int quantity)
         {
             if (quantity <= 0)
             {
                 throw new ArgumentException("Quantity must be greater than zero.");
             }
-            await _cartRepository.UpdateQuantityAsync(cartItemId, quantity);
+            await _cartRepository.UpdateQuantityAsync(cartId, quantity);
         }
 
-        public async Task RemoveItemAsync(int cartItemId)
+        public async Task RemoveItemAsync(int cartId)
         {
-            await _cartRepository.RemoveCartAsync(cartItemId);
-        }
-
-        public async Task AddToCartAsync(int userId, string productName, int quantity)
-        {
-            
-
-            int? productId = await _productRepository.GetProductIdByNameAsync(productName);
-
-            if (productId == null)
-                throw new Exception($"Product '{productName}' not found");
-
-            await _cartRepository.AddToCartAsync(userId, productId.Value, quantity);
+            await _cartRepository.RemoveCartAsync(cartId);
         }
 
     }

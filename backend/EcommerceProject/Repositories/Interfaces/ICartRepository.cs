@@ -8,8 +8,8 @@ namespace EcommerceProject.Repositories.Interfaces
     {
         Task<IEnumerable<CartItemDto>> GetCartAsync(int userId);
         Task AddToCartAsync(int userId, int productId, int quantity);
-        Task UpdateQuantityAsync(int cartItemId, int quantity);
-        Task RemoveCartAsync(int cartItemId);
+        Task UpdateQuantityAsync(int cartId, int quantity);
+        Task RemoveCartAsync(int cartId);
 
     }
 }

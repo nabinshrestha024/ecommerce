@@ -147,7 +147,7 @@ namespace EcommerceProject.Repositories.Implementations
 
 
             return await _factory.CreateConnection().QueryFirstOrDefaultAsync<int?>(
-                "spProduct_GetProductIdByName",
+                "spProduct_GetIdByName",
                 new { ProductName = productName },
                 commandType: CommandType.StoredProcedure
             );

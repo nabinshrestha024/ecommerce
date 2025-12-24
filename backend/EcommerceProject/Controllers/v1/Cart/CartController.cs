@@ -26,7 +26,7 @@ namespace EcommerceProject.Controllers.v1.Cart
         }
 
 
-        [HttpGet("/get/cart")]
+        [HttpGet("get")]
 
         public async Task<IActionResult> GetCart()
         {
@@ -37,7 +37,7 @@ namespace EcommerceProject.Controllers.v1.Cart
         }
 
         
-        [HttpPost("/addcart")]
+        [HttpPost("add")]
 
         public async Task<IActionResult> AddCart([FromBody] AddCartRequestDto request)
         {
@@ -68,20 +68,20 @@ namespace EcommerceProject.Controllers.v1.Cart
             
         }
 
-        [HttpPut("{cartitemId}")]
+        [HttpPut("Update")]
 
-        public async Task<IActionResult> UpdateCartAsync(int cartItemId, [FromBody] int quantity)
+        public async Task<IActionResult> UpdateCartAsync(int cartId, [FromBody] UpdateCartDto request)
         {
 
-            await _cartService.UpdateQuantityAsync(cartItemId, quantity);
-            return Ok("Card updated");
+            await _cartService.UpdateQuantityAsync(cartId, request.Quantity);
+            return Ok(new { message = "Card updated" });
 
         }
 
-        [HttpDelete("{cartitemId}")]
-        public async Task<IActionResult> DeleteItem(int cartItemId)
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteItem(int cartId)
         {
-            await _cartService.RemoveItemAsync(cartItemId);
+            await _cartService.RemoveItemAsync(cartId);
             return Ok("Item removed");
         }
 

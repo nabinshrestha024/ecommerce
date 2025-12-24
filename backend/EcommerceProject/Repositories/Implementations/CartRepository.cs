@@ -37,22 +37,22 @@ namespace EcommerceProject.Repositories.Implementations
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task UpdateQuantityAsync(int cartItemId, int quantity)
+        public async Task UpdateQuantityAsync(int cartId, int quantity)
         {
             using var conn = _connectionFactory.CreateConnection();
-            await conn.ExecuteAsync("spCart_UpdateQuantiy",
+            await conn.ExecuteAsync("spCart_UpdateCartQuantity",
                 new { 
-                    CartItemId = cartItemId,
+                    CartId = cartId,
                     Quantity = quantity },
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task RemoveCartAsync(int cartItemId)
+        public async Task RemoveCartAsync(int cartId)
         {
             using var conn = _connectionFactory.CreateConnection();
             await conn.ExecuteAsync("spCart_RemoveCartItem",
                 new { 
-                    CartItemId = cartItemId },
+                    CartId = cartId },
                 commandType: CommandType.StoredProcedure);
         }
 
@@ -61,7 +61,7 @@ namespace EcommerceProject.Repositories.Implementations
         {
             return await _connectionFactory.CreateConnection().QueryFirstOrDefaultAsync<int?>(
                 "spProduct_GetIdByName",
-                new { ProductName = productName },
+                new { Name = productName },
                 commandType: CommandType.StoredProcedure
             );
         }

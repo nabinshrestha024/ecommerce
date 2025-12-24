@@ -1,14 +1,14 @@
-﻿USE EcommerceDB;
+﻿USE [EcommerceDB]
 GO
 
-CREATE OR ALTER PROCEDURE spProduct_GetIdByName
-    @Name VARCHAR(200)
+
+CREATE OR ALTER   PROCEDURE [dbo].[spProduct_GetIdByName]
+    @ProductName VARCHAR(200)
 AS
 BEGIN
     SET NOCOUNT ON;
 
     SELECT ProductId
     FROM Products
-    WHERE Name = @Name
+    WHERE Name = @ProductName
 END
-GO
