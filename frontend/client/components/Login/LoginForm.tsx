@@ -8,8 +8,10 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/ui/button";
 import Link from "next/link";
 import { useLogin } from "@/hooks/auth/useLogin";
+import { useRouter } from "next/navigation";
 
 export const LoginForm = () => {
+  const router = useRouter();
   const { mutate } = useLogin();
   const {
     register,
@@ -24,6 +26,7 @@ export const LoginForm = () => {
   const onSubmit = (data: LoginFormSchemaType) => {
     reset();
     mutate(data);
+    router.push("/");
   };
 
   return (
