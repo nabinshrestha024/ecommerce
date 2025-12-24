@@ -3,10 +3,12 @@ using System.Text;
 using EcommerceProject.Database;
 using EcommerceProject.Filters;
 using EcommerceProject.Hubs;
+using EcommerceProject.Models.Validators.Wishlist;
 using EcommerceProject.Repositories.Implementations;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Implementations;
 using EcommerceProject.Services.Interfaces;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -102,6 +104,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPasswordRepository, PasswordResetRepository>();
 builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
 builder.Services.AddScoped<IWishlistService, WishlistService>();
+
+builder.Services.AddScoped<IValidator<int>, GetWishlistValidator>();
 
 
 
