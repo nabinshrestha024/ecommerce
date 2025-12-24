@@ -19,6 +19,7 @@ namespace EcommerceProject.Models.DTOs.Profile
         public string? Gender { get; set; }
         public string? Bio { get; set; }
 
+        public ProfileImageDto? ProfileImage { get; set; }
         public List<UserSocialLinkDto> SocialLinks { get; set; } = new();
     }
 }
