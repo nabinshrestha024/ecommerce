@@ -4,7 +4,6 @@ import { BsPlusCircleFill } from "react-icons/bs";
 import { FaBagShopping } from "react-icons/fa6";
 import { CgProfile } from "react-icons/cg";
 import { BiCategory } from "react-icons/bi";
-import { IoExitOutline } from "react-icons/io5";
 import {
   Sidebar as Root,
   SidebarContent,
@@ -20,6 +19,7 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { TooltipContent, Tooltip, TooltipTrigger } from "@/ui/tooltip";
+import { LogoutButton } from "../Logout/LogoutButton";
 
 const items = [
   {
@@ -137,11 +137,7 @@ export const Sidebar = () => {
             )}
           </div>
 
-          {!collapsed && (
-            <div className="shrink-0">
-              <IoExitOutline className="text-2xl" />
-            </div>
-          )}
+          {!collapsed && <LogoutButton />}
         </div>
       </SidebarFooter>
     </Root>
