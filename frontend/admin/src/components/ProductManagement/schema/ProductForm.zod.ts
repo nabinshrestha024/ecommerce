@@ -7,7 +7,7 @@ const stringField = (message: string) =>
   );
 export const ProductFormSchema = z
   .object({
-    productName: stringField("Product name is required"),
+    name: stringField("Product name is required"),
 
     shortDescription: stringField("Short description is required"),
     description: stringField("Description is required"),
@@ -23,7 +23,7 @@ export const ProductFormSchema = z
       .optional()
       .transform((val) => (val === "" ? undefined : val)),
 
-    productCategories: z.string().min(1, "Product category is required"),
+    categories: z.string().min(1, "Product category is required"),
 
     images: z
       .instanceof(FileList)
@@ -51,8 +51,6 @@ export const ProductFormSchema = z
       .optional()
       .transform((val) => (val === "" ? undefined : val)),
 
-    taxIncluded: z.enum(["yes", "no"]).optional(),
-
     stockStatus: z.string().min(1, "Stock status is required"),
 
     highlightFeatured: z.boolean().optional(),
@@ -66,15 +64,4 @@ export const ProductFormSchema = z
       message: "Discounted price cannot be greater than product price",
       path: ["discountedPrice"],
     },
-  )
-  .superRefine((data, ctx) => {
-    if (data.stockStatus === "in-stock") {
-      if (!data.stockQuantity || data.stockQuantity < 1) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["stockQuantity"],
-          message: "Stock quantity must be at least 1",
-        });
-      }
-    }
-  });
+  );

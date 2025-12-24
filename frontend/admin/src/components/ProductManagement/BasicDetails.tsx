@@ -4,10 +4,8 @@ import { useFormContext } from "react-hook-form";
 export const BasicDetails = () => {
   const {
     register,
-    watch,
     formState: { errors },
   } = useFormContext();
-  const selectedCategory = watch("stockStatus");
   return (
     <Card
       className="flex flex-col shadow-[0px_1px_3px_0px_#00000033] w-full py-4 sm:py-6 px-4 sm:px-6 rounded-xl"
@@ -24,11 +22,11 @@ export const BasicDetails = () => {
               type="text"
               placeholder="Enter product name...."
               className="w-full bg-[#F9FAFB] h-12"
-              {...register("productName")}
+              {...register("name")}
             />
-            {errors.productName && (
+            {errors.name && (
               <p className="text-sm text-red-500 mt-1">
-                {errors.productName?.message as string}
+                {errors.name?.message as string}
               </p>
             )}
           </div>
@@ -120,42 +118,21 @@ export const BasicDetails = () => {
           </div>
           <div className="grid grid-cols-2 mt-6 gap-5">
             <div className="flex flex-col gap-3">
-              <label className="block text-sm font-medium ">Stock Status</label>
-              <select
-                {...register("stockStatus")}
-                defaultValue=""
-                className="w-full  h-9 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent flex items-center"
-              >
-                <option value="" disabled>
-                  Select stock status...
-                </option>
-                <option value="true">In Stock</option>
-                <option value="false">Out of Stock</option>
-              </select>
-              {errors.stockStatus && (
+              <label className="block text-sm font-medium ">
+                Stock Quantity
+              </label>
+              <Input
+                type="number"
+                placeholder="Stock quantity..."
+                {...register("stockQuantity")}
+                className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+              />
+              {errors.stockQuantity && (
                 <p className="text-sm text-red-500 mt-1">
-                  {errors.stockStatus?.message as string}
+                  {errors.stockQuantity?.message as string}
                 </p>
               )}
             </div>
-            {selectedCategory === "true" && (
-              <div className="flex flex-col gap-3">
-                <label className="block text-sm font-medium ">
-                  Stock Quantity
-                </label>
-                <Input
-                  type="number"
-                  placeholder="Stock quantity..."
-                  {...register("stockQuantity")}
-                  className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
-                />
-                {errors.stockQuantity && (
-                  <p className="text-sm text-red-500 mt-1">
-                    {errors.stockQuantity?.message as string}
-                  </p>
-                )}
-              </div>
-            )}
           </div>
           <div className="flex items-center gap-2">
             <input
