@@ -1,5 +1,5 @@
 "use client";
-import { LoginFunction } from "@/lib/auth/LoginFunction";
+import { LoginFunction } from "@/lib/auth/loginFn";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -19,8 +19,8 @@ export const useLogin = () => {
         toast.error("Invalid login response");
       }
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.error || "Login failed");
+    onError: () => {
+      toast.error("Login failed");
     },
   });
 };

@@ -37,7 +37,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <IoIosHeartEmpty />
           </div>
         </div>
-
         <div className="flex flex-col gap-2">
           <div className="text-[20px] font-medium line-clamp-1">
             {product.name}
