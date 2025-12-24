@@ -1,6 +1,7 @@
 ﻿using EcommerceProject.Models.DTOs.Common;
 using EcommerceProject.Models.DTOs.Orders;
 using EcommerceProject.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace EcommerceProject.Controllers.v1.Orders
 {
     [Route("v1/admin/orders")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class AdminOrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;

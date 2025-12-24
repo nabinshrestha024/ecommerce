@@ -1,8 +1,10 @@
 using EcommerceProject.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("v1/payments/esewa")]
+[Authorize(Roles = "Customer")]
 public class PaymentController : ControllerBase
 {
     private readonly IPaymentService _service;
