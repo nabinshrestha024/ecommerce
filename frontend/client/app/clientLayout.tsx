@@ -20,10 +20,6 @@ export default function ClientLayout({
       router.push("/home");
       return;
     }
-
-    if (!isAuth && pathname !== "/login") {
-      router.push("/login");
-    }
   }, [pathname, router]);
 
   return <AuthProvider>{children}</AuthProvider>;
