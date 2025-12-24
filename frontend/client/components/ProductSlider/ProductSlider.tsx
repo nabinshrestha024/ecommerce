@@ -3,7 +3,7 @@
 import Autoplay from "embla-carousel-autoplay";
 import { useMemo } from "react";
 import { Slides } from "./constants/Slides";
-import { Carousel } from "../carousel/Carousel";
+import { Carousel } from "../Carousel/Carousel";
 import Link from "next/link";
 
 export const ProductSlider = () => {
