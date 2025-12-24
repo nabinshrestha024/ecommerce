@@ -2,22 +2,49 @@ import { BasicDetails } from "@/components/ProductManagement/BasicDetails";
 import { Header } from "@/components/ProductManagement/Header";
 import { UploadProductDetails } from "@/components/ProductManagement/UploadProductDetails";
 import { Button } from "@/ui/button";
-import { Save } from "lucide-react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProductFormSchema } from "@/components/ProductManagement/schema/ProductForm.zod";
+import { useCreateProduct } from "@/hooks/useCreateProduct";
+import { useRef } from "react";
 export const ProductManagement = () => {
+  const { mutate, isPending } = useCreateProduct();
   const methods = useForm({
     resolver: zodResolver(ProductFormSchema),
     defaultValues: {
-      taxIncluded: "yes",
       highlightFeatured: false,
     },
     shouldUnregister: true,
     mode: "all",
   });
   const handleFormSubmit = (data: any) => {
-    console.log(data);
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("description", data.description || "");
+    formData.append("shortDescription", data.shortDescription || "");
+    formData.append("price", data.price);
+    if (data.categories) {
+      formData.append("categories", data.categories);
+    }
+    if (data.stockQuantity != null) {
+      formData.append("stockQuantity", data.stockQuantity);
+    }
+
+    const files: FileList | undefined = data.images;
+    if (files && files.length > 0) {
+      Array.from(files).forEach((file) => formData.append("images", file));
+    }
+    if (typeof data.primaryIndex === "number") {
+      formData.append("primaryIndex", String(data.primaryIndex));
+    }
+    const uploadRef = useRef<{ resetImages: () => void }>(null);
+    <UploadProductDetails ref={uploadRef} />;
+    mutate(formData, {
+      onSuccess: () => {
+        methods.reset();
+        uploadRef.current?.resetImages();
+      },
+    });
   };
   return (
     <div className="px-2 sm:px-3 md:px-5 pt-3 md:pt-5 pb-6 md:pb-8 w-full max-w-full">
@@ -40,11 +67,8 @@ export const ProductManagement = () => {
               className="h-12 w-full sm:w-auto"
               type="submit"
             >
-              Publish Product
+              {isPending ? "Publishing..." : "Publish Product"}
             </Button>
-            <button className="flex flex-row justify-center items-center gap-2 px-4 py-1.5 h-12 rounded-md border font-bold tracking-[-2%] leading-[100%] text-[15px] border-gray-300 hover:bg-gray-50 w-full sm:w-auto">
-              <Save size={16} /> Save to draft
-            </button>
           </div>
         </form>
       </FormProvider>

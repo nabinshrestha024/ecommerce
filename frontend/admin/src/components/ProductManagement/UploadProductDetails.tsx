@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Card } from "../Card/Card";
 import { useFormContext } from "react-hook-form";
 import { X } from "lucide-react";
@@ -8,7 +8,7 @@ type ImageItem = {
   preview: string;
 };
 
-export const UploadProductDetails = () => {
+export const UploadProductDetails = forwardRef((_, ref) => {
   const {
     register,
     setValue,
@@ -41,6 +41,13 @@ export const UploadProductDetails = () => {
     setPrimaryImage(index);
     setValue("primaryIndex", index, { shouldValidate: false });
   };
+
+  useImperativeHandle(ref, () => ({
+    resetImages: () => {
+      setImages([]);
+      setPrimaryImage(0);
+    },
+  }));
 
   useEffect(() => {
     return () => {
@@ -91,6 +98,7 @@ export const UploadProductDetails = () => {
                     </span>
                   )}
                   <button
+                    type="button"
                     onClick={() => handleDeleteImage(index)}
                     className="absolute top-1 right-0"
                   >
@@ -112,23 +120,23 @@ export const UploadProductDetails = () => {
               </label>
               <div className="w-full">
                 <select
-                  {...register("productCategories")}
+                  {...register("categoryId")}
                   defaultValue=""
                   className="w-full h-9 px-3 border border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent flex items-center"
                 >
                   <option value="" disabled>
                     Select product categories...
                   </option>
-                  <option value="1">Electronics</option>
-                  <option value="2">Groceries</option>
-                  <option value="3">Shoes</option>
-                  <option value="4">Clothing</option>
+                  <option value={1}>Electronics</option>
+                  <option value={2}>Groceries</option>
+                  <option value={3}>Shoes</option>
+                  <option value={4}>Clothing</option>
                 </select>
               </div>
 
-              {errors.productCategories && (
+              {errors.categories && (
                 <p className="text-sm text-red-500 mt-1">
-                  {errors.productCategories?.message as string}
+                  {errors.categories?.message as string}
                 </p>
               )}
             </div>
@@ -137,4 +145,4 @@ export const UploadProductDetails = () => {
       </div>
     </Card>
   );
-};
+});

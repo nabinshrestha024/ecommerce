@@ -11,7 +11,7 @@ import { Sidebar } from "./components/Sidebar/Sidebar";
 import { Navbar } from "./components/Navbar/Navbar";
 import { ViewProduct } from "./screens/view-product";
 import { Vendor } from "./screens/vendor";
-import { ProtectedRoute } from "./components/ProtectedRoute/ProtectedRoute";
+import { ProtectedRoute } from "./routes/ProtectedRoute";
 
 export const App = () => {
   return (
