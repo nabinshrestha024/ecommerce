@@ -6,12 +6,13 @@ import type { VendorFormValues } from "./VendorForm.zod.ts";
 interface Vendor {
   id: string;
   businessName: string;
-  contactPerson: string;
   email: string;
   phone: string;
   address: string;
-  status: "active" | "inactive";
-  joinedOn: string;
+  totalProducts: number;
+  completedOrders: number;
+  canceledOrders: number;
+  status: "active" | "pending" | "inactive" | "blocked";
 }
 
 type Props = {
@@ -27,15 +28,7 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
     reset,
   } = useForm<VendorFormValues>({
     resolver: zodResolver(VendorFormSchema),
-    defaultValues: {
-      businessName: vendor.businessName,
-      contactPerson: vendor.contactPerson,
-      email: vendor.email,
-      phone: vendor.phone,
-      address: vendor.address,
-      status: vendor.status,
-      joinedOn: vendor.joinedOn,
-    },
+    defaultValues: vendor,
     mode: "onChange",
   });
 
@@ -54,7 +47,20 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         <h2 className="text-[24px] font-bold mb-6 text-center">Edit Vendor</h2>
 
-        {/* Vendor ID is not editable */}
+        <div className="grid grid-cols-4 gap-4 items-center">
+          <label className="col-span-1 font-medium ">Vendor ID</label>
+          <div className="col-span-3">
+            <Input
+              type="text"
+              placeholder="Enter vendor ID"
+              {...register("id")}
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+            />
+            {errors.id && (
+              <p className="text-[12px] text-red-500">{errors.id.message}</p>
+            )}
+          </div>
+        </div>
 
         <div className="grid grid-cols-4 gap-4 items-center mt-5">
           <label className="font-medium ">Business Name</label>
@@ -68,23 +74,6 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
             {errors.businessName && (
               <p className="text-[12px] text-red-500">
                 {errors.businessName.message}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium ">Contact Person</label>
-          <div className="col-span-3">
-            <Input
-              type="text"
-              placeholder="Enter contact person"
-              {...register("contactPerson")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
-            />
-            {errors.contactPerson && (
-              <p className="text-[12px] text-red-500">
-                {errors.contactPerson.message}
               </p>
             )}
           </div>
@@ -138,40 +127,67 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium ">Status</label>
+          <label className="font-medium ">Total Products</label>
           <div className="col-span-3">
-            <select
-              {...register("status")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 bg-white"
-            >
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
-            {errors.status && (
+            <Input
+              type="number"
+              placeholder="Enter total products"
+              {...register("totalProducts")}
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded
+             focus-visible:border-[#DFE0E1] focus-visible:ring-0
+             appearance-none
+             [&::-webkit-inner-spin-button]:appearance-none
+             [&::-webkit-outer-spin-button]:appearance-none"
+            />
+            {errors.totalProducts && (
               <p className="text-[12px] text-red-500">
-                {errors.status.message}
+                {errors.totalProducts.message}
               </p>
             )}
           </div>
         </div>
 
         <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium ">Joined On</label>
+          <label className="font-medium ">Completed Orders</label>
           <div className="col-span-3">
             <Input
-              type="date"
-              placeholder="Enter joined date"
-              {...register("joinedOn")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              type="number"
+              placeholder="Enter completed orders"
+              {...register("completedOrders")}
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded
+             focus-visible:border-[#DFE0E1] focus-visible:ring-0
+             appearance-none
+             [&::-webkit-inner-spin-button]:appearance-none
+             [&::-webkit-outer-spin-button]:appearance-none"
             />
-            {errors.joinedOn && (
+            {errors.completedOrders && (
               <p className="text-[12px] text-red-500">
-                {errors.joinedOn.message}
+                {errors.completedOrders.message}
               </p>
             )}
           </div>
         </div>
 
+        <div className="grid grid-cols-4 gap-4 items-center mt-5">
+          <label className="font-medium ">Canceled Orders</label>
+          <div className="col-span-3">
+            <Input
+              type="number"
+              placeholder="Enter canceled orders"
+              {...register("canceledOrders")}
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded
+             focus-visible:border-[#DFE0E1] focus-visible:ring-0
+             appearance-none
+             [&::-webkit-inner-spin-button]:appearance-none
+             [&::-webkit-outer-spin-button]:appearance-none"
+            />
+            {errors.canceledOrders && (
+              <p className="text-[12px] text-red-500">
+                {errors.canceledOrders.message}
+              </p>
+            )}
+          </div>
+        </div>
         <div className="flex justify-center">
           <button
             type="submit"

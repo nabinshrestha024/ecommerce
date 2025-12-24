@@ -21,7 +21,7 @@ namespace EcommerceProject.Controllers.v1.Wishlist
         }
 
 
-        [HttpGet("{userId}")]
+        [HttpGet("/get")]
         public async Task<IActionResult> GetWishlist()
         {
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -29,7 +29,7 @@ namespace EcommerceProject.Controllers.v1.Wishlist
             return Ok(await _wishlistService.GetWishlistAsync(userId));
         }
 
-        [HttpPost("addwishlist/{productId}")]
+        [HttpPost("/addwishlist")]
         public async Task<IActionResult> AddWishlist(int productId)
         {
 
@@ -37,7 +37,7 @@ namespace EcommerceProject.Controllers.v1.Wishlist
             await _wishlistService.AddWishlistItemAsync(userId, productId);
             return Ok("Added to wishlist");
         }
-        [HttpDelete("deletewishlist/{wishlistItemId}")]
+        [HttpDelete("/deletewishlist")]
 
         public async Task<IActionResult> DeleteWishlistItem(int wishlistItemId)
         {

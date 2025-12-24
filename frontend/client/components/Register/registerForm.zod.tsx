@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const RegisterFormSchema = z
   .object({
-    fullName: z.string().min(2, "Enter your full name"),
+    name: z.string().min(2, "Enter your full name"),
     email: z.string().min(1, "Email is required").email("Invalid email"),
     password: z
       .string()
@@ -12,9 +12,14 @@ export const RegisterFormSchema = z
         "Password must contain uppercase, lowercase, number, and special character",
       ),
     repassword: z.string().min(1, "Confirm password is required"),
+    profilePicture: z.custom<File>(
+      (file) => file instanceof File,
+      "Please upload an image",
+    ),
     address: z.string().min(1, "Address is required"),
     city: z.string().min(1, "City is required"),
-    phone: z
+    role: z.string().min(1, "Select atleast one role"),
+    phoneNumber: z
       .string()
       .max(10, { message: "Phone number must be exactly 10 digits" })
       .regex(/^98\d{8}$/, { message: "Phone number must start with 98" }),

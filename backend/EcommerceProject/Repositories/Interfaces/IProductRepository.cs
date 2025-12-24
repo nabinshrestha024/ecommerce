@@ -16,5 +16,7 @@ namespace EcommerceProject.Repositories.Interfaces
         Task<bool> DeleteAsync(int id, CancellationToken ct);
 
         Task InsertImagesBulkAsync(int productId, IReadOnlyList<(string url, bool isPrimary, int sortOrder)> images, CancellationToken ct);
+
+        Task<int?> GetProductIdByNameAsync(string productName);
     }
 }
