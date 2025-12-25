@@ -24,7 +24,7 @@ export interface CartProductType {
   quantity: number;
   totalPrice: number;
   addedDate: string;
-  image: string;
+  productImageUrl: string;
   description: string;
 }
 
@@ -148,7 +148,7 @@ export const TopNav = () => {
                     >
                       <div className="w-20 h-20 shrink-0 relative rounded-md overflow-hidden bg-gray-100">
                         <Image
-                          src={val.image}
+                          src={val.productImageUrl || "/a.jpg"}
                           fill
                           alt={val.productName}
                           className="object-cover"

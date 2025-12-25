@@ -32,7 +32,7 @@ export const TrendingProductCard = () => {
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-      {prods.data?.items.map(
+      {prods.data?.items?.map(
         (product, index) =>
           index < 3 && (
             <Card
