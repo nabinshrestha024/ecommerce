@@ -1,5 +1,4 @@
 import { Card } from "../Card/Card";
-import { IoIosHeartEmpty } from "react-icons/io";
 
 interface Product {
   productId: number;
@@ -37,9 +36,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             alt="image"
             className="w-full h-full object-cover rounded-xl"
           />
-          <div className="absolute top-3 right-3 rounded-full bg-background w-6 h-6 shadow-sm flex justify-center items-center">
-            <IoIosHeartEmpty />
-          </div>
         </div>
 
         <div className="flex flex-col gap-2">
