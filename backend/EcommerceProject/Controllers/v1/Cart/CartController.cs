@@ -42,11 +42,12 @@ namespace EcommerceProject.Controllers.v1.Cart
         public async Task<IActionResult> AddCart([FromBody] AddCartRequestDto request)
         {
 
+
             try
             {
-                if (string.IsNullOrWhiteSpace(request.ProductName))
+                if (request.ProductId <=0)
                 {
-                    return BadRequest(new { message = "Product name is required" });
+                    return BadRequest(new { message = " VALID ProductId is required" });
 
                 }
 
@@ -58,7 +59,7 @@ namespace EcommerceProject.Controllers.v1.Cart
 
                 int userId = User.GetUserId();
 
-                await _cartService.AddToCartAsync(userId, request.ProductName, request.Quantity);
+                await _cartService.AddToCartAsync(userId, request.ProductId, request.Quantity);
                 return Ok(new { message = "Product added to cart" });
 
             }catch(Exception ex)
