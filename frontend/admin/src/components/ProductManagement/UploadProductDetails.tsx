@@ -12,7 +12,6 @@ type ImageItem = {
 export const UploadProductDetails = forwardRef((_, ref) => {
   const { data } = useGetCategories();
   const categories = data?.items ?? [];
-  console.log(data);
   const {
     register,
     setValue,

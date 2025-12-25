@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ProductFormSchema } from "@/components/ProductManagement/schema/ProductForm.zod";
 import { useCreateProduct } from "@/hooks/useCreateProduct";
 import { useRef } from "react";
-import { toast } from "sonner";
 export const ProductManagement = () => {
   const { mutate, isPending } = useCreateProduct();
   const uploadRef = useRef<{ resetImages: () => void }>(null);
@@ -48,14 +47,10 @@ export const ProductManagement = () => {
     if (typeof data.primaryIndex === "number") {
       formData.append("primaryIndex", String(data.primaryIndex));
     }
-    console.log("Submitting form with data:", formData);
     mutate(formData, {
       onSuccess: () => {
         methods.reset();
         uploadRef.current?.resetImages();
-      },
-      onError: (error) => {
-        console.error("Product creation failed:", error);
       },
     });
   };
@@ -67,10 +62,7 @@ export const ProductManagement = () => {
       <FormProvider {...methods}>
         <form
           id="productForm"
-          onSubmit={methods.handleSubmit(handleFormSubmit, (errors) => {
-            console.error("[form:errors]", errors);
-            toast.error("Please fix the highlighted validation errors.");
-          })}
+          onSubmit={methods.handleSubmit(handleFormSubmit)}
           className="w-full"
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-3 md:gap-5 w-full">
