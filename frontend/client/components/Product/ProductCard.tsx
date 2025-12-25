@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Card } from "../Card/Card";
 import { IoIosHeartEmpty } from "react-icons/io";
 import Link from "next/link";
-import { Star } from "lucide-react";
 
 interface Product {
   productId: number;
@@ -33,7 +32,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="w-full h-[185px] relative ">
           <Image
             src={product.primaryImageUrl}
-            alt="image"
+            alt={product.name}
             fill
             className="w-full h-full object-cover rounded-[12px]"
           />

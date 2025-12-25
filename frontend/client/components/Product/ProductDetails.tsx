@@ -10,10 +10,8 @@ import { useProductDetails } from "@/hooks/product/useProductDetails";
 const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const searchParams = useParams();
-  console.log(searchParams.id);
   const slug = searchParams.id;
   const productItems = useProductDetails((slug as string) || "");
-  console.log(productItems);
   const handleSubQuantity = () => {
     if (quantity === 1) {
       setQuantity(1);
