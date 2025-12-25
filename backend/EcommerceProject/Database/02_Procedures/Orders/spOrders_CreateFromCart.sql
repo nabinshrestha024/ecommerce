@@ -19,7 +19,7 @@ BEGIN
     DECLARE @CartId INT;
 
     SELECT TOP 1 @CartId = c.CartId
-    FROM Carts c
+    FROM CartItems c
     WHERE c.UserId = @UserId;
 
     IF @CartId IS NULL

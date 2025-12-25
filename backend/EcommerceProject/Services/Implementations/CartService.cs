@@ -25,17 +25,16 @@ namespace EcommerceProject.Services.Implementations
             return await _cartRepository.GetCartAsync(userId);
         }
 
-        public async Task AddToCartAsync(int userId, string productName, int quantity)
+        public async Task AddToCartAsync(int userId, int productId, int quantity)
         {
-            int? productId = await _productRepository.GetProductIdByNameAsync(productName);
 
-            if(productId == null)
+            if (productId <= 0)
             {
-                throw new Exception($"Product'{productName}' not found");
+                throw new Exception($"Invalid ProductId");
 
 
             }
-            await _cartRepository.AddToCartAsync(userId, productId.Value, quantity);
+            await _cartRepository.AddToCartAsync(userId, productId, quantity);
         }
 
         public async Task UpdateQuantityAsync(int cartId, int quantity)

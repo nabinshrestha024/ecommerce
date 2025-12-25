@@ -71,6 +71,7 @@ namespace EcommerceProject.Controllers.v1.Category
         {
             var deleted = await _service.DeleteAsync(id);
 
+
             if (!deleted)
                 return NotFound(new { message = "Category not found or already inactive." });
 

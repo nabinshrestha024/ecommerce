@@ -7,9 +7,11 @@ using System.Security.Claims;
 
 namespace EcommerceProject.Controllers.v1.Wishlist
 {
-    [Route("v1/wishlist")]
+   
     [ApiController]
-    [Authorize]
+    [Route("v1/wishlist/")]
+    [Authorize(Roles = "Customer, Admin")]
+    
     public class WishlistController : ControllerBase
     {
         private readonly IWishlistService _wishlistService;
@@ -21,15 +23,15 @@ namespace EcommerceProject.Controllers.v1.Wishlist
         }
 
 
-        [HttpGet("/get")]
+        [HttpGet("get")]
         public async Task<IActionResult> GetWishlist()
         {
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             return Ok(await _wishlistService.GetWishlistAsync(userId));
         }
 
-        [HttpPost("/addwishlist")]
+        [HttpPost("add")]
         public async Task<IActionResult> AddWishlist(int productId)
         {
 
@@ -37,11 +39,11 @@ namespace EcommerceProject.Controllers.v1.Wishlist
             await _wishlistService.AddWishlistItemAsync(userId, productId);
             return Ok("Added to wishlist");
         }
-        [HttpDelete("/deletewishlist")]
+        [HttpDelete("delete")]
 
-        public async Task<IActionResult> DeleteWishlistItem(int wishlistItemId)
+        public async Task<IActionResult> DeleteWishlistItem(int wishlistId)
         {
-            await _wishlistService.DeleteWishlistItemAsync(wishlistItemId);
+            await _wishlistService.DeleteWishlistItemAsync(wishlistId);
             return Ok("Removed From wishlist");
         }
     }

@@ -4,6 +4,7 @@ import { Input } from "../Input/Input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordSchema } from "../profile/schemas/Password.zod";
+import { useChangePassword } from "@/hooks/changePassword/useChangePassword";
 export const ChangePassword = () => {
   const {
     register,
@@ -11,8 +12,17 @@ export const ChangePassword = () => {
     formState: { errors },
   } = useForm({ resolver: zodResolver(PasswordSchema), mode: "all" });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const changePassword = useChangePassword();
+
+  const onSubmit = (data: {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }) => {
+    changePassword.mutate({
+      currentPassword: data.currentPassword,
+      newPassword: data.newPassword,
+    });
   };
   return (
     <Card

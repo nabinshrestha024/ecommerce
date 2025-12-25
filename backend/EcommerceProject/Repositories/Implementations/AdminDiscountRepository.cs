@@ -16,11 +16,20 @@ namespace EcommerceProject.Repositories.Implementations
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
+
+        public async Task<IEnumerable<DiscountDto>> GetAllAsync()
+        {
+
+            using var connection = _sqlConnectionFactory.CreateConnection();
+            return await connection.QueryAsync<DiscountDto>(
+                "spDiscount_GetAll",
+                commandType: CommandType.StoredProcedure);
+        }
         public async Task CreateAsync(CreateDiscountDto dto)
         {
             using var connection = _sqlConnectionFactory.CreateConnection();
             await connection.ExecuteAsync(
-                "spDiscount_CreateDiscount",
+                "spDiscount_Create",
                 dto,
                 commandType: CommandType.StoredProcedure);
         }
@@ -29,13 +38,12 @@ namespace EcommerceProject.Repositories.Implementations
         {
             using var connection = _sqlConnectionFactory.CreateConnection();
             await connection.ExecuteAsync(
-                "spDiscount_UpdateDiscount",
+                "spDiscount_Update",
                 new
                 {
                     DiscountId = discountId,
-                    dto.DiscountValue,
-                    dto.IsPercentage,
-                    dto.MinQuantity,
+                    dto.ProductId,
+                    dto.Percentage,
                     dto.StartDate,
                     dto.EndDate,
                     dto.MaxUsage,
@@ -50,24 +58,13 @@ namespace EcommerceProject.Repositories.Implementations
             using var connection = _sqlConnectionFactory.CreateConnection();
 
             await connection.ExecuteAsync(
-                "SpDiscount_ToggleDiscount",
+                "spDiscount_ToggleStatus",
                 new
                 {
                     DiscountId = discountId,
                     IsActive = isActive
                 },
                 commandType: CommandType.StoredProcedure);
-        }
-
-        public async Task<IEnumerable<Discount>> GetAllAsync()
-        {
-            using var conn = _sqlConnectionFactory.CreateConnection();
-            var discount = await conn.QueryAsync<Discount>(
-                "spDiscount_GellAllDiscounts",
-                commandType: CommandType.StoredProcedure
-                );
-
-            return discount;
         }
     }
 }

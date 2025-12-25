@@ -3,5 +3,6 @@ export const endpoint = {
   LOGIN: "auth/login",
   LOGOUT: "auth/logout",
   FETCH_PRODUCT: "admin/products",
+  CHANGEPASSWORD: "auth/change_password",
   FETCH_CATEGORY: "admin/categories",
 };

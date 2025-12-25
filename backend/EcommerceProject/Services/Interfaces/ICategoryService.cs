@@ -10,8 +10,8 @@ namespace EcommerceProject.Services.Interfaces
         Task<PagedResult<Category>> GetCategoriesAsync(CategoryFilterDto filter, PaginationDto pagination);
         Task<PagedResult<Category>> AdminGetCategoriesAsync(AdminCategoryFilterDto filter, PaginationDto pagination);
 
-        Task<int> CreateAsync(CategoryUpsertDto dto, CancellationToken ct);
-        Task UpdateAsync(int id, CategoryUpsertDto dto, CancellationToken ct);
+        Task<int> CreateAsync(CategoryUpsertDto body, CancellationToken ct);
+        Task UpdateAsync(int id, CategoryUpsertDto body, CancellationToken ct);
         Task<bool> DeleteAsync(int id);
     }
 }
