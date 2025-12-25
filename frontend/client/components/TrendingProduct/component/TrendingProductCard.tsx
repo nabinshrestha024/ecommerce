@@ -65,7 +65,7 @@ export const TrendingProductCard = () => {
                   </span>
                 </Link>
 
-                <Button className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px]">
+                <Button className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px] hover:bg-[#fffcfc]">
                   Add to cart
                 </Button>
               </div>

@@ -25,8 +25,11 @@ export const LoginForm = () => {
 
   const onSubmit = (data: LoginFormSchemaType) => {
     reset();
-    mutate(data);
-    router.push("/");
+    mutate(data, {
+      onSuccess: () => {
+        router.push("/");
+      },
+    });
   };
 
   return (

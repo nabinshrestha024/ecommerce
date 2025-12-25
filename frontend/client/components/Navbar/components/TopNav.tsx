@@ -76,7 +76,7 @@ export const TopNav = () => {
     return total;
   };
 
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token") || "";
   const isAuth = Boolean(token);
   const { logout } = useAuth();
 

@@ -1,5 +1,5 @@
 "use client";
-import { Product } from "@/lib/product/getProduct";
+import { ProductByCategory } from "@/lib/product/getProductCategory";
 import { useQuery } from "@tanstack/react-query";
 
 type ProductData = {
@@ -23,10 +23,10 @@ type ProductResponse = {
   totalPages: number;
 };
 
-export const useProduct = () => {
+export const useProductCategory = (categoryId: number) => {
   const { data, isLoading, isError, refetch } = useQuery<ProductResponse>({
-    queryKey: ["product"],
-    queryFn: Product,
+    queryKey: ["product", categoryId],
+    queryFn: () => ProductByCategory(categoryId),
   });
   return { data, isLoading, isError, refetch };
 };
