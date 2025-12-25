@@ -7,9 +7,11 @@ import { IoIosHeartEmpty } from "react-icons/io";
 import Link from "next/link";
 import { Star } from "lucide-react";
 import { useProduct } from "@/hooks/product/useProduct";
+import { useAddToCart } from "@/hooks/cart/useAddToCart";
 
 export const TrendingProductCard = () => {
   const prods = useProduct();
+  const addToCart = useAddToCart();
 
   if (prods.isLoading) return <p>Loading products...</p>;
   if (prods.isError) return <p>Failed to load products</p>;
@@ -65,7 +67,15 @@ export const TrendingProductCard = () => {
                   </span>
                 </Link>
 
-                <Button className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px] hover:bg-[#fffcfc]">
+                <Button
+                  className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px] hover:bg-[#fffcfc]"
+                  onClick={() =>
+                    addToCart.mutate({
+                      productId: product.productId,
+                      quantity: 1,
+                    })
+                  }
+                >
                   Add to cart
                 </Button>
               </div>

@@ -6,12 +6,14 @@ import { RiAddFill, RiSubtractFill } from "react-icons/ri";
 import { useState } from "react";
 import { Button } from "@/ui/button";
 import { useProductDetails } from "@/hooks/product/useProductDetails";
+import { useAddToCart } from "@/hooks/cart/useAddToCart";
 
 const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const searchParams = useParams();
   const slug = searchParams.id;
   const productItems = useProductDetails((slug as string) || "");
+  const addToCart = useAddToCart();
   const handleSubQuantity = () => {
     if (quantity === 1) {
       setQuantity(1);
@@ -85,7 +87,17 @@ const ProductDetails = () => {
                   <RiAddFill color="white" />
                 </div>
               </div>
-              <Button className="w-[200px]">Add to cart</Button>
+              <Button
+                className="w-[200px]"
+                onClick={() =>
+                  addToCart.mutate({
+                    productId: productItems?.data?.productId || 1,
+                    quantity: quantity,
+                  })
+                }
+              >
+                Add to cart
+              </Button>
             </div>
           </div>
         </div>
