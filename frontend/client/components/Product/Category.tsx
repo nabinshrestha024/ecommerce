@@ -1,50 +1,46 @@
 "use client";
 
+import { useCategory } from "@/hooks/category/useCategory";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-
-const data = [
-  {
-    title: "All",
-    url: "/product",
-  },
-  {
-    title: "Groceries",
-    url: "/product/category/groceries",
-  },
-  {
-    title: "Clothes",
-    url: "/product/category/clothes",
-  },
-  {
-    title: "Shoes",
-    url: "/product/category/shoes",
-  },
-  {
-    title: "Electronics",
-    url: "/product/category/electronics",
-  },
-];
+import { useSearchParams } from "next/navigation";
 
 export const Category = () => {
-  const pathname = usePathname();
+  const categoryItems = useCategory();
+  const searchParams = useSearchParams();
+  const activeCategoryId = searchParams.get("categoryId");
+
   return (
     <div>
       <div className="text-xl font-semibold underline mb-5">Categories</div>
       <div className="flex md:flex-col gap-3 justify-center py-5 border-b">
-        {data.map((val) => {
+        <Link
+          href="/product"
+          className={`font-semibold transition-colors ${
+            !activeCategoryId ? "text-green-700" : ""
+          }`}
+        >
+          All
+        </Link>
+
+        {categoryItems.data?.items.map((val) => {
           const isActive =
-            pathname === val.url || (val.title === "All" && pathname === "/");
+            val.categoryId === null
+              ? !activeCategoryId
+              : activeCategoryId === String(val.categoryId);
 
           return (
             <Link
-              href={val.url}
-              key={val.title}
+              href={
+                val.categoryId
+                  ? `/product/?categoryId=${val.categoryId}`
+                  : "/product"
+              }
+              key={val.name}
               className={`font-semibold relative transition-colors duration-300 ${
                 isActive ? "text-green-700" : ""
               }`}
             >
-              {val.title}
+              {val.name}
             </Link>
           );
         })}

@@ -3,20 +3,18 @@ import Image from "next/image";
 import { Card } from "../Card/Card";
 import { IoIosHeartEmpty } from "react-icons/io";
 import Link from "next/link";
-import { Star } from "lucide-react";
 
 interface Product {
-  id: number;
+  productId: number;
   name: string;
-  description: string;
+  slug: string;
+  shortDescription: string | null;
   price: number;
-  originalPrice?: number;
-  discount?: number;
-  image: string;
-  rating: number;
-  reviews: number;
-  stock: number;
-  sslug: string;
+  stockQuantity: number;
+  primaryImageUrl: string;
+  isActive: boolean;
+  categoryId: number;
+  sku: string;
 }
 
 interface ProductCardProps {
@@ -27,14 +25,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <Card
       className="p-3 w-full max-w-[285px] border-0 shadow-none"
-      key={product.id}
+      key={product.productId}
       rootClassName="py-0 border shadow-xl"
     >
       <div className="flex flex-col gap-2">
         <div className="w-full h-[185px] relative ">
           <Image
-            src={product.image}
-            alt="image"
+            src={product.primaryImageUrl}
+            alt={product.name}
             fill
             className="w-full h-full object-cover rounded-[12px]"
           />
@@ -48,9 +46,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             {product.name}
           </div>
           <div className="text-[16px] font-normal leading-[22px] text-[#00000099]/60 line-clamp-2">
-            {product.description}
+            {product.shortDescription}
           </div>
-          <div className="flex items-center mb-2">
+          {/* <div className="flex items-center mb-2">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
@@ -65,20 +63,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <span className="ml-2 text-sm text-gray-600">
               ({product.reviews})
             </span>
-          </div>
+          </div> */}
           <div>
             <span className="text-[14px] text-[#4EA674] font-bold">
               $ {product.price}
             </span>
             &nbsp;&nbsp;&nbsp;
             <span className="line-through text-[12px] text-[red] font-medium">
-              $ {product.originalPrice}
+              $ {product.price}
             </span>
           </div>
         </div>
       </div>
       <div className="flex justify-between flex-col md:flex-row items-center mt-2">
-        <Link href={`/product/id/${product.sslug}`}>
+        <Link href={`/product/id/${product.slug}`}>
           <div className="text-[14px] text-[#6467F2] font-normal">
             View Details
           </div>

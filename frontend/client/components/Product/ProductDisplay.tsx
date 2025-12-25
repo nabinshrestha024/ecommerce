@@ -1,25 +1,43 @@
 "use client";
 
 import { ProductCard } from "./ProductCard";
-import { products, ProductType } from "./Product.import";
 import { Category } from "./Category";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useProductCategory } from "@/hooks/product/useProductCategory";
+import { useProduct } from "@/hooks/product/useProduct";
 
-export const ProductDisplay = ({ category }: { category: string }) => {
-  const [filteredData] = useState<ProductType[]>(() => {
-    if (!category) {
-      return products;
-    } else {
-      return products.filter((val) => val.category === category);
-    }
-  });
+interface Product {
+  productId: number;
+  name: string;
+  slug: string;
+  shortDescription: string | null;
+  price: number;
+  stockQuantity: number;
+  primaryImageUrl: string;
+  isActive: boolean;
+  categoryId: number;
+  sku: string;
+}
+
+export const ProductDisplay = () => {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get("categoryId");
+  const categoryId = categoryParam ? Number(categoryParam) : null;
+  const prod = useProductCategory(categoryId || 0);
+  const products = useProduct();
+  if (products.isLoading) return <p>Loading products...</p>;
+  if (products.isError) return <p>Failed to load products</p>;
   return (
     <div className="min-h-screen bg-gray-50 p-8 flex flex-col md:flex-row gap-5 items-start w-screen">
       <Category />
       <div className="grid grid-cols-2  md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-        {filteredData.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+        {categoryId === null
+          ? products.data?.items.map((product: Product) => (
+              <ProductCard key={product.productId} product={product} />
+            ))
+          : prod.data?.items.map((product: Product) => (
+              <ProductCard key={product.productId} product={product} />
+            ))}
       </div>
     </div>
   );

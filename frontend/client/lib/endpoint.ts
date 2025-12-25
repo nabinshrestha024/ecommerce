@@ -3,4 +3,5 @@ export const endpoint = {
   LOGIN: "auth/login",
   LOGOUT: "auth/logout",
   PRODUCT: "catalog/products",
+  CATEGORY: "categories",
 };
