@@ -39,6 +39,10 @@ namespace EcommerceProject.Services.Implementations
                 await using var fs = new FileStream(path, FileMode.Create);
                 await file.CopyToAsync(fs, ct);
 
+
+
+
+
                 urls.Add($"/images/products/{name}");
             }
 

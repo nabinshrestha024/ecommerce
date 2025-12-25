@@ -20,7 +20,8 @@ namespace EcommerceProject.Repositories.Implementations
 
         public async Task<IEnumerable<CartItemDto>> GetCartAsync(int userId)
         {
-            return await _connectionFactory.CreateConnection().QueryAsync<CartItemDto>(
+            using var connection = _connectionFactory.CreateConnection();
+            return await connection.QueryAsync<CartItemDto>(
                 "spCart_GetCartByUser",
                 new { UserId = userId },
                 commandType: CommandType.StoredProcedure);
