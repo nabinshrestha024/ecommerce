@@ -11,13 +11,9 @@ export const useLogin = () => {
     mutationKey: ["login"],
     mutationFn: LoginFunction,
     onSuccess: (data) => {
-      if (data.token) {
-        login(data.token);
-        toast.success("Login successful");
-        navigate("/dashboard");
-      } else {
-        toast.error("Invalid login response");
-      }
+      login(data.token);
+      toast.success("Login successful");
+      navigate("/dashboard");
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.error || "Login failed");

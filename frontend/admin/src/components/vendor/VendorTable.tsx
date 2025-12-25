@@ -1,88 +1,54 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   createColumnHelper,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { VendorData } from "./VendorData.Import.ts";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import { Table } from "../Table/Table";
 import { Dialog } from "../Dialog/Dialog.tsx";
-import { VendorProfile } from "./VendorProfile.tsx";
 import { VendorForm } from "./VendorForm.tsx";
+import { useGetVendor } from "@/hooks/vendor/useGetVendor.ts";
+import { useDeleteVendor } from "@/hooks/vendor/useDeleteVendor.ts";
 export interface VendorTableProps {
-  id: string;
+  vendorId: number;
   name: string;
+  contactPerson: string;
   email: string;
   phone: string;
-  status: "active" | "pending" | "inactive" | "blocked";
-  products: number;
-  lastActive: string;
-  joinedOn: string;
+  address: string;
+  isActive: boolean;
+  createdAt: string;
 }
 
-type Vendor = {
-  id: string;
-  businessName: string;
-  name?: string;
-  email: string;
-  phone: string;
-  status: "active" | "pending" | "inactive" | "blocked";
-  totalProducts: number;
-  products?: number;
-  lastActive: string;
-  joinedOn: string;
-  address: string;
-  completedOrders?: number;
-  canceledOrders?: number;
-  avatar?: string;
-};
-
-const mapToVendorProfile = (vendor: VendorTableProps) => ({
-  name: vendor.name,
-  email: vendor.email,
-  phone: vendor.phone,
-  status: vendor.status,
-  businessName: vendor.name,
-  totalProducts: vendor.products,
-  joinedOn: vendor.joinedOn,
-  lastActive: vendor.lastActive,
-  avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(vendor.name)}&background=random`,
-  address: "N/A",
-});
-
 const mapTableToVendor = (v: VendorTableProps): any => ({
-  id: v.id,
+  vendorId: v.vendorId,
   businessName: v.name,
-  name: v.name,
+  contactPerson: v.contactPerson,
   email: v.email,
   phone: v.phone,
-  status: v.status,
-  totalProducts: v.products,
-  products: v.products,
-  lastActive: v.lastActive,
-  joinedOn: v.joinedOn,
-  address: "N/A",
-  completedOrders: 0,
-  canceledOrders: 0,
-  avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(v.name)}&background=random`,
-});
-
-const mapVendorToTable = (v: Partial<Vendor> | any): VendorTableProps => ({
-  id: v.id ?? "",
-  name: v.businessName ?? v.name ?? "",
-  email: v.email ?? "",
-  phone: v.phone ?? "",
-  status: v.status ?? "inactive",
-  products: v.totalProducts ?? v.products ?? 0,
-  lastActive: v.lastActive ?? "",
-  joinedOn: v.joinedOn ?? "",
+  isActive: v.isActive,
+  createdAt: v.createdAt,
+  address: v.address,
 });
 
 export const VendorTable = () => {
-  const [vendor, setVendor] = useState<VendorTableProps[]>(VendorData);
+  const { data, isError } = useGetVendor();
+  const { mutate } = useDeleteVendor();
+  const sortedVendorData: VendorTableProps[] = useMemo(() => {
+    const list = Array.isArray(data?.data) ? [...data!.data] : [];
+    return list.sort((a: any, b: any) => {
+      const ai = Number(a.vendorId);
+      const bi = Number(b.vendorId);
+      if (Number.isNaN(ai) || Number.isNaN(bi)) {
+        return String(a.vendorId).localeCompare(String(b.vendorId));
+      }
+      return ai - bi;
+    });
+  }, [data]);
+
   const columnHelper = createColumnHelper<VendorTableProps>();
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -94,7 +60,7 @@ export const VendorTable = () => {
   );
 
   const handleRowClick = (row: VendorTableProps) => {
-    if (selectedVendor?.id === row.id) {
+    if (selectedVendor?.vendorId === row.vendorId) {
       setSelectedVendor(null);
     } else {
       setSelectedVendor(row);
@@ -105,17 +71,28 @@ export const VendorTable = () => {
     setSelectedVendor(row);
   };
 
-  const handleDelete = (id: string) => {
-    setVendor((prev) => prev.filter((vendor) => vendor.id !== id));
+  const handleDelete = (vendorId: number) => {
+    mutate(vendorId);
   };
 
   const columns = [
-    columnHelper.accessor("id", {
+    columnHelper.accessor("vendorId", {
       header: "Vendor Id",
       cell: (info) => <div className="cursor-pointer">{info.getValue()}</div>,
     }),
     columnHelper.accessor("name", {
-      header: "Name",
+      header: "Company Name",
+      cell: (info) => (
+        <div
+          onClick={() => handleRowClick(info.row.original)}
+          className="cursor-pointer flex justify-start items-center"
+        >
+          {info.getValue()}
+        </div>
+      ),
+    }),
+    columnHelper.accessor("contactPerson", {
+      header: "Contact Person",
       cell: (info) => (
         <div
           onClick={() => handleRowClick(info.row.original)}
@@ -147,8 +124,8 @@ export const VendorTable = () => {
         </div>
       ),
     }),
-    columnHelper.accessor("products", {
-      header: "Products",
+    columnHelper.accessor("address", {
+      header: "Address",
       cell: (info) => (
         <div
           onClick={() => handleRowClick(info.row.original)}
@@ -158,18 +135,7 @@ export const VendorTable = () => {
         </div>
       ),
     }),
-    columnHelper.accessor("lastActive", {
-      header: "Last Active",
-      cell: (info) => (
-        <div
-          onClick={() => handleRowClick(info.row.original)}
-          className="cursor-pointer"
-        >
-          {info.getValue()}
-        </div>
-      ),
-    }),
-    columnHelper.accessor("joinedOn", {
+    columnHelper.accessor("createdAt", {
       header: "Joined On",
       cell: (info) => (
         <div
@@ -180,27 +146,27 @@ export const VendorTable = () => {
         </div>
       ),
     }),
-    columnHelper.accessor("status", {
+    columnHelper.accessor("isActive", {
       header: "Status",
       cell: (info) => {
-        const value = info.getValue() as string;
+        const value = info.getValue() as boolean;
 
         const statusStyles: Record<string, { dot: string; text: string }> = {
           active: { dot: "bg-[#21C45D]", text: "text-[#21C45D]" },
-          pending: { dot: "bg-[#F59E0B]", text: "text-[#F59E0B]" },
           inactive: { dot: "bg-[#9CA3AF]", text: "text-[#9CA3AF]" },
-          blocked: { dot: "bg-[#EF4343]", text: "text-[#EF4343]" },
         };
 
-        const style = statusStyles[value] ?? statusStyles.inactive;
+        const style = value ? statusStyles.active : statusStyles.inactive;
 
         return (
           <div
             onClick={() => handleRowClick(info.row.original)}
             className="flex gap-3 justify-start items-center cursor-pointer"
           >
-            <div className={`w-2 h-2 rounded-full ${style.dot}`} />
-            <div className={`${style.text} capitalize`}>{value}</div>
+            <div
+              className={`w-2 h-2 rounded-full ${style.dot} ${style.text}`}
+            />
+            {value ? "Active" : "Inactive"}
           </div>
         );
       },
@@ -223,14 +189,8 @@ export const VendorTable = () => {
                 {" "}
                 <VendorForm
                   vendor={mapTableToVendor(selectedVendor) as any}
-                  onSave={(updatedVendor: any) => {
-                    setVendor((prev) =>
-                      prev.map((v) =>
-                        v.id === updatedVendor.id
-                          ? mapVendorToTable(updatedVendor)
-                          : v,
-                      ),
-                    );
+                  onSave={() => {
+                    setSelectedVendor(null);
                   }}
                 />
               </div>
@@ -238,7 +198,7 @@ export const VendorTable = () => {
           </Dialog>
           <MdDelete
             className="text-[#6A717F] text-[20px]"
-            onClick={() => handleDelete(info.row.original.id)}
+            onClick={() => handleDelete(info.row.original.vendorId)}
           />
         </div>
       ),
@@ -246,7 +206,7 @@ export const VendorTable = () => {
   ];
 
   const table = useReactTable({
-    data: vendor,
+    data: sortedVendorData as VendorTableProps[],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -261,13 +221,12 @@ export const VendorTable = () => {
       <div className="flex gap-4 max-lg:flex-col">
         <div className="flex-1">
           <Table table={table} pageIndex={pagination.pageIndex} />
+          {isError && (
+            <div className="text-red-500 text-center mt-4">
+              Failed to load vendor data.
+            </div>
+          )}
         </div>
-
-        {selectedVendor && (
-          <div className="w-[350px] mt-5">
-            <VendorProfile vendor={mapToVendorProfile(selectedVendor)} />
-          </div>
-        )}
       </div>
     </div>
   );

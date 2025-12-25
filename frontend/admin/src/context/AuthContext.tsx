@@ -1,18 +1,23 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 interface AuthContextType {
   token: string | null;
   isAuthenticated: boolean;
   login: (token: string) => void;
   logout: () => void;
 }
+const getInitialToken = () => {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("authToken");
+  }
+};
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [token, setToken] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const storedToken = getInitialToken();
+  const [token, setToken] = useState<string | null>(
+    () => localStorage.getItem("authToken") || "",
+  );
   useEffect(() => {
-    const storedToken = localStorage.getItem("authToken");
     if (storedToken) {
       setToken(storedToken);
     }
@@ -24,7 +29,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = () => {
     localStorage.removeItem("authToken");
     setToken(null);
-    navigate("/login", { replace: true });
   };
   return (
     <AuthContext.Provider

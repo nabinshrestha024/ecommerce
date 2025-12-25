@@ -11,7 +11,7 @@ export const BasicDetails = () => {
       className="flex flex-col shadow-[0px_1px_3px_0px_#00000033] w-full py-4 sm:py-6 px-4 sm:px-6 rounded-xl"
       cardClassName="p-0 border-none shadow-none w-full"
     >
-      <div className="flex justify-center font-bold text-[22px] leading-[26px] tracking-[0%]">
+      <div className="flex justify-start font-bold text-[22px] leading-[26px] tracking-[0%]">
         Basic Details
       </div>
       <div className="flex flex-col mt-6 gap-8">
@@ -86,37 +86,13 @@ export const BasicDetails = () => {
                 </p>
               )}
             </div>
-            <div className="grid grid-cols-2 gap-5">
-              <div className="flex flex-col gap-3 ">
-                <label className="block text-sm font-medium ">
-                  Discounted Price{" "}
-                  <span className="font-normal">(Optional)</span>
-                </label>
-                <div className="relative w-full">
-                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 font-bold">
-                    Rs
-                  </div>
-                  <Input
-                    type="number"
-                    placeholder="Discounted price...."
-                    className="w-full bg-[#F9FAFB] h-full p-3 pl-10 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
-                    {...register("discountedPrice")}
-                  />
-                </div>
-                {errors.discountedPrice && (
-                  <p className="text-sm text-red-500 mt-1">
-                    {errors.discountedPrice?.message as string}
-                  </p>
-                )}
-              </div>
-            </div>
           </div>
         </div>
         <div className="flex flex-col gap-3">
           <div className="font-bold text-[22px] leading-[26px] tracking-[0%]">
             Inventory
           </div>
-          <div className="grid grid-cols-2 mt-6 gap-5">
+          <div className="grid grid-cols-2 mt-3 gap-5">
             <div className="flex flex-col gap-3">
               <label className="block text-sm font-medium ">
                 Stock Quantity

@@ -12,12 +12,17 @@ import { Navbar } from "./components/Navbar/Navbar";
 import { ViewProduct } from "./screens/view-product";
 import { Vendor } from "./screens/vendor";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
+import { PublicRoute } from "./routes/PublicRoute";
 
 export const App = () => {
   return (
     <>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route element={<PublicRoute />}>
+          <Route element={<LoginLayout />}>
+            <Route path="/login" element={<Login />} />
+          </Route>
+        </Route>
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
             <Route index element={<Navigate to="/dashboard" replace />} />
@@ -36,7 +41,13 @@ export const App = () => {
     </>
   );
 };
-
+const LoginLayout = () => {
+  return (
+    <div className="flex flex-col w-full h-full">
+      <Outlet />
+    </div>
+  );
+};
 const AppLayout = () => {
   return (
     <>

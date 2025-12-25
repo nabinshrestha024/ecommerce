@@ -7,12 +7,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ProductFormSchema } from "@/components/ProductManagement/schema/ProductForm.zod";
 import { useCreateProduct } from "@/hooks/useCreateProduct";
 import { useRef } from "react";
+import { toast } from "sonner";
 export const ProductManagement = () => {
   const { mutate, isPending } = useCreateProduct();
+  const uploadRef = useRef<{ resetImages: () => void }>(null);
   const methods = useForm({
     resolver: zodResolver(ProductFormSchema),
     defaultValues: {
       highlightFeatured: false,
+      isActive: true,
     },
     shouldUnregister: true,
     mode: "all",
@@ -22,12 +25,20 @@ export const ProductManagement = () => {
     formData.append("name", data.name);
     formData.append("description", data.description || "");
     formData.append("shortDescription", data.shortDescription || "");
-    formData.append("price", data.price);
-    if (data.categories) {
-      formData.append("categories", data.categories);
+    if (data.productPrice != null) {
+      formData.append("price", String(data.productPrice));
+    }
+    if (data.categoryId) {
+      formData.append("categoryId", String(data.categoryId));
     }
     if (data.stockQuantity != null) {
-      formData.append("stockQuantity", data.stockQuantity);
+      formData.append("stockQuantity", String(data.stockQuantity));
+    }
+    if (typeof data.isActive === "boolean") {
+      formData.append("isActive", String(data.isActive ? "true" : "false"));
+    }
+    if (typeof data.highlightFeatured === "boolean") {
+      formData.append("highlightFeatured", String(data.highlightFeatured));
     }
 
     const files: FileList | undefined = data.images;
@@ -37,12 +48,14 @@ export const ProductManagement = () => {
     if (typeof data.primaryIndex === "number") {
       formData.append("primaryIndex", String(data.primaryIndex));
     }
-    const uploadRef = useRef<{ resetImages: () => void }>(null);
-    <UploadProductDetails ref={uploadRef} />;
+    console.log("Submitting form with data:", formData);
     mutate(formData, {
       onSuccess: () => {
         methods.reset();
         uploadRef.current?.resetImages();
+      },
+      onError: (error) => {
+        console.error("Product creation failed:", error);
       },
     });
   };
@@ -54,12 +67,15 @@ export const ProductManagement = () => {
       <FormProvider {...methods}>
         <form
           id="productForm"
-          onSubmit={methods.handleSubmit(handleFormSubmit)}
+          onSubmit={methods.handleSubmit(handleFormSubmit, (errors) => {
+            console.error("[form:errors]", errors);
+            toast.error("Please fix the highlighted validation errors.");
+          })}
           className="w-full"
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-3 md:gap-5 w-full">
             <BasicDetails />
-            <UploadProductDetails />
+            <UploadProductDetails ref={uploadRef} />
           </div>
           <div className="flex flex-col sm:flex-row justify-start sm:justify-end items-stretch sm:items-center gap-3 md:gap-4 mt-3 md:mt-4">
             <Button
