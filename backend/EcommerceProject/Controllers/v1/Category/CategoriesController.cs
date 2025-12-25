@@ -9,7 +9,7 @@ namespace EcommerceProject.Controllers.v1.Category
 {
     [ApiController]
     [Route("v1/categories")]
-    [Authorize(Roles = "Admin, Customer")]
+    
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _service;

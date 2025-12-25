@@ -3,7 +3,6 @@
     public interface IFileStorageService
     {
         Task<IReadOnlyList<string>> SaveProductImagesAsync(IFormFileCollection files, CancellationToken ct);
-
         Task<string> SaveProfileImageAsync(IFormFile file, int userId, CancellationToken ct);
         Task<bool> DeleteProfileImageAsync(string imageUrl, CancellationToken ct);
     }
