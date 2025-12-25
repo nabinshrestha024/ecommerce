@@ -2,54 +2,67 @@
 using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
+using FluentValidation;
 
 namespace EcommerceProject.Services.Implementations
 {
     public class AdminDiscountService : IAdminDiscountService
     {
         private readonly IAdminDiscountRepository _adminRepo;
+        private readonly IValidator<CreateDiscountDto> _validator;
 
-        public AdminDiscountService(IAdminDiscountRepository adminrepo)
+        public AdminDiscountService(IAdminDiscountRepository adminrepo, IValidator<CreateDiscountDto> validator)
         {
             _adminRepo = adminrepo;
+            _validator = validator;
+
+        }
+
+
+        public async Task<IEnumerable<DiscountDto>> GetAllAsync()
+        {
+            return await _adminRepo.GetAllAsync();
         }
 
         public async Task CreateAsync(CreateDiscountDto dto)
         {
-            if(dto.EndDate <= dto.StartDate)
-            {
-                throw new ArgumentException("End date must be after start date");
-
-            }
-
-            if(dto.DiscountValue <= 0)
-            {
-                throw new ArgumentException("Discount value must be greater than zero");
-
-            }
-
+            await Validate(dto);
             await _adminRepo.CreateAsync(dto);
 
         }
 
         public async Task UpdateAsync(int discountId, CreateDiscountDto dto)
         {
-            if(dto.EndDate <= dto.StartDate)
+            if(discountId <= 0)
             {
                 throw new ArgumentException("Invalid discount date range ");
             }
-           await _adminRepo.UpdateAsync(discountId, dto);
+
+            await Validate(dto);
+            await _adminRepo.UpdateAsync(discountId, dto);
 
         }
 
         public async Task ToggleAsync(int discountId, bool isActive)
         {
+            if(discountId <= 0)
+            {
+                throw new ValidationException("Invalid discount Id");
+            }
             await _adminRepo.ToggleAsync(discountId, isActive);
         }
 
-        public async Task<IEnumerable<Discount>> GetAllAsync()
+        private async Task Validate(CreateDiscountDto dto)
         {
-            return await _adminRepo.GetAllAsync();
+            var result = await _validator.ValidateAsync(dto);
+            if (!result.IsValid)
+            {
+                throw new ValidationException(result.Errors);
+            }
+
         }
+                
+
+
     }
 }

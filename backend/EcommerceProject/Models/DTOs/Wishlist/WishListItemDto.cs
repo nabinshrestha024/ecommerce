@@ -2,7 +2,7 @@
 {
     public class WishListItemDto
     {
-        public int WishlistItemId { get; set; }
+        public int WishlistId { get; set; }
 
         public int UserId { get; set; }
 

@@ -18,21 +18,21 @@ namespace EcommerceProject.Controllers.v1.Discount
             _service = service;
             
         }
-        [HttpGet]
+        [HttpGet("get")]
         public async Task<IActionResult> GetAll()
         {
 
             return Ok(await _service.GetAllAsync());
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(CreateDiscountDto dto)
+        [HttpPost("add")]
+        public async Task<IActionResult> Create([FromBody]CreateDiscountDto dto)
         {
             await _service.CreateAsync(dto);
             return Ok("Discount created");
 
         }
-        [HttpPut("{discountId}")]
+        [HttpPut("update")]
         public async Task<IActionResult> update(int discountId, CreateDiscountDto dto)
         {
             await _service.UpdateAsync(discountId, dto);
@@ -40,7 +40,7 @@ namespace EcommerceProject.Controllers.v1.Discount
 
         }
 
-        [HttpPatch("discountId/status")]
+        [HttpPatch("status")]
         public async Task<IActionResult> Toggle(int discountId, [FromQuery] bool isActive)
         {
             await _service.ToggleAsync(discountId, isActive);
