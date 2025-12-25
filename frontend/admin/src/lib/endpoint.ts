@@ -2,6 +2,7 @@ export const endpoint = {
   REGISTER: "auth/register",
   LOGIN: "auth/login",
   LOGOUT: "auth/logout",
-  products: "admin/products",
+  FETCH_PRODUCT: "admin/products",
   CHANGEPASSWORD: "auth/change_password",
+  FETCH_CATEGORY: "admin/categories",
 };
