@@ -11,7 +11,6 @@ CREATE TABLE Products (
     Price               DECIMAL(10,2) NOT NULL,
     StockQuantity       INT DEFAULT 0,
     SKU                 VARCHAR(50) NOT NULL UNIQUE,
-    ProductImageURL     VARCHAR(500) NULL, 
     IsActive            BIT NOT NULL DEFAULT 1,
     CreatedAt           DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
     UpdatedAt           DATETIME2(3) NULL,

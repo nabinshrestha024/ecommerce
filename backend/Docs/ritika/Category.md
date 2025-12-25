@@ -119,14 +119,13 @@ All admin endpoints require: [Authorize(Roles = "Admin")]
 - Used before creating or updating a category
 
 **Response**
-```json
 {
   "imageUrl": "/images/categories/abc123.png"
 }
 
-###Create Category
+### Create Category
 
--POST /v1/admin/categories
+- POST /v1/admin/categories
 
 Request Body
 
@@ -138,21 +137,21 @@ Request Body
   "sortOrder": 1,
   "isActive": true
 }
-###Behavior
+### Behavior
 - Slug generated automatically
 - Validation enforced using FluentValidation
 - Category stored as active by default
 
-###Update Category
+### Update Category
 - PUT /v1/admin/categories/{id}
-###Behavior
+### Behavior
 - Slug regenerated only if name changes
 - Existing slug preserved otherwise
 - Category updated safely
 
-###Delete Category 
+### Delete Category 
 -DELETE /v1/admin/categories/{id}
-###Behavior
+### Behavior
 -Sets IsActive = 0
 - Category is hidden from customers
 - Data remains for audit safety
