@@ -22,7 +22,7 @@ CREATE TABLE Users (
     Phone            VARCHAR(20) NULL,
     Address          VARCHAR(500) NULL,
     City             VARCHAR(100) NULL,
-    Role             BIT NOT NULL DEFAULT 1, -- Admin = 0, Customer = 1
+    Role             BIT NOT NULL DEFAULT 1, -- Admin = 1, Customer = 0
     RefreshToken     VARCHAR(500) NULL,
     AccessToken      VARCHAR(500) NULL,
     IsActive         BIT NOT NULL DEFAULT 1,
@@ -131,6 +131,8 @@ CREATE TABLE Orders (
     PaymentStatus   VARCHAR(20) NOT NULL DEFAULT 'Pending',
     PaymentGateway  VARCHAR(50) NULL,
     Notes           VARCHAR(500) NULL,
+    CreatedAt       DATETIME2,
+    UpdatedAt       DATETIME2,
 
     FOREIGN KEY (UserId) REFERENCES Users(UserId),
     FOREIGN KEY (PaymentMethodId) REFERENCES PaymentMethods(PaymentMethodId)
@@ -163,6 +165,7 @@ CREATE TABLE Payments (
     PaymentURL              VARCHAR(500) NULL,
     GatewayReference        VARCHAR(200) NULL,
     Metadata                VARCHAR(MAX) NULL,
+    UpdatedAt               DATETIME2 NULL,
     FOREIGN KEY (OrderId) REFERENCES Orders(OrderId)
 );
 PRINT 'Table Payments created.';
@@ -178,6 +181,7 @@ CREATE TABLE PaymentGatewayTransactions (
     Status               VARCHAR(50) NOT NULL,
     GatewayStatus        VARCHAR(100) NULL,
     RetryCount           INT NOT NULL DEFAULT 0,
+    RawResponse          VARCHAR(MAX) NULL,
     CreatedAt            DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
     UpdatedAt            DATETIME2(3) NULL,
     FOREIGN KEY (PaymentId) REFERENCES Payments(PaymentId)
