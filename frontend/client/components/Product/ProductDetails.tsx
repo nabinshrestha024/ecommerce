@@ -7,6 +7,8 @@ import { useState } from "react";
 import { Button } from "@/ui/button";
 import { useProductDetails } from "@/hooks/product/useProductDetails";
 import { useAddToCart } from "@/hooks/cart/useAddToCart";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
@@ -21,6 +23,23 @@ const ProductDetails = () => {
   };
   const handleAddQuantity = () => {
     setQuantity(quantity + 1);
+  };
+  const { token } = useAuth();
+  const handleAddToCart = ({
+    productId,
+    quantity,
+  }: {
+    productId: number;
+    quantity: number;
+  }) => {
+    if (token) {
+      addToCart.mutate({
+        productId: productId,
+        quantity: quantity,
+      });
+    } else {
+      toast.message("Login to add to cart");
+    }
   };
   if (productItems.isLoading) return <p>Loading product details...</p>;
   if (productItems.isError) return <p>Failed to load product details</p>;
@@ -90,7 +109,7 @@ const ProductDetails = () => {
               <Button
                 className="w-[200px]"
                 onClick={() =>
-                  addToCart.mutate({
+                  handleAddToCart({
                     productId: productItems?.data?.productId || 1,
                     quantity: quantity,
                   })

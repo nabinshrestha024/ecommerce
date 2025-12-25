@@ -8,13 +8,27 @@ import Link from "next/link";
 import { Star } from "lucide-react";
 import { useProduct } from "@/hooks/product/useProduct";
 import { useAddToCart } from "@/hooks/cart/useAddToCart";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 export const TrendingProductCard = () => {
   const prods = useProduct();
   const addToCart = useAddToCart();
+  const { token } = useAuth();
 
   if (prods.isLoading) return <p>Loading products...</p>;
   if (prods.isError) return <p>Failed to load products</p>;
+
+  const handleAddToCart = (productId: number) => {
+    if (token) {
+      addToCart.mutate({
+        productId: productId,
+        quantity: 1,
+      });
+    } else {
+      toast.message("Login to add to cart");
+    }
+  };
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
@@ -69,12 +83,7 @@ export const TrendingProductCard = () => {
 
                 <Button
                   className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px] hover:bg-[#fffcfc]"
-                  onClick={() =>
-                    addToCart.mutate({
-                      productId: product.productId,
-                      quantity: 1,
-                    })
-                  }
+                  onClick={() => handleAddToCart(product.productId)}
                 >
                   Add to cart
                 </Button>

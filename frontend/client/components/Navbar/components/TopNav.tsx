@@ -131,7 +131,9 @@ export const TopNav = () => {
               >
                 <X />
               </div>
-              {isLoading ? (
+              {!isAuth ? (
+                <div>Please login to check your cart</div>
+              ) : isLoading ? (
                 <div>Loading...</div>
               ) : isError ? (
                 <div>{error?.message}</div>

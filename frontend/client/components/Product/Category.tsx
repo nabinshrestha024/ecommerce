@@ -22,7 +22,7 @@ export const Category = () => {
           All
         </Link>
 
-        {categoryItems.data?.items.map((val) => {
+        {(categoryItems.data?.items || []).map((val) => {
           const isActive =
             val.categoryId === null
               ? !activeCategoryId
