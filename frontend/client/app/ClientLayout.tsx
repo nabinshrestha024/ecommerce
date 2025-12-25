@@ -20,6 +20,10 @@ export default function ClientLayout({
       router.push("/home");
       return;
     }
+    if (!isAuth && pathname === "/wishlist") {
+      router.push("/home");
+      return;
+    }
   }, [pathname, router]);
 
   return <AuthProvider>{children}</AuthProvider>;

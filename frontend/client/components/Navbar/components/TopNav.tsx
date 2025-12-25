@@ -8,13 +8,15 @@ import { FaShoppingCart } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
 import { Sidebar } from "./Sidebar";
-import { Trash2, X } from "lucide-react";
+import { Heart, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFetchCart } from "@/hooks/cart/useFetchCart";
 import { useDeleteCart } from "@/hooks/cart/useDeleteCart";
 import { MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
 import { useUpdateCart } from "@/hooks/cart/useUpdateCart";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export interface CartProductType {
   cartId: number;
@@ -29,6 +31,7 @@ export interface CartProductType {
 }
 
 export const TopNav = () => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const { data, isLoading, isError, error } = useFetchCart();
   const deleteCart = useDeleteCart();
@@ -51,14 +54,10 @@ export const TopNav = () => {
     cartId: number;
     quantity: number;
   }) => {
-    if (quantity > 1) {
-      updateCart.mutate({
-        cartId: cartId,
-        quantity: quantity - 1,
-      });
-    } else {
-      deleteCart.mutate(cartId);
-    }
+    updateCart.mutate({
+      cartId: cartId,
+      quantity: quantity - 1,
+    });
   };
 
   return (
@@ -109,6 +108,14 @@ export const TopNav = () => {
           <Link href="/login">
             <Button>Login</Button>
           </Link>
+        )}
+
+        {!isAuth ? (
+          <Heart
+            onClick={() => toast.error("Please log in to access wishlist!")}
+          />
+        ) : (
+          <Heart onClick={() => router.push("/wishlist")} />
         )}
 
         <div className="flex gap-2 shrink-0 items-center text-xl">
@@ -164,11 +171,16 @@ export const TopNav = () => {
                           </div>
                         </div>
                         <div className="flex justify-between items-center">
-                          <div className="text-lg text-gray-700 flex gap-2">
-                            <span className="font-semibold">$ {val.price}</span>{" "}
-                            ×{" "}
-                            <div className="flex items-center justify-center gap-2">
+                          <div className="text-lg text-gray-700 flex flex-col gap-2">
+                            <span className="font-semibold">
+                              Price: $ {val.price}
+                            </span>{" "}
+                            <div
+                              className={`flex items-center justify-center gap-2 `}
+                            >
+                              <div>Quantity: </div>
                               <div
+                                className={`${val.quantity === 1 ? "hidden" : ""}`}
                                 onClick={() =>
                                   handleQuantityDecrease({
                                     cartId: val.cartId,
