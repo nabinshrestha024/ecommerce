@@ -42,6 +42,17 @@ namespace EcommerceProject.Repositories.Implementations
                 total
             );
         }
+        public async Task<int?> GetMaxSlugSuffixAsync(string baseSlug, CancellationToken ct)
+        {
+            using var conn = _factory.CreateConnection();
+
+            return await conn.ExecuteScalarAsync<int?>(
+               "spProducts_GetMaxSlugSuffix",
+                new { BaseSlug = baseSlug },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
         public async Task InsertImageAsync(int productId, string imageUrl, bool isPrimary,int sortOrder,CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
@@ -79,15 +90,25 @@ namespace EcommerceProject.Repositories.Implementations
             return product;
         }
 
-        public async Task<int> CreateAsync(ProductCreateDto dto, CancellationToken ct)
+        public async Task<int> CreateAsync(int categoryId, string name, string slug, string? description, string? shortDescription, decimal price, int stockQuantity, string sku, bool isActive, CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
 
-            var p = new DynamicParameters(dto);
-            var id = await conn.ExecuteScalarAsync<int>(
-                new CommandDefinition("spProducts_Create", p, commandType: CommandType.StoredProcedure, cancellationToken: ct)
+            var p = new DynamicParameters();
+            p.Add("@CategoryId", categoryId);
+            p.Add("@Name", name);
+            p.Add("@Slug", slug);
+            p.Add("@Description", description);
+            p.Add("@ShortDescription", shortDescription);
+            p.Add("@Price", price);
+            p.Add("@StockQuantity", stockQuantity);
+            p.Add("@SKU", sku);
+            p.Add("@IsActive", isActive);
+            return await conn.ExecuteScalarAsync<int>(
+                "spProducts_Create",
+                 p,
+                 commandType: CommandType.StoredProcedure
             );
-            return id;
         }
 
         public async Task<bool> UpdateAsync(int id, ProductUpdateDto dto, CancellationToken ct)
@@ -103,6 +124,17 @@ namespace EcommerceProject.Repositories.Implementations
 
             return affected > 0;
         }
+        public async Task<ProductDetailsDto?> GetByIdAsync(int productId, CancellationToken ct)
+        {
+            using var conn = _factory.CreateConnection();
+
+            return await conn.QueryFirstOrDefaultAsync<ProductDetailsDto>(
+                "spProducts_GetById",
+                new { ProductId = productId },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
 
         public async Task<bool> DeleteAsync(int id, CancellationToken ct)
         {
