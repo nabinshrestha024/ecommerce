@@ -8,6 +8,6 @@ namespace EcommerceProject.Services.Interfaces
         Task CreateAsync(CreateDiscountDto dto);
         Task UpdateAsync(int discountId, CreateDiscountDto dto);
         Task ToggleAsync(int discountId, bool isActive);
-        Task<IEnumerable<Discount>> GetAllAsync();
+        Task<IEnumerable<DiscountDto>> GetAllAsync();
     }
 }

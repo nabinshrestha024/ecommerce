@@ -1,8 +1,8 @@
-using System.Data;
-using System.Text;
 using EcommerceProject.Database;
 using EcommerceProject.Filters;
 using EcommerceProject.Hubs;
+using EcommerceProject.Models.DTOs.Discount;
+using EcommerceProject.Models.Validators.Discount;
 using EcommerceProject.Models.Validators.Wishlist;
 using EcommerceProject.Repositories.Implementations;
 using EcommerceProject.Repositories.Interfaces;
@@ -12,6 +12,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Data;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,6 +83,8 @@ builder.Services.AddScoped<IShipmentRepository, ShipmentRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<IAdminDiscountRepository, AdminDiscountRepository>();
+builder.Services.AddScoped<IAdminDiscountService, AdminDiscountService>();
 
 
 builder.Services.AddScoped<ICartService, CartService>();
@@ -106,6 +110,7 @@ builder.Services.AddScoped<IWishlistRepository, WishlistRepository>();
 builder.Services.AddScoped<IWishlistService, WishlistService>();
 
 builder.Services.AddScoped<IValidator<int>, GetWishlistValidator>();
+builder.Services.AddScoped<IValidator<CreateDiscountDto>, CreateDiscountValidator>();
 
 
 

@@ -4,10 +4,7 @@ GO
 CREATE TABLE Discounts (
     DiscountId INT PRIMARY KEY IDENTITY,
     ProductId INT NOT NULL,
-    DiscountType VARCHAR(20), 
-    DiscountValue DECIMAL(10,2), 
-    IsPercentage BIT,
-    MinQuantity INT NULL, 
+    Percentage DECIMAL(5,2),
     StartDate DATETIME,
     EndDate DATETIME,
     MaxUsage INT NULL,
