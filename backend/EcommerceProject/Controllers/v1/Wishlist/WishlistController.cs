@@ -7,9 +7,11 @@ using System.Security.Claims;
 
 namespace EcommerceProject.Controllers.v1.Wishlist
 {
-    [Route("v1/wishlist")]
+   
     [ApiController]
-    [Authorize]
+    [Route("v1/wishlist/")]
+    [Authorize(Roles = "Customer, Admin")]
+    
     public class WishlistController : ControllerBase
     {
         private readonly IWishlistService _wishlistService;
@@ -21,15 +23,14 @@ namespace EcommerceProject.Controllers.v1.Wishlist
         }
 
 
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> GetWishlist()
+        [HttpGet]
+        public async Task<IActionResult> Get(int page = 1, int size = 10)
         {
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-
-            return Ok(await _wishlistService.GetWishlistAsync(userId));
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            return Ok(await _wishlistService.GetAsync(userId, page, size));
         }
 
-        [HttpPost("addwishlist/{productId}")]
+        [HttpPost("add")]
         public async Task<IActionResult> AddWishlist(int productId)
         {
 
@@ -37,12 +38,23 @@ namespace EcommerceProject.Controllers.v1.Wishlist
             await _wishlistService.AddWishlistItemAsync(userId, productId);
             return Ok("Added to wishlist");
         }
-        [HttpDelete("deletewishlist/{wishlistItemId}")]
 
-        public async Task<IActionResult> DeleteWishlistItem(int wishlistItemId)
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteWishlistItem(int productId)
         {
-            await _wishlistService.DeleteWishlistItemAsync(wishlistItemId);
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            await _wishlistService.DeleteWishlistItemAsync(userId, productId);
             return Ok("Removed From wishlist");
+        }
+
+
+        [HttpPost("move_to_cart")]
+        public async Task<IActionResult> MoveToCart(int productId)
+        {
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            await _wishlistService.MoveToCartAsync(userId, productId);
+            return Ok(new { message = " moved TO Cart" });
         }
     }
 }

@@ -4,10 +4,13 @@ namespace EcommerceProject.Repositories.Interfaces
 {
     public interface IWishlistRepository
     {
-        Task<IEnumerable<WishListItemDto>> GetWishlist(int userId);
-     
+
+        Task<PagedResult<WishListItemDto>> GetPagedAsync(int userId, int page, int size);     
         Task AddWishlistItem(int userId, int productId);
 
-        Task DeleteWishlistItem(int wishlistItemId); 
+
+        Task DeleteWishlistItem(int userId, int productId);
+
+        Task MoveToCartAsync(int userId, int ProductId);
     }
 }

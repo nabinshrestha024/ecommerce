@@ -69,56 +69,56 @@ Stores item-level snapshots.
 
 ## 4.APIs
 # Get My Order
-GET /v1/orders/me
-Returns the authenticated customer’s order history.
+- GET /v1/orders/me
+- Returns the authenticated customer’s order history.
 
 # Get Order Details
-GET /v1/orders/{orderId}
-Returns order details only if the order belongs to the requesting customer.
+- GET /v1/orders/{orderId}
+- Returns order details only if the order belongs to the requesting customer.
 
 # Cancel Order
-PUT /v1/orders/{orderId}/cancel
-Rules:
-Only the owner can cancel the order
-Only orders with status Pending can be cancelled
-Cancellation updates the order status to Cancelled
+- PUT /v1/orders/{orderId}/cancel
+- Rules:
+- Only the owner can cancel the order
+- Only orders with status Pending can be cancelled
+- Cancellation updates the order status to Cancelled
 
 # Get All Orders (Paginated)
-GET /v1/admin/orders
-return all the orders with page and pageSize
+- GET /v1/admin/orders
+- return all the orders with page and pageSize
 
 # Get Order By Id
-GET /v1/admin/orders/{orderId}
-Returns full order details including items.
+- GET /v1/admin/orders/{orderId}
+- Returns full order details including items.
 
 # Update Order Status
-PUT /v1/admin/orders/{orderId}/status
-Only predefined statuses are allowed
-Invalid status transitions are blocked
+- PUT /v1/admin/orders/{orderId}/status
+- Only predefined statuses are allowed
+- Invalid status transitions are blocked
 ---
 
 ## 5. Validation Rules
 # Customer Order Validation
-Shipping address, city, and phone are required
-Payment method must be valid
-Phone number format is validated
-Field length constraints enforced
+- Shipping address, city, and phone are required
+- Payment method must be valid
+- Phone number format is validated
+- Field length constraints enforced
 #Admin Status Validation
-Status must be one of the allowed values
-Status transitions must follow lifecycle rules
-Validation is implemented using FluentValidation at the Service layer.
+- Status must be one of the allowed values
+- Status transitions must follow lifecycle rules
+- Validation is implemented using FluentValidation at the Service layer.
 
 ---
 
 ## 6. Design Decision adn Best Practice
 # Why orders are not deleted
-Orders are financial records
-Required for audit, analytics, and accounting
-Industry standard practice
+- Orders are financial records
+- Required for audit, analytics, and accounting
+- Industry standard practice
 # Why admin cannot create orders
-Orders represent customer intent
-Prevents data corruption and fraud
-Why order data is immutable
-Ensures historical accuracy
-Prevents reconciliation issues
+- Orders represent customer intent
+- Prevents data corruption and fraud
+# Why order data is immutable
+- Ensures historical accuracy
+- Prevents reconciliation issues
 

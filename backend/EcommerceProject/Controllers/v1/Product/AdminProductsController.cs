@@ -1,4 +1,6 @@
-﻿using EcommerceProject.Models.DTOs.Common;
+﻿using EcommerceProject.Models.DTOs;
+using EcommerceProject.Models.DTOs.Common;
+using EcommerceProject.Models.DTOs.EcommerceProject.Models.DTOs;
 using EcommerceProject.Models.DTOs.Product;
 using EcommerceProject.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +19,20 @@ namespace EcommerceProject.Controllers.v1.Product
         {
             _service = service;
         }
+        private string? ToAbsoluteUrl(string? path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                return path;
+
+            if (Uri.IsWellFormedUriString(path, UriKind.Absolute))
+                return path;
+
+            if (!path.StartsWith("/"))
+                path = "/" + path;
+
+            return $"{Request.Scheme}://{Request.Host}{path}";
+        }
+
         [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create(
@@ -34,13 +50,30 @@ namespace EcommerceProject.Controllers.v1.Product
         {
             var product = await _service.GetDetailsAsync(id.ToString(), ct);
             if (product is null) return NotFound();
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            foreach (var img in product.Images)
+            {
+                img.ImageUrl = ToAbsoluteUrl(img.ImageUrl);
+            }
+
             return Ok(product);
+
         }
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] AdminProductFilterDto filter, [FromQuery] PaginationDto pagination, CancellationToken ct)
         {
             var result = await _service.AdminGetProductsAsync(filter, pagination, ct);
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            foreach (var item in result.Items)
+            {
+                item.PrimaryImageUrl = ToAbsoluteUrl(item.PrimaryImageUrl);
+            }
+
             return Ok(result);
+           
+
         }
 
 

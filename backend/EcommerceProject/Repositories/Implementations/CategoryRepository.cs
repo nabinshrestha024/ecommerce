@@ -44,6 +44,17 @@ namespace EcommerceProject.Repositories.Implementations
                 total
             );
         }
+        public async Task<Category?> GetByIdAsync(int categoryId, CancellationToken ct)
+        {
+            using var conn = _connectionFactory.CreateConnection();
+
+            return await conn.QueryFirstOrDefaultAsync<Category>(
+                "spCategories_GetById",
+                new { CategoryId = categoryId },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
         public async Task<PagedResult<Category>> AdminGetAllAsync(AdminCategoryFilterDto filter, PaginationDto pagination)
         {
             using var conn = _connectionFactory.CreateConnection();
@@ -103,6 +114,18 @@ namespace EcommerceProject.Repositories.Implementations
                 commandType: CommandType.StoredProcedure
             );
         }
+        public async Task<int?> GetMaxSlugSuffixAsync(string baseSlug, CancellationToken ct)
+        {
+            using var conn = _connectionFactory.CreateConnection();
+
+            return await conn.ExecuteScalarAsync<int?>(
+                "spCategories_GetMaxSlugSuffix",
+                new { BaseSlug = baseSlug },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+
 
         public async Task<bool> DeleteAsync(int id)
         {

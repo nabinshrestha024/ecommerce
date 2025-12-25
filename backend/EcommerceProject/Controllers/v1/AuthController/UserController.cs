@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace EcommerceProject.Controllers.v1.AuthController
 {
-    [Route("v1/")]
+    [Route("v1/admin/user/")]
     [ApiController]
     [Authorize]
     public class UserController : ControllerBase
@@ -19,7 +19,7 @@ namespace EcommerceProject.Controllers.v1.AuthController
         }
 
 
-        [HttpGet("admin/users")]
+        [HttpGet("get")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
         {
@@ -39,7 +39,7 @@ namespace EcommerceProject.Controllers.v1.AuthController
             }
         }
 
-        [HttpGet("admin/users/paged")]
+        [HttpGet("get/paged")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUsersPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
@@ -67,7 +67,7 @@ namespace EcommerceProject.Controllers.v1.AuthController
         }
 
 
-        [HttpPut("admin/user/update{id}")]
+        [HttpPut("update")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateUser(int id , UpdateUserDto dto)
         {
@@ -90,7 +90,7 @@ namespace EcommerceProject.Controllers.v1.AuthController
 
         }
 
-        [HttpDelete("admin/users/Delete{userId}")]
+        [HttpDelete("Delete")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int userId)
         {

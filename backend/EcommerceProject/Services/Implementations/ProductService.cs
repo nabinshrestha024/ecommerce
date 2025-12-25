@@ -6,6 +6,7 @@ using EcommerceProject.Models.DTOs.Product;
 using EcommerceProject.Models.Validators.Product;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
+using EcommerceProject.utils;
 using FluentValidation;
 
 namespace EcommerceProject.Services.Implementations
@@ -31,6 +32,8 @@ namespace EcommerceProject.Services.Implementations
         {
             return _repo.GetBySlugOrIdAsync(slugOrId, onlyActive: true, ct);
         }
+        
+
 
         public Task<PagedResult<ProductListItemDto>> AdminGetProductsAsync(AdminProductFilterDto filter, PaginationDto pagination, CancellationToken ct)
         {
@@ -43,13 +46,38 @@ namespace EcommerceProject.Services.Implementations
                 ct
             );
         }
+        private async Task<string> GenerateUniqueSlugAsync(string name, CancellationToken ct)
+        {
+            var baseSlug = SlugGenerator.Generate(name);
+
+            var maxSuffix = await _repo.GetMaxSlugSuffixAsync(baseSlug, ct);
+
+            if (maxSuffix == null)
+                return baseSlug;          
+
+            return $"{baseSlug}-{maxSuffix + 1}";
+        }
+
 
 
         public async Task<int> CreateAsync(ProductCreateDto dto, IFormFileCollection? images, int? primaryIndex, CancellationToken ct)
         {
             await new ProductCreateValidator().ValidateAndThrowAsync(dto, ct);
-            var productId = await _repo.CreateAsync(dto, ct);
+            var slug = await GenerateUniqueSlugAsync(dto.Name, ct);
+            var sku = SkuGenerator.Generate();
 
+            var productId = await _repo.CreateAsync(
+                dto.CategoryId,
+                dto.Name,
+                slug,
+                dto.Description,
+                dto.ShortDescription,
+                dto.Price,
+                dto.StockQuantity,
+                sku,
+                dto.IsActive,
+                ct
+            );
             if (images is not { Count: > 0 })
                 return productId;
 
@@ -77,6 +105,21 @@ namespace EcommerceProject.Services.Implementations
         public async Task<bool> UpdateAsync(int id, ProductUpdateDto dto, IFormFileCollection? images, int? primaryIndex, CancellationToken ct)
         {
             await new ProductUpdateValidator().ValidateAndThrowAsync(dto, ct);
+
+            var existing = await _repo.GetByIdAsync(id, ct);
+            if (existing == null)
+                return false;
+            string slug;
+            if (!string.Equals(existing.Name, dto.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                slug = await GenerateUniqueSlugAsync(dto.Name, ct);
+            }
+            else
+            {
+                slug = existing.Slug;
+            }
+            dto.Slug = slug;
+
             var ok = await _repo.UpdateAsync(id, dto, ct);
             if (!ok) return false;
 

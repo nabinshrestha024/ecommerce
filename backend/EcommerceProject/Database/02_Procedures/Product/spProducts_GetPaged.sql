@@ -1,6 +1,7 @@
-﻿USE EcommerceDB;
+﻿USE [EcommerceDB]
 GO
-CREATE OR ALTER PROCEDURE spProducts_GetPaged
+
+CREATE OR ALTER   PROCEDURE [dbo].[spProducts_GetPaged]
 (
     @CategoryId     INT             = NULL,
     @Search         VARCHAR(200)    = NULL,
@@ -22,8 +23,10 @@ BEGIN
         SELECT
             p.ProductId,
             p.CategoryId,
+            c.Name AS CategoryName,
             p.Name,
             p.Slug,
+            p.Description,
             p.ShortDescription,
             p.Price,
             p.StockQuantity,
@@ -38,6 +41,8 @@ BEGIN
                 ORDER BY pi.IsPrimary DESC, pi.SortOrder ASC, pi.ProductImageId ASC
             )
         FROM Products p
+        INNER JOIN Categories c
+        ON p.CategoryId = c.CategoryId
         WHERE
             (@CategoryId IS NULL OR p.CategoryId = @CategoryId)
             AND (
@@ -46,7 +51,7 @@ BEGIN
                 p.Slug LIKE '%' + @Search + '%' OR
                 p.SKU  LIKE '%' + @Search + '%'
             )
-            AND (@OnlyActive = 0 OR p.IsActive = 1)
+            AND p.IsActive = @OnlyActive
     )
     SELECT *
     FROM Filtered
@@ -65,4 +70,3 @@ BEGIN
         )
         AND (@OnlyActive = 0 OR p.IsActive = 1);
 END
-GO

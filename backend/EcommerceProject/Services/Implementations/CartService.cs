@@ -1,55 +1,55 @@
 ﻿using EcommerceProject.Models.DTOs.Cart;
+using EcommerceProject.Models.DTOs.ShoppingCart;
 using EcommerceProject.Repositories.Implementations;
+using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
 
 namespace EcommerceProject.Services.Implementations
 {
     public class CartService : ICartService
     {
-        private readonly CartRepository _cartRepository;
+        private readonly ICartRepository _cartRepository;
+        private readonly IProductRepository _productRepository;
 
-        public CartService(CartRepository cartRepository)
+        public CartService(ICartRepository cartRepository, IProductRepository productRepository )
         {
             _cartRepository = cartRepository;
+            _productRepository = productRepository;
         }
 
-        public async Task<ShoppingCartResponseDto> GetCartAsync(int userId)
+        public async Task<IEnumerable<CartItemDto>> GetCartAsync(int userId)
         {
-            var item = await _cartRepository.GetCartAsync(userId);
-            decimal subTotal = item.Sum(i => i.Price * i.Quantity);
+            if (userId <= 0)
+                throw new ArgumentException("Invalid user");
 
-            decimal discount = subTotal >= 10000 ? subTotal * 0.10m : 0m;
-
-            return new ShoppingCartResponseDto
-            {
-                Items = item,
-                SubTotal = subTotal,
-                Discount = discount,
-                GrandTotal = subTotal - discount
-            };
+            return await _cartRepository.GetCartAsync(userId);
         }
 
         public async Task AddToCartAsync(int userId, int productId, int quantity)
         {
-            if(quantity <= 0)
+
+            if (productId <= 0)
             {
-                throw new ArgumentException("Quantity must be greater than zero.");
+                throw new Exception($"Invalid ProductId");
+
+
             }
             await _cartRepository.AddToCartAsync(userId, productId, quantity);
         }
 
-        public async Task UpdateQuantityAsync(int cartItemId, int quantity)
+        public async Task UpdateQuantityAsync(int cartId, int quantity)
         {
             if (quantity <= 0)
             {
                 throw new ArgumentException("Quantity must be greater than zero.");
             }
-            await _cartRepository.UpdateQuantityAsync(cartItemId, quantity);
+            await _cartRepository.UpdateQuantityAsync(cartId, quantity);
         }
 
-        public async Task RemoveItemAsync(int cartItemId)
+        public async Task RemoveItemAsync(int cartId)
         {
-            await _cartRepository.RemoveCartAsync(cartItemId);
+            await _cartRepository.RemoveCartAsync(cartId);
         }
+
     }
 }
