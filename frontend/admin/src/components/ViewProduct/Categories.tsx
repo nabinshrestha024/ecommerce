@@ -1,12 +1,12 @@
 "use client";
-const data = [
+export const STATIC_CATEGORIES = [
   {
     CategoryId: 0,
     Name: "All",
   },
   {
     CategoryId: 1,
-    Name: "Groceries",
+    Name: "Grocery",
   },
   {
     CategoryId: 2,
@@ -35,7 +35,7 @@ export const Category = ({
     <div>
       <div className="text-xl font-semibold underline mb-10">Categories</div>
       <div className="flex flex-col gap-3 justify-center py-5 border-b">
-        {data.map((val) => {
+        {STATIC_CATEGORIES.map((val) => {
           const isActive = selectedCategory === val.Name;
 
           return (

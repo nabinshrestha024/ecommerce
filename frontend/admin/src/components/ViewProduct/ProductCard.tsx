@@ -1,18 +1,21 @@
 import { Card } from "../Card/Card";
 import { IoIosHeartEmpty } from "react-icons/io";
-import { Star } from "lucide-react";
 
 interface Product {
-  id: number;
+  productId: number;
+  categoryId: number;
   name: string;
-  description: string;
+  slug: string;
+  shortDescription: string | null;
+  sku: string;
+  isActive: boolean;
   price: number;
   originalPrice?: number;
   discount?: number;
-  image: string;
-  rating: number;
-  reviews: number;
-  stock: number;
+  primaryImageUrl: string;
+  rating?: number;
+  reviews?: number;
+  stockOuantity?: number;
 }
 
 interface ProductCardProps {
@@ -20,16 +23,17 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  console.log("card", product);
   return (
     <Card
       className="p-3 w-full max-w-[285px] border-0 shadow-none"
-      key={product.id}
+      key={product.productId}
       cardClassName="py-0 border shadow-xl"
     >
       <div className="flex flex-col gap-2">
         <div className="w-full h-[185px] relative">
           <img
-            src={product.image}
+            src={product.primaryImageUrl}
             alt="image"
             className="w-full h-full object-cover rounded-xl"
           />
@@ -43,36 +47,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             {product.name}
           </div>
           <div className="text-[16px] font-normal leading-[22px] line-clamp-2">
-            {product.description}
+            {product.shortDescription}
           </div>
-          <div className="flex items-center mb-2">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                size={16}
-                className={
-                  i < product.rating
-                    ? "fill-yellow-400 text-yellow-400"
-                    : "text-gray-300"
-                }
-              />
-            ))}
-            <span className="ml-2 text-sm text-gray-600">
-              ({product.reviews})
-            </span>
-          </div>
-          <div>
-            <span className="text-[14px] text-[#4EA674] font-bold">
-              $ {product.price}
-            </span>
-            &nbsp;&nbsp;&nbsp;
-            <span className="line-through text-[12px] text-[red] font-medium">
-              $ {product.originalPrice}
-            </span>
-          </div>
+          <span className="text-[14px] text-[#4EA674] font-bold">
+            $ {product.price}
+          </span>
         </div>
       </div>
-      <div className="flex justify-between items-center mt-2"></div>
     </Card>
   );
 };
