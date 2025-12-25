@@ -23,7 +23,6 @@ namespace EcommerceProject.Controllers.v1.Cart
 
 
         [HttpGet("{userId}")]
-
         public async Task<IActionResult> GetCart(int userId)
         {
             var cartItems = await _cartService.GetCartAsync(userId);
@@ -53,7 +52,5 @@ namespace EcommerceProject.Controllers.v1.Cart
             await _cartService.RemoveItemAsync(cartItemId);
             return Ok("Item removed");
         }
-
-
     }
 }

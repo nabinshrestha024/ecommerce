@@ -2,6 +2,7 @@
 using Dapper;
 using EcommerceProject.Database;
 using EcommerceProject.Models.DTOs.Common;
+using EcommerceProject.Models.DTOs.Payment;
 using EcommerceProject.Models.DTOs.EcommerceProject.Models.DTOs;
 using EcommerceProject.Models.DTOs.Orders;
 using EcommerceProject.Models.DTOs.PurchaseOrder;
@@ -142,6 +143,27 @@ namespace EcommerceProject.Repositories.Implementations
                 commandType: CommandType.StoredProcedure
             );
         }
-    }
 
+        // for payment
+        public async Task<OrderPaymentInfoDto> GetOrderForPaymentAsync(int orderId)
+        {
+            using var conn = _db.CreateConnection();
+
+            return await conn.QuerySingleAsync<OrderPaymentInfoDto>(
+            "spOrders_GetForPayment",
+            new { OrderId = orderId },
+            commandType: CommandType.StoredProcedure
+        );
+        }
+
+        public async Task UpdateOrderPaymentStatus(int orderId, string paymentStatus, string orderStatus)
+        {
+            using var conn = _db.CreateConnection();
+            await conn.ExecuteAsync(
+                "spOrders_UpdateOrderPaymentStatus",
+                new { OrderId = orderId, PaymentStatus = paymentStatus, OrderStatus = orderStatus },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+}
 }

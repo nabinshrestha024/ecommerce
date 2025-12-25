@@ -13,6 +13,8 @@ namespace EcommerceProject.Models.Entities
         public string? TransactionId { get; set; }
         public string? PaymentURL { get; set; }
         public string? GatewayReference { get; set; }
-        public string? Metadata { get; set; }     
+        public string? Metadata { get; set; }
+        public Order? Order { get; set; } 
     }
 }
+    

@@ -16,5 +16,7 @@ namespace EcommerceProject.Models.Entities;
         public string? PaymentStatus { get; set; } = "Pending";
         public string? PaymentGateway {  get; set; }
         public string? Notes { get; set; }
-        
-    }
+
+        // navigation property
+        public virtual ICollection<Payment> Payment { get; set; } = new List<Payment>();
+}
