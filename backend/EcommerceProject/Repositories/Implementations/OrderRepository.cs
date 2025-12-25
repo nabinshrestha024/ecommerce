@@ -29,9 +29,9 @@ namespace EcommerceProject.Repositories.Implementations
             p.Add("@ShippingAddress", dto.ShippingAddress);
             p.Add("@ShippingCity", dto.ShippingCity);
             p.Add("@ShippingPhone", dto.ShippingPhone);
-            p.Add("@PaymentMethodId", dto.PaymentMethodId);
-            p.Add("@PaymentGateway", dto.PaymentGateway);
-            p.Add("@Notes", dto.Notes);
+            p.Add("@PaymentMethodId", 1);
+            p.Add("@PaymentGateway", "esewa");
+            p.Add("@Notes", "notes");
             p.Add("@OrderId", dbType: DbType.Int32, direction: ParameterDirection.Output);
             p.Add("@TotalAmount", dbType: DbType.Decimal, precision: 10, scale: 2, direction: ParameterDirection.Output);
 
