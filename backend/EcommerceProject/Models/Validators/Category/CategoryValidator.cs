@@ -11,11 +11,6 @@ namespace EcommerceProject.Models.Validators.Category
                 .Must(x => !string.IsNullOrEmpty(x))
            .MaximumLength(300);
 
-            RuleFor(x => x.Slug)
-                .NotEmpty()
-                .MaximumLength(300)
-                .Matches("^[a-z0-9-]+$")
-                .WithMessage("Slug must contain only lowercase letters, numbers, and hyphens.");
 
             RuleFor(x => x.Description)
                 .MaximumLength(1000);
