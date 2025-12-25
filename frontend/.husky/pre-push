@@ -35,5 +35,3 @@ if ! echo "$branch" | grep -qE "$valid_branch_regex"; then
     echo "Example: FE-feat/add-auth-form"
     exit 1
 fi
-
-pnpm build
