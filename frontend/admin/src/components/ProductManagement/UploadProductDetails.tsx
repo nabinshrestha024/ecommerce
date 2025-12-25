@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Card } from "../Card/Card";
 import { useFormContext } from "react-hook-form";
 import { X } from "lucide-react";
+import { useGetCategories } from "@/hooks/product/useGetCategories";
 
 type ImageItem = {
   file: File;
@@ -9,6 +10,8 @@ type ImageItem = {
 };
 
 export const UploadProductDetails = forwardRef((_, ref) => {
+  const { data } = useGetCategories();
+  const categories = data?.items ?? [];
   const {
     register,
     setValue,
@@ -127,16 +130,22 @@ export const UploadProductDetails = forwardRef((_, ref) => {
                   <option value="" disabled>
                     Select product categories...
                   </option>
-                  <option value={1}>Electronics</option>
-                  <option value={2}>Groceries</option>
-                  <option value={3}>Shoes</option>
-                  <option value={4}>Clothing</option>
+                  {categories?.map(
+                    (category: { categoryId: number; name: string }) => (
+                      <option
+                        key={category.categoryId}
+                        value={category.categoryId}
+                      >
+                        {category.name}
+                      </option>
+                    ),
+                  )}
                 </select>
               </div>
 
-              {errors.categories && (
+              {errors.categoryId && (
                 <p className="text-sm text-red-500 mt-1">
-                  {errors.categories?.message as string}
+                  {errors.categoryId?.message as string}
                 </p>
               )}
             </div>

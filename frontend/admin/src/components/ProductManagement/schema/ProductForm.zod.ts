@@ -23,7 +23,7 @@ export const ProductFormSchema = z
       .optional()
       .transform((val) => (val === "" ? undefined : val)),
 
-    categories: z.string().min(1, "Product category is required"),
+    categoryId: z.coerce.number().min(1, "Product category is required"),
 
     images: z
       .instanceof(FileList)
@@ -41,17 +41,7 @@ export const ProductFormSchema = z
       .number({ message: "Stock quantity must be a number" })
       .optional(),
 
-    expirationStart: z
-      .union([z.string().length(0), z.string().date()])
-      .optional()
-      .transform((val) => (val === "" ? undefined : val)),
-
-    expirationEnd: z
-      .union([z.string().length(0), z.string().date()])
-      .optional()
-      .transform((val) => (val === "" ? undefined : val)),
-
-    stockStatus: z.string().min(1, "Stock status is required"),
+    isActive: z.boolean().optional(),
 
     highlightFeatured: z.boolean().optional(),
   })

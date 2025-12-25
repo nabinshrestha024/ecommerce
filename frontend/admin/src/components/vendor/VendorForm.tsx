@@ -3,16 +3,16 @@ import { Input } from "../Input/Input.tsx";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { VendorFormSchema } from "./VendorForm.zod.ts";
 import type { VendorFormValues } from "./VendorForm.zod.ts";
+import { useUpdateVendor } from "@/hooks/vendor/useUpdateVendor.ts";
 interface Vendor {
-  id: string;
+  vendorId: number | string;
   businessName: string;
+  contactPerson: string;
   email: string;
   phone: string;
   address: string;
-  totalProducts: number;
-  completedOrders: number;
-  canceledOrders: number;
-  status: "active" | "pending" | "inactive" | "blocked";
+  status: "active" | "inactive";
+  joinedOn: string;
 }
 
 type Props = {
@@ -21,6 +21,7 @@ type Props = {
 };
 
 export const VendorForm = ({ vendor, onSave }: Props) => {
+  const { mutate } = useUpdateVendor();
   const {
     register,
     handleSubmit,
@@ -28,16 +29,30 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
     reset,
   } = useForm<VendorFormValues>({
     resolver: zodResolver(VendorFormSchema),
-    defaultValues: vendor,
+    defaultValues: {
+      name: vendor.businessName,
+      contactPerson: vendor.contactPerson,
+      email: vendor.email,
+      phone: vendor.phone,
+      address: vendor.address,
+      status: vendor.status,
+      joinedOn: vendor.joinedOn,
+    },
     mode: "onChange",
   });
 
   const onSubmit = (data: VendorFormValues) => {
-    console.log("Form Data:", data);
     const updatedVendor: Vendor = {
       ...vendor,
-      ...data,
+      businessName: data.name,
+      contactPerson: data.contactPerson,
+      email: data.email,
+      phone: data.phone,
+      address: data.address,
+      status: data.status,
+      joinedOn: data.joinedOn,
     };
+    mutate({ vendorId: vendor.vendorId, vendorData: updatedVendor } as any);
     onSave(updatedVendor);
     reset(updatedVendor);
   };
@@ -47,33 +62,32 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         <h2 className="text-[24px] font-bold mb-6 text-center">Edit Vendor</h2>
 
-        <div className="grid grid-cols-4 gap-4 items-center">
-          <label className="col-span-1 font-medium ">Vendor ID</label>
-          <div className="col-span-3">
-            <Input
-              type="text"
-              placeholder="Enter vendor ID"
-              {...register("id")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
-            />
-            {errors.id && (
-              <p className="text-[12px] text-red-500">{errors.id.message}</p>
-            )}
-          </div>
-        </div>
-
         <div className="grid grid-cols-4 gap-4 items-center mt-5">
           <label className="font-medium ">Business Name</label>
           <div className="col-span-3">
             <Input
               type="text"
               placeholder="Enter business name"
-              {...register("businessName")}
+              {...register("name")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
-            {errors.businessName && (
+            {errors.name && (
+              <p className="text-[12px] text-red-500">{errors.name.message}</p>
+            )}
+          </div>
+        </div>
+        <div className="grid grid-cols-4 gap-4 items-center mt-5">
+          <label className="font-medium ">Contact Person</label>
+          <div className="col-span-3">
+            <Input
+              type="text"
+              placeholder="Enter contact person"
+              {...register("contactPerson")}
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+            />
+            {errors.contactPerson && (
               <p className="text-[12px] text-red-500">
-                {errors.businessName.message}
+                {errors.contactPerson.message}
               </p>
             )}
           </div>
@@ -127,67 +141,40 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium ">Total Products</label>
+          <label className="font-medium ">Status</label>
           <div className="col-span-3">
-            <Input
-              type="number"
-              placeholder="Enter total products"
-              {...register("totalProducts")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded
-             focus-visible:border-[#DFE0E1] focus-visible:ring-0
-             appearance-none
-             [&::-webkit-inner-spin-button]:appearance-none
-             [&::-webkit-outer-spin-button]:appearance-none"
-            />
-            {errors.totalProducts && (
+            <select
+              {...register("status")}
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 bg-white"
+            >
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+            {errors.status && (
               <p className="text-[12px] text-red-500">
-                {errors.totalProducts.message}
+                {errors.status.message}
               </p>
             )}
           </div>
         </div>
 
         <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium ">Completed Orders</label>
+          <label className="font-medium ">Joined On</label>
           <div className="col-span-3">
             <Input
-              type="number"
-              placeholder="Enter completed orders"
-              {...register("completedOrders")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded
-             focus-visible:border-[#DFE0E1] focus-visible:ring-0
-             appearance-none
-             [&::-webkit-inner-spin-button]:appearance-none
-             [&::-webkit-outer-spin-button]:appearance-none"
+              type="date"
+              placeholder="Enter joined date"
+              {...register("joinedOn")}
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
-            {errors.completedOrders && (
+            {errors.joinedOn && (
               <p className="text-[12px] text-red-500">
-                {errors.completedOrders.message}
+                {errors.joinedOn.message}
               </p>
             )}
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium ">Canceled Orders</label>
-          <div className="col-span-3">
-            <Input
-              type="number"
-              placeholder="Enter canceled orders"
-              {...register("canceledOrders")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded
-             focus-visible:border-[#DFE0E1] focus-visible:ring-0
-             appearance-none
-             [&::-webkit-inner-spin-button]:appearance-none
-             [&::-webkit-outer-spin-button]:appearance-none"
-            />
-            {errors.canceledOrders && (
-              <p className="text-[12px] text-red-500">
-                {errors.canceledOrders.message}
-              </p>
-            )}
-          </div>
-        </div>
         <div className="flex justify-center">
           <button
             type="submit"
