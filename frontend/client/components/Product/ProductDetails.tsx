@@ -22,7 +22,8 @@ const ProductDetails = () => {
   const handleAddQuantity = () => {
     setQuantity(quantity + 1);
   };
-
+  if (productItems.isLoading) return <p>Loading product details...</p>;
+  if (productItems.isError) return <p>Failed to load product details</p>;
   return (
     <div className="w-full px-20 py-10">
       <Card key={productItems.data?.productId} className="p-0">

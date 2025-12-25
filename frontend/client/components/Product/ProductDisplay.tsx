@@ -25,7 +25,8 @@ export const ProductDisplay = () => {
   const categoryId = categoryParam ? Number(categoryParam) : null;
   const prod = useProductCategory(categoryId || 0);
   const products = useProduct();
-
+  if (products.isLoading) return <p>Loading products...</p>;
+  if (products.isError) return <p>Failed to load products</p>;
   return (
     <div className="min-h-screen bg-gray-50 p-8 flex flex-col md:flex-row gap-5 items-start w-screen">
       <Category />
