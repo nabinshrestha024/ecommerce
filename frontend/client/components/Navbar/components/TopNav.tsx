@@ -8,10 +8,30 @@ import { FaShoppingCart } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
 import { Sidebar } from "./Sidebar";
-import { Trash2, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Heart, Trash2, X } from "lucide-react";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useFetchCart } from "@/hooks/cart/useFetchCart";
+import { useDeleteCart } from "@/hooks/cart/useDeleteCart";
+import { MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
+import { useUpdateCart } from "@/hooks/cart/useUpdateCart";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+export interface CartProductType {
+  cartId: number;
+  productId: number;
+  productName: string;
+  price: number;
+  quantity: number;
+  totalPrice: number;
+  addedDate: string;
+  productImageUrl: string;
+  description: string;
+}
 
 export const TopNav = () => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [cartItems, setCartItems] = useState([
     {
@@ -82,8 +102,22 @@ export const TopNav = () => {
     setTotal(t);
   }, [cartItems, total]);
 
+<<<<<<< HEAD
   const handleDelete = (id: number) => {
     setCartItems((prev) => prev.filter((val) => val.id !== id));
+=======
+  const handleQuantityDecrease = ({
+    cartId,
+    quantity,
+  }: {
+    cartId: number;
+    quantity: number;
+  }) => {
+    updateCart.mutate({
+      cartId: cartId,
+      quantity: quantity - 1,
+    });
+>>>>>>> b67460de61aa26164c515cb9b53240ef78013712
   };
 
   return (
@@ -126,9 +160,30 @@ export const TopNav = () => {
             Search
           </Button>
         </div>
+<<<<<<< HEAD
         <Link href="/login">
           <Button>Login</Button>
         </Link>
+=======
+        {isAuth ? (
+          <Link href="/home">
+            <Button onClick={logout}>Logout</Button>
+          </Link>
+        ) : (
+          <Link href="/login">
+            <Button>Login</Button>
+          </Link>
+        )}
+
+        {!isAuth ? (
+          <Heart
+            onClick={() => toast.error("Please log in to access wishlist!")}
+          />
+        ) : (
+          <Heart onClick={() => router.push("/wishlist")} />
+        )}
+
+>>>>>>> b67460de61aa26164c515cb9b53240ef78013712
         <div className="flex gap-2 shrink-0 items-center text-xl">
           <div onClick={() => setOpen(true)} className="cursor-pointer">
             <FaShoppingCart />
@@ -167,8 +222,64 @@ export const TopNav = () => {
                       <div className="text-sm font-semibold text-gray-800">
                         {val.name}
                       </div>
+<<<<<<< HEAD
                       <div className="text-xs text-gray-600 line-clamp-1">
                         {val.description}
+=======
+                      <div className="flex-1 flex flex-col justify-between">
+                        <div>
+                          <div className="text-sm font-semibold text-gray-800">
+                            {val.productName}
+                          </div>
+                          <div className="text-xs text-gray-600 line-clamp-1">
+                            {val.description}
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <div className="text-lg text-gray-700 flex flex-col gap-2">
+                            <span className="font-semibold">
+                              Price: $ {val.price}
+                            </span>{" "}
+                            <div
+                              className={`flex items-center justify-center gap-2 `}
+                            >
+                              <div>Quantity: </div>
+                              <div
+                                className={`${val.quantity === 1 ? "hidden" : ""}`}
+                                onClick={() =>
+                                  handleQuantityDecrease({
+                                    cartId: val.cartId,
+                                    quantity: val.quantity,
+                                  })
+                                }
+                              >
+                                <MdKeyboardArrowDown className="text-lg" />
+                              </div>{" "}
+                              {val.quantity}{" "}
+                              <div
+                                onClick={() =>
+                                  updateCart.mutate({
+                                    cartId: val.cartId,
+                                    quantity: val.quantity + 1,
+                                  })
+                                }
+                              >
+                                <MdKeyboardArrowUp className="text-lg" />
+                              </div>
+                            </div>
+                          </div>
+                          <button
+                            className="p-1 hover:bg-red-50 rounded transition-colors"
+                            title="Remove from cart"
+                            onClick={() => deleteCart.mutate(val.cartId)}
+                          >
+                            <Trash2
+                              size={16}
+                              className="text-red-500 hover:text-red-600"
+                            />
+                          </button>
+                        </div>
+>>>>>>> b67460de61aa26164c515cb9b53240ef78013712
                       </div>
                     </div>
                     <div className="flex justify-between items-center">

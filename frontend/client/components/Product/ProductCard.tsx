@@ -1,9 +1,18 @@
 import { Button } from "@/ui/button";
 import Image from "next/image";
 import { Card } from "../Card/Card";
-import { IoIosHeartEmpty } from "react-icons/io";
+import { IoIosHeart, IoIosHeartEmpty } from "react-icons/io";
 import Link from "next/link";
-import { Star } from "lucide-react";
+import { useAddToCart } from "@/hooks/cart/useAddToCart";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
+import { useAddWishlist } from "@/hooks/wishlist/useAddWishlist";
+import { useDeleteWishlist } from "@/hooks/wishlist/useDeleteWishlist";
+import { useFetchWishlist } from "@/hooks/wishlist/useFetchWishlist";
+import {
+  wishlistData,
+  WishlistItem,
+} from "../TrendingProduct/component/TrendingProductCard";
 
 interface Product {
   id: number;
@@ -24,6 +33,43 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+<<<<<<< HEAD
+=======
+  const addToCart = useAddToCart();
+  const { token } = useAuth();
+  const addMutate = useAddWishlist();
+  const deleteMutate = useDeleteWishlist();
+  const wishlists = useFetchWishlist();
+
+  const handleAddToCart = (productId: number) => {
+    if (token) {
+      addToCart.mutate({ productId: productId, quantity: 1 });
+    } else {
+      toast.message("Login to add to cart");
+    }
+  };
+
+  const wishlistItems = Array.isArray(wishlists?.data)
+    ? wishlists.data
+    : (wishlists?.data?.items ?? []);
+
+  const wishedIds = new Set<number>(
+    wishlistItems
+      .map((wishlist: WishlistItem) => Number(wishlist.productId))
+      .filter((id) => !Number.isNaN(id)),
+  );
+
+  const handleAddWishlist = (productId: wishlistData) => {
+    console.log(productId);
+    addMutate.mutate(productId);
+  };
+
+  const handleDeleteWishlist = (productId: wishlistData) => {
+    console.log(productId);
+    deleteMutate.mutate(productId);
+  };
+
+>>>>>>> b67460de61aa26164c515cb9b53240ef78013712
   return (
     <Card
       className="p-3 w-full max-w-[285px] border-0 shadow-none"
@@ -38,8 +84,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             fill
             className="w-full h-full object-cover rounded-[12px]"
           />
-          <div className="absolute top-3 right-3 rounded-full bg-white w-6 h-6 shadow-sm flex justify-center items-center">
-            <IoIosHeartEmpty />
+          <div className="absolute top-3 right-3 rounded-full w-6 h-6 shadow-sm flex justify-center items-center cursor-pointer">
+            {wishedIds.has(product.productId) ? (
+              <IoIosHeart
+                size={16}
+                className="text-red-600"
+                onClick={() => handleDeleteWishlist(product.productId)}
+              />
+            ) : (
+              <IoIosHeartEmpty
+                size={16}
+                className="text-gray-400"
+                onClick={() => handleAddWishlist(product.productId)}
+              />
+            )}
           </div>
         </div>
 
