@@ -1,4 +1,5 @@
 ﻿using EcommerceProject.Models.DTOs;
+using EcommerceProject.Models.DTOs.Common;
 using EcommerceProject.Models.DTOs.EcommerceProject.Models.DTOs;
 using EcommerceProject.Models.DTOs.Product;
 using EcommerceProject.Services.Interfaces;
@@ -24,7 +25,16 @@ namespace EcommerceProject.Controllers.v1.Product
             pageSize = Math.Clamp(pageSize, 1, 100);
 
             var result = await _service.GetPagedAsync(categoryId, search, page, pageSize, ct);
-            return Ok(result);
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            return Ok(new ApiResponse<PagedResult<ProductListItemDto>>
+            {
+                Meta = new ApiMeta
+                {
+                    BaseUrl = baseUrl
+                },
+                Data = result
+            });
         }
 
         [HttpGet("{slugOrId}")]
@@ -32,7 +42,16 @@ namespace EcommerceProject.Controllers.v1.Product
         {
             var product = await _service.GetDetailsAsync(slugOrId, ct);
             if (product is null) return NotFound(new { message = "Product not found." });
-            return Ok(product);
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            return Ok(new ApiResponse<ProductDetailsDto>
+            {
+                Meta = new ApiMeta
+                {
+                    BaseUrl = baseUrl
+                },
+                Data = product
+            });
         }
     }
 }

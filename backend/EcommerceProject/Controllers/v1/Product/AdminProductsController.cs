@@ -1,4 +1,6 @@
-﻿using EcommerceProject.Models.DTOs.Common;
+﻿using EcommerceProject.Models.DTOs;
+using EcommerceProject.Models.DTOs.Common;
+using EcommerceProject.Models.DTOs.EcommerceProject.Models.DTOs;
 using EcommerceProject.Models.DTOs.Product;
 using EcommerceProject.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -34,13 +36,31 @@ namespace EcommerceProject.Controllers.v1.Product
         {
             var product = await _service.GetDetailsAsync(id.ToString(), ct);
             if (product is null) return NotFound();
-            return Ok(product);
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            return Ok(new ApiResponse<ProductDetailsDto>
+            {
+                Meta = new ApiMeta
+                {
+                    BaseUrl = baseUrl
+                },
+                Data = product
+            });
         }
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] AdminProductFilterDto filter, [FromQuery] PaginationDto pagination, CancellationToken ct)
         {
             var result = await _service.AdminGetProductsAsync(filter, pagination, ct);
-            return Ok(result);
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            return Ok(new ApiResponse<PagedResult<ProductListItemDto>>
+            {
+                Meta = new ApiMeta
+                {
+                    BaseUrl = baseUrl
+                },
+                Data = result
+            });
         }
 
 
