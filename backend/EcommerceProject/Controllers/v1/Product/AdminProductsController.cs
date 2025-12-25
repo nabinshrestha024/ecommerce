@@ -19,6 +19,20 @@ namespace EcommerceProject.Controllers.v1.Product
         {
             _service = service;
         }
+        private string? ToAbsoluteUrl(string? path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                return path;
+
+            if (Uri.IsWellFormedUriString(path, UriKind.Absolute))
+                return path;
+
+            if (!path.StartsWith("/"))
+                path = "/" + path;
+
+            return $"{Request.Scheme}://{Request.Host}{path}";
+        }
+
         [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create(
@@ -38,14 +52,13 @@ namespace EcommerceProject.Controllers.v1.Product
             if (product is null) return NotFound();
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
-            return Ok(new ApiResponse<ProductDetailsDto>
+            foreach (var img in product.Images)
             {
-                Meta = new ApiMeta
-                {
-                    BaseUrl = baseUrl
-                },
-                Data = product
-            });
+                img.ImageUrl = ToAbsoluteUrl(img.ImageUrl);
+            }
+
+            return Ok(product);
+
         }
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] AdminProductFilterDto filter, [FromQuery] PaginationDto pagination, CancellationToken ct)
@@ -53,14 +66,14 @@ namespace EcommerceProject.Controllers.v1.Product
             var result = await _service.AdminGetProductsAsync(filter, pagination, ct);
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
-            return Ok(new ApiResponse<PagedResult<ProductListItemDto>>
+            foreach (var item in result.Items)
             {
-                Meta = new ApiMeta
-                {
-                    BaseUrl = baseUrl
-                },
-                Data = result
-            });
+                item.PrimaryImageUrl = ToAbsoluteUrl(item.PrimaryImageUrl);
+            }
+
+            return Ok(result);
+           
+
         }
 
 
