@@ -3,6 +3,9 @@ import Image from "next/image";
 import { Card } from "../Card/Card";
 import { IoIosHeartEmpty } from "react-icons/io";
 import Link from "next/link";
+import { useAddToCart } from "@/hooks/cart/useAddToCart";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 interface Product {
   productId: number;
@@ -22,6 +25,17 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const addToCart = useAddToCart();
+  const { token } = useAuth();
+
+  const handleAddToCart = (productId: number) => {
+    if (token) {
+      addToCart.mutate({ productId: productId, quantity: 1 });
+    } else {
+      toast.message("Login to add to cart");
+    }
+  };
+
   return (
     <Card
       className="p-3 w-full max-w-[285px] border-0 shadow-none"
@@ -82,7 +96,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
         </Link>
 
-        <Button className="px-5 py-4 text-[14px] font-bold leading-3 bg-white border border-[#4EA674] text-[#4EA674]  rounded-[200px] hover:bg-[#fffcfc]">
+        <Button
+          className="px-5 py-4 text-[14px] font-bold leading-3 bg-white border border-[#4EA674] text-[#4EA674]  rounded-[200px] hover:bg-[#fffcfc]"
+          onClick={() => handleAddToCart(product.productId)}
+        >
           Add to cart
         </Button>
       </div>

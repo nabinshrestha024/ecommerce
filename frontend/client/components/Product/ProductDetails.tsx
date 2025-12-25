@@ -6,12 +6,16 @@ import { RiAddFill, RiSubtractFill } from "react-icons/ri";
 import { useState } from "react";
 import { Button } from "@/ui/button";
 import { useProductDetails } from "@/hooks/product/useProductDetails";
+import { useAddToCart } from "@/hooks/cart/useAddToCart";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const searchParams = useParams();
   const slug = searchParams.id;
   const productItems = useProductDetails((slug as string) || "");
+  const addToCart = useAddToCart();
   const handleSubQuantity = () => {
     if (quantity === 1) {
       setQuantity(1);
@@ -19,6 +23,23 @@ const ProductDetails = () => {
   };
   const handleAddQuantity = () => {
     setQuantity(quantity + 1);
+  };
+  const { token } = useAuth();
+  const handleAddToCart = ({
+    productId,
+    quantity,
+  }: {
+    productId: number;
+    quantity: number;
+  }) => {
+    if (token) {
+      addToCart.mutate({
+        productId: productId,
+        quantity: quantity,
+      });
+    } else {
+      toast.message("Login to add to cart");
+    }
   };
   if (productItems.isLoading) return <p>Loading product details...</p>;
   if (productItems.isError) return <p>Failed to load product details</p>;
@@ -85,7 +106,17 @@ const ProductDetails = () => {
                   <RiAddFill color="white" />
                 </div>
               </div>
-              <Button className="w-[200px]">Add to cart</Button>
+              <Button
+                className="w-[200px]"
+                onClick={() =>
+                  handleAddToCart({
+                    productId: productItems?.data?.productId || 1,
+                    quantity: quantity,
+                  })
+                }
+              >
+                Add to cart
+              </Button>
             </div>
           </div>
         </div>

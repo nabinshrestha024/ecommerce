@@ -32,10 +32,10 @@ export const ProductDisplay = () => {
       <Category />
       <div className="grid grid-cols-2  md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
         {categoryId === null
-          ? products.data?.items.map((product: Product) => (
+          ? (products.data?.items || []).map((product: Product) => (
               <ProductCard key={product.productId} product={product} />
             ))
-          : prod.data?.items.map((product: Product) => (
+          : (prod.data?.items || []).map((product: Product) => (
               <ProductCard key={product.productId} product={product} />
             ))}
       </div>
