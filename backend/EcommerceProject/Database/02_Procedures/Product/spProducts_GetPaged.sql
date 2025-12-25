@@ -1,6 +1,7 @@
-﻿USE EcommerceDB;
+﻿USE [EcommerceDB]
 GO
-CREATE OR ALTER PROCEDURE spProducts_GetPaged
+
+CREATE OR ALTER   PROCEDURE [dbo].[spProducts_GetPaged]
 (
     @CategoryId     INT             = NULL,
     @Search         VARCHAR(200)    = NULL,
@@ -50,7 +51,7 @@ BEGIN
                 p.Slug LIKE '%' + @Search + '%' OR
                 p.SKU  LIKE '%' + @Search + '%'
             )
-            AND (@OnlyActive = 0 OR p.IsActive = 1)
+            AND p.IsActive = @OnlyActive
     )
     SELECT *
     FROM Filtered
@@ -69,4 +70,3 @@ BEGIN
         )
         AND (@OnlyActive = 0 OR p.IsActive = 1);
 END
-GO
