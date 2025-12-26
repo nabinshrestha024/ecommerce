@@ -22,10 +22,6 @@ import { useSearch } from "@/hooks/search/useSearch";
 import { useDebounce } from "@/hooks/search/useDebounce";
 import { Notification } from "@/components/Notification/Notification";
 import { Dialog } from "@/components/dialog/Dialog";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckoutFormSchema, CheckoutFormSchemaType } from "./checkoutForm.zod";
-import { Label } from "@/ui/label";
 import { CheckoutForm } from "./CheckoutForm";
 
 export interface CartProductType {
@@ -46,9 +42,9 @@ export const TopNav = () => {
   const [searchData, setSearchData] = useState("");
   const { data, isLoading, isError, error } = useFetchCart();
   const deleteCart = useDeleteCart();
-  const calculateTotal = () => {
-    return data?.reduce((sum, val) => sum + val.quantity * val.price, 0) ?? 0;
-  };
+
+  const totalPrice =
+    data?.reduce((sum, val) => sum + val.quantity * val.price, 0) ?? 0;
 
   const { token, logout } = useAuth();
   const isAuth = Boolean(token);
@@ -164,6 +160,12 @@ export const TopNav = () => {
           </Link>
         )}
 
+        {isAuth && (
+          <Link href={"/order"}>
+            <Button variant={"secondary"}>Orders</Button>
+          </Link>
+        )}
+
         {!isAuth ? (
           <Heart
             onClick={() => toast.error("Please log in to access wishlist!")}
@@ -256,10 +258,14 @@ export const TopNav = () => {
                       <div key={val.cartId} className="flex gap-4 items-start">
                         <div className="w-20 h-20 relative rounded-md overflow-hidden bg-gray-100 shrink-0">
                           <Image
-                            src={val.productImageUrl || "/a.jpg"}
+                            src={
+                              `http://192.168.80.229${val.productImageUrl}` ||
+                              "/a.jpg"
+                            }
                             fill
                             alt={val.productName}
                             className="object-cover"
+                            unoptimized
                           />
                         </div>
                         <div className="flex-1 flex flex-col">
@@ -333,7 +339,7 @@ export const TopNav = () => {
                   <div className="flex items-center justify-between mb-3">
                     <div className="text-sm text-gray-600">Grand Total</div>
                     <div className="text-2xl font-semibold text-green-600">
-                      ${calculateTotal()}
+                      ${totalPrice}
                     </div>
                   </div>
 

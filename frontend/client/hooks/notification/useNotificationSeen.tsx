@@ -1,18 +1,17 @@
-import { addOrder } from "@/lib/orders/addOrder";
+import { notificationSeen } from "@/lib/notification/notificationSeen";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export const useAddOrder = () => {
+export const useNotificationSeen = () => {
   const queryClient = useQueryClient();
   const data = useMutation({
-    mutationKey: ["addOrder"],
-    mutationFn: addOrder,
+    mutationKey: ["notificationSeen"],
+    mutationFn: notificationSeen,
     onSuccess: () => {
-      toast.success("Order created successfully");
       queryClient.invalidateQueries({ queryKey: ["fetchNotification"] });
     },
-    onError: (data) => {
-      toast.error(data.message);
+    onError: () => {
+      toast.error("An error occured");
     },
   });
   return data;

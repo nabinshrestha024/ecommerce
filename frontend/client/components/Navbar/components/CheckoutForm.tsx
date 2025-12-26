@@ -75,12 +75,12 @@ export const CheckoutForm = () => {
       <input
         type="hidden"
         name="success_url"
-        value="http://localhost:5115/success.html"
+        value="http://localhost:3000/success"
       />
       <input
         type="hidden"
         name="failure_url"
-        value="http://localhost:5115/failure.html"
+        value="http://localhost:3000/failure"
       />
       <input
         type="hidden"

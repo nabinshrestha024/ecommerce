@@ -15,4 +15,6 @@ export const endpoint = {
   FETCHNOTIFICATION: "notifications",
   ADDORDER: "orders",
   ESEWAPAYMENT: "payments/esewa/initiate",
+  PAYMENTSUCCESS: "payments/esewa/verify/success",
+  NOTIFICATIONSEEN: "notifications",
 };

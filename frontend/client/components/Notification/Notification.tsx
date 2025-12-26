@@ -1,5 +1,6 @@
 "use client";
 import { useNotification } from "@/hooks/notification/useNotification";
+import { useNotificationSeen } from "@/hooks/notification/useNotificationSeen";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,6 +10,8 @@ import {
   DropdownMenuTrigger,
 } from "@/ui/dropdown-menu";
 import { Bell, Clock, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export interface NotificationType {
   notificationId: number;
@@ -22,7 +25,17 @@ export interface NotificationType {
 export const Notification = () => {
   const { data, isLoading, isError, error } = useNotification();
 
-  const unreadCount = data?.filter((n) => n.isRead === 0).length || 0;
+  const [read, setRead] = useState(true);
+
+  useEffect(() => {
+    data?.map((val) => {
+      if (val.isRead === 0) {
+        setRead(false);
+      }
+    });
+  }, [data]);
+
+  const router = useRouter();
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -39,32 +52,38 @@ export const Notification = () => {
     return date.toLocaleDateString();
   };
 
+  const markAsRead = useNotificationSeen();
+
+  const handleNotification = () => {
+    data?.map((val) => {
+      if (val.isRead === 0) {
+        markAsRead.mutate(val.notificationId);
+      }
+    });
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button
+          className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onClick={handleNotification}
+        >
           <Bell className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-          {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-semibold text-white bg-red-500 rounded-full animate-pulse">
-              {unreadCount > 9 ? "9+" : unreadCount}
-            </span>
+          {read && (
+            <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-semibold text-white bg-red-500 rounded-full"></span>
           )}
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="w-80 max-h-[480px] overflow-hidden p-0"
+        className="w-90 max-h-[480px] overflow-hidden p-0"
       >
         <DropdownMenuLabel className="px-4 py-3 bg-linear-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-850 border-b">
           <div className="flex items-center justify-between">
             <h3 className="text-base font-semibold text-gray-900 dark:text-white">
               Notifications
             </h3>
-            {unreadCount > 0 && (
-              <span className="text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 px-2 py-1 rounded-full">
-                {unreadCount} new
-              </span>
-            )}
           </div>
         </DropdownMenuLabel>
 
@@ -105,7 +124,10 @@ export const Notification = () => {
               {data?.map((val, index) => (
                 <div key={val.notificationId}>
                   <DropdownMenuItem
-                    className={`px-4 py-3 cursor-pointer transition-colors focus:bg-gray-50 dark:focus:bg-gray-800 ${
+                    onClick={() => {
+                      router.push("/order");
+                    }}
+                    className={`px-4 hide-scrollbar py-3 cursor-pointer transition-colors focus:bg-gray-50 dark:focus:bg-gray-800 ${
                       val.isRead === 0
                         ? "bg-blue-50/50 dark:bg-blue-950/20"
                         : "hover:bg-gray-50 dark:hover:bg-gray-800/50"
@@ -149,17 +171,6 @@ export const Notification = () => {
             </>
           )}
         </div>
-
-        {data && data.length > 0 && (
-          <>
-            <DropdownMenuSeparator className="my-0" />
-            <div className="p-2 bg-gray-50 dark:bg-gray-800/50">
-              <button className="w-full text-center text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 py-2 px-3 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-colors">
-                View all notifications
-              </button>
-            </div>
-          </>
-        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
