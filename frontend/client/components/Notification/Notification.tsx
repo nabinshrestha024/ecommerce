@@ -29,7 +29,7 @@ export const Notification = () => {
 
   useEffect(() => {
     data?.map((val) => {
-      if (val.isRead === 0) {
+      if (!val.isRead) {
         setRead(false);
       }
     });
@@ -55,8 +55,9 @@ export const Notification = () => {
   const markAsRead = useNotificationSeen();
 
   const handleNotification = () => {
+    console.log("hello");
     data?.map((val) => {
-      if (val.isRead === 0) {
+      if (!val.isRead) {
         markAsRead.mutate(val.notificationId);
       }
     });
@@ -64,13 +65,10 @@ export const Notification = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button
-          className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-          onClick={handleNotification}
-        >
+      <DropdownMenuTrigger asChild onClick={() => handleNotification()}>
+        <button className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
           <Bell className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-          {read && (
+          {!read && (
             <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-semibold text-white bg-red-500 rounded-full"></span>
           )}
         </button>
