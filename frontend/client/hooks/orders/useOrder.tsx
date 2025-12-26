@@ -16,6 +16,7 @@ export type OrderData = {
   userId: number;
   orderDate: number;
   totalAmount: number;
+  shippingCity: string;
   status: string;
   paymentStatus: string;
   shippingName: string | null;

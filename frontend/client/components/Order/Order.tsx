@@ -20,93 +20,15 @@ const statusType = {
   CANCELLED: "Cancelled",
   PENDING: "Pending",
   SHIPPED: "Shipped",
+  PAID: "Paid",
 };
 
 export const Order = () => {
   const { data } = useOrder();
+
   const [sortType, setSortType] = useState<"date" | "price" | null>(null);
-  const columnHelper = createColumnHelper<OrderData>();
-  const columns = [
-    columnHelper.accessor("orderId", { header: "Order Id" }),
-    columnHelper.accessor(
-      (row) => row.items?.map((item) => item.productName).join(", "),
-      {
-        id: "productName",
-        header: "Product Name",
-        cell: (info) => (
-          <div className="flex flex-col">
-            {info
-              .getValue()
-              ?.split(", ")
-              .map((name, i) => (
-                <span key={i}>{name}</span>
-              ))}
-          </div>
-        ),
-      },
-    ),
-    columnHelper.accessor("orderDate", { header: "Date" }),
-    columnHelper.accessor("totalAmount", { header: "Price" }),
-    columnHelper.accessor("paymentStatus", {
-      header: "Payment",
-      cell: (info) => {
-        return info.getValue() === "Paid" ? (
-          <div className="flex justify-center items-center">
-            <div className="text-green-500 flex items-center justify-start gap-3 w-18">
-              <div className="rounded-full h-2 w-2 bg-green-500"></div> Paid
-            </div>
-          </div>
-        ) : (
-          <div className="flex justify-center items-center">
-            <div className="text-red-500 flex items-center justify-start gap-3 w-18">
-              <div className="rounded-full h-2 w-2 bg-red-500"></div> Unpaid
-            </div>
-          </div>
-        );
-      },
-    }),
-    columnHelper.accessor("status", {
-      header: "Status",
-      cell: ({ row }) => {
-        const original = row.original;
-        return original.status === statusType.DELIVERED ? (
-          <div className="flex justify-center items-center">
-            <div className="text-green-500 flex items-center justify-start gap-3 w-24">
-              <LuBus style={{ color: "green" }} />
-              Delivered
-            </div>
-          </div>
-        ) : original.status === statusType.PENDING ? (
-          <div className="flex justify-center items-center">
-            <div className="text-orange-500 flex items-center justify-start gap-3 w-24">
-              <LuBus style={{ color: "orange" }} />
-              Pending
-            </div>
-          </div>
-        ) : original.status === statusType.SHIPPED ? (
-          <div className="flex justify-center items-center">
-            <div className="text-gray-500 flex items-center justify-start gap-3 w-24">
-              <LuBus style={{ color: "gray" }} />
-              Shipped
-            </div>
-          </div>
-        ) : original.status === statusType.CANCELLED ? (
-          <div className="flex justify-center items-center">
-            <div className="text-red-500 flex items-center justify-start gap-3 w-24">
-              <LuBus style={{ color: "red" }} />
-              Cancelled
-            </div>
-          </div>
-        ) : (
-          <div className="flex justify-center items-center">
-            <div className="text-red-500 flex items-center justify-start gap-3">
-              Error
-            </div>
-          </div>
-        );
-      },
-    }),
-  ];
+  const [searchTerm, setSearchTerm] = useState("");
+
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -123,70 +45,159 @@ export const Order = () => {
   });
   const [paginationCancelled, setPaginationCancelled] =
     useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
-  const [searchTerm, setSearchTerm] = useState("");
+
+  const columnHelper = createColumnHelper<OrderData>();
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("orderId", {
+        header: "Order Id",
+        cell: (info) => <span className="font-bold">#{info.getValue()}</span>,
+      }),
+      columnHelper.accessor(
+        (row) =>
+          row.items ? row.items.map((item) => item.productName).join(", ") : "",
+        {
+          id: "productName",
+          header: "Product Name",
+          cell: (info) => {
+            const val = info.getValue();
+            if (!val)
+              return (
+                <span className="text-gray-400 italic">No items data</span>
+              );
+            return (
+              <div className="flex flex-col">
+                {val.split(", ").map((name, i) => (
+                  <span key={i}>{name}</span>
+                ))}
+              </div>
+            );
+          },
+        },
+      ),
+      columnHelper.accessor("shippingCity", {
+        header: "Shipping City",
+        cell: (info) => <span>{info.getValue() || "N/A"}</span>,
+      }),
+      columnHelper.accessor("orderDate", {
+        header: "Date",
+        cell: (info) => new Date(info.getValue()).toLocaleDateString(),
+      }),
+      columnHelper.accessor("totalAmount", {
+        header: "Price",
+        cell: (info) => <span>Rs. {info.getValue()}</span>,
+      }),
+      columnHelper.accessor("paymentStatus", {
+        header: "Payment",
+        cell: (info) => {
+          const isPaid = info.getValue() === "Paid";
+          const isProcessing = info.getValue() === "Processing";
+
+          let color = "text-red-500";
+          let bg = "bg-red-500";
+
+          if (isPaid) {
+            color = "text-green-500";
+            bg = "bg-green-500";
+          }
+          if (isProcessing) {
+            color = "text-blue-500";
+            bg = "bg-blue-500";
+          }
+
+          return (
+            <div className="flex justify-center items-center">
+              <div
+                className={`${color} flex items-center justify-start gap-3 w-24`}
+              >
+                <div className={`rounded-full h-2 w-2 ${bg}`}></div>
+                {info.getValue()}
+              </div>
+            </div>
+          );
+        },
+      }),
+      columnHelper.accessor("status", {
+        header: "Status",
+        cell: ({ row }) => {
+          const status = row.original.status;
+
+          let colorClass = "text-gray-500";
+          let iconColor = "gray";
+
+          if (status === statusType.DELIVERED || status === "Paid") {
+            colorClass = "text-green-500";
+            iconColor = "green";
+          } else if (status === statusType.PENDING || status === "Processing") {
+            colorClass = "text-orange-500";
+            iconColor = "orange";
+          } else if (status === statusType.CANCELLED) {
+            colorClass = "text-red-500";
+            iconColor = "red";
+          }
+
+          return (
+            <div className="flex justify-center items-center">
+              <div
+                className={`${colorClass} flex items-center justify-start gap-3 w-24`}
+              >
+                <LuBus style={{ color: iconColor }} />
+                {status}
+              </div>
+            </div>
+          );
+        },
+      }),
+    ],
+    [],
+  );
 
   const filteredData = useMemo(() => {
-    const filterBySearch = (orders: OrderData[]) => {
-      if (!searchTerm) return orders;
-      return orders.filter(
-        (order) =>
-          order.orderId ||
-          order.items[0].productName
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          order.paymentStatus
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          order.status.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
-    };
-    const sortOrder = (orders: OrderData[]) => {
+    const rawItems = (
+      Array.isArray(data) ? data : data?.items || []
+    ) as OrderData[];
+
+    const processData = (items: OrderData[]) => {
+      let result = [...items];
+
+      if (searchTerm) {
+        const lowerTerm = searchTerm.toLowerCase();
+        result = result.filter(
+          (order) =>
+            (order.orderId &&
+              String(order.orderId).toLowerCase().includes(lowerTerm)) ||
+            (order.shippingCity &&
+              order.shippingCity.toLowerCase().includes(lowerTerm)) ||
+            (order.status && order.status.toLowerCase().includes(lowerTerm)) ||
+            (order.items &&
+              order.items.some((item) =>
+                item.productName.toLowerCase().includes(lowerTerm),
+              )),
+        );
+      }
+
       if (sortType === "date") {
-        return [...orders].sort(
+        result.sort(
           (a, b) =>
             new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime(),
         );
+      } else if (sortType === "price") {
+        result.sort((a, b) => Number(a.totalAmount) - Number(b.totalAmount));
       }
-      if (sortType === "price") {
-        return [...orders].sort(
-          (a, b) => Number(a.totalAmount) - Number(b.totalAmount),
-        );
-      }
-      return orders;
+
+      return result;
     };
 
+    const all = processData(rawItems);
+
     return {
-      all: sortOrder(filterBySearch((data?.items ?? []) as OrderData[])),
-      delivered: sortOrder(
-        filterBySearch(
-          ((data?.items ?? []) as OrderData[]).filter(
-            (d) => d.status === statusType.DELIVERED,
-          ),
-        ),
-      ),
-      pending: sortOrder(
-        filterBySearch(
-          ((data?.items ?? []) as OrderData[]).filter(
-            (d) => d.status === statusType.PENDING,
-          ),
-        ),
-      ),
-      shipped: sortOrder(
-        filterBySearch(
-          ((data?.items ?? []) as OrderData[]).filter(
-            (d) => d.status === statusType.SHIPPED,
-          ),
-        ),
-      ),
-      cancelled: sortOrder(
-        filterBySearch(
-          ((data?.items ?? []) as OrderData[]).filter(
-            (d) => d.status === statusType.CANCELLED,
-          ),
-        ),
-      ),
+      all,
+      delivered: all.filter((d) => d.status === statusType.DELIVERED),
+      pending: all.filter((d) => d.status === statusType.PENDING),
+      shipped: all.filter((d) => d.status === statusType.SHIPPED),
+      cancelled: all.filter((d) => d.status === statusType.CANCELLED),
     };
-  }, [searchTerm, sortType]);
+  }, [data, searchTerm, sortType]);
 
   const tableAll = useReactTable({
     columns,
@@ -280,10 +291,6 @@ export const Order = () => {
     },
   ];
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
-
   return (
     <div className="p-3 rounded-lg">
       <div className="relative">
@@ -294,9 +301,10 @@ export const Order = () => {
         />
         <div className="absolute top-0 right-0 w-70 flex gap-2 justify-end items-center">
           <Input
-            onChange={handleChange}
+            onChange={(e) => setSearchTerm(e.target.value)}
             type="text"
             placeholder="Search for order..."
+            value={searchTerm}
           />
           <div className="p-2 rounded-lg border shadow-2xl">
             <DropDown
@@ -309,17 +317,13 @@ export const Order = () => {
             >
               <div
                 className="cursor-pointer hover:text-green-600"
-                onClick={() => {
-                  setSortType("date");
-                }}
+                onClick={() => setSortType("date")}
               >
                 Sort by Date
               </div>
               <div
                 className="cursor-pointer hover:text-green-600"
-                onClick={() => {
-                  setSortType("price");
-                }}
+                onClick={() => setSortType("price")}
               >
                 Sort by Price
               </div>
