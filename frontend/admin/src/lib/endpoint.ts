@@ -6,7 +6,10 @@ export const endpoint = {
   FETCH_ORDER: "admin/orders",
   CHANGEPASSWORD: "auth/change_password",
   FETCH_CATEGORY: "admin/categories",
+  FETCH_PROFILE: "profile/me",
+  products: "admin/products",
   CATEGORIES: "admin/categories",
+  REPORT: "admin/reports",
   VENDOR: "admin/vendors",
   USER: "admin/user",
 };

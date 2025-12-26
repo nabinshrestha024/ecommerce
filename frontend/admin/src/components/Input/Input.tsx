@@ -12,7 +12,7 @@ import {
 } from "react";
 
 type CommonProps = {
-  placeholder: string;
+  placeholder?: string;
   className?: string;
   icon?: ReactNode;
   error?: string;

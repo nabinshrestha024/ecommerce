@@ -7,9 +7,14 @@ import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProfileUpdateSchema } from "../profile/schemas/Profile.zod";
+import { useGetProfile } from "@/hooks/profile/useGetProfile";
+import { usePutProfile } from "@/hooks/profile/usePutProfile";
 export const ProfileUpdate = () => {
+  const { data } = useGetProfile();
+  const { mutate } = usePutProfile();
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: zodResolver(ProfileUpdateSchema), mode: "all" });
@@ -18,8 +23,25 @@ export const ProfileUpdate = () => {
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
   };
+  useEffect(() => {
+    if (!data) return;
+
+    reset({
+      fullName: data.fullName ?? "",
+      email: data.email ?? "",
+      phoneNumber: data.phone ?? "",
+      address: data.address ?? "",
+      dateOfBirth: data.dateOfBirth ?? "",
+      biography: data.bio ?? "",
+    });
+
+    if (data.profileImageUrl) {
+      setPreview(data.profileImageUrl);
+    }
+  }, [data, reset]);
+
   const onSubmit = (data: any) => {
-    console.log(data);
+    mutate(data);
   };
   const imageInputRef = useRef<HTMLInputElement>(null);
   const handleImageInput = () => {
@@ -97,7 +119,6 @@ export const ProfileUpdate = () => {
               <label className="text-sm font-medium ">Full Name</label>
               <Input
                 type="text"
-                placeholder="Wade"
                 disabled={!isEditing}
                 {...register("fullName")}
                 className={"w-full " + (!isEditing ? "cursor-not-allowed" : "")}
@@ -117,6 +138,7 @@ export const ProfileUpdate = () => {
                 type="password"
                 placeholder="********"
                 disabled={!isEditing}
+                {...register("password")}
                 className={!isEditing ? "cursor-not-allowed" : ""}
               />
               {errors.password && (
@@ -129,8 +151,8 @@ export const ProfileUpdate = () => {
               <label className="text-sm font-medium ">Phone Number</label>
               <Input
                 type="tel"
-                placeholder="1234567890"
                 disabled={!isEditing}
+                {...register("phoneNumber")}
                 className={!isEditing ? "cursor-not-allowed" : ""}
               />
               {errors.phoneNumber && (
@@ -146,8 +168,8 @@ export const ProfileUpdate = () => {
               <label className="text-sm font-medium ">Email</label>
               <Input
                 type="email"
-                placeholder="wade@example.com"
                 disabled={!isEditing}
+                {...register("email")}
                 className={!isEditing ? "cursor-not-allowed" : ""}
               />
               {errors.email && (
@@ -158,7 +180,6 @@ export const ProfileUpdate = () => {
               <label className="text-sm font-medium ">Date of Birth</label>
               <Input
                 type="date"
-                placeholder="01/01/2003"
                 disabled={!isEditing}
                 {...register("dateOfBirth")}
                 className={!isEditing ? "cursor-not-allowed" : ""}
@@ -175,8 +196,8 @@ export const ProfileUpdate = () => {
             <label className="text-sm font-medium ">Location</label>
             <Input
               type="text"
-              placeholder="1234 Main St, City, Country"
               disabled={!isEditing}
+              {...register("address")}
               className={!isEditing ? "cursor-not-allowed" : ""}
             />
             {errors.address && (
@@ -187,8 +208,8 @@ export const ProfileUpdate = () => {
           <div className="flex flex-col gap-2">
             <label className="text-sm font-medium">Biography</label>
             <textarea
-              placeholder="Tell us about yourself"
               disabled={!isEditing}
+              {...register("biography")}
               className={`w-full border rounded-lg p-3 h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm sm:text-base ${
                 !isEditing ? " cursor-not-allowed" : ""
               }`}

@@ -5,6 +5,7 @@ export const endpoint = {
   PRODUCT: "catalog/products",
   CATEGORY: "categories",
   FETCHCART: "cart/get",
+  FETCHORDER: "orders/me",
   ADDTOCART: "cart/add",
   DELETECART: "cart/delete",
   UPDATECART: "cart/update",

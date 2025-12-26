@@ -8,7 +8,10 @@ export const AddVendorFormSchema = z.object({
   phone: z
     .string()
     .min(10, "Phone number must be at least 10 digits")
-    .regex(/^\d+$/, "Phone number must contain only digits"),
+    .regex(
+      /^(98|97)\d{8}$/,
+      "Phone number must start with 98 or 97 and be 10 digits long",
+    ),
   address: z.string().min(5, "Address must be at least 5 characters"),
 });
 
