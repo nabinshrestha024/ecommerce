@@ -1,7 +1,9 @@
+import { useGetProfile } from "@/hooks/profile/useGetProfile";
 import { Card } from "../Card/Card";
 import { CirclePlus, Link } from "lucide-react";
 import { Copy } from "lucide-react";
 export const ShortProfile = () => {
+  const { data } = useGetProfile();
   return (
     <Card
       className="flex flex-col shadow-[0px_1px_3px_0px_#00000033] w-full py-4 sm:py-6 px-4 sm:px-6 rounded-xl"
@@ -14,21 +16,19 @@ export const ShortProfile = () => {
         <div className="flex flex-col items-center">
           <div className="h-20 w-20 sm:h-24 sm:w-24 flex justify-center items-center rounded-full bg-gray-200 shadow-md mt-1 mb-2">
             <img
-              src="profile.webp"
+              src={data?.profilePicture ?? "profile.webp"}
               alt="Profile"
               className="h-full w-full rounded-full object-cover border-2 border-white"
             />
           </div>
           <div className="font font-bold text-xl sm:text-[22px]">
-            Wade Warren
+            {data?.fullName}
           </div>
           <div className="flex items-center gap-2 text-sm sm:text-[16px] text-gray-400 text-center break-all px-2 sm:px-0">
-            <span className="break-all">wade.warren@example.com</span>
+            <span className="break-all">{data?.email}</span>
             <Copy
               className="h-4 w-4 cursor-pointer hover:text-gray-600 transition-colors shrink-0"
-              onClick={() =>
-                navigator.clipboard.writeText("wade.warren@example.com")
-              }
+              onClick={() => navigator.clipboard.writeText(data?.email ?? "")}
             />
           </div>
           <div className="flex justify-center items-center flex-col mt-4 sm:mt-5 text-xs sm:text-[14px]">
