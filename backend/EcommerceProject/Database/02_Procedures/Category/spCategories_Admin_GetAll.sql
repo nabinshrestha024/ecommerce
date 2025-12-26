@@ -31,6 +31,6 @@ BEGIN
     FETCH NEXT
         CASE WHEN @PageSize IS NULL THEN 1000000
              ELSE @PageSize
-        END ROWS ONLY;
+        END ROWS ONLY
 END
 
