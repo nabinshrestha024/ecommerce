@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using EcommerceProject.Database;
+using EcommerceProject.Filters;
 using EcommerceProject.Models.DTOs.Report;
 using EcommerceProject.Repositories.Interfaces;
 using Microsoft.Data.SqlClient;
@@ -16,54 +17,61 @@ namespace EcommerceProject.Repositories.Implementations
             _connectionFactory = sqlConnectionFactory;
         }
 
-        public async Task<TotalSaleDto> GetTotalSales(DateTime from, DateTime to)
+        public async Task<IEnumerable<SalesOverviewDto>> GetSalesOverviewAsync(ReportFilter filter)
         {
-            using var conn = _connectionFactory.CreateConnection();
-            return await conn.QueryFirstOrDefaultAsync<TotalSaleDto>(
-                "spReport_GetTotalSales",
-                new { FromDate = from, ToDate = to },
+            using var connection = _connectionFactory.CreateConnection();
+            var parameters = new DynamicParameters();
+            parameters.Add("@FromDate", filter.FromDate);
+            parameters.Add("@ToDate", filter.ToDate);
+
+            return await connection.QueryAsync<SalesOverviewDto>
+                ("spReport_GetTotalSales", 
+                parameters,
                 commandType: CommandType.StoredProcedure
-            );
+                );
         }
 
-        public async Task<IEnumerable<OrdersByStatusDto>> GetOrdersByStatus(DateTime from, DateTime to)
+        public async Task<IEnumerable<TopProductDto>> GetTopProductsAsync(ReportFilter filter)
         {
-            using var conn = _connectionFactory.CreateConnection();
-            return await conn.QueryAsync<OrdersByStatusDto>(
-                "spReport_GetOrdersByStatus",
-                new { FromDate = from, ToDate = to },
+            using var connection = _connectionFactory.CreateConnection();
+            var parameters = new DynamicParameters();
+            parameters.Add("@FromDate", filter.FromDate);
+            parameters.Add("@ToDate", filter.ToDate);
+
+            return await connection.QueryAsync<TopProductDto>
+                ("spReport_GetTopProducts",
+                parameters,
                 commandType: CommandType.StoredProcedure
-            );
+                );
         }
 
-        public async Task<IEnumerable<SalesByCategoryDto>> GetSalesByCategory(DateTime from, DateTime to)
+        public async Task<IEnumerable<CategorySalesDto>> GetCategorySalesAsync(ReportFilter filter)
         {
-            using var conn = _connectionFactory.CreateConnection();
-            return await conn.QueryAsync<SalesByCategoryDto>(
-                "spReport_GetSalesByCategory",
-                new { FromDate = from, ToDate = to },
+            using var connection = _connectionFactory.CreateConnection();
+            var parameters = new DynamicParameters();
+            parameters.Add("@FromDate", filter.FromDate);
+            parameters.Add("@ToDate", filter.ToDate);
+
+            return await connection.QueryAsync<CategorySalesDto>
+                ("spReport_GetSalesByCategory",
+                parameters, commandType: CommandType.StoredProcedure
+                );
+        }
+        public async Task<IEnumerable<LowStockProductDto>> GetLowStockAsync(ReportFilter filter)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@FromDate", filter.FromDate);
+            parameters.Add("@ToDate", filter.ToDate);
+
+            return await connection.QueryAsync<LowStockProductDto>
+                ("spReport_GetLowStockProducts",
+                parameters,
                 commandType: CommandType.StoredProcedure
-            );
+                );
         }
 
-        public async Task<IEnumerable<TopProductDto>> GetTopProducts(DateTime from, DateTime to, int topN)
-        {
-            using var conn = _connectionFactory.CreateConnection();
-            return await conn.QueryAsync<TopProductDto>(
-                "spReport_GetTopProducts",
-                new { FromDate = from, ToDate = to, TopN = topN },
-                commandType: CommandType.StoredProcedure
-            );
-        }
 
-        public async Task<IEnumerable<LowStockProductDto>> GetLowStockProducts(int threshold)
-        {
-            using var conn = _connectionFactory.CreateConnection();
-            return await conn.QueryAsync<LowStockProductDto>(
-                "spReport_GetLowStockProducts",
-                new { Threshold = threshold },
-                commandType: CommandType.StoredProcedure
-            );
-        }
     }
 }

@@ -1,22 +1,23 @@
-﻿USE EcommerceDB;
+﻿USE [EcommerceDB]
 GO
 
-CREATE OR ALTER PROCEDURE spReport_GetTopProducts
-    @FromDate DATE,
-    @ToDate DATE,
-    @TopN INT
+CREATE OR ALTER   PROCEDURE spReport_GetTopProducts
+    @FromDate DATETIME = NULL,
+    @ToDate DATETIME = NULL
 AS
 BEGIN
-    SELECT TOP(@TopN)
-        p.ProductId,
-        p.Name,
-        SUM(od.Quantity) AS QuantitySold,
-        SUM(od.Quantity * od.UnitPrice) AS TotalSales
-    FROM OrderItems od
-    INNER JOIN Orders o ON o.OrderId = od.OrderId
-    INNER JOIN Products p ON p.ProductId = od.ProductId
-    WHERE o.OrderDate BETWEEN @FromDate AND @ToDate
+    SET NOCOUNT ON;
+
+    SELECT p.ProductId,
+           p.Name,
+           SUM(oi.Quantity) AS QuantitySold,
+           SUM(oi.Quantity * oi.UnitPrice) AS TotalRevenue
+    FROM OrderItems oi
+    INNER JOIN Products p ON p.ProductId = oi.ProductId
+    INNER JOIN Orders o ON o.OrderId = oi.OrderId
+    WHERE (@FromDate IS NULL OR o.OrderDate >= @FromDate)
+      AND (@ToDate IS NULL OR o.OrderDate <= @ToDate)
     GROUP BY p.ProductId, p.Name
-    ORDER BY QuantitySold DESC
+    ORDER BY QuantitySold DESC;
 END
 GO

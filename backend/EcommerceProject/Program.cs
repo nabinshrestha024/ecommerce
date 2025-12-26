@@ -3,6 +3,7 @@ using EcommerceProject.Filters;
 using EcommerceProject.Hubs;
 using EcommerceProject.Models.DTOs.Discount;
 using EcommerceProject.Models.Validators.Discount;
+using EcommerceProject.Models.Validators.Report;
 using EcommerceProject.Models.Validators.Wishlist;
 using EcommerceProject.Repositories.Implementations;
 using EcommerceProject.Repositories.Interfaces;
@@ -84,11 +85,15 @@ builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IShipmentRepository, ShipmentRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
 
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IAdminDiscountRepository, AdminDiscountRepository>();
 builder.Services.AddScoped<IAdminDiscountService, AdminDiscountService>();
 
+
+
+builder.Services.AddScoped<IReportsService, ReportsService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
@@ -112,6 +117,8 @@ builder.Services.AddScoped<IWishlistService, WishlistService>();
 
 builder.Services.AddScoped<IValidator<int>, GetWishlistValidator>();
 builder.Services.AddScoped<IValidator<CreateDiscountDto>, CreateDiscountValidator>();
+builder.Services.AddScoped<IValidator<ReportFilter>, ReportFilterValidator>();
+
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 

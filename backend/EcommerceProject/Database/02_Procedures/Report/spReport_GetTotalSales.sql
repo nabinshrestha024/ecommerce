@@ -1,15 +1,20 @@
-﻿USE EcommerceDB;
-Go
+﻿USE [EcommerceDB]
+GO
 
-CREATE OR ALTER PROCEDURE spReport_GetTotalSales
-    @FromDate DATE,
-    @ToDate DATE
+CREATE OR ALTER   PROCEDURE spReport_GetTotalSales
+    @FromDate DATETIME = NULL,
+    @ToDate DATETIME = NULL
 AS
 BEGIN
-    SELECT 
-        SUM(TotalAmount) AS TotalSales,
-        COUNT(*) AS TotalOrders
+    SET NOCOUNT ON;
+
+    SELECT CAST(OrderDate AS DATE) AS Date,
+           SUM(TotalAmount) AS TotalSales,
+           COUNT(OrderId) AS TotalOrders
     FROM Orders
-    WHERE OrderDate BETWEEN @FromDate AND @ToDate
+    WHERE (@FromDate IS NULL OR OrderDate >= @FromDate)
+      AND (@ToDate IS NULL OR OrderDate <= @ToDate)
+    GROUP BY CAST(OrderDate AS DATE)
+    ORDER BY Date;
 END
 GO
