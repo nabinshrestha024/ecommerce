@@ -53,28 +53,6 @@ export const Order = () => {
         header: "Order Id",
         cell: (info) => <span className="font-bold">#{info.getValue()}</span>,
       }),
-      columnHelper.accessor(
-        (row) =>
-          row.items ? row.items.map((item) => item.productName).join(", ") : "",
-        {
-          id: "productName",
-          header: "Product Name",
-          cell: (info) => {
-            const val = info.getValue();
-            if (!val)
-              return (
-                <span className="text-gray-400 italic">No items data</span>
-              );
-            return (
-              <div className="flex flex-col">
-                {val.split(", ").map((name, i) => (
-                  <span key={i}>{name}</span>
-                ))}
-              </div>
-            );
-          },
-        },
-      ),
       columnHelper.accessor("shippingCity", {
         header: "Shipping City",
         cell: (info) => <span>{info.getValue() || "N/A"}</span>,
@@ -292,7 +270,7 @@ export const Order = () => {
   ];
 
   return (
-    <div className="p-3 rounded-lg">
+    <div className="p-3 rounded-lg w-screen">
       <div className="relative">
         <Tabs
           defaultValue="All"
