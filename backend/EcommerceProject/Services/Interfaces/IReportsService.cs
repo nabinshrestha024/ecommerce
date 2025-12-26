@@ -1,13 +1,13 @@
-﻿using EcommerceProject.Models.DTOs.Report;
+﻿using EcommerceProject.Filters;
+using EcommerceProject.Models.DTOs.Report;
 
 namespace EcommerceProject.Services.Interfaces
 {
     public interface IReportsService
     {
-        Task<TotalSaleDto> GetTotalSalesAsync(ReportFilter filter);
-        Task<IEnumerable<OrdersByStatusDto>> GetOrdersByStatusAsync(ReportFilter filter);
-        Task<IEnumerable<SalesByCategoryDto>> GetSalesByCategoryAsync(ReportFilter filter);
+        Task<IEnumerable<SalesOverviewDto>> GetSalesOverviewAsync(ReportFilter filter);
         Task<IEnumerable<TopProductDto>> GetTopProductsAsync(ReportFilter filter);
-        Task<IEnumerable<LowStockProductDto>> GetLowStockProductsAsync(ReportFilter filter);
+        Task<IEnumerable<CategorySalesDto>> GetCategorySalesAsync(ReportFilter filter);
+        Task<IEnumerable<LowStockProductDto>> GetLowStockAsync(ReportFilter filter);
     }
 }

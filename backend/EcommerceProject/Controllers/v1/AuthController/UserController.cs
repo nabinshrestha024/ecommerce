@@ -19,26 +19,6 @@ namespace EcommerceProject.Controllers.v1.AuthController
         }
 
 
-        [HttpGet("get")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
-        {
-            try
-            {
-                var users = (await _userService.GetAllUsersAsync()).ToList();
-                foreach (var user in users)
-                {
-                    user.PasswordHash = null;
-                }
-
-                return Ok(users);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "An error occurred", error = ex.Message });
-            }
-        }
-
         [HttpGet("get/paged")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUsersPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)

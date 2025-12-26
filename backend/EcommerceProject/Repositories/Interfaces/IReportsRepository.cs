@@ -1,13 +1,13 @@
-﻿using EcommerceProject.Models.DTOs.Report;
+﻿using EcommerceProject.Filters;
+using EcommerceProject.Models.DTOs.Report;
 
 namespace EcommerceProject.Repositories.Interfaces
 {
     public interface IReportsRepository
     {
-        Task<TotalSaleDto> GetTotalSales(DateTime from, DateTime to);
-        Task<IEnumerable<OrdersByStatusDto>> GetOrdersByStatus(DateTime from, DateTime to);
-        Task<IEnumerable<SalesByCategoryDto>> GetSalesByCategory(DateTime from, DateTime to);
-        Task<IEnumerable<TopProductDto>> GetTopProducts(DateTime from, DateTime to, int topN);
-        Task<IEnumerable<LowStockProductDto>> GetLowStockProducts(int threshold);
+        Task<IEnumerable<SalesOverviewDto>> GetSalesOverviewAsync(ReportFilter filter);
+        Task<IEnumerable<TopProductDto>> GetTopProductsAsync(ReportFilter filter);
+        Task<IEnumerable<CategorySalesDto>> GetCategorySalesAsync(ReportFilter filter);
+        Task<IEnumerable<LowStockProductDto>> GetLowStockAsync(ReportFilter filter);
     }
 }
