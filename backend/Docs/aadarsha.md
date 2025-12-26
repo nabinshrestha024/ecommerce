@@ -1,13 +1,113 @@
-# Admin Inventory & Procurement API Documentation
+#  Documentation
 
-**Base URL:** `/v1/admin`
+**Base URL(General):** `/v1`   
 
-**Scope:** Vendor Management, Purchase Orders, Stock & Inventory
+**Base URL(Admin):** `/v1/admin`
+
+#### **Scope:** [ Vendor Management, Purchase Orders, Stock Management, UserProfile, Esewa Payment Gateway Integration ]
 ---
+
+# APIs Lists
+
+## Profile Management
+**Base:** `/v1/profile`
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| ![](https://img.shields.io/badge/GET-green) | `/v1/profile/me` | Get current user profile |
+| ![](https://img.shields.io/badge/PUT-orange) | `/v1/profile/me` | Update user profile |
+| ![](https://img.shields.io/badge/PATCH-yellow) | `/v1/profile/me` | Partial update user profile |
+| ![](https://img.shields.io/badge/PUT-orange) | `/v1/profile/me/change-password` | Change password |
+| ![](https://img.shields.io/badge/POST-blue) | `/v1/profile/me/upload-image` | Upload profile image |
+| ![](https://img.shields.io/badge/DELETE-red) | `/v1/profile/me/profile-image` | Delete profile image |
+
+---
+
+## Profile Orders
+**Base:** `/v1/profile/orders`
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| ![](https://img.shields.io/badge/GET-green) | `/v1/profile/orders` | Get user orders |
+| ![](https://img.shields.io/badge/GET-green) | `/v1/profile/orders/{orderId}` | Get specific order details |
+
+---
+
+## Profile Social Links
+**Base:** `/v1/profile/social-links`
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| ![](https://img.shields.io/badge/GET-green) | `/v1/profile/social-links` | Get social links |
+| ![](https://img.shields.io/badge/POST-blue) | `/v1/profile/social-links` | Add social link |
+| ![](https://img.shields.io/badge/PUT-orange) | `/v1/profile/social-links/{socialLinkId}` | Update social link |
+| ![](https://img.shields.io/badge/DELETE-red) | `/v1/profile/social-links/{socialLinkId}` | Delete social link |
+
+---
+
+## Esewa Payments
+**Base:** `/v1/payments/esewa`
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| ![](https://img.shields.io/badge/POST-blue) | `/v1/payments/esewa/initiate` | Initiate payment |
+| ![](https://img.shields.io/badge/GET-green) | `/v1/payments/esewa/verify/success` | Verify successful payment |
+| ![](https://img.shields.io/badge/GET-green) | `/v1/payments/esewa/checkstatus` | Check payment status |
+| ![](https://img.shields.io/badge/GET-green) | `/v1/payments/esewa/failure` | Handle payment failure |
+
+---
+
+## Admin – Purchase Orders
+**Base:** `/v1/admin/purchase-orders`
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| ![](https://img.shields.io/badge/POST-blue) | `/v1/admin/purchase-orders` | Create purchase order |
+| ![](https://img.shields.io/badge/GET-green) | `/v1/admin/purchase-orders` | Get all purchase orders |
+| ![](https://img.shields.io/badge/GET-green) | `/v1/admin/purchase-orders/{id}` | Get purchase order by ID |
+| ![](https://img.shields.io/badge/PUT-orange) | `/v1/admin/purchase-orders/{id}/receive` | Receive purchase order |
+| ![](https://img.shields.io/badge/PUT-orange) | `/v1/admin/purchase-orders/{id}/status` | Update purchase order status |
+
+---
+
+## Admin – Stock Management
+**Base:** `/v1/admin/stock`
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| ![](https://img.shields.io/badge/GET-green) | `/v1/admin/stock` | Get all stock |
+| ![](https://img.shields.io/badge/POST-blue) | `/v1/admin/stock/adjust` | Adjust stock quantity |
+| ![](https://img.shields.io/badge/GET-green) | `/v1/admin/stock/low-stock` | Get low stock alerts |
+
+---
+
+## Admin – Vendor Management
+**Base:** `/v1/admin/vendors`
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| ![](https://img.shields.io/badge/GET-green) | `/v1/admin/vendors` | Get all vendors |
+| ![](https://img.shields.io/badge/POST-blue) | `/v1/admin/vendors` | Create vendor |
+| ![](https://img.shields.io/badge/GET-green) | `/v1/admin/vendors/{id}` | Get vendor by ID |
+| ![](https://img.shields.io/badge/PUT-orange) | `/v1/admin/vendors/{id}` | Update vendor |
+| ![](https://img.shields.io/badge/DELETE-red) | `/v1/admin/vendors/{id}` | Delete vendor (soft delete) |
+
+---
+
+## Error Responses
+
+| HTTP Code | Description |
+| :--- | :--- |
+| `400` | Bad Request / Validation Error |
+| `401` | Unauthorized |
+| `403` | Forbidden |
+| `404` | Resource Not Found |
+| `409` | Conflict |
+| `500` | Internal Server Error |
 
 ## Common Response Structure
 
-All APIs return a consistent response envelope:
+All APIs return a consistent response envelope as shown below:
 
 ```
 {
@@ -17,16 +117,9 @@ All APIs return a consistent response envelope:
 }
 ```
 
-### Error Responses
-
-| HTTP Code | Description                        |
-| --------- | ---------------------------------- |
-| 400       | Validation error / invalid request |
-| 404       | Resource not found                 |
-| 500       | Internal server error              |
-
 ---
 
+### Some examples:
 ## Vendor Management APIs
 
 ### 1. Get All Vendors
@@ -421,6 +514,9 @@ All APIs return a consistent response envelope:
 
 ---
 
+
+
+
 ## Notes
 
 * All admin APIs are versioned under `/v1/admin`
@@ -431,4 +527,4 @@ All APIs return a consistent response envelope:
 
 ---
 
-**Contact Backend Team for DTO field-level validations if needed.**
+**Further APIs Documentation is provided in Swagger UI.**
