@@ -1,41 +1,53 @@
-﻿using EcommerceProject.Models.DTOs.Report;
+﻿using EcommerceProject.Filters;
+using EcommerceProject.Models.DTOs.Report;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
+using FluentValidation;
 
 namespace EcommerceProject.Services.Implementations
 {
     public class ReportsService : IReportsService
     {
         private readonly IReportsRepository _repository;
-
-        public ReportsService(IReportsRepository repository)
+        private readonly IValidator<ReportFilter> _validator;
+        public ReportsService(IReportsRepository repository, IValidator<ReportFilter> validator)
         {
             _repository = repository;
+            _validator = validator;
         }
 
-        public Task<TotalSaleDto> GetTotalSalesAsync(ReportFilter filter)
+        private async Task ValidateAsync(ReportFilter filter)
         {
-            return _repository.GetTotalSales(filter.FromDate, filter.ToDate);
+            var result = await _validator.ValidateAsync(filter);
+            if (!result.IsValid)
+                throw new ValidationException(result.Errors);
         }
 
-        public Task<IEnumerable<OrdersByStatusDto>> GetOrdersByStatusAsync(ReportFilter filter)
+
+        public async Task<IEnumerable<SalesOverviewDto>> GetSalesOverviewAsync(ReportFilter filter)
         {
-            return _repository.GetOrdersByStatus(filter.FromDate, filter.ToDate);
+            await ValidateAsync(filter);
+            return await _repository.GetSalesOverviewAsync(filter);
         }
 
-        public Task<IEnumerable<SalesByCategoryDto>> GetSalesByCategoryAsync(ReportFilter filter)
+        public async Task<IEnumerable<TopProductDto>> GetTopProductsAsync(ReportFilter filter)
         {
-            return _repository.GetSalesByCategory(filter.FromDate, filter.ToDate);
+            await ValidateAsync(filter);
+            return await _repository.GetTopProductsAsync(filter);
         }
 
-        public Task<IEnumerable<TopProductDto>> GetTopProductsAsync(ReportFilter filter)
+        public async Task<IEnumerable<CategorySalesDto>> GetCategorySalesAsync(ReportFilter filter)
         {
-            return _repository.GetTopProducts(filter.FromDate, filter.ToDate, filter.TopN.Value);
+            await ValidateAsync(filter);
+            return await _repository.GetCategorySalesAsync(filter);
         }
 
-        public Task<IEnumerable<LowStockProductDto>> GetLowStockProductsAsync(ReportFilter filter)
+        public async Task<IEnumerable<LowStockProductDto>> GetLowStockAsync(ReportFilter filter)
         {
-            return _repository.GetLowStockProducts(filter.Threshold.Value);
+            await ValidateAsync(filter);
+            return await _repository.GetLowStockAsync(filter);
         }
+
+
     }
 }
