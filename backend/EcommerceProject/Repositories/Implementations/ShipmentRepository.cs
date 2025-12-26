@@ -36,6 +36,18 @@ namespace EcommerceProject.Repositories.Implementations
                 commandType: CommandType.StoredProcedure
             );
         }
+        public async Task<(int OrderId, int UserId)?> GetOrderAndUserByShipmentIdAsync(
+    int shipmentId,
+    CancellationToken ct)
+        {
+            using var conn = _db.CreateConnection();
+
+            return await conn.QueryFirstOrDefaultAsync<(int OrderId, int UserId)>(
+                "spShipments_GetOrderAndUserByShipmentId",
+                new { ShipmentId = shipmentId },
+                commandType: CommandType.StoredProcedure
+                );
+        }
 
         public async Task UpdateStatusAsync(int shipmentId, string status, CancellationToken ct)
         {
