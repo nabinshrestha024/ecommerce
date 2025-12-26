@@ -12,4 +12,7 @@ export const endpoint = {
   ADD_WISHLIST: "wishlist/add",
   FETCH_WISHLIST: "wishlist",
   DELETE_WISHLIST: "wishlist/delete",
+  FETCHNOTIFICATION: "notifications",
+  ADDORDER: "orders",
+  ESEWAPAYMENT: "payments/esewa/initiate",
 };
