@@ -2,17 +2,16 @@ import axios from "axios";
 import { axiosInstance } from "../axiosInstance";
 import { endpoint } from "../endpoint";
 
-export const Category = async () => {
+export const ProductTable = async (pageIndex: number) => {
   try {
-    const res = await axiosInstance.get(endpoint.FETCH_CATEGORY, {
+    const res = await axiosInstance.get(endpoint.FETCH_PRODUCT, {
       params: {
-        IsActive: true,
-        Page: 1,
-        PageSize: 4,
+        OnlyActive: true,
+        Page: pageIndex,
+        PageSize: 10,
       },
     });
-
-    return res.data.items;
+    return res.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
       return e.response?.data;

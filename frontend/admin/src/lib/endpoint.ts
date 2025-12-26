@@ -8,4 +8,5 @@ export const endpoint = {
   products: "admin/products",
   CATEGORIES: "admin/categories",
   VENDOR: "admin/vendors",
+  USER: "admin/user",
 };
