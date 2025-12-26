@@ -4,17 +4,26 @@ import { Button } from "@/ui/button";
 import { Card } from "../Card/Card";
 import Image from "next/image";
 import Link from "next/link";
-import { IoIosHeartEmpty } from "react-icons/io";
+import { IoIosHeart, IoIosHeartEmpty } from "react-icons/io";
 import { useProduct } from "@/hooks/product/useProduct";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAddToCart } from "@/hooks/cart/useAddToCart";
 import { toast } from "sonner";
+import { useAddWishlist } from "@/hooks/wishlist/useAddWishlist";
+import { useDeleteWishlist } from "@/hooks/wishlist/useDeleteWishlist";
+import { useFetchWishlist } from "@/hooks/wishlist/useFetchWishlist";
+import {
+  wishlistData,
+  WishlistItem,
+} from "../TrendingProduct/component/TrendingProductCard";
 
 export const Deal = () => {
   const { data, isLoading, isError } = useProduct();
+  const addMutate = useAddWishlist();
+  const deleteMutate = useDeleteWishlist();
+  const wishlists = useFetchWishlist();
   const { token } = useAuth();
   const addToCart = useAddToCart();
-  console.log(data);
 
   const handleAddToCart = (productId: number) => {
     if (token) {
@@ -25,6 +34,25 @@ export const Deal = () => {
     } else {
       toast.message("Login to add to cart");
     }
+  };
+  const wishlistItems = Array.isArray(wishlists?.data)
+    ? wishlists.data
+    : (wishlists?.data?.items ?? []);
+
+  const wishedIds = new Set<number>(
+    wishlistItems
+      .map((wishlist: WishlistItem) => Number(wishlist.productId))
+      .filter((id: number) => !Number.isNaN(id)),
+  );
+
+  const handleAddWishlist = (productId: wishlistData) => {
+    console.log(productId);
+    addMutate.mutate(productId);
+  };
+
+  const handleDeleteWishlist = (productId: wishlistData) => {
+    console.log(productId);
+    deleteMutate.mutate(productId);
   };
   return isLoading ? (
     <div>Loading...</div>
@@ -58,9 +86,22 @@ export const Deal = () => {
                         alt="image"
                         fill
                         className="w-full h-full object-cover rounded-[12px]"
+                        unoptimized
                       />
-                      <div className="absolute top-3 right-3 rounded-full bg-white w-6 h-6 shadow-sm flex justify-center items-center">
-                        <IoIosHeartEmpty />
+                      <div className="absolute top-3 right-3 rounded-full w-6 h-6 shadow-sm flex justify-center items-center cursor-pointer">
+                        {wishedIds.has(val.productId) ? (
+                          <IoIosHeart
+                            size={16}
+                            className="text-red-600"
+                            onClick={() => handleDeleteWishlist(val.productId)}
+                          />
+                        ) : (
+                          <IoIosHeartEmpty
+                            size={16}
+                            className="text-gray-400"
+                            onClick={() => handleAddWishlist(val.productId)}
+                          />
+                        )}
                       </div>
                     </div>
 

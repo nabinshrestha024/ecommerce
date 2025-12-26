@@ -3,11 +3,13 @@ using EcommerceProject.Filters;
 using EcommerceProject.Hubs;
 using EcommerceProject.Models.DTOs.Discount;
 using EcommerceProject.Models.Validators.Discount;
+using EcommerceProject.Models.Validators.Report;
 using EcommerceProject.Models.Validators.Wishlist;
 using EcommerceProject.Repositories.Implementations;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Implementations;
 using EcommerceProject.Services.Interfaces;
+using EcommerceProject.utils;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -47,8 +49,6 @@ builder.Services.AddSwaggerGen(x =>
 
     x.AddSecurityDefinition("Bearer", securityScheme);
 
-
-
     x.AddSecurityRequirement(new OpenApiSecurityRequirement
      {
          {
@@ -61,7 +61,11 @@ builder.Services.AddSwaggerGen(x =>
 
 builder.Services.AddSignalR();
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
 
+builder.Services.AddScoped<EsewaSignatureHelper>();
+builder.Services.AddScoped<ICurrentProfileService, CurrentProfileService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
@@ -75,18 +79,21 @@ builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<IVendorRepository, VendorRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IEsewaRepository, EsewaRepository>();
 builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
-builder.Services.AddScoped<ICheckoutRepository, CheckoutRepository>();
-builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IShipmentRepository, ShipmentRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
 
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IAdminDiscountRepository, AdminDiscountRepository>();
 builder.Services.AddScoped<IAdminDiscountService, AdminDiscountService>();
 
 
+
+builder.Services.AddScoped<IReportsService, ReportsService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
@@ -96,8 +103,7 @@ builder.Services.AddScoped<IVendorService, VendorService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
-builder.Services.AddScoped<ICheckoutService, CheckoutService>();
-builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IEsewaService, EsewaService>();
 builder.Services.AddScoped<IShipmentService, ShipmentService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
@@ -111,7 +117,7 @@ builder.Services.AddScoped<IWishlistService, WishlistService>();
 
 builder.Services.AddScoped<IValidator<int>, GetWishlistValidator>();
 builder.Services.AddScoped<IValidator<CreateDiscountDto>, CreateDiscountValidator>();
-
+builder.Services.AddScoped<IValidator<ReportFilter>, ReportFilterValidator>();
 
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -146,7 +152,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-
 var app = builder.Build();
 
 app.UseStaticFiles();
@@ -157,12 +162,10 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger"; 
 });
 
-
 app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 
 app.MapControllers();
 app.MapHub<NotificationHub>("/hubs/notifications");

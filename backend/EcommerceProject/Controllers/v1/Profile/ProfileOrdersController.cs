@@ -1,36 +1,37 @@
 using EcommerceProject.Services.Interfaces;
-using EcommerceProject.Services.Implementations;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-[ApiController]
-[Route("v1/profile/orders")]
-public class ProfileOrdersController : ControllerBase
+namespace EcommerceProject.Controllers
 {
-    private readonly IUserProfileService _service;
-
-    public ProfileOrdersController(IUserProfileService service)
+    [ApiController]
+    [Authorize]
+    [Route("v1/profile/orders")]
+    public class ProfileOrdersController : ControllerBase
     {
-        _service = service;
-    }
+        private readonly IUserProfileService _service;
 
-    [HttpGet("{userId:int}")]
-    public async Task<IActionResult> GetUserOrders(int userId)
-    {
-        var orders = await _service.GetUserOrdersAsync(userId);
-        
-        return orders == null ? NotFound(new { message = "User not found." }) : Ok(orders);
-    }
+        public ProfileOrdersController(IUserProfileService service)
+        {
+            _service = service;
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> GetMyOrders()
+        {
+            var orders = await _service.GetMyOrdersAsync();
+            return Ok(orders);
+        }
 
-    [HttpGet("{userId:int}/{orderId:int}")]
-    public async Task<IActionResult> GetOrderDetails(int userId, int orderId)
-    {
-        var order = await _service.GetOrderDetailsAsync(userId, orderId);
-    
-        if (order == null) 
-        return NotFound(new { message = "Order not found or access denied." });
+        [HttpGet("{orderId:int}")]
+        public async Task<IActionResult> GetOrderDetails(int orderId)
+        {
+            var order = await _service.GetOrderDetailsAsync(orderId);
 
-        return Ok(order);
+            if (order == null)
+                return NotFound(new { message = "Order not found or access denied." });
+
+            return Ok(order);
+        }
     }
 }

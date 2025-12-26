@@ -8,89 +8,66 @@ namespace EcommerceProject.Services.Implementations
 {
     public class UserProfileService : IUserProfileService
     {
-        private readonly IUserProfileRepository _userProfileRepository;
+        private readonly IUserProfileRepository _repo;
         private readonly IFileStorageService _files;
+        private readonly ICurrentProfileService _currentUser;
         private readonly ILogger<UserProfileService> _logger;
 
-        public UserProfileService(IUserProfileRepository userProfileRepository, IFileStorageService files, ILogger<UserProfileService> logger)
+        public UserProfileService(
+            IUserProfileRepository repo,
+            IFileStorageService files,
+            ICurrentProfileService currentUser,
+            ILogger<UserProfileService> logger)
         {
-            _userProfileRepository = userProfileRepository;
+            _repo = repo;
             _files = files;
+            _currentUser = currentUser;
             _logger = logger;
         }
 
-        public async Task<ProfileResponseDto?> GetProfileByUserIdAsync(int userId)
+        private int UserId => _currentUser.UserId;
+
+        public async Task<ProfileResponseDto> GetMyProfileAsync()
         {
-            if (userId <= 0)
-                throw new UnauthorizedAccessException("Invalid user ID.");
-
-            var profile = await _userProfileRepository.GetProfileByUserIdAsync(userId);
-
-            if (profile == null)
-                throw new KeyNotFoundException("User profile not found.");
+            var profile = await _repo.GetProfileByUserIdAsync(UserId)
+                ?? throw new KeyNotFoundException("User profile not found.");
 
             return profile;
         }
 
-        public async Task PutUpdateProfileAsync(int userId, UpdateProfileRequestDto dto)
+        public async Task PutUpdateProfileAsync(UpdateProfileRequestDto dto)
         {
-            if (userId <= 0)
-                throw new UnauthorizedAccessException("Invalid user context.");
-
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
-
-            await _userProfileRepository.PutUpdateProfileAsync(userId, dto);
+            ArgumentNullException.ThrowIfNull(dto);
+            await _repo.PutUpdateProfileAsync(UserId, dto);
         }
 
-        public async Task UpdateProfileAsync(int userId, PatchProfileRequestDto dto)
+        public async Task UpdateProfileAsync(PatchProfileRequestDto dto)
         {
-            if (userId <= 0)
-                throw new UnauthorizedAccessException("Invalid user context.");
-
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
-
-            await _userProfileRepository.UpdateProfileAsync(userId, dto);
+            ArgumentNullException.ThrowIfNull(dto);
+            await _repo.UpdateProfileAsync(UserId, dto);
         }
 
-        public async Task ChangePasswordAsync(int userId, ChangePasswordRequestDto dto)
+        public async Task ChangePasswordAsync(ChangePasswordRequestDto dto)
         {
-            if (userId <= 0)
-                throw new UnauthorizedAccessException("Invalid user context.");
+            ArgumentNullException.ThrowIfNull(dto);
 
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
-
-            var profile = await _userProfileRepository.GetProfileByUserIdAsync(userId);
-
-            if (profile == null)
-                throw new KeyNotFoundException("User not found.");
+            var profile = await _repo.GetProfileByUserIdAsync(UserId)
+                ?? throw new KeyNotFoundException("User not found.");
 
             if (!BCrypt.Net.BCrypt.Verify(dto.CurrentPassword, profile.PasswordHash))
                 throw new UnauthorizedAccessException("Current password is incorrect.");
 
             var newHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
-            await _userProfileRepository.ChangePasswordAsync(userId, newHash);
+            await _repo.ChangePasswordAsync(UserId, newHash);
         }
 
-        public async Task<IEnumerable<UserSocialLinkDto>> GetSocialLinksAsync(int userId)
+        public async Task<IEnumerable<UserSocialLinkDto>> GetSocialLinksAsync()
+            => await _repo.GetSocialLinksAsync(UserId);
+
+        public async Task AddSocialLinkAsync(UserSocialLinkDto dto)
         {
-            if (userId <= 0)
-                throw new UnauthorizedAccessException("Invalid user context.");
-
-            return await _userProfileRepository.GetSocialLinksAsync(userId);
-        }
-
-        public async Task AddSocialLinkAsync(int userId, UserSocialLinkDto dto)
-        {
-            if (userId <= 0)
-                throw new UnauthorizedAccessException("Invalid user context.");
-
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
-
-            await _userProfileRepository.AddSocialLinkAsync(userId, dto);
+            ArgumentNullException.ThrowIfNull(dto);
+            await _repo.AddSocialLinkAsync(UserId, dto);
         }
 
         public async Task UpdateSocialLinkAsync(int socialLinkId, UserSocialLinkDto dto)
@@ -98,10 +75,8 @@ namespace EcommerceProject.Services.Implementations
             if (socialLinkId <= 0)
                 throw new ArgumentException("Invalid social link ID.");
 
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
-
-            await _userProfileRepository.UpdateSocialLinkAsync(socialLinkId, dto);
+            ArgumentNullException.ThrowIfNull(dto);
+            await _repo.UpdateSocialLinkAsync(socialLinkId, dto);
         }
 
         public async Task DeleteSocialLinkAsync(int socialLinkId)
@@ -109,168 +84,77 @@ namespace EcommerceProject.Services.Implementations
             if (socialLinkId <= 0)
                 throw new ArgumentException("Invalid social link ID.");
 
-            await _userProfileRepository.DeleteSocialLinkAsync(socialLinkId);
+            await _repo.DeleteSocialLinkAsync(socialLinkId);
         }
 
-        public async Task<IEnumerable<UserOrdersDto>> GetUserOrdersAsync(int userId)
-        {
-            if (userId <= 0)
-                throw new UnauthorizedAccessException("Invalid user context.");
+        public async Task<IEnumerable<UserOrdersDto>> GetMyOrdersAsync()
+            => await _repo.GetOrdersAsync(UserId);
 
-            return await _userProfileRepository.GetOrdersAsync(userId);
+        public async Task<UserOrderDetailsDto?> GetOrderDetailsAsync(int orderId)
+        {
+            if (orderId <= 0)
+                throw new ArgumentException("Invalid order ID.");
+
+            return await _repo.GetOrderDetailsAsync(UserId, orderId);
         }
 
-        public async Task<UserOrderDetailsDto?> GetOrderDetailsAsync(int userId, int orderId)
+        public async Task<string?> UploadProfileImageAsync(
+            IFormFile imageFile,
+            CancellationToken ct = default)
         {
-            if (userId <= 0 || orderId <= 0) return null;
-            return await _userProfileRepository.GetOrderDetailsAsync(userId, orderId);
-        }
+            ArgumentNullException.ThrowIfNull(imageFile);
 
-        public async Task<string?> UploadProfileImageAsync(int userId, IFormFile imageFile)
-        {
-            try
+            var profile = await GetMyProfileAsync();
+
+            if (!string.IsNullOrEmpty(profile.ProfileImageUrl))
             {
-                var currentProfile = await GetProfileByUserIdAsync(userId);
-                
-                if (!string.IsNullOrEmpty(currentProfile?.ProfileImageUrl))
-                {
-                    await _files.DeleteProfileImageAsync(currentProfile.ProfileImageUrl, CancellationToken.None);
-                }
-
-                var imageUrl = await _files.SaveProfileImageAsync(imageFile, userId, CancellationToken.None);
-                
-                await _userProfileRepository.UpdateProfileAsync(userId, new PatchProfileRequestDto
-                {
-                    ProfileImageUrl = imageUrl
-                });
-
-                _logger.LogInformation("Uploaded profile image for user {UserId}: {ImageUrl}", userId, imageUrl);
-                return imageUrl;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error uploading profile image for user {UserId}", userId);
-                throw;
-            }
-        }
-
-         public async Task<bool> RemoveProfileImageAsync(int userId)
-        {
-            try
-            {
-                var currentProfile = await GetProfileByUserIdAsync(userId);
-                
-                if (!string.IsNullOrEmpty(currentProfile?.ProfileImageUrl))
-                {
-                    await _files.DeleteProfileImageAsync(currentProfile.ProfileImageUrl, CancellationToken.None);
-                    
-                    await _userProfileRepository.UpdateProfileAsync(userId, new PatchProfileRequestDto
-                    {
-                        ProfileImageUrl = null
-                    });
-                    
-                    _logger.LogInformation("Removed profile image for user {UserId}", userId);
-                    return true;
-                }
-                
-                return false;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error removing profile image for user {UserId}", userId);
-                throw;
-            }
-        }
-
-    public async Task PutUpdateProfileWithImageAsync(
-    int userId, 
-    UpdateProfileRequestDto dto, 
-    IFormFile? profileImage = null,
-    bool? removeProfileImage = false,
-    CancellationToken ct = default)
-    {
-        string? imageUrl = dto.ProfileImageUrl;
-    
-        if (profileImage != null)
-        {
-            imageUrl = await UploadProfileImageAsync(userId, profileImage, ct);
-        }
-        else if (removeProfileImage == true)
-        {
-            await RemoveProfileImageAsync(userId, ct);
-            imageUrl = null;
-        }
-    
-        var updateDto = new UpdateProfileRequestDto
-        {
-            FullName = dto.FullName,
-            Phone = dto.Phone,
-            Address = dto.Address,
-            City = dto.City,
-            Status = dto.Status,
-            DateOfBirth = dto.DateOfBirth,
-            Gender = dto.Gender,
-            Bio = dto.Bio,
-            ProfileImageUrl = imageUrl
-        };
-    
-        await _userProfileRepository.PutUpdateProfileAsync(userId, updateDto);
-    }
-
-    public async Task<string?> UploadProfileImageAsync(int userId, IFormFile imageFile, CancellationToken ct = default)
-    {
-        try
-        {
-            var currentProfile = await GetProfileByUserIdAsync(userId);
-        
-            if (!string.IsNullOrEmpty(currentProfile?.ProfileImageUrl))
-            {
-                await _files.DeleteProfileImageAsync(currentProfile.ProfileImageUrl, ct);
+                await _files.DeleteProfileImageAsync(profile.ProfileImageUrl, ct);
             }
 
-            var imageUrl = await _files.SaveProfileImageAsync(imageFile, userId, ct);
-        
-            await _userProfileRepository.UpdateProfileAsync(userId, new PatchProfileRequestDto
+            var imageUrl = await _files.SaveProfileImageAsync(imageFile, UserId, ct);
+
+            await _repo.UpdateProfileAsync(UserId, new PatchProfileRequestDto
             {
                 ProfileImageUrl = imageUrl
             });
 
-            _logger.LogInformation("Uploaded profile image for user {UserId}: {ImageUrl}", userId, imageUrl);
+            _logger.LogInformation("Profile image uploaded for user {UserId}", UserId);
             return imageUrl;
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error uploading profile image for user {UserId}", userId);
-            throw;
-        }
-    }
 
-        public async Task<bool> RemoveProfileImageAsync(int userId, CancellationToken ct = default)
+        public async Task<bool> RemoveProfileImageAsync(CancellationToken ct = default)
         {
-        try
-        {
-            var currentProfile = await GetProfileByUserIdAsync(userId);
-        
-            if (!string.IsNullOrEmpty(currentProfile?.ProfileImageUrl))
+            var profile = await GetMyProfileAsync();
+
+            if (string.IsNullOrEmpty(profile.ProfileImageUrl))
+                return false;
+
+            await _files.DeleteProfileImageAsync(profile.ProfileImageUrl, ct);
+
+            await _repo.UpdateProfileAsync(UserId, new PatchProfileRequestDto
             {
-                await _files.DeleteProfileImageAsync(currentProfile.ProfileImageUrl, ct);
-            
-                await _userProfileRepository.UpdateProfileAsync(userId, new PatchProfileRequestDto
-                {
-                    ProfileImageUrl = null
-                });
-            
-                _logger.LogInformation("Removed profile image for user {UserId}", userId);
-                return true;
-            }
-        
-            return false;
+                ProfileImageUrl = null
+            });
+
+            _logger.LogInformation("Profile image removed for user {UserId}", UserId);
+            return true;
         }
-        catch (Exception ex)
+        
+        public async Task PutUpdateProfileWithImageAsync(
+            UpdateProfileRequestDto dto,
+            IFormFile? profileImage = null,
+            bool removeProfileImage = false,
+            CancellationToken ct = default)
         {
-            _logger.LogError(ex, "Error removing profile image for user {UserId}", userId);
-            throw;
+            string? imageUrl = dto.ProfileImageUrl;
+
+            if (profileImage != null)
+                imageUrl = await UploadProfileImageAsync(profileImage, ct);
+            else if (removeProfileImage)
+                await RemoveProfileImageAsync(ct);
+
+            dto.ProfileImageUrl = imageUrl;
+            await _repo.PutUpdateProfileAsync(UserId, dto);
         }
     }
-}
 }

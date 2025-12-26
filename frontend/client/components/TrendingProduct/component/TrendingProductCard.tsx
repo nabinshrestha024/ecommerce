@@ -3,21 +3,35 @@
 import { Card } from "@/components/Card/Card";
 import { Button } from "@/ui/button";
 import Image from "next/image";
-import { IoIosHeartEmpty } from "react-icons/io";
 import Link from "next/link";
 import { Star } from "lucide-react";
+import { IoIosHeart, IoIosHeartEmpty } from "react-icons/io";
 import { useProduct } from "@/hooks/product/useProduct";
 import { useAddToCart } from "@/hooks/cart/useAddToCart";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { useAddWishlist } from "@/hooks/wishlist/useAddWishlist";
+import { useFetchWishlist } from "@/hooks/wishlist/useFetchWishlist";
+import { useDeleteWishlist } from "@/hooks/wishlist/useDeleteWishlist";
+
+export interface WishlistItem {
+  productId: number;
+  primaryImageUrl: string;
+  name: string;
+  shortDescription: string;
+  price: number;
+  id: number;
+}
+
+export type wishlistData = number;
 
 export const TrendingProductCard = () => {
-  const prods = useProduct();
+  const { data, isLoading, isError } = useProduct();
+  const addMutate = useAddWishlist();
+  const deleteMutate = useDeleteWishlist();
+  const wishlists = useFetchWishlist();
   const addToCart = useAddToCart();
   const { token } = useAuth();
-
-  if (prods.isLoading) return <p>Loading products...</p>;
-  if (prods.isError) return <p>Failed to load products</p>;
 
   const handleAddToCart = (productId: number) => {
     if (token) {
@@ -30,9 +44,33 @@ export const TrendingProductCard = () => {
     }
   };
 
-  return (
+  const wishlistItems = Array.isArray(wishlists?.data)
+    ? wishlists.data
+    : (wishlists?.data?.items ?? []);
+
+  const wishedIds = new Set<number>(
+    wishlistItems
+      .map((wishlist: WishlistItem) => Number(wishlist.productId))
+      .filter((id: number) => !Number.isNaN(id)),
+  );
+
+  const handleAddWishlist = (productId: wishlistData) => {
+    console.log(productId);
+    addMutate.mutate(productId);
+  };
+
+  const handleDeleteWishlist = (productId: wishlistData) => {
+    console.log(productId);
+    deleteMutate.mutate(productId);
+  };
+
+  return isLoading ? (
+    <div>Loading...</div>
+  ) : isError ? (
+    <div>An Error Occured</div>
+  ) : (
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-      {prods.data?.items?.map(
+      {data?.items?.map(
         (product, index) =>
           index < 3 && (
             <Card
@@ -47,9 +85,22 @@ export const TrendingProductCard = () => {
                     alt={product.name}
                     fill
                     className="object-cover rounded-[12px]"
+                    unoptimized
                   />
-                  <div className="absolute top-3 right-3 rounded-full bg-white w-6 h-6 shadow-sm flex justify-center items-center">
-                    <IoIosHeartEmpty />
+                  <div className="absolute top-3 right-3 rounded-full w-6 h-6 shadow-sm flex justify-center items-center cursor-pointer">
+                    {wishedIds.has(product.productId) ? (
+                      <IoIosHeart
+                        size={16}
+                        className="text-red-600"
+                        onClick={() => handleDeleteWishlist(product.productId)}
+                      />
+                    ) : (
+                      <IoIosHeartEmpty
+                        size={16}
+                        className="text-gray-400"
+                        onClick={() => handleAddWishlist(product.productId)}
+                      />
+                    )}
                   </div>
                 </div>
 
@@ -63,7 +114,7 @@ export const TrendingProductCard = () => {
                   </div>
 
                   <div className="flex items-center mb-2">
-                    {[...Array(5)].map((_, i) => (
+                    {[...Array(5)]?.map((_, i) => (
                       <Star key={i} size={16} className="text-gray-300" />
                     ))}
                   </div>

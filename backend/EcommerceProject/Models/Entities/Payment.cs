@@ -8,9 +8,13 @@ namespace EcommerceProject.Models.Entities
         public decimal Amount { get; set; }
         public string? Status { get; set; }
         public string? PaymentMethod { get; set; }
-        public string? PaymentStatus { get; set; }
-        public string? TransactionId { get; set; }
         public string? PaymentGateway { get; set; }
+        public string? PaymentStatus { get; set; } 
+        public string? TransactionId { get; set; }
         public string? PaymentURL { get; set; }
+        public string? GatewayReference { get; set; }
+        public string? Metadata { get; set; }
+        public Order? Order { get; set; } 
     }
 }
+    

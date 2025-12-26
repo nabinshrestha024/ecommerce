@@ -12,7 +12,7 @@ export const ProductByCategory = async (categoryId: number | null) => {
         PageSize: 20,
       },
     });
-    return res.data.data;
+    return res.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
       return e.response?.data;

@@ -18,6 +18,12 @@ BEGIN
 
     DECLARE @CartId INT;
 
+    IF @UserId IS NULL
+    BEGIN
+        RAISERROR('User not found .', 16, 1);
+        RETURN;
+    END
+
     SELECT TOP 1 @CartId = c.CartId
     FROM CartItems c
     WHERE c.UserId = @UserId;
@@ -28,27 +34,35 @@ BEGIN
         RETURN;
     END
 
-    IF NOT EXISTS (SELECT 1 FROM CartItems WHERE CartId = @CartId)
-    BEGIN
-        RAISERROR('Cart is empty.', 16, 1);
-        RETURN;
-    END
+    --IF NOT EXISTS (SELECT 1 FROM CartItems WHERE CartId = @CartId)
+    --BEGIN
+    --    RAISERROR('Cart is empty.', 16, 1);
+    --    RETURN;
+    --END
 
     BEGIN TRY
         BEGIN TRAN;
 
-        SELECT @TotalAmount =
+        --SELECT @TotalAmount =
+        --    CAST(SUM(ci.Quantity * p.Price) AS DECIMAL(10,2))
+        --FROM CartItems ci
+        --INNER JOIN Products p ON p.ProductId = ci.ProductId
+        --WHERE ci.CartId = @CartId;
+
+        Select
+         @TotalAmount =
             CAST(SUM(ci.Quantity * p.Price) AS DECIMAL(10,2))
+        -- *  
         FROM CartItems ci
         INNER JOIN Products p ON p.ProductId = ci.ProductId
-        WHERE ci.CartId = @CartId;
+        where ci.UserId = @UserId
 
-        IF @TotalAmount IS NULL OR @TotalAmount <= 0
-        BEGIN
-            RAISERROR('Failed to calculate total amount.', 16, 1);
-            ROLLBACK;
-            RETURN;
-        END
+        --IF @TotalAmount IS NULL OR @TotalAmount <= 0
+        --BEGIN
+        --    RAISERROR('Failed to calculate total amount.', 16, 1);
+        --    ROLLBACK;
+        --    RETURN;
+        --END
 
         INSERT INTO Orders
         (
@@ -73,9 +87,11 @@ BEGIN
             p.Price
         FROM CartItems ci
         INNER JOIN Products p ON p.ProductId = ci.ProductId
-        WHERE ci.CartId = @CartId;
+        where ci.UserId = @UserId;
 
-        DELETE FROM CartItems WHERE CartId = @CartId;
+        DELETE FROM CartItems WHERE UserId = @UserId;
+        
+        --select @OrderId as orderId;
 
         COMMIT;
     END TRY

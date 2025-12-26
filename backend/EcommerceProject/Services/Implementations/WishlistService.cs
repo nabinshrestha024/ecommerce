@@ -1,8 +1,10 @@
 ﻿
 using EcommerceProject.Models.DTOs.Wishlist;
+using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
 using FluentValidation;
+using System.Security.Claims;
 
 namespace EcommerceProject.Services.Implementations
 {
@@ -17,14 +19,14 @@ namespace EcommerceProject.Services.Implementations
             _validator = validator;
         }
 
-        public async Task<IEnumerable<WishListItemDto>> GetWishlistAsync(int userId)
+        public async Task<PagedResult<WishListItemDto>> GetAsync(int userId, int page, int size)
         {
             var validation = await _validator.ValidateAsync(userId);
             if(validation == null)
             {
                 throw new ValidationException(validation.Errors);
             }
-            return await _wishlistRepository.GetWishlist(userId);
+            return await _wishlistRepository.GetPagedAsync(userId, page, size);
         }
 
         public async Task AddWishlistItemAsync(int userId, int productId)
@@ -32,9 +34,15 @@ namespace EcommerceProject.Services.Implementations
             await _wishlistRepository.AddWishlistItem(userId, productId);
         }
 
-        public async Task DeleteWishlistItemAsync(int wishlishItemId)
+        public async Task DeleteWishlistItemAsync(int userId, int productId)
         {
-            await _wishlistRepository.DeleteWishlistItem(wishlishItemId);
+            await _wishlistRepository.DeleteWishlistItem(userId, productId);
+        }
+
+        public async Task MoveToCartAsync(int userId, int productId)
+        {
+            await _wishlistRepository.MoveToCartAsync(userId, productId);
+
         }
     }
 }

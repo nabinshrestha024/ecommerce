@@ -2,24 +2,28 @@ using EcommerceProject.Models.DTOs.Profile;
 
 namespace EcommerceProject.Services.Interfaces
 {   
-public interface IUserProfileService
-{
-    Task<ProfileResponseDto?> GetProfileByUserIdAsync(int userId);
-    Task PutUpdateProfileAsync(int userId, UpdateProfileRequestDto dto);
-    Task UpdateProfileAsync(int userId, PatchProfileRequestDto dto);
+    public interface IUserProfileService
+    {
+        Task<ProfileResponseDto> GetMyProfileAsync();
+        Task PutUpdateProfileAsync(UpdateProfileRequestDto dto);
+        Task UpdateProfileAsync(PatchProfileRequestDto dto);
+        Task ChangePasswordAsync(ChangePasswordRequestDto dto);
 
-    Task ChangePasswordAsync(int userId, ChangePasswordRequestDto dto);
+        Task<IEnumerable<UserSocialLinkDto>> GetSocialLinksAsync();
+        Task AddSocialLinkAsync(UserSocialLinkDto dto);
+        Task UpdateSocialLinkAsync(int socialLinkId, UserSocialLinkDto dto);
+        Task DeleteSocialLinkAsync(int socialLinkId);
 
-    Task<string?> UploadProfileImageAsync(int userId, IFormFile imageFile);
-    Task<bool> RemoveProfileImageAsync(int userId);
+        Task<IEnumerable<UserOrdersDto>> GetMyOrdersAsync();
+        Task<UserOrderDetailsDto?> GetOrderDetailsAsync(int orderId);
 
-    Task PutUpdateProfileWithImageAsync(int userId, UpdateProfileRequestDto dto, IFormFile? profileImage = null,bool? removeProfileImage = false, CancellationToken ct = default);
-    Task<IEnumerable<UserSocialLinkDto>> GetSocialLinksAsync(int userId);
-    Task AddSocialLinkAsync(int userId, UserSocialLinkDto dto);
-    Task UpdateSocialLinkAsync(int socialLinkId, UserSocialLinkDto dto);
-    Task DeleteSocialLinkAsync(int socialLinkId);
+        Task<string?> UploadProfileImageAsync(IFormFile imageFile, CancellationToken ct = default);
+        Task<bool> RemoveProfileImageAsync(CancellationToken ct = default);
 
-    Task<IEnumerable<UserOrdersDto>> GetUserOrdersAsync(int userId);
-    Task<UserOrderDetailsDto?> GetOrderDetailsAsync(int userId, int orderId);
-}
+        Task PutUpdateProfileWithImageAsync(
+            UpdateProfileRequestDto dto,
+            IFormFile? profileImage = null,
+            bool removeProfileImage = false,
+            CancellationToken ct = default);
+    }
 }

@@ -8,4 +8,7 @@ export const endpoint = {
   ADDTOCART: "cart/add",
   DELETECART: "cart/delete",
   UPDATECART: "cart/update",
+  ADD_WISHLIST: "wishlist/add",
+  FETCH_WISHLIST: "wishlist",
+  DELETE_WISHLIST: "wishlist/delete",
 };
