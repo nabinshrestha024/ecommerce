@@ -50,7 +50,6 @@ export const Wishlist = () => {
                 <div className="text-[20px] font-medium line-clamp-1">
                   {wishlist.productName}
                 </div>
-
                 <div className="text-[16px] text-[#00000099]/60 line-clamp-2">
                   {wishlist.description}
                 </div>
