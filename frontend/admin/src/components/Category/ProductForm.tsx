@@ -1,19 +1,25 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   productSchema,
   type ProductFormValues,
 } from "../Category/ProductZodVAlidation.tsx";
 import { Input } from "../Input/Input.tsx";
+import { useEditProduct } from "@/hooks/product/useEditProduct.ts";
+import { useState } from "react";
 
 type ProductData = {
-  productId: string;
+  productId: number;
   name: string;
-  createdAt: string;
-  order: number;
-  image: string;
-  status: string;
-  category?: string;
+  slug: string;
+  description: string;
+  shortDescription: string | null;
+  price: number;
+  stockQuantity: number;
+  primaryImageUrl: string;
+  isActive: boolean;
+  categoryId: number;
+  primaryIndex: number;
 };
 
 type Props = {
@@ -22,29 +28,62 @@ type Props = {
 };
 
 export const ProductForm = ({ product, onSave }: Props) => {
+  const editProduct = useEditProduct();
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
     reset,
   } = useForm<ProductFormValues>({
-    resolver: zodResolver(productSchema),
+    resolver: zodResolver(productSchema) as Resolver<ProductFormValues>,
     defaultValues: {
+      name: product.name,
+      productId: product.productId,
+      categoryId: product.categoryId,
+      stockQuantity: product.stockQuantity,
+      description: product.description || "",
+      shortDescription: product.shortDescription || "",
+      slug: product.slug,
+      price: product.price,
       isActive: true,
-      createdAt: new Date().toISOString().split("T")[0],
+      primaryIndex: product.primaryIndex || 0,
     },
     mode: "onChange",
   });
   const onSubmit = (data: ProductFormValues) => {
-    console.log("Form Data:", data);
-    const updatedProduct: ProductData = {
-      ...product,
-      ...data,
-    };
-    onSave(updatedProduct);
-    reset(updatedProduct);
-  };
+    const formData = new FormData();
 
+    formData.append("productId", String(product.productId));
+    formData.append("categoryId", String(data.categoryId));
+    formData.append("name", data.name);
+    formData.append("slug", data.slug);
+    formData.append("description", data.description);
+    formData.append("shortDescription", data.shortDescription || "");
+    formData.append("price", String(data.price));
+    formData.append("stockQuantity", String(data.stockQuantity));
+    formData.append("isActive", String(data.isActive));
+    formData.append("primaryIndex", String(data.primaryIndex));
+
+    if (data.image) {
+      formData.append("image", data.image);
+    }
+
+    editProduct.mutate(
+      {
+        productId: product.productId,
+        productData: formData,
+      },
+      {
+        onSuccess: () => {
+          onSave({ ...product, ...data });
+          reset(data);
+          setImagePreview("");
+        },
+      },
+    );
+  };
+  const [imagePreview, setImagePreview] = useState<string>("");
   return (
     <div className="flex justify-center">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
@@ -58,8 +97,7 @@ export const ProductForm = ({ product, onSave }: Props) => {
           </label>
           <div className="col-span-3">
             <Input
-              type="text"
-              defaultValue={product.productId}
+              type="number"
               placeholder=""
               {...register("productId")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0"
@@ -76,8 +114,7 @@ export const ProductForm = ({ product, onSave }: Props) => {
           <label className="font-medium text-gray-700">Category ID</label>
           <div className="col-span-3">
             <Input
-              type="text"
-              defaultValue={product.category}
+              type="number"
               placeholder=""
               {...register("categoryId")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
@@ -95,7 +132,6 @@ export const ProductForm = ({ product, onSave }: Props) => {
           <div className="col-span-3">
             <Input
               type="text"
-              defaultValue={product.name}
               placeholder=""
               {...register("name")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
@@ -107,18 +143,16 @@ export const ProductForm = ({ product, onSave }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium text-gray-700">Brand</label>
+          <label className="font-medium text-gray-700">Slug</label>
           <div className="col-span-3">
             <Input
               type="text"
               placeholder=""
-              {...register("brand")}
+              {...register("slug")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
-            {errors.brand && (
-              <p className="text-[12px] text-red-500 ">
-                {errors.brand.message}
-              </p>
+            {errors.slug && (
+              <p className="text-[12px] text-red-500 ">{errors.slug.message}</p>
             )}
           </div>
         </div>
@@ -140,17 +174,53 @@ export const ProductForm = ({ product, onSave }: Props) => {
           </div>
         </div>
 
+        <div className="grid grid-cols-4 gap-4 mt-5">
+          <label className="font-medium text-gray-700 mt-2">
+            Short Description
+          </label>
+          <div className="col-span-3">
+            <Input
+              type="textarea"
+              placeholder=""
+              {...register("shortDescription")}
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded resize-none focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+            />
+            {errors.shortDescription && (
+              <p className="text-[12px] text-red-500 ">
+                {errors.shortDescription.message}
+              </p>
+            )}
+          </div>
+        </div>
+
         <div className="grid grid-cols-4 gap-4 items-center mt-5">
           <label className="font-medium text-gray-700">Price</label>
           <div className="col-span-3">
             <Input
-              type="phone"
+              type="number"
               placeholder=""
-              {...register("price", { valueAsNumber: true })}
+              {...register("price")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
             {errors.price && (
               <p className="text-[12px] text-red-500">{errors.price.message}</p>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-4 gap-4 items-center mt-5">
+          <label className="font-medium text-gray-700">Stock Quantity</label>
+          <div className="col-span-3">
+            <Input
+              type="text"
+              placeholder=""
+              {...register("stockQuantity")}
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+            />
+            {errors.stockQuantity && (
+              <p className="text-[12px] text-red-500 ">
+                {errors.stockQuantity.message}
+              </p>
             )}
           </div>
         </div>
@@ -163,35 +233,45 @@ export const ProductForm = ({ product, onSave }: Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium text-gray-700">Created At</label>
-          <div className="col-span-3">
-            <Input
-              type="date"
-              defaultValue={product.createdAt}
-              placeholder=""
-              {...register("createdAt")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
-            />
-            {errors.createdAt && (
-              <p className="text-[12px] text-red-500 ">
-                {errors.createdAt.message}
-              </p>
-            )}
-          </div>
-        </div>
+        <Controller
+          control={control}
+          name="image"
+          render={({ field }) => (
+            <div className="space-y-2">
+              <label className="font-medium text-gray-700">Image</label>
 
-        <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium text-gray-700">Updated At</label>
-          <div className="col-span-3">
-            <Input
-              type="date"
-              placeholder=""
-              {...register("updatedAt")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
-            />
-          </div>
-        </div>
+              {imagePreview && (
+                <div className="w-48 h-48 border overflow-hidden rounded">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    width={200}
+                    height={200}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+              )}
+
+              <input
+                autoComplete="off"
+                type="file"
+                id="image"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    field.onChange(file);
+                    setImagePreview(URL.createObjectURL(file));
+                  }
+                }}
+              />
+
+              {errors.image && (
+                <p className="text-red-500">{errors.image.message as string}</p>
+              )}
+            </div>
+          )}
+        />
 
         <button
           type="submit"

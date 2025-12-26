@@ -15,8 +15,8 @@ export const useLogin = () => {
       toast.success("Login successful");
       navigate("/dashboard");
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.error || "Login failed");
+    onError: (data) => {
+      toast.error(data.message || "An error occurred during login.");
     },
   });
 };

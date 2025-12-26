@@ -2,17 +2,15 @@ import axios from "axios";
 import { axiosInstance } from "../axiosInstance";
 import { endpoint } from "../endpoint";
 
-export const Category = async () => {
+export const getUser = async (pageIndex: number) => {
   try {
-    const res = await axiosInstance.get(endpoint.FETCH_CATEGORY, {
+    const res = await axiosInstance.get(endpoint.USER, {
       params: {
-        IsActive: true,
-        Page: 1,
-        PageSize: 4,
+        Page: pageIndex,
+        PageSize: 10,
       },
     });
-
-    return res.data.items;
+    return res.data.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
       return e.response?.data;

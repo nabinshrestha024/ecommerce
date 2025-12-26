@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -8,7 +8,6 @@ import {
 import { MdAddCircleOutline, MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import { Table } from "../Table/Table";
-import { data } from "./ProductData.import";
 import { Tabs } from "../Tabs/Tabs";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
@@ -17,58 +16,50 @@ import { IoFilter } from "react-icons/io5";
 import { Dialog } from "../Dialog/Dialog";
 import { ProductForm } from "./ProductForm";
 import { Input } from "@/ui/input";
+import { useProduct } from "@/hooks/product/useProduct";
+import { useDeleteProduct } from "@/hooks/product/useDeleteProduct";
 
 type ProductData = {
-  productId: string;
+  productId: number;
   name: string;
-  createdAt: string;
-  order: number;
-  image: string;
-  status: string;
-  category?: string;
-};
-
-const status = {
-  FEATURED: "Featured",
-  ONSALE: "On sale",
-  OUTOFPRODUCT: "Out of stock",
+  slug: string;
+  description: string;
+  shortDescription: string | null;
+  price: number;
+  stockQuantity: number;
+  primaryImageUrl: string;
+  isActive: boolean;
+  categoryId: number;
+  primaryIndex: number;
 };
 
 export const CategoryTable = () => {
-  const [products, setProducts] = useState<ProductData[]>(data);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  const product = useProduct(pagination.pageIndex);
   const [searchProduct, setSearchProduct] = useState("");
-  const [sortType, setSortType] = useState<"date" | "order" | null>(null);
+  // const [sortType, setSortType] = useState<"price" | "stockQuantity" | null>(null);
   const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState<ProductData | null>(
     null,
   );
 
-  const handleRowClick = (row: ProductData) => {
-    setSelectedProduct(row);
-  };
   const columnHelper = createColumnHelper<ProductData>();
 
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [paginationFeature, setPaginationFeature] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
+  // const search = useSearch(searchProduct, pagination.pageIndex);
 
-  const [paginationOnSale, setPaginationOnSale] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
+  // const prod = searchProduct ? search : product;
 
-  const [paginationOutOfStock, setPaginationOutOfStock] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
+  const deleteProduct = useDeleteProduct();
 
-  const handleDelete = (id: string) => {
-    setProducts((prev) => prev.filter((product) => product.productId !== id));
+  const handleDelete = (productId: number) => {
+    deleteProduct.mutate(productId);
+  };
+  const handleEdit = (row: ProductData) => {
+    setSelectedProduct(row);
   };
 
   const columns = [
@@ -76,7 +67,7 @@ export const CategoryTable = () => {
       header: "Product Id",
     }),
 
-    columnHelper.accessor("image", {
+    columnHelper.accessor("primaryImageUrl", {
       header: "Image",
 
       cell: (info) => {
@@ -97,11 +88,11 @@ export const CategoryTable = () => {
       header: "Product",
     }),
 
-    columnHelper.accessor("order", {
-      header: "Order",
+    columnHelper.accessor("stockQuantity", {
+      header: "Stock Quantity",
     }),
-    columnHelper.accessor("createdAt", {
-      header: "Created Date",
+    columnHelper.accessor("price", {
+      header: "Price",
     }),
 
     columnHelper.display({
@@ -113,23 +104,20 @@ export const CategoryTable = () => {
             triggerContent={
               <FaEdit
                 className="text-[#6A717F] text-[20px]"
-                onClick={() => handleRowClick(info.row.original)}
+                onClick={() => handleEdit(info.row.original)}
               />
             }
           >
             {selectedProduct && (
-              <ProductForm
-                product={selectedProduct}
-                onSave={(updatedProduct) => {
-                  setProducts((prev) =>
-                    prev.map((p) =>
-                      p.productId === updatedProduct.productId
-                        ? updatedProduct
-                        : p,
-                    ),
-                  );
-                }}
-              />
+              <div className="max-h-[70vh] overflow-y-auto px-4 py-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                {" "}
+                <ProductForm
+                  product={selectedProduct}
+                  onSave={() => {
+                    setSelectedProduct(null);
+                  }}
+                />
+              </div>
             )}
           </Dialog>
           <MdDelete
@@ -141,49 +129,8 @@ export const CategoryTable = () => {
     }),
   ];
 
-  const filteredData = useMemo(() => {
-    const filterBySearch = (products: ProductData[]) => {
-      if (!searchProduct) return products;
-      return products.filter(
-        (product) =>
-          product.productId
-            .toLowerCase()
-            .includes(searchProduct.toLowerCase()) ||
-          product.name.toLowerCase().includes(searchProduct.toLowerCase()),
-      );
-    };
-
-    const sortProduct = (products: ProductData[]) => {
-      if (sortType === "date") {
-        return [...products].sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-        );
-      }
-      if (sortType === "order") {
-        return [...products].sort((a, b) => a.order - b.order);
-      }
-      return products;
-    };
-
-    return {
-      all: sortProduct(filterBySearch(products)),
-      featuredProduct: sortProduct(
-        filterBySearch(products.filter((d) => d.status === status.FEATURED)),
-      ),
-      onSale: sortProduct(
-        filterBySearch(products.filter((d) => d.status === status.ONSALE)),
-      ),
-      outofStock: sortProduct(
-        filterBySearch(
-          products.filter((d) => d.status === status.OUTOFPRODUCT),
-        ),
-      ),
-    };
-  }, [products, searchProduct, sortType]);
-
   const table = useReactTable({
-    data: filteredData.all,
+    data: product.data?.items || [],
     columns,
     state: { pagination },
     getCoreRowModel: getCoreRowModel(),
@@ -192,29 +139,26 @@ export const CategoryTable = () => {
   });
   const tableFeature = useReactTable({
     columns,
-    data: filteredData.featuredProduct,
-    state: { pagination: paginationFeature },
+    data: product.data?.items || [],
+
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPaginationFeature,
   });
 
   const tableOnSale = useReactTable({
     columns,
-    data: filteredData.onSale,
-    state: { pagination: paginationOnSale },
+    data: product.data?.items || [],
+
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPaginationOnSale,
   });
 
   const tableOutOfStock = useReactTable({
     columns,
-    data: filteredData.outofStock,
-    state: { pagination: paginationOutOfStock },
+    data: product.data?.items || [],
+
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPaginationOutOfStock,
   });
 
   const tabDatas = [
@@ -280,16 +224,16 @@ export const CategoryTable = () => {
             >
               <div
                 className="cursor-pointer hover:text-green-600"
-                onClick={() => setSortType("date")}
+                // onClick={() => setSortType("price")}
               >
-                Sort by Date
+                Sort by Price
               </div>
 
               <div
                 className="cursor-pointer hover:text-green-600"
-                onClick={() => setSortType("order")}
+                // onClick={() => setSortType("stockQuantity")}
               >
-                Sort by Order
+                Sort by Stock Quantity
               </div>
             </DropDown>
           </div>
