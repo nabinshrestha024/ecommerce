@@ -10,5 +10,7 @@
         public string PaymentStatus { get; set; } = default!;
         public string? ShippingName { get; set; }
         public string? ShippingPhone { get; set; }
+
+        public List<OrderItemDto> Items { get; set; } = new();
     }
 }
