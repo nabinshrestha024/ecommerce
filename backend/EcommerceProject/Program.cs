@@ -8,14 +8,13 @@ using EcommerceProject.Repositories.Implementations;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Implementations;
 using EcommerceProject.Services.Interfaces;
+using EcommerceProject.utils;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Data;
 using System.Text;
-
-using EcommerceProject.utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,12 +60,11 @@ builder.Services.AddSwaggerGen(x =>
 
 builder.Services.AddSignalR();
 
-
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<EsewaSignatureHelper>();
-
+builder.Services.AddScoped<ICurrentProfileService, CurrentProfileService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
@@ -115,8 +113,6 @@ builder.Services.AddScoped<IWishlistService, WishlistService>();
 builder.Services.AddScoped<IValidator<int>, GetWishlistValidator>();
 builder.Services.AddScoped<IValidator<CreateDiscountDto>, CreateDiscountValidator>();
 
-
-
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -158,7 +154,6 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "ECommerce v1");
     c.RoutePrefix = "swagger"; 
 });
-
 
 app.UseCors("AllowFrontend");
 
