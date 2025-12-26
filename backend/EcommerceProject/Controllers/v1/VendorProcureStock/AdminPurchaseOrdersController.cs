@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EcommerceProject.Controllers.v1.Admin
 {
+    [Authorize] 
     [ApiController]
     [Route("v1/admin/purchase-orders")]
     public class PurchaseOrdersController : ControllerBase
