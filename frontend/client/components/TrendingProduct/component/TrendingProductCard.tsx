@@ -51,7 +51,7 @@ export const TrendingProductCard = () => {
   const wishedIds = new Set<number>(
     wishlistItems
       .map((wishlist: WishlistItem) => Number(wishlist.productId))
-      .filter((id) => !Number.isNaN(id)),
+      .filter((id: number) => !Number.isNaN(id)),
   );
 
   const handleAddWishlist = (productId: wishlistData) => {
@@ -85,6 +85,7 @@ export const TrendingProductCard = () => {
                     alt={product.name}
                     fill
                     className="object-cover rounded-[12px]"
+                    unoptimized
                   />
                   <div className="absolute top-3 right-3 rounded-full w-6 h-6 shadow-sm flex justify-center items-center cursor-pointer">
                     {wishedIds.has(product.productId) ? (

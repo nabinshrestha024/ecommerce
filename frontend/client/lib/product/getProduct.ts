@@ -7,7 +7,7 @@ export const Product = async () => {
     const res = await axiosInstance.get(endpoint.PRODUCT, {
       params: { OnlyActive: true, Page: 1, PageSize: 20 },
     });
-    return res.data.data;
+    return res.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
       return e.response?.data;
