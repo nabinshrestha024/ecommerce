@@ -21,12 +21,7 @@ namespace EcommerceProject.Repositories.Implementations
 
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            //using var connection = _factory.CreateConnection();
-            //var dbresp = await connection.QueryFirstOrDefaultAsync<User>(
-            //    "spUser_GetUserByEmail",
-            //    new { Email = email },
-            //    commandType: CommandType.StoredProcedure);
-            //return dbresp;
+
 
             try
             {

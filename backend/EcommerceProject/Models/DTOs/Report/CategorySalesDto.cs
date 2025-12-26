@@ -1,10 +1,12 @@
 ﻿namespace EcommerceProject.Models.DTOs.Report
 {
-    public class TopProductDto
+    public class CategorySalesDto
     {
-        public int ProductId { get; set; }
-        public string ProductName { get; set; }
+        public string CategoryName { get; set; }
+
         public int QuantitySold { get; set; }
+
+
         public decimal TotalRevenue { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using EcommerceProject.Models.DTOs.Report;
+﻿using EcommerceProject.Filters;
+using EcommerceProject.Services.Implementations;
 using EcommerceProject.Services.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
@@ -11,64 +12,43 @@ namespace EcommerceProject.Controllers.v1.Report
     [Authorize(Roles ="Admin")]
     public class ReportsController : ControllerBase
     {
-        private readonly IReportsService _service;
-        private readonly IValidator<ReportFilter> _validator;
+        private readonly IReportsService _reportservice;
 
-        public ReportsController(IReportsService service, IValidator<ReportFilter> validator)
+        public ReportsController(IReportsService service)
         {
-            _service = service;
-            _validator = validator;
+            _reportservice = service;
+           
         }
 
         [HttpGet("sales-overview")]
-        public async Task<IActionResult> GetTotalSales([FromQuery] ReportFilter filter)
+        public async Task<IActionResult> SalesOverview([FromQuery] ReportFilter filter)
         {
-            var validation = await _validator.ValidateAsync(filter);
-            if (!validation.IsValid) return BadRequest(validation.Errors);
-
-            var result = await _service.GetTotalSalesAsync(filter);
+            var result = await _reportservice.GetSalesOverviewAsync(filter);
             return Ok(result);
         }
 
-        [HttpGet("orders-by-status")]
-        public async Task<IActionResult> GetOrdersByStatus([FromQuery] ReportFilter filter)
-        {
-            var validation = await _validator.ValidateAsync(filter);
-            if (!validation.IsValid) return BadRequest(validation.Errors);
 
-            var result = await _service.GetOrdersByStatusAsync(filter);
+        [HttpGet("top-products")]
+        public async Task<IActionResult> TopProducts([FromQuery] ReportFilter filter)
+        {
+            var result = await _reportservice.GetTopProductsAsync(filter);
             return Ok(result);
         }
 
         [HttpGet("category-sales")]
-        public async Task<IActionResult> GetSalesByCategory([FromQuery] ReportFilter filter)
+        public async Task<IActionResult> CategorySales([FromQuery] ReportFilter filter)
         {
-            var validation = await _validator.ValidateAsync(filter);
-            if (!validation.IsValid) return BadRequest(validation.Errors);
-
-            var result = await _service.GetSalesByCategoryAsync(filter);
-            return Ok(result);
-        }
-
-        [HttpGet("top-products")]
-        public async Task<IActionResult> GetTopProducts([FromQuery] ReportFilter filter)
-        {
-            var validation = await _validator.ValidateAsync(filter);
-            if (!validation.IsValid) return BadRequest(validation.Errors);
-
-            var result = await _service.GetTopProductsAsync(filter);
+            var result = await _reportservice.GetCategorySalesAsync(filter);
             return Ok(result);
         }
 
         [HttpGet("low-stock")]
-        public async Task<IActionResult> GetLowStock([FromQuery] ReportFilter filter)
+        public async Task<IActionResult> LowStock([FromQuery] ReportFilter filter)
         {
-            var validation = await _validator.ValidateAsync(filter);
-            if (!validation.IsValid) return BadRequest(validation.Errors);
-
-            var result = await _service.GetLowStockProductsAsync(filter);
+            var result = await _reportservice.GetLowStockAsync(filter);
             return Ok(result);
         }
+
     }
 
 }
