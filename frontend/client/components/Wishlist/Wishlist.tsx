@@ -3,11 +3,14 @@
 import Image from "next/image";
 import { Card } from "../Card/Card";
 import { useFetchWishlist } from "@/hooks/wishlist/useFetchWishlist";
-import { Star } from "lucide-react";
+import { Star, Trash2 } from "lucide-react";
+import { Button } from "@/ui/button";
+import { useDeleteWishlist } from "@/hooks/wishlist/useDeleteWishlist";
+import { wishlistData } from "../TrendingProduct/component/TrendingProductCard";
 
 interface WishlistItem {
   wishlistId: number;
-  productId: string;
+  productId: number;
   slug: string;
   primaryImageUrl: string;
   productName: string;
@@ -17,7 +20,13 @@ interface WishlistItem {
 
 export const Wishlist = () => {
   const { data } = useFetchWishlist();
+  const { mutate } = useDeleteWishlist();
   console.log("Wishlist", data);
+
+  const handleDeleteWishlist = (productId: wishlistData) => {
+    console.log(productId);
+    mutate(productId);
+  };
 
   return (
     <div className="w-screen">
@@ -25,7 +34,7 @@ export const Wishlist = () => {
         {data?.items?.map((wishlist: WishlistItem) => (
           <Card
             key={wishlist.productId}
-            className="p-3 w-full max-w-[285px] border-0 shadow-none"
+            className="p-3 w-full border-0 shadow-none"
             rootClassName="py-0 border shadow-xl"
           >
             <div className="flex flex-col gap-2">
@@ -37,21 +46,10 @@ export const Wishlist = () => {
                   className="object-cover rounded-[12px]"
                 />
               </div>
-              {/* <div
-                className="absolute top-3 right-3 rounded-full w-6 h-6 shadow-sm flex justify-center items-center cursor-pointer"
-                onClick={() => handleWishlist(product.productId)}
-              >
-                {wishedIds.has(product.productId) ? (
-                  <IoIosHeart size={16} className="text-red-600" />
-                ) : (
-                  <IoIosHeartEmpty size={16} className="text-gray-400" />
-                )}
-              </div> */}
               <div className="flex flex-col gap-2">
                 <div className="text-[20px] font-medium line-clamp-1">
                   {wishlist.productName}
                 </div>
-
                 <div className="text-[16px] text-[#00000099]/60 line-clamp-2">
                   {wishlist.description}
                 </div>
@@ -62,8 +60,14 @@ export const Wishlist = () => {
                   ))}
                 </div>
 
-                <div className="text-[14px] text-[#4EA674] font-bold">
-                  Rs {wishlist.price}
+                <div className="w-full flex justify-between">
+                  <div className="text-[14px] text-[#4EA674] font-bold">
+                    Rs {wishlist.price}
+                  </div>
+                  <Trash2
+                    color="red"
+                    onClick={() => handleDeleteWishlist(wishlist.productId)}
+                  />
                 </div>
               </div>
             </div>
