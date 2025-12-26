@@ -6,26 +6,15 @@ import {
   type PaginationState,
 } from "@tanstack/react-table";
 import { Table } from "../Table/Table";
-import { data } from "./orderData.import";
 import { LuBus } from "react-icons/lu";
 import { Tabs } from "../Tabs/Tabs";
 import { useState, useMemo } from "react";
 import { Input } from "@/ui/input";
 import { DropDown } from "../DropDown/DropDown";
 import { IoFilter } from "react-icons/io5";
+import { useFetchOrder, type OrderData } from "@/hooks/order/useFetchOrder";
 
-interface OrderType {
-  no: string;
-  order_id: string;
-  product: string;
-  date: string;
-  price: string;
-  payment: string;
-  status: string;
-  src: string;
-}
-
-const status = {
+const statusType = {
   DELIVERED: "Delivered",
   CANCELLED: "Cancelled",
   PENDING: "Pending",
@@ -33,28 +22,31 @@ const status = {
 };
 
 export const OrderTable = () => {
+  const { data } = useFetchOrder();
   const [sortType, setSortType] = useState<"date" | "price" | null>(null);
-  const columnHelper = createColumnHelper<OrderType>();
+  const columnHelper = createColumnHelper<OrderData>();
   const columns = [
-    columnHelper.accessor("no", { header: "No." }),
-    columnHelper.accessor("order_id", { header: "Order Id" }),
-    columnHelper.accessor("product", {
-      header: "Product",
-      cell: ({ row }) => {
-        const original = row.original;
-        return (
-          <div className="flex items-center justify-start gap-3">
-            <div className="w-7 h-7">
-              <img src={original.src} alt="Image" />
-            </div>
-            <div>{original.product}</div>
+    columnHelper.accessor("orderId", { header: "Order Id" }),
+    columnHelper.accessor(
+      (row) => row.items?.map((item) => item.productName).join(", "),
+      {
+        id: "productName",
+        header: "Product Name",
+        cell: (info) => (
+          <div className="flex flex-col">
+            {info
+              .getValue()
+              ?.split(", ")
+              .map((name, i) => (
+                <span key={i}>{name}</span>
+              ))}
           </div>
-        );
+        ),
       },
-    }),
-    columnHelper.accessor("date", { header: "Date" }),
-    columnHelper.accessor("price", { header: "Price" }),
-    columnHelper.accessor("payment", {
+    ),
+    columnHelper.accessor("orderDate", { header: "Date" }),
+    columnHelper.accessor("totalAmount", { header: "Price" }),
+    columnHelper.accessor("paymentStatus", {
       header: "Payment",
       cell: (info) => {
         return info.getValue() === "Paid" ? (
@@ -76,28 +68,28 @@ export const OrderTable = () => {
       header: "Status",
       cell: ({ row }) => {
         const original = row.original;
-        return original.status === status.DELIVERED ? (
+        return original.status === statusType.DELIVERED ? (
           <div className="flex justify-center items-center">
             <div className="text-green-500 flex items-center justify-start gap-3 w-24">
               <LuBus style={{ color: "green" }} />
               Delivered
             </div>
           </div>
-        ) : original.status === status.PENDING ? (
+        ) : original.status === statusType.PENDING ? (
           <div className="flex justify-center items-center">
             <div className="text-orange-500 flex items-center justify-start gap-3 w-24">
               <LuBus style={{ color: "orange" }} />
               Pending
             </div>
           </div>
-        ) : original.status === status.SHIPPED ? (
+        ) : original.status === statusType.SHIPPED ? (
           <div className="flex justify-center items-center">
             <div className="text-gray-500 flex items-center justify-start gap-3 w-24">
               <LuBus style={{ color: "gray" }} />
               Shipped
             </div>
           </div>
-        ) : original.status === status.CANCELLED ? (
+        ) : original.status === statusType.CANCELLED ? (
           <div className="flex justify-center items-center">
             <div className="text-red-500 flex items-center justify-start gap-3 w-24">
               <LuBus style={{ color: "red" }} />
@@ -133,41 +125,64 @@ export const OrderTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredData = useMemo(() => {
-    const filterBySearch = (orders: OrderType[]) => {
+    const filterBySearch = (orders: OrderData[]) => {
       if (!searchTerm) return orders;
       return orders.filter(
         (order) =>
-          order.order_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          order.product.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          order.payment.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          order.orderId ||
+          order.items[0].productName
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          order.paymentStatus
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
           order.status.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     };
-    const sortOrder = (orders: OrderType[]) => {
+    const sortOrder = (orders: OrderData[]) => {
       if (sortType === "date") {
         return [...orders].sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          (a, b) =>
+            new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime(),
         );
       }
       if (sortType === "price") {
-        return [...orders].sort((a, b) => Number(a.price) - Number(b.price));
+        return [...orders].sort(
+          (a, b) => Number(a.totalAmount) - Number(b.totalAmount),
+        );
       }
       return orders;
     };
 
     return {
-      all: sortOrder(filterBySearch(data)),
+      all: sortOrder(filterBySearch((data?.items ?? []) as OrderData[])),
       delivered: sortOrder(
-        filterBySearch(data.filter((d) => d.status === status.DELIVERED)),
+        filterBySearch(
+          ((data?.items ?? []) as OrderData[]).filter(
+            (d) => d.status === statusType.DELIVERED,
+          ),
+        ),
       ),
       pending: sortOrder(
-        filterBySearch(data.filter((d) => d.status === status.PENDING)),
+        filterBySearch(
+          ((data?.items ?? []) as OrderData[]).filter(
+            (d) => d.status === statusType.PENDING,
+          ),
+        ),
       ),
       shipped: sortOrder(
-        filterBySearch(data.filter((d) => d.status === status.SHIPPED)),
+        filterBySearch(
+          ((data?.items ?? []) as OrderData[]).filter(
+            (d) => d.status === statusType.SHIPPED,
+          ),
+        ),
       ),
       cancelled: sortOrder(
-        filterBySearch(data.filter((d) => d.status === status.CANCELLED)),
+        filterBySearch(
+          ((data?.items ?? []) as OrderData[]).filter(
+            (d) => d.status === statusType.CANCELLED,
+          ),
+        ),
       ),
     };
   }, [searchTerm, sortType]);
