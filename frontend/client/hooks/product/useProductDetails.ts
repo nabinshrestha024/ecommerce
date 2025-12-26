@@ -19,7 +19,7 @@ type ProductData = {
 
 export interface ProductImage {
   id?: number;
-  url: string;
+  imageUrl: string;
   isPrimary?: boolean;
 }
 

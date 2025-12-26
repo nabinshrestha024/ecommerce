@@ -4,7 +4,13 @@ import { endpoint } from "../endpoint";
 
 export const Product = async () => {
   try {
-    const res = await axiosInstance.get(endpoint.FETCH_PRODUCT);
+    const res = await axiosInstance.get(endpoint.FETCH_PRODUCT, {
+      params: {
+        OnlyActive: true,
+        Page: 1,
+        PageSize: 10,
+      },
+    });
     return res.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {

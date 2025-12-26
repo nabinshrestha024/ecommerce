@@ -64,4 +64,22 @@ export const teamMembers = [
     image: "/Amardeep.jpg",
     link: "https://www.instagram.com/amardeep.limbu/",
   },
+  {
+    name: "Ritika Maharjan",
+    role: "Backend Engineer",
+    image: "/ritika.jpg",
+    link: "https://www.linkedin.com/in/ritikamhrz/",
+  },
+  {
+    name: "Sujal Maharjan",
+    role: "Backend Developer",
+    image: "/sujal.jpg",
+    link: "https://www.linkedin.com/in/sujal-maharjan-27bb06267/",
+  },
+  {
+    name: "Aadarsha Khadka",
+    role: "Database Engineer",
+    image: "/aadarsha.jpg",
+    link: "http://linkedin.com/in/aadarkdk/",
+  },
 ];

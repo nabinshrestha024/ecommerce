@@ -11,6 +11,7 @@ export const Category = async () => {
         PageSize: 4,
       },
     });
+
     return res.data.items;
   } catch (e) {
     if (axios.isAxiosError(e)) {

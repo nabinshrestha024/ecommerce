@@ -50,12 +50,12 @@ const LoginLayout = () => {
 };
 const AppLayout = () => {
   return (
-    <>
+    <div className="flex min-h-screen w-full overflow-hidden">
       <Sidebar />
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col flex-1 min-w-0">
         <Navbar />
         <Outlet />
       </div>
-    </>
+    </div>
   );
 };

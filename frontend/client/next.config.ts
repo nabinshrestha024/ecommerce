@@ -19,6 +19,12 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "img.shop.com",
       },
+      {
+        protocol: "http",
+        hostname: "192.168.80.229",
+        port: "",
+        pathname: "/images/**",
+      },
     ],
   },
 };

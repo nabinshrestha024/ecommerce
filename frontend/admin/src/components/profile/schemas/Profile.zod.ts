@@ -18,7 +18,10 @@ export const ProfileUpdateSchema = z.object({
 
   phoneNumber: z
     .string()
-    .min(10, "Phone number must be at least 10 digits")
+    .regex(
+      /^9[87]\d{8}$/,
+      "Phone number must start with 98 or 97 and be 10 digits",
+    )
     .optional(),
 
   address: z.string().min(1, "Address is required").optional(),
