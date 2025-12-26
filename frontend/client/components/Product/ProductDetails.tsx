@@ -43,6 +43,7 @@ const ProductDetails = () => {
   };
   if (productItems.isLoading) return <p>Loading product details...</p>;
   if (productItems.isError) return <p>Failed to load product details</p>;
+  console.log(productItems);
   return (
     <div className="w-full px-20 py-10">
       <Card key={productItems.data?.productId} className="p-0">
@@ -50,10 +51,11 @@ const ProductDetails = () => {
           <div className="px-5 py-8">
             <div className="max-w-[600px] h-[400px] relative">
               <Image
-                src={productItems.data?.images[0].url || ""}
+                src={productItems.data?.images[0]?.imageUrl || ""}
                 alt="Image"
                 fill
                 className="w-full h-full rounded-xl object-cover"
+                unoptimized
               />
             </div>
           </div>

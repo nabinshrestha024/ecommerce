@@ -8,7 +8,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
 import { Sidebar } from "./Sidebar";
-import { Heart, Trash2, X } from "lucide-react";
+import { Bell, Heart, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFetchCart } from "@/hooks/cart/useFetchCart";
@@ -33,6 +33,7 @@ export interface CartProductType {
 export const TopNav = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
   const { data, isLoading, isError, error } = useFetchCart();
   const deleteCart = useDeleteCart();
   const calculateTotal = () => {
@@ -116,6 +117,16 @@ export const TopNav = () => {
           />
         ) : (
           <Heart onClick={() => router.push("/wishlist")} />
+        )}
+
+        {!isAuth ? (
+          <Bell
+            onClick={() =>
+              toast.error("Please log in to see your notifications")
+            }
+          />
+        ) : (
+          <Bell onClick={() => router.push("/wishlist")} />
         )}
 
         <div className="flex gap-2 shrink-0 items-center text-xl">

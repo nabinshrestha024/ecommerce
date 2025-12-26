@@ -42,7 +42,7 @@ export const Deal = () => {
   const wishedIds = new Set<number>(
     wishlistItems
       .map((wishlist: WishlistItem) => Number(wishlist.productId))
-      .filter((id) => !Number.isNaN(id)),
+      .filter((id: number) => !Number.isNaN(id)),
   );
 
   const handleAddWishlist = (productId: wishlistData) => {
@@ -86,6 +86,7 @@ export const Deal = () => {
                         alt="image"
                         fill
                         className="w-full h-full object-cover rounded-[12px]"
+                        unoptimized
                       />
                       <div className="absolute top-3 right-3 rounded-full w-6 h-6 shadow-sm flex justify-center items-center cursor-pointer">
                         {wishedIds.has(val.productId) ? (
