@@ -83,9 +83,15 @@ namespace EcommerceProject.Repositories.Implementations
             return header;
         }
 
-        public async Task<PagedResult<AdminOrderRowDto>> AdminGetPagedAsync(PaginationDto pagination, string? status, string? search, CancellationToken ct)
+        public async Task<PagedResult<AdminOrderRowDto>> AdminGetPagedAsync(
+    PaginationDto pagination,
+    string? status,
+    string? search,
+    CancellationToken ct)
         {
             using var conn = _db.CreateConnection();
+
+            var orderDict = new Dictionary<int, AdminOrderRowDto>();
 
             using var multi = await conn.QueryMultipleAsync(
                 "spAdminOrders_GetPaged",
@@ -99,15 +105,31 @@ namespace EcommerceProject.Repositories.Implementations
                 commandType: CommandType.StoredProcedure
             );
 
-            var items = (await multi.ReadAsync<AdminOrderRowDto>()).ToList();
-            var total = await multi.ReadFirstAsync<int>();
+            multi.Read<AdminOrderRowDto, OrderItemDto, AdminOrderRowDto>(
+                (order, item) =>
+                {
+                    if (!orderDict.TryGetValue(order.OrderId, out var existing))
+                    {
+                        existing = order;
+                        existing.Items = new List<OrderItemDto>();
+                        orderDict.Add(order.OrderId, existing);
+                    }
 
-            return new PagedResult<AdminOrderRowDto>
-            (
-               items,
-               total,
-               pagination.Page,
-               pagination.PageSize
+                    if (item != null)
+                        existing.Items.Add(item);
+
+                    return existing;
+                },
+                splitOn: "OrderItemId"
+            );
+
+            var totalCount = await multi.ReadFirstAsync<int>();
+
+            return new PagedResult<AdminOrderRowDto>(
+                orderDict.Values.ToList(),
+                pagination.Page,
+                pagination.PageSize,
+                totalCount
             );
         }
 

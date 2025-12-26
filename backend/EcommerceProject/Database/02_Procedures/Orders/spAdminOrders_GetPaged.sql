@@ -2,21 +2,15 @@ USE EcommerceDB;
 GO
 
 CREATE OR ALTER PROCEDURE spAdminOrders_GetPaged
-    @Page INT = 1,
-    @PageSize INT = 20,
+    @Page INT,
+    @PageSize INT,
     @Status VARCHAR(20) = NULL,
     @Search VARCHAR(100) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF @Page < 1 SET @Page = 1;
-    IF @PageSize < 1 SET @PageSize = 20;
-
-    DECLARE @Offset INT = (@Page - 1) * @PageSize;
-
-    ;WITH Q AS
-    (
+    ;WITH OrdersPaged AS (
         SELECT
             o.OrderId,
             o.UserId,
@@ -25,8 +19,7 @@ BEGIN
             o.Status,
             o.PaymentStatus,
             o.ShippingName,
-            o.ShippingPhone,
-            ROW_NUMBER() OVER (ORDER BY o.OrderDate DESC) AS rn
+            o.ShippingPhone
         FROM Orders o
         WHERE
             (@Status IS NULL OR o.Status = @Status)
@@ -34,14 +27,25 @@ BEGIN
                 @Search IS NULL
                 OR o.ShippingName LIKE '%' + @Search + '%'
                 OR o.ShippingPhone LIKE '%' + @Search + '%'
-                OR CAST(o.OrderId AS VARCHAR(20)) LIKE '%' + @Search + '%'
             )
+        ORDER BY o.OrderDate DESC
+        OFFSET (@Page - 1) * @PageSize ROWS
+        FETCH NEXT @PageSize ROWS ONLY
     )
-    SELECT *
-    FROM Q
-    WHERE rn > @Offset AND rn <= (@Offset + @PageSize);
+    SELECT
+        op.*,
+        oi.OrderItemId,
+        oi.ProductId,
+        p.Name AS ProductName,
+        oi.Quantity,
+        oi.UnitPrice,
+        CAST(oi.Quantity * oi.UnitPrice AS DECIMAL(10,2)) AS LineTotal
+    FROM OrdersPaged op
+    LEFT JOIN OrderItems oi ON oi.OrderId = op.OrderId
+    LEFT JOIN Products p ON p.ProductId = oi.ProductId
+    ORDER BY op.OrderDate DESC;
 
-    SELECT COUNT(1) AS TotalCount
+    SELECT COUNT(1)
     FROM Orders o
     WHERE
         (@Status IS NULL OR o.Status = @Status)
@@ -49,7 +53,6 @@ BEGIN
             @Search IS NULL
             OR o.ShippingName LIKE '%' + @Search + '%'
             OR o.ShippingPhone LIKE '%' + @Search + '%'
-            OR CAST(o.OrderId AS VARCHAR(20)) LIKE '%' + @Search + '%'
         );
 END
 GO
