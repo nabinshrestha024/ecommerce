@@ -1,3 +1,5 @@
+"use client";
+
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -5,48 +7,56 @@ import {
   useReactTable,
   type PaginationState,
 } from "@tanstack/react-table";
-import { Table } from "../Table/Table";
 import { LuBus } from "react-icons/lu";
-import { Tabs } from "../Tabs/Tabs";
 import { useState, useMemo } from "react";
 import { Input } from "@/ui/input";
-import { DropDown } from "../DropDown/DropDown";
 import { IoFilter } from "react-icons/io5";
-import { useFetchOrder, type OrderData } from "@/hooks/order/useFetchOrder";
+import { data } from "./orderData.import";
+import { Table } from "../Table/Table";
+import { Tabs } from "../Tabs/Tabs";
+import { DropDown } from "../DropDown/DropDown";
 
-const statusType = {
+interface OrderType {
+  no: string;
+  order_id: string;
+  product: string;
+  date: string;
+  price: string;
+  payment: string;
+  status: string;
+  src: string;
+}
+
+const status = {
   DELIVERED: "Delivered",
   CANCELLED: "Cancelled",
   PENDING: "Pending",
   SHIPPED: "Shipped",
 };
 
-export const OrderTable = () => {
-  const { data } = useFetchOrder();
+export const Order = () => {
   const [sortType, setSortType] = useState<"date" | "price" | null>(null);
-  const columnHelper = createColumnHelper<OrderData>();
+  const columnHelper = createColumnHelper<OrderType>();
   const columns = [
-    columnHelper.accessor("orderId", { header: "Order Id" }),
-    columnHelper.accessor(
-      (row) => row.items?.map((item) => item.productName).join(", "),
-      {
-        id: "productName",
-        header: "Product Name",
-        cell: (info) => (
-          <div className="flex flex-col">
-            {info
-              .getValue()
-              ?.split(", ")
-              .map((name, i) => (
-                <span key={i}>{name}</span>
-              ))}
+    columnHelper.accessor("no", { header: "No." }),
+    columnHelper.accessor("order_id", { header: "Order Id" }),
+    columnHelper.accessor("product", {
+      header: "Product",
+      cell: ({ row }) => {
+        const original = row.original;
+        return (
+          <div className="flex items-center justify-start gap-3">
+            <div className="w-7 h-7">
+              <img src={original.src} alt="Image" />
+            </div>
+            <div>{original.product}</div>
           </div>
-        ),
+        );
       },
-    ),
-    columnHelper.accessor("orderDate", { header: "Date" }),
-    columnHelper.accessor("totalAmount", { header: "Price" }),
-    columnHelper.accessor("paymentStatus", {
+    }),
+    columnHelper.accessor("date", { header: "Date" }),
+    columnHelper.accessor("price", { header: "Price" }),
+    columnHelper.accessor("payment", {
       header: "Payment",
       cell: (info) => {
         return info.getValue() === "Paid" ? (
@@ -68,28 +78,28 @@ export const OrderTable = () => {
       header: "Status",
       cell: ({ row }) => {
         const original = row.original;
-        return original.status === statusType.DELIVERED ? (
+        return original.status === status.DELIVERED ? (
           <div className="flex justify-center items-center">
             <div className="text-green-500 flex items-center justify-start gap-3 w-24">
               <LuBus style={{ color: "green" }} />
               Delivered
             </div>
           </div>
-        ) : original.status === statusType.PENDING ? (
+        ) : original.status === status.PENDING ? (
           <div className="flex justify-center items-center">
             <div className="text-orange-500 flex items-center justify-start gap-3 w-24">
               <LuBus style={{ color: "orange" }} />
               Pending
             </div>
           </div>
-        ) : original.status === statusType.SHIPPED ? (
+        ) : original.status === status.SHIPPED ? (
           <div className="flex justify-center items-center">
             <div className="text-gray-500 flex items-center justify-start gap-3 w-24">
               <LuBus style={{ color: "gray" }} />
               Shipped
             </div>
           </div>
-        ) : original.status === statusType.CANCELLED ? (
+        ) : original.status === status.CANCELLED ? (
           <div className="flex justify-center items-center">
             <div className="text-red-500 flex items-center justify-start gap-3 w-24">
               <LuBus style={{ color: "red" }} />
@@ -125,64 +135,41 @@ export const OrderTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredData = useMemo(() => {
-    const filterBySearch = (orders: OrderData[]) => {
+    const filterBySearch = (orders: OrderType[]) => {
       if (!searchTerm) return orders;
       return orders.filter(
         (order) =>
-          order.orderId ||
-          order.items[0].productName
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          order.paymentStatus
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
+          order.order_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          order.product.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          order.payment.toLowerCase().includes(searchTerm.toLowerCase()) ||
           order.status.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     };
-    const sortOrder = (orders: OrderData[]) => {
+    const sortOrder = (orders: OrderType[]) => {
       if (sortType === "date") {
         return [...orders].sort(
-          (a, b) =>
-            new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime(),
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
         );
       }
       if (sortType === "price") {
-        return [...orders].sort(
-          (a, b) => Number(a.totalAmount) - Number(b.totalAmount),
-        );
+        return [...orders].sort((a, b) => Number(a.price) - Number(b.price));
       }
       return orders;
     };
 
     return {
-      all: sortOrder(filterBySearch((data?.items ?? []) as OrderData[])),
+      all: sortOrder(filterBySearch(data)),
       delivered: sortOrder(
-        filterBySearch(
-          ((data?.items ?? []) as OrderData[]).filter(
-            (d) => d.status === statusType.DELIVERED,
-          ),
-        ),
+        filterBySearch(data.filter((d) => d.status === status.DELIVERED)),
       ),
       pending: sortOrder(
-        filterBySearch(
-          ((data?.items ?? []) as OrderData[]).filter(
-            (d) => d.status === statusType.PENDING,
-          ),
-        ),
+        filterBySearch(data.filter((d) => d.status === status.PENDING)),
       ),
       shipped: sortOrder(
-        filterBySearch(
-          ((data?.items ?? []) as OrderData[]).filter(
-            (d) => d.status === statusType.SHIPPED,
-          ),
-        ),
+        filterBySearch(data.filter((d) => d.status === status.SHIPPED)),
       ),
       cancelled: sortOrder(
-        filterBySearch(
-          ((data?.items ?? []) as OrderData[]).filter(
-            (d) => d.status === statusType.CANCELLED,
-          ),
-        ),
+        filterBySearch(data.filter((d) => d.status === status.CANCELLED)),
       ),
     };
   }, [searchTerm, sortType]);
@@ -284,7 +271,7 @@ export const OrderTable = () => {
   };
 
   return (
-    <div className="p-3 rounded-lg">
+    <div className="p-3 rounded-lg w-screen">
       <div className="relative">
         <Tabs
           defaultValue="All"
