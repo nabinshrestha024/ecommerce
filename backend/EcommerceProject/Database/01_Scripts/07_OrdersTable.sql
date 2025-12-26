@@ -17,6 +17,7 @@ CREATE TABLE Orders (
     PaymentStatus   VARCHAR(20) NOT NULL DEFAULT 'Pending',
     PaymentGateway  VARCHAR(50) NULL,
     Notes           VARCHAR(500) NULL,
+    UpdatedAt       DATETIME2,
 
     FOREIGN KEY (UserId) REFERENCES Users(UserId),
     FOREIGN KEY (PaymentMethodId) REFERENCES PaymentMethods(PaymentMethodId)

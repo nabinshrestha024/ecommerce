@@ -11,6 +11,7 @@ CREATE TABLE PaymentGatewayTransactions (
     Status               VARCHAR(50) NOT NULL,
     GatewayStatus        VARCHAR(100) NULL,
     RetryCount           INT NOT NULL DEFAULT 0,
+    RawResponse          VARCHAR(MAX) NULL,
     CreatedAt            DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
     UpdatedAt            DATETIME2(3) NULL,
     FOREIGN KEY (PaymentId) REFERENCES Payments(PaymentId)

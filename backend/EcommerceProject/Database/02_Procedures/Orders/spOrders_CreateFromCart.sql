@@ -20,7 +20,7 @@ BEGIN
 
     IF @UserId IS NULL
     BEGIN
-        RAISERROR('USer not found .', 16, 1);
+        RAISERROR('User not found .', 16, 1);
         RETURN;
     END
 
