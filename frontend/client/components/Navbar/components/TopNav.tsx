@@ -9,7 +9,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
 import { Sidebar } from "./Sidebar";
 import { Bell, Heart, Trash2, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFetchCart } from "@/hooks/cart/useFetchCart";
 import { useDeleteCart } from "@/hooks/cart/useDeleteCart";
@@ -17,6 +17,8 @@ import { MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
 import { useUpdateCart } from "@/hooks/cart/useUpdateCart";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useSearch } from "@/hooks/search/useSearch";
+import { useDebounce } from "@/hooks/search/useDebounce";
 
 export interface CartProductType {
   cartId: number;
@@ -34,6 +36,7 @@ export const TopNav = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
+  const [searchData, setSearchData] = useState("");
   const { data, isLoading, isError, error } = useFetchCart();
   const deleteCart = useDeleteCart();
   const calculateTotal = () => {
@@ -60,6 +63,13 @@ export const TopNav = () => {
       quantity: quantity - 1,
     });
   };
+  const debounceSearch = useDebounce(searchData, 500);
+
+  useEffect(() => {
+    if (!debounceSearch) return;
+  }, [debounceSearch]);
+
+  const search = useSearch(debounceSearch);
 
   return (
     <div className="flex justify-between px-5 lg:px-10 items-center py-5 border-b">
@@ -87,20 +97,59 @@ export const TopNav = () => {
         </div>
       </div>
       <div className="gap-4 items-center hidden lg:flex">
-        <div className="relative">
+        <div className="relative w-[500px]">
           <Input
-            type={"text"}
+            type="text"
+            value={searchData}
             placeholder="What you're looking for"
-            className="bg-[#EAF8E7] shrink-0 w-[500px] h-12 rounded-3xl pr-25"
+            onChange={(e) => setSearchData(e.target.value)}
+            className="bg-[#EAF8E7] h-12 rounded-3xl pr-24"
           />
+
           <Button
-            variant={"ghost"}
-            className="bg-white rounded-3xl absolute right-2 top-1/2 -translate-y-1/2"
+            variant="ghost"
+            className="bg-white rounded-3xl absolute right-2 top-1/2 -translate-y-1/2 "
           >
             <IoSearch />
             Search
           </Button>
+
+          {debounceSearch && (
+            <div className="absolute top-14 left-0 w-full bg-white shadow-lg  z-50 max-h-80 overflow-y-auto ">
+              {search.isLoading && (
+                <div className="p-4 text-sm text-gray-500">Searching...</div>
+              )}
+
+              {search.isError && (
+                <div className="p-4 text-sm text-red-500">
+                  Failed to fetch products
+                </div>
+              )}
+
+              {search.data?.items.map((product) => (
+                <div
+                  key={product.productId}
+                  onClick={() => {
+                    router.push(`/product/id/${product.slug}`);
+                    setSearchData("");
+                  }}
+                  className="flex items-center gap-3 p-3 hover:bg-[#EAF8E7] cursor-pointer"
+                >
+                  <div className="w-10 h-10 relative rounded overflow-hidden">
+                    <Image
+                      src={product.primaryImageUrl}
+                      alt={product.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="text-sm font-medium">{product.name}</div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
+
         {isAuth ? (
           <Link href="/home">
             <Button onClick={logout}>Logout</Button>
