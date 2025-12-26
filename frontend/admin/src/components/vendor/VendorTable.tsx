@@ -7,11 +7,12 @@ import {
 } from "@tanstack/react-table";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
-import { Table } from "../Table/Table";
+import { Table } from "../Table/Table.tsx";
 import { Dialog } from "../Dialog/Dialog.tsx";
 import { VendorForm } from "./VendorForm.tsx";
 import { useGetVendor } from "@/hooks/vendor/useGetVendor.ts";
 import { useDeleteVendor } from "@/hooks/vendor/useDeleteVendor.ts";
+
 export interface VendorTableProps {
   vendorId: number;
   name: string;
@@ -29,9 +30,9 @@ const mapTableToVendor = (v: VendorTableProps): any => ({
   contactPerson: v.contactPerson,
   email: v.email,
   phone: v.phone,
-  isActive: v.isActive,
-  createdAt: v.createdAt,
   address: v.address,
+  status: v.isActive ? "active" : "inactive",
+  joinedOn: (v.createdAt ?? "").split("T")[0],
 });
 
 export const VendorTable = () => {
@@ -107,7 +108,7 @@ export const VendorTable = () => {
       cell: (info) => (
         <div
           onClick={() => handleRowClick(info.row.original)}
-          className="cursor-pointer flex justify-start items-center"
+          className="cursor-pointer flex justify-start items-center truncate max-w-[200px]"
         >
           {info.getValue()}
         </div>
@@ -129,7 +130,7 @@ export const VendorTable = () => {
       cell: (info) => (
         <div
           onClick={() => handleRowClick(info.row.original)}
-          className="cursor-pointer"
+          className="cursor-pointer truncate max-w-[200px]"
         >
           {info.getValue()}
         </div>
@@ -137,14 +138,18 @@ export const VendorTable = () => {
     }),
     columnHelper.accessor("createdAt", {
       header: "Joined On",
-      cell: (info) => (
-        <div
-          onClick={() => handleRowClick(info.row.original)}
-          className="cursor-pointer"
-        >
-          {info.getValue()}
-        </div>
-      ),
+      cell: (info) => {
+        const raw = info.getValue() as string;
+        const dateOnly = (raw ?? "").split("T")[0];
+        return (
+          <div
+            onClick={() => handleRowClick(info.row.original)}
+            className="cursor-pointer whitespace-nowrap"
+          >
+            {dateOnly}
+          </div>
+        );
+      },
     }),
     columnHelper.accessor("isActive", {
       header: "Status",
@@ -161,12 +166,10 @@ export const VendorTable = () => {
         return (
           <div
             onClick={() => handleRowClick(info.row.original)}
-            className="flex gap-3 justify-start items-center cursor-pointer"
+            className="flex gap-2 justify-start items-center cursor-pointer whitespace-nowrap"
           >
-            <div
-              className={`w-2 h-2 rounded-full ${style.dot} ${style.text}`}
-            />
-            {value ? "Active" : "Inactive"}
+            <div className={`w-2 h-2 rounded-full ${style.dot}`} />
+            <span className={style.text}>{value ? "Active" : "Inactive"}</span>
           </div>
         );
       },
@@ -179,14 +182,13 @@ export const VendorTable = () => {
           <Dialog
             triggerContent={
               <FaEdit
-                className="text-[#6A717F] text-[20px]"
+                className="text-[#6A717F] text-[20px] cursor-pointer hover:text-[#4A5160] transition-colors"
                 onClick={() => handleEdit(info.row.original)}
               />
             }
           >
             {selectedVendor && (
               <div className="max-h-[70vh] overflow-y-auto px-4 py-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                {" "}
                 <VendorForm
                   vendor={mapTableToVendor(selectedVendor) as any}
                   onSave={() => {
@@ -197,7 +199,7 @@ export const VendorTable = () => {
             )}
           </Dialog>
           <MdDelete
-            className="text-[#6A717F] text-[20px]"
+            className="text-[#6A717F] text-[20px] cursor-pointer hover:text-red-500 transition-colors"
             onClick={() => handleDelete(info.row.original.vendorId)}
           />
         </div>
@@ -215,14 +217,16 @@ export const VendorTable = () => {
   });
 
   return (
-    <div>
-      <div className="text-[16px] leading-normal font-bold ">Vendors Table</div>
+    <div className="w-full px-0 sm:px-4 lg:px-0">
+      <div className="text-base sm:text-lg leading-normal font-bold mb-4">
+        Vendors Table
+      </div>
 
       <div className="flex gap-4 max-lg:flex-col">
-        <div className="flex-1">
+        <div className="flex-1/2 overflow-x-auto">
           <Table table={table} pageIndex={pagination.pageIndex} />
           {isError && (
-            <div className="text-red-500 text-center mt-4">
+            <div className="text-red-500 text-center mt-4 text-sm sm:text-base">
               Failed to load vendor data.
             </div>
           )}

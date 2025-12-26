@@ -16,7 +16,7 @@ export const BasicDetails = () => {
       </div>
       <div className="flex flex-col mt-6 gap-8">
         <div className="flex flex-col gap-3">
-          <div>
+          <div className="flex flex-col gap-3">
             <label className="block text-sm font-medium ">Product Name</label>
             <Input
               type="text"
@@ -38,7 +38,7 @@ export const BasicDetails = () => {
             <Input
               type="textarea"
               placeholder="Enter short description...."
-              className="w-full h-24 p-3 border rounded-md focus:outline-none bg-[#F9FAFB] focus:ring-2  focus:border-transparent"
+              className="w-full h-15 p-3 border rounded-md focus:outline-none bg-[#F9FAFB] focus:ring-2  focus:border-transparent"
               {...register("shortDescription")}
             />
             {errors.shortDescription && (
