@@ -2,7 +2,7 @@
 GO
 
 
-CREATE OR ALTER   PROCEDURE [dbo].[spProduct_GetIdByName]
+CREATE OR ALTER   PROCEDURE spProduct_GetIdByName
     @ProductName VARCHAR(200)
 AS
 BEGIN
