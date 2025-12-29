@@ -24,19 +24,7 @@ export interface NotificationType {
 
 export const Notification = () => {
   const { data, isLoading, isError, error, refetch } = useNotification();
-
-  // const [read, setRead] = useState(true);
-
-  // useEffect(() => {
-  //   data?.map((val) => {
-  //     if (!val.isRead) {
-  //       setRead(false);
-  //     }
-  //   });
-  // }, [data]);
-
   const read = data?.every((val) => val.isRead === true);
-  console.log(read);
 
   const router = useRouter();
 
@@ -58,7 +46,6 @@ export const Notification = () => {
   const markAsRead = useNotificationSeen();
 
   const handleNotification = () => {
-    console.log("Hello");
     data?.map((val) => {
       if (!val.isRead) {
         markAsRead.mutate(val.notificationId, {
