@@ -41,11 +41,22 @@ namespace EcommerceProject.Repositories.Implementations
         public async Task UpdateQuantityAsync(int cartId, int quantity)
         {
             using var conn = _connectionFactory.CreateConnection();
-            await conn.ExecuteAsync("spCart_UpdateCartQuantity",
-                new { 
-                    CartId = cartId,
-                    Quantity = quantity },
-                commandType: CommandType.StoredProcedure);
+            try
+            {
+               
+                await conn.ExecuteAsync("spCart_UpdateCartQuantity",
+                    new
+                    {
+                        CartId = cartId,
+                        Quantity = quantity
+                    },
+                    commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+            
         }
 
         public async Task RemoveCartAsync(int cartId)
