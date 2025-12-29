@@ -12,6 +12,7 @@ import { useState } from "react";
 import { CartProductType } from "./TopNav";
 import Image from "next/image";
 import { ScrollArea } from "@/ui/scroll-area";
+import { useFetchCart } from "@/hooks/cart/useFetchCart";
 
 export const CheckoutForm = ({
   data,

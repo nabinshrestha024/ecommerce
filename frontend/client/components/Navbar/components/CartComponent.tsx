@@ -5,7 +5,7 @@ import Image from "next/image";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { CheckoutForm } from "./CheckoutForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDeleteCart } from "@/hooks/cart/useDeleteCart";
 import { useFetchCart } from "@/hooks/cart/useFetchCart";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,13 +17,17 @@ export const CartComponent = () => {
   const deleteCart = useDeleteCart();
   const updateCart = useUpdateCart();
 
-  const { data, isLoading, isError, error } = useFetchCart();
+  const { data, isLoading, isError, error, refetch } = useFetchCart();
   const totalPrice =
     data?.reduce((sum, val) => sum + val.quantity * val.price, 0) ?? 0;
 
   const { token } = useAuth();
   const isAuth = Boolean(token);
   const router = useRouter();
+
+  useEffect(() => {
+    refetch();
+  }, [open]);
 
   const handleQuantityDecrease = ({
     cartId,
