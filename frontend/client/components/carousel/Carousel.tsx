@@ -20,6 +20,7 @@ interface CarouselProps {
   nextClassName?: string;
   opts?: EmblaOptionsType;
   plugins?: any[];
+  itemClassName?: string;
 }
 
 export const Carousel = ({
@@ -30,13 +31,14 @@ export const Carousel = ({
   nextClassName,
   opts,
   plugins,
+  itemClassName,
 }: CarouselProps) => {
   return (
     <Root className={rootClassName} opts={opts} plugins={plugins}>
       <CarouselContent className={contentClassName}>
         {items.map((item, index) => (
-          <CarouselItem key={index} className="p-0">
-            <div className="w-full">{item}</div>
+          <CarouselItem key={index} className={`p-0 ${itemClassName}`}>
+            {item}
           </CarouselItem>
         ))}
       </CarouselContent>
