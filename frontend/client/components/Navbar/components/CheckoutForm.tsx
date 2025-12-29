@@ -9,8 +9,18 @@ import { Button } from "@/ui/button";
 import { useAddOrder } from "@/hooks/orders/useAddOrder";
 import { useInitiatePayment } from "@/hooks/esewa/useInitiatePayment";
 import { useState } from "react";
+import { CartProductType } from "./TopNav";
+import Image from "next/image";
+import { ScrollArea } from "@/ui/scroll-area";
+import { useFetchCart } from "@/hooks/cart/useFetchCart";
 
-export const CheckoutForm = () => {
+export const CheckoutForm = ({
+  data,
+  totalPrice,
+}: {
+  data: CartProductType[];
+  totalPrice: number;
+}) => {
   const [pay, setPay] = useState(false);
   const [signature, setSignature] = useState("");
   const [transactionUid, setTransactionUid] = useState("");
@@ -65,6 +75,52 @@ export const CheckoutForm = () => {
       action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"
       method="POST"
     >
+      <div className="text-lg font-semibold mb-5">
+        Order Placed Successfully
+      </div>
+      <ScrollArea className="h-[50vh] pr-5">
+        <div className="space-y-4">
+          {data?.map((val) => (
+            <div key={val.cartId} className="flex gap-4 items-start">
+              <div className="w-20 h-20 relative rounded-md overflow-hidden bg-gray-100 shrink-0">
+                <Image
+                  src={
+                    `http://192.168.80.229${val.productImageUrl}` || "/a.jpg"
+                  }
+                  fill
+                  alt={val.productName}
+                  className="object-cover"
+                  unoptimized
+                />
+              </div>
+              <div className="flex-1 flex flex-col">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="text-sm font-semibold text-gray-800">
+                      {val.productName}
+                    </div>
+                    <div className="text-xs text-gray-600 line-clamp-2">
+                      {val.description}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center justify-between">
+                  <div className="text-sm text-gray-700">
+                    Price: <span className="font-semibold">${val.price}</span>
+                  </div>
+                  <div className="text-sm text-gray-700">
+                    Variant: <span className="font-semibold">S</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <div className="text-sm text-gray-700">Quantity:</div>
+                    <div>{val.quantity}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
       <input type="hidden" name="amount" value="1200.00" />
       <input type="hidden" name="tax_amount" value="0" />
       <input type="hidden" name="total_amount" value="1200.00" />
@@ -89,7 +145,12 @@ export const CheckoutForm = () => {
       />
       <input type="hidden" name="signature" value={signature} />
 
-      <Button type="submit">Pay with eSewa</Button>
+      <div className="flex justify-between items-center mt-5">
+        <div className="text-sm text-gray-700">
+          Total: <span className="font-semibold">Rs. {totalPrice}</span>
+        </div>
+        <Button type="submit">Pay with eSewa</Button>
+      </div>
     </form>
   ) : (
     <form
