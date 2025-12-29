@@ -3,9 +3,11 @@ import { fetchNotification } from "@/lib/notification/fetchNotification";
 import { useQuery } from "@tanstack/react-query";
 
 export const useNotification = () => {
-  const { data, isLoading, isError, error } = useQuery<NotificationType[]>({
+  const { data, isLoading, isError, error, refetch } = useQuery<
+    NotificationType[]
+  >({
     queryKey: ["fetchNotification"],
     queryFn: fetchNotification,
   });
-  return { data, isLoading, isError, error };
+  return { data, isLoading, isError, error, refetch };
 };

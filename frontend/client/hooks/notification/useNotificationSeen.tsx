@@ -8,7 +8,7 @@ export const useNotificationSeen = () => {
     mutationKey: ["notificationSeen"],
     mutationFn: notificationSeen,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["fetchNotification"] });
+      console.log("Triggered");
     },
     onError: () => {
       toast.error("An error occured");
