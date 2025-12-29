@@ -13,8 +13,16 @@ export const VendorFormSchema = z.object({
       "Phone number must start with 98 or 97 and be 10 digits long",
     ),
   address: z.string().min(5, "Address must be at least 5 characters"),
-  status: z.enum(["active", "inactive"], "Status must be active or inactive"),
+  isActive: z.enum(["true", "false"], "Invalid status"),
   joinedOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/u, "Date must be YYYY-MM-DD"),
 });
 
-export type VendorFormValues = z.infer<typeof VendorFormSchema>;
+export type VendorFormValues = {
+  name: string;
+  contactPerson: string;
+  email: string;
+  phone: string;
+  address: string;
+  isActive: "true" | "false";
+  joinedOn: string;
+};
