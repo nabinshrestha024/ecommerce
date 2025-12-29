@@ -13,7 +13,8 @@ import { useState, useMemo } from "react";
 import { Input } from "@/ui/input";
 import { DropDown } from "../DropDown/DropDown";
 import { IoFilter } from "react-icons/io5";
-import { useOrder, type OrderData } from "@/hooks/orders/useOrder";
+import { ProductData, useOrder } from "@/hooks/orders/useOrder";
+import { OrderDetails } from "./OrderDetails";
 
 const statusType = {
   DELIVERED: "Delivered",
@@ -23,11 +24,31 @@ const statusType = {
   PAID: "Paid",
 };
 
+export type OrderData = {
+  items: ProductData[];
+  orderId: number;
+  shippingCity: string;
+  orderDate: number;
+  totalAmount: number;
+  paymentStatus: string;
+  status: string;
+};
+
 export const Order = () => {
   const { data } = useOrder();
 
   const [sortType, setSortType] = useState<"date" | "price" | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [selectedOrder, setSelectedOrder] = useState<OrderData | null>(null);
+
+  const handleRowClick = (row: OrderData) => {
+    if (selectedOrder?.orderId === row.orderId) {
+      setSelectedOrder(null);
+    } else {
+      setSelectedOrder(row);
+    }
+  };
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -51,11 +72,22 @@ export const Order = () => {
     () => [
       columnHelper.accessor("orderId", {
         header: "Order Id",
-        cell: (info) => <span className="font-bold">#{info.getValue()}</span>,
+        cell: (info) => (
+          <div
+            onClick={() => handleRowClick(info.row.original)}
+            className="font-bold"
+          >
+            #{info.getValue()}
+          </div>
+        ),
       }),
       columnHelper.accessor("shippingCity", {
         header: "Shipping City",
-        cell: (info) => <span>{info.getValue() || "N/A"}</span>,
+        cell: (info) => (
+          <div onClick={() => handleRowClick(info.row.original)}>
+            {info.getValue() || "N/A"}
+          </div>
+        ),
       }),
       columnHelper.accessor("orderDate", {
         header: "Date",
@@ -63,7 +95,11 @@ export const Order = () => {
       }),
       columnHelper.accessor("totalAmount", {
         header: "Price",
-        cell: (info) => <span>Rs. {info.getValue()}</span>,
+        cell: (info) => (
+          <div onClick={() => handleRowClick(info.row.original)}>
+            Rs. {info.getValue()}
+          </div>
+        ),
       }),
       columnHelper.accessor("paymentStatus", {
         header: "Payment",
@@ -84,7 +120,10 @@ export const Order = () => {
           }
 
           return (
-            <div className="flex justify-center items-center">
+            <div
+              className="flex justify-center items-center"
+              onClick={() => handleRowClick(info.row.original)}
+            >
               <div
                 className={`${color} flex items-center justify-start gap-3 w-24`}
               >
@@ -270,8 +309,8 @@ export const Order = () => {
   ];
 
   return (
-    <div className="p-3 rounded-lg w-screen">
-      <div className="relative">
+    <div className="flex p-3 rounded-lg w-screen">
+      <div className="flex-1 relative">
         <Tabs
           defaultValue="All"
           data={tabsData}
@@ -309,6 +348,11 @@ export const Order = () => {
           </div>
         </div>
       </div>
+      {selectedOrder && (
+        <div className="w-[350px] mt-5">
+          <OrderDetails order={selectedOrder} />
+        </div>
+      )}
     </div>
   );
 };
