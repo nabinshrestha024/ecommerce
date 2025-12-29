@@ -104,30 +104,14 @@ namespace EcommerceProject.Repositories.Implementations
                 throw;
             }
         }
-
-        public async Task UpdateProductStockAsync(int productId, int newStockQuantity)
+        public async Task DecreaseStockOnOrderAsync(int productId, int quantity, IDbTransaction tx)
         {
-            try
-            {
-                using var connection = _connectionFactory.CreateConnection();
-                
-                const string query = @"
-                    UPDATE Products 
-                    SET StockQuantity = @NewStockQuantity, 
-                        UpdatedAt = GETDATE() 
-                    WHERE ProductID = @ProductId";
-                
-                await connection.ExecuteAsync(query, new
-                {
-                    ProductId = productId,
-                    NewStockQuantity = newStockQuantity
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error updating product stock for product {ProductId}", productId);
-                throw;
-            }
+            await tx.Connection.ExecuteAsync(
+                "spStock_Decrease_OnOrder",
+                new { ProductId = productId, Quantity = quantity },
+                transaction: tx,
+                commandType: CommandType.StoredProcedure
+            );
         }
     }
 }

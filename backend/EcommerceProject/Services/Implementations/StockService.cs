@@ -47,7 +47,7 @@ namespace EcommerceProject.Services.Implementations
             }
         }
 
-        public async Task<StockAdjustmentRequestDto> AdjustStockAsync(StockAdjustmentRequestDto request, int adjustedBy)
+        public async Task<StockAdjustmentResultDto> AdjustStockAsync(StockAdjustmentRequestDto request, int adjustedBy)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace EcommerceProject.Services.Implementations
                 var adjustment = await _stockRepository.AdjustStockAsync(request, adjustedBy);
                 _logger.LogInformation("Stock adjusted successfully for product {ProductId}", request.ProductId);
                 
-                return request;
+                return adjustment;
             }
             catch (Exception ex)
             {
