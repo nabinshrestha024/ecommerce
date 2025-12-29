@@ -13,6 +13,9 @@ import { Input } from "@/ui/input";
 import { DropDown } from "../DropDown/DropDown";
 import { IoFilter } from "react-icons/io5";
 import { useFetchOrder, type OrderData } from "@/hooks/order/useFetchOrder";
+import { Dialog } from "../Dialog/Dialog";
+import { FaEdit } from "react-icons/fa";
+import { OrderForm } from "./OrderForm";
 
 const statusType = {
   DELIVERED: "Delivered",
@@ -24,6 +27,14 @@ const statusType = {
 export const OrderTable = () => {
   const { data } = useFetchOrder();
   const [sortType, setSortType] = useState<"date" | "price" | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<OrderData | null>(
+    null,
+  );
+
+  const handleEdit = (row: OrderData) => {
+    setSelectedProduct(row);
+  };
+
   const columnHelper = createColumnHelper<OrderData>();
   const columns = [
     columnHelper.accessor("orderId", { header: "Order Id" }),
@@ -105,17 +116,48 @@ export const OrderTable = () => {
         );
       },
     }),
+
+    columnHelper.display({
+      id: "actions",
+      header: "Actions",
+      cell: (info) => (
+        <div className="flex gap-2 justify-center items-center">
+          <Dialog
+            triggerContent={
+              <FaEdit
+                className="text-[#6A717F] text-[20px]"
+                onClick={() => handleEdit(info.row.original)}
+              />
+            }
+          >
+            {selectedProduct && (
+              <div className="max-h-[70vh] overflow-y-auto px-4 py-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                <OrderForm
+                  order={selectedProduct}
+                  onSave={() => {
+                    setSelectedProduct(null);
+                  }}
+                />
+              </div>
+            )}
+          </Dialog>
+        </div>
+      ),
+    }),
   ];
+
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
+
   const [paginationDelivered, setPaginationDelivered] =
     useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
   const [paginationPending, setPaginationPending] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
+
   const [paginationShipped, setPaginationShipped] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
