@@ -1,251 +1,265 @@
-### EcommerceProject – Backend API Setup Guide
+# 🛒 EcommerceProject – Backend API
+
+EcommerceProject is a backend API for an e-commerce system built using **ASP.NET Core**, **SQL Server**, **Dapper**, and **SignalR**.  
+The project follows a **layered architecture** with clear separation between Controllers, Services, Repositories, and Database logic.
+
+This repository focuses on:
+- Order management
+- Shipment lifecycle
+- Real-time notifications
+- Clean architecture & scalability
+
+---
+
+## 🧱 Tech Stack
+- **Framework**: ASP.NET Core ( .NET 9)
+- **Database**: SQL Server
+- **ORM**: Dapper
+- **Real-time**: SignalR
+- **Authentication**: JWT
+- **Validation**: FluentValidation
+- **Architecture**: Controller → Service → Repository
+- **Database Access**: Stored Procedures
+
+---
+
+## 📁 Project Structure
+```
+EcommerceProject
+│
+├── Controllers
+│   └── v1
+│
+├── Database
+│   ├── 01_Scripts
+│   ├── 02_Procedures
+│   ├── 03_SeedData
+│   └── SqlConnectionFactory.cs
+│
+├── Filters
+│   └── GlobalExceptionFilter.cs
+│
+├── Hubs
+│   └── NotificationHub.cs
+│
+├── Middlewares
+│   └── RateLimitingMiddleware.cs
+│
+├── Models
+│   ├── Entities
+│   └── DTOs
+│
+├── Repositories
+│   ├── Interfaces
+│   └── Implementations
+│
+├── Services
+│   ├── Interfaces
+│   └── Implementations
+│
+├── utils
+│   └── PasswordHasher.cs
+│
+├── Program.cs
+├── appsettings.json
+└── EcommerceProject.http
+```
+
+---
+
+## 🚀 Getting Started
+
+### A) Create the Project
+
+1. Open **Visual Studio**
+2. Click **Create a new project**
+3. Select **ASP.NET Core Web API**
+4. Project Name: `EcommerceProject`
+5. Choose Framework: **.NET 8 or .NET 9**
+6. (Optional) ✔ Use Controllers
+7. Click **Create**
+
+---
+
+## 📂 B) Create Folders (Solution Explorer)
+
+Right-click the project → **Add → New Folder**  
+Create the following folders **exactly as shown**:
+
+### Root folders
+- Controllers  
+- Database  
+- Filters  
+- Hubs  
+- Middlewares  
+- Models  
+- Repositories  
+- Services  
+- utils  
 
-This repository contains the backend API for an Ecommerce system built using ASP.NET Core, SQL Server, Dapper, and SignalR, following a layered architecture with Controllers, Services, and Repositories.
+### Subfolders
 
-## A) Create the Project
+**Controllers**
+- `v1`
 
-Open Visual Studio
+**Database**
+- `01_Scripts`
+- `02_Procedures`
+- `03_SeedData`
 
-Create a new project
+**Models**
+- `Entities`
+- `DTOs`
 
-Select ASP.NET Core Web API
+**Repositories**
+- `Interfaces`
+- `Implementations`
 
-Name: EcommerceProject
+**Services**
+- `Interfaces`
+- `Implementations`
 
-Choose framework (ex: .NET 8 / .NET 9)
+(Optional)
+- `wwwroot` (only if serving files/images)
 
-(Optional) Check Use controllers
+---
 
-Create
+## 🧩 C) Create Required Files
 
-## B) Create Folders (Solution Explorer)
+### 1️⃣ Database
 
-Right click on the project EcommerceProject → Add → New Folder
+**Database/SqlConnectionFactory.cs**
 
-Create these folders (exact names like your structure):
+Purpose: Centralized SQL connection creation for Dapper.
 
-Controllers
+---
 
-inside Controllers create folder: v1
+### 2️⃣ Filters
 
-Database
+**Filters/GlobalExceptionFilter.cs**
 
-inside Database create folders:
+Purpose:
+- Centralized exception handling
+- Converts exceptions into proper HTTP responses
 
-01_Scripts
+---
 
-02_Procedures
+### 3️⃣ Middleware
 
-03_SeedData
+**Middlewares/RateLimitingMiddleware.cs**
 
-Filters
+Purpose:
+- Throttle excessive requests
+- Return HTTP `429 Too Many Requests`
 
-Hubs
+---
 
-Middlewares
+### 4️⃣ SignalR Hub
 
-Models
+**Hubs/NotificationHub.cs**
 
-inside Models create folders:
+Purpose:
+- Real-time notifications
+- Admin & customer notifications
 
-DTOs
+---
 
-inside DTOs create folder: Product (and more later)
+### 5️⃣ Models
 
-Entities
+#### Entities
+Example: 
+- Models/Entities/Product.cs
+- Models/Entities/Order.cs
+- Models/Entities/Shipment.cs
 
-Repositories
 
-inside Repositories create folders:
+Purpose:
+- Represent database structure
 
-Interfaces
+#### DTOs
+Example:
+- Models/DTOs/Product/ProductDto.cs
+- Models/DTOs/Orders/OrderDetailDto.cs
+- Models/DTOs/Shipments/ShipmentDto.cs
 
-Implementations
 
-Services
+Purpose:
+- Shape API request/response models
 
-inside Services create folders:
+---
 
-Interfaces
+### 6️⃣ Repositories
 
-Implementations
+#### Interfaces
+- Repositories/Interfaces/IProductRepository.cs
+- Repositories/Interfaces/IOrderRepository.cs
 
-utils
 
-(Optional static content) wwwroot (only if you serve files/images)
+#### Implementations
+- Repositories/Implementations/ProductRepository.cs
+- Repositories/Implementations/OrderRepository.cs
 
-## C) Create Files (Where + How)
 
-Right click the folder → Add → Class… (or New Item…) and create these files.
+Purpose:
+- Execute stored procedures
+- Database-only logic (no business rules)
 
-1) Database
+---
 
-Database/SqlConnectionFactory.cs
+### 7️⃣ Services
 
-Add → Class → SqlConnectionFactory
+#### Interfaces
+- Services/Interfaces/IProductService.cs
+- Services/Interfaces/IOrderService.cs
 
-Purpose: create SQL connections for Dapper.
 
-2) Filters
+#### Implementations
+- Services/Implementations/ProductService.cs
+- Services/Implementations/OrderService.cs
 
-Filters/GlobalExceptionFilter.cs
 
-Add → Class → GlobalExceptionFilter
+Purpose:
+- Business logic
+- Validation
+- Orchestration between modules
 
-Purpose: centralized exception handling.
+---
 
-3) Middlewares
+### 8️⃣ Controllers
 
-Middlewares/RateLimitingMiddleware.cs
+**Controllers/v1/ProductsController.cs**
 
-Add → Class → RateLimitingMiddleware
+- API Controller – Empty
+- Handles HTTP requests
+- Calls service layer
 
-Purpose: throttle requests, return 429.
+---
 
-4) Hubs (SignalR)
+### 9️⃣ Utils
 
-Hubs/NotificationHub.cs
+**utils/PasswordHasher.cs**
 
-Add → Class → NotificationHub
+Purpose:
+- Password hashing
+- Security utility
 
-Purpose: real-time notifications via SignalR.
+---
 
-5) Models
-Entities
+## ⚙️ D) Configuration
 
-Models/Entities/Product.cs
+### appsettings.json
 
-Add → Class → Product
+Ensure it contains:
 
-Purpose: DB entity model.
-
-DTOs
-
-Models/DTOs/Product/ProductDto.cs
-
-In Models/DTOs create folder Product
-
-Add → Class → ProductDto
-
-Purpose: what API returns/accepts.
-
-6) Repositories
-Interface
-
-Repositories/Interfaces/IProductRepository.cs
-
-Add → Interface → IProductRepository
-
-Implementation
-
-Repositories/Implementations/ProductRepository.cs
-
-Add → Class → ProductRepository
-
-Purpose: DB/stored-procedure calls.
-
-7) Services
-Interface
-
-Services/Interfaces/IProductService.cs
-
-Add → Interface → IProductService
-
-Implementation
-
-Services/Implementations/ProductService.cs
-
-Add → Class → ProductService
-
-Purpose: business logic + mapping entity ↔ dto.
-
-8) Controller
-
-Controllers/v1/ProductsController.cs
-
-Right click Controllers/v1 → Add → Controller
-
-Choose API Controller - Empty
-
-Name: ProductsController
-
-Purpose: HTTP endpoints.
-
-9) Utils
-
-utils/PasswordHasher.cs
-
-Add → Class → PasswordHasher
-
-Purpose: password hashing helper.
-
-## D) Add Configuration Files
-appsettings.json
-
-Already exists. Ensure it includes:
-
-ConnectionStrings:DefaultConnection
-
-Rate limit settings (optional)
-
-EcommerceProject.http
-
-Right click project → Add → New Item → HTTP File
-Name: EcommerceProject.http
-
-## E) Wire Everything in Program.cs (Important)
-
-You must register dependencies and middleware.
-
-1) Register DI
-
-In Program.cs add:
-
-SqlConnectionFactory
-
-Repository
-
-Service
-
-SignalR
-
-Example structure (high-level):
-
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-
-builder.Services.AddScoped<IProductService, ProductService>();
-
-builder.Services.AddSignalR();
-
-2) Use middleware
-
-app.UseMiddleware<RateLimitingMiddleware>();
-
-3) Map controllers and hubs
-
-app.MapControllers();
-
-app.MapHub<NotificationHub>("/hubs/notifications");
-
-## F) Order You Should Build Modules (Recommended)
-
-When adding a new feature like Category / Brand / Order, follow this order:
-
-Entity (Models/Entities)
-
-DTO (Models/DTOs)
-
-Repository Interface
-
-Repository Implementation
-
-Service Interface
-
-Service Implementation
-
-Controller endpoint
-
-Test in .http
-
-
-
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=.;Database=EcommerceDB;Trusted_Connection=True;"
+  },
+  "Jwt": {
+    "Issuer": "EcommerceApp",
+    "Audience": "EcommerceAppUsers",
+    "Key": "your-secret-key"
+  }
+}
+```
