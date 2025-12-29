@@ -19,7 +19,7 @@ namespace EcommerceProject.Controllers.v1.AuthController
         }
 
 
-        [HttpGet("get/paged")]
+        [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllUsersPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
@@ -46,6 +46,24 @@ namespace EcommerceProject.Controllers.v1.AuthController
             }
         }
 
+        [HttpGet("id")]
+        [Authorize(Roles ="Admin")]
+        public async Task<IActionResult> GetUserById(int userId)
+        {
+            try
+            {
+                var usersId = await _userService.GetUserByIdAsync(userId);
+
+                return Ok(new
+                {
+                    Data = usersId,
+                });
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occured", error = ex.Message }); 
+            }
+        }
 
         [HttpPut("update")]
         [Authorize(Roles = "Admin")]
@@ -70,7 +88,7 @@ namespace EcommerceProject.Controllers.v1.AuthController
 
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete("delete")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int userId)
         {
