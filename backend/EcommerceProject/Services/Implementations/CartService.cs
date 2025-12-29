@@ -25,16 +25,48 @@ namespace EcommerceProject.Services.Implementations
             return await _cartRepository.GetCartAsync(userId);
         }
 
-        public async Task AddToCartAsync(int userId, int productId, int quantity)
+        public async Task AddToCartAsync(int userId, int productId, int quantity, CancellationToken ct = default)
         {
+            var product = await _productRepository.GetByIdAsync(productId, ct);
 
-            if (productId <= 0)
+            if (product == null)
             {
-                throw new Exception($"Invalid ProductId");
-
+                throw new Exception($"Product cannot found");
 
             }
-            await _cartRepository.AddToCartAsync(userId, productId, quantity);
+
+            if(quantity > product.StockQuantity)
+            {
+                throw new Exception($"Only{product.StockQuantity} item avaiable in stock");
+
+            }
+
+            var cartItems = await _cartRepository.GetCartAsync(userId);
+
+            var cartItem = cartItems.FirstOrDefault(x => x.ProductId == productId);
+
+
+            if (cartItem != null)
+            {
+
+                var totalQuantity = cartItem.Quantity + quantity;
+                
+                if(totalQuantity > product.StockQuantity)
+                {
+                    throw new Exception($"Connot add more than {product.StockQuantity} items(s) to cart");
+                }
+
+
+                cartItem.Quantity = totalQuantity;
+
+                await _cartRepository.UpdateQuantityAsync(cartItem.CartId, totalQuantity);
+            }
+            else
+            {
+                await _cartRepository.AddToCartAsync(userId, productId, quantity);      
+               
+            }
+
         }
 
         public async Task UpdateQuantityAsync(int cartId, int quantity)
@@ -43,6 +75,8 @@ namespace EcommerceProject.Services.Implementations
             {
                 throw new ArgumentException("Quantity must be greater than zero.");
             }
+
+
             await _cartRepository.UpdateQuantityAsync(cartId, quantity);
         }
 
