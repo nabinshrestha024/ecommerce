@@ -18,22 +18,13 @@ export interface NotificationType {
   userId: number;
   title: string;
   message: string;
-  isRead: number;
+  isRead: boolean;
   createdAt: string;
 }
 
 export const Notification = () => {
-  const { data, isLoading, isError, error } = useNotification();
-
-  const [read, setRead] = useState(true);
-
-  useEffect(() => {
-    data?.map((val) => {
-      if (!val.isRead) {
-        setRead(false);
-      }
-    });
-  }, [data]);
+  const { data, isLoading, isError, error, refetch } = useNotification();
+  const read = data?.every((val) => val.isRead === true);
 
   const router = useRouter();
 
@@ -55,21 +46,27 @@ export const Notification = () => {
   const markAsRead = useNotificationSeen();
 
   const handleNotification = () => {
-    console.log("hello");
     data?.map((val) => {
       if (!val.isRead) {
-        markAsRead.mutate(val.notificationId);
+        markAsRead.mutate(val.notificationId, {
+          onSuccess: () => {
+            refetch();
+          },
+        });
       }
     });
   };
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild onClick={() => handleNotification()}>
-        <button className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <DropdownMenuTrigger asChild>
+        <button
+          className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+          onPointerDownCapture={handleNotification}
+        >
           <Bell className="w-5 h-5 text-gray-700 dark:text-gray-300" />
           {!read && (
-            <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-semibold text-white bg-red-500 rounded-full"></span>
+            <span className="absolute top-1 right-1 flex items-center justify-center h-3 w-3 px-1 text-[10px] font-semibold text-white bg-red-500 rounded-full"></span>
           )}
         </button>
       </DropdownMenuTrigger>
@@ -126,7 +123,7 @@ export const Notification = () => {
                       router.push("/order");
                     }}
                     className={`px-4 hide-scrollbar py-3 cursor-pointer transition-colors focus:bg-gray-50 dark:focus:bg-gray-800 ${
-                      val.isRead === 0
+                      val.isRead === false
                         ? "bg-blue-50/50 dark:bg-blue-950/20"
                         : "hover:bg-gray-50 dark:hover:bg-gray-800/50"
                     }`}
@@ -134,7 +131,7 @@ export const Notification = () => {
                     <div className="flex gap-3 w-full">
                       <div
                         className={`shrink-0 w-2 h-2 rounded-full mt-2 ${
-                          val.isRead === 0
+                          val.isRead === false
                             ? "bg-blue-500"
                             : "bg-transparent border-2 border-gray-300 dark:border-gray-600"
                         }`}
@@ -143,7 +140,7 @@ export const Notification = () => {
                         <div className="flex items-start justify-between gap-2 mb-1">
                           <h4
                             className={`text-sm font-semibold truncate ${
-                              val.isRead === 0
+                              val.isRead === false
                                 ? "text-gray-900 dark:text-white"
                                 : "text-gray-700 dark:text-gray-300"
                             }`}

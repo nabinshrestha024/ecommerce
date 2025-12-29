@@ -154,7 +154,7 @@ export const CheckoutForm = ({
     </form>
   ) : (
     <form
-      className="max-w-2xl mx-auto rounded-xl border bg-background p-6 shadow-sm space-y-6"
+      className="rounded-xl bg-background p-2 space-y-6"
       onSubmit={handleSubmit(onSubmit)}
     >
       <h2 className="text-lg font-semibold">Shipping Details</h2>
