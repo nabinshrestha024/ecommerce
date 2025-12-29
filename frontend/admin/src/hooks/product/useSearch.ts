@@ -26,7 +26,7 @@ type ProductResponse = {
 
 export const useSearch = (name: string, pageIndex: number) => {
   const { data, isLoading, isError, refetch } = useQuery<ProductResponse>({
-    queryKey: ["productData"],
+    queryKey: ["productData", name],
     queryFn: () => searchProduct(name, pageIndex),
   });
   return { data, isLoading, isError, refetch };

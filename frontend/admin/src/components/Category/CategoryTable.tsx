@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -18,6 +18,8 @@ import { ProductForm } from "./ProductForm";
 import { Input } from "@/ui/input";
 import { useProduct } from "@/hooks/product/useProduct";
 import { useDeleteProduct } from "@/hooks/product/useDeleteProduct";
+import { useSearch } from "@/hooks/product/useSearch";
+import { useDebounce } from "@/hooks/search/useDebounce";
 
 type ProductData = {
   productId: number;
@@ -48,19 +50,27 @@ export const CategoryTable = () => {
   );
 
   const columnHelper = createColumnHelper<ProductData>();
+  const debounceSearch = useDebounce(searchProduct, 500);
 
-  // const search = useSearch(searchProduct, pagination.pageIndex);
-
-  // const prod = searchProduct ? search : product;
+  useEffect(() => {
+    if (!debounceSearch) return;
+  }, [debounceSearch]);
+  const search = useSearch(debounceSearch, pagination.pageIndex);
 
   const deleteProduct = useDeleteProduct();
 
   const handleDelete = (productId: number) => {
     deleteProduct.mutate(productId);
   };
+
   const handleEdit = (row: ProductData) => {
     setSelectedProduct(row);
   };
+
+  const isSearching = searchProduct.trim().length > 0;
+  const tableData = useMemo(() => {
+    return isSearching ? search.data?.items || [] : product.data?.items || [];
+  }, [isSearching, search.data?.items, product.data?.items]);
 
   const columns = [
     columnHelper.accessor("productId", {
@@ -110,7 +120,6 @@ export const CategoryTable = () => {
           >
             {selectedProduct && (
               <div className="max-h-[70vh] overflow-y-auto px-4 py-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                {" "}
                 <ProductForm
                   product={selectedProduct}
                   onSave={() => {
@@ -130,7 +139,7 @@ export const CategoryTable = () => {
   ];
 
   const table = useReactTable({
-    data: product.data?.items || [],
+    data: tableData || [],
     columns,
     state: { pagination },
     getCoreRowModel: getCoreRowModel(),
@@ -193,10 +202,6 @@ export const CategoryTable = () => {
     },
   ];
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchProduct(e.target.value);
-  };
-
   return (
     <div className="w-full  pt-6 pb-14 pl-6 pr-6 border border-[#E5E7EB] rounded-lg">
       <div className="relative">
@@ -209,7 +214,7 @@ export const CategoryTable = () => {
           <Input
             type="text"
             value={searchProduct}
-            onChange={handleChange}
+            onChange={(e) => setSearchProduct(e.target.value)}
             placeholder="Search product"
             className="pt-2.5 pb-2.5 pl-3 pr-2  border-none focus-visible:border-0 focus-visible:ring-0"
           />
