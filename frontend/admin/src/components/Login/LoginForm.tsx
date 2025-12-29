@@ -1,12 +1,12 @@
 "use client";
 
-import { Input } from "@/ui/input";
 import { Label } from "@/ui/label";
 import { LoginFormSchema, type LoginFormType } from "./AdminLoginForm.zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/ui/button";
 import { useLogin } from "@/hooks/auth/useAuth";
+import { Input } from "../Input/Input";
 
 export const AdminLoginForm = () => {
   const { mutate, isPending } = useLogin();
@@ -45,7 +45,6 @@ export const AdminLoginForm = () => {
       <div className="flex flex-col gap-3">
         <Label htmlFor="password">Password</Label>
         <Input
-          id="password"
           {...register("password")}
           type="password"
           placeholder="Enter your password"
