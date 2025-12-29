@@ -15,6 +15,7 @@ BEGIN
         p.ProductId,
         p.CategoryId,
         p.Name,
+        c.Name AS CategoryName,
         p.Slug,
         p.Description,
         p.ShortDescription,
@@ -25,6 +26,8 @@ BEGIN
         p.CreatedAt,
         p.UpdatedAt
     FROM Products p
+    INNER JOIN Categories c
+        ON p.CategoryId = c.CategoryId
     WHERE
         (
             (@Id IS NOT NULL AND p.ProductId = @Id)
