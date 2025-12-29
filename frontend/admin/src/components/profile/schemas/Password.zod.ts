@@ -2,7 +2,6 @@ import { z } from "zod";
 
 const strongPassword = z
   .string()
-  .min(8, "Password must be at least 8 characters")
   .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
   .regex(/[a-z]/, "Password must contain at least one lowercase letter")
   .regex(/\d/, "Password must contain at least one number")
@@ -13,10 +12,11 @@ const strongPassword = z
 
 export const PasswordSchema = z
   .object({
-    currentPassword: strongPassword,
+    currentPassword: z.string().min(1, "Current password is required"),
     newPassword: strongPassword,
     confirmPassword: strongPassword,
   })
+
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "New password and confirm password must match",
     path: ["confirmPassword"],

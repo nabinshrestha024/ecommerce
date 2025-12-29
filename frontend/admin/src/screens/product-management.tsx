@@ -40,9 +40,9 @@ export const ProductManagement = () => {
       formData.append("highlightFeatured", String(data.highlightFeatured));
     }
 
-    const files: FileList | undefined = data.images;
-    if (files && files.length > 0) {
-      Array.from(files).forEach((file) => formData.append("images", file));
+    const files: File[] = data.images ?? [];
+    if (files.length > 0) {
+      files.forEach((file) => formData.append("images", file));
     }
     if (typeof data.primaryIndex === "number") {
       formData.append("primaryIndex", String(data.primaryIndex));

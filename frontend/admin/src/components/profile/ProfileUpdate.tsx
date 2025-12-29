@@ -148,78 +148,82 @@ export const ProfileUpdate = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col">
               <label className="text-sm font-medium">Full Name</label>
               <Input
                 type="text"
                 disabled={!isEditing}
                 {...register("fullName")}
-                className={`w-full ${!isEditing ? "cursor-not-allowed" : ""}`}
+                className={`w-full mt-2 ${!isEditing ? "cursor-not-allowed" : ""}`}
               />
               {errors.fullName && (
-                <p className="text-red-600 text-sm">
+                <div className="text-red-600 text-sm">
                   {errors.fullName.message}
-                </p>
+                </div>
               )}
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col ">
               <label className="text-sm font-medium">Phone Number</label>
               <Input
                 type="tel"
                 disabled={!isEditing}
                 {...register("phoneNumber")}
-                className={!isEditing ? "cursor-not-allowed" : ""}
+                className={`w-full mt-2 ${!isEditing ? "cursor-not-allowed" : ""}`}
               />
               {errors.phoneNumber && (
-                <p className="text-red-600 text-sm">
+                <div className="text-red-600 text-sm">
                   {errors.phoneNumber.message}
-                </p>
+                </div>
               )}
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col ">
               <label className="text-sm font-medium">Email</label>
               <Input
                 type="email"
                 disabled={!isEditing}
                 {...register("email")}
-                className={!isEditing ? "cursor-not-allowed" : ""}
+                className={`w-full mt-2 ${!isEditing ? "cursor-not-allowed" : ""}`}
               />
               {errors.email && (
-                <p className="text-red-600 text-sm">{errors.email.message}</p>
+                <div className="text-red-600 text-sm">
+                  {errors.email.message}
+                </div>
               )}
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col ">
               <label className="text-sm font-medium">Date of Birth</label>
               <Input
                 type="date"
                 disabled={!isEditing}
                 {...register("dateOfBirth")}
-                className={!isEditing ? "cursor-not-allowed" : ""}
+                className={`w-full mt-2 ${!isEditing ? "cursor-not-allowed" : ""}`}
               />
               {errors.dateOfBirth && (
-                <p className="text-red-600 text-sm">
+                <div className="text-red-600 text-sm">
                   {errors.dateOfBirth.message}
-                </p>
+                </div>
               )}
             </div>
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col ">
             <label className="text-sm font-medium">Location</label>
             <Input
               type="text"
               disabled={!isEditing}
               {...register("address")}
-              className={!isEditing ? "cursor-not-allowed" : ""}
+              className={`w-full mt-2 ${!isEditing ? "cursor-not-allowed" : ""}`}
             />
             {errors.address && (
-              <p className="text-red-600 text-sm">{errors.address.message}</p>
+              <div className="text-red-600 text-sm">
+                {errors.address.message}
+              </div>
             )}
           </div>
 
@@ -233,7 +237,9 @@ export const ProfileUpdate = () => {
               }`}
             />
             {errors.biography && (
-              <p className="text-red-600 text-sm">{errors.biography.message}</p>
+              <div className="text-red-600 text-sm">
+                {errors.biography.message}
+              </div>
             )}
           </div>
 
