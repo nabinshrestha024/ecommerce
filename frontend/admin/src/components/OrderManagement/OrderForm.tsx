@@ -25,7 +25,6 @@ export const OrderForm = ({ order, onSave }: Props) => {
     mode: "onChange",
   });
   const onSubmit = (data: OrderFormValues) => {
-    console.log(data);
     editOrder.mutate(
       {
         orderId: order.orderId,

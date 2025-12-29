@@ -9,8 +9,6 @@ export const editOrder = async ({
   orderId: number;
   status: string;
 }) => {
-  console.log(status, "trest");
-
   try {
     const res = await axiosInstance.put(
       `${endpoint.FETCH_ORDER}/${orderId}/status`,
