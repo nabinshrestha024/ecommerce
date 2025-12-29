@@ -16,8 +16,35 @@ import {
   wishlistData,
   WishlistItem,
 } from "../TrendingProduct/component/TrendingProductCard";
+import { useState } from "react";
+import { Dialog } from "../Dialog/Dialog";
+import { DialogClose, DialogTitle } from "@/ui/dialog";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+
+const sizes = [
+  {
+    id: 0,
+    value: "s",
+    isActive: true,
+  },
+  {
+    id: 1,
+    value: "m",
+    isActive: false,
+  },
+  {
+    id: 2,
+    value: "xl",
+    isActive: false,
+  },
+];
 
 export const Deal = () => {
+  const stockValue = 20;
+  const [quantity, setQuantity] = useState(1);
+  const [selectedSizes, setSelectedSizes] = useState<
+    Record<number, number | null>
+  >({});
   const { data, isLoading, isError } = useProduct();
   const addMutate = useAddWishlist();
   const deleteMutate = useDeleteWishlist();
@@ -25,16 +52,41 @@ export const Deal = () => {
   const { token } = useAuth();
   const addToCart = useAddToCart();
 
-  const handleAddToCart = (productId: number) => {
+  const handleIncrease = () => {
+    if (quantity < stockValue) {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  const handleDecrease = () => {
+    if (quantity === 1) {
+      return 1;
+    }
+    setQuantity(quantity - 1);
+  };
+
+  const handleAddToCart = (
+    productId: number,
+    quantity: number,
+    sizeValue?: string,
+  ) => {
     if (token) {
-      addToCart.mutate({
-        productId: productId,
-        quantity: 1,
-      });
+      // addToCart.mutate({
+      //   productId: productId,
+      //   quantity: 1,
+      // });
+      console.log("Product: ", productId);
+      console.log("Quantity: ", quantity);
+      console.log("Size: ", sizeValue);
     } else {
       toast.message("Login to add to cart");
     }
   };
+
+  const handleSelectSize = (productId: number, sizeId: number) => {
+    setSelectedSizes((prev) => ({ ...prev, [productId]: sizeId }));
+  };
+
   const wishlistItems = Array.isArray(wishlists?.data)
     ? wishlists.data
     : (wishlists?.data?.items ?? []);
@@ -143,12 +195,115 @@ export const Deal = () => {
                       </div>
                     </Link>
 
-                    <Button
-                      className="px-5 py-4 text-[14px] font-bold leading-3 bg-white border border-[#4EA674] text-[#4EA674]  rounded-[200px] hover:bg-[#fffcfc]"
-                      onClick={() => handleAddToCart(val.productId)}
+                    <Dialog
+                      triggerText={
+                        <Button
+                          className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px] hover:bg-[#fffcfc]"
+                          onPointerDownCapture={() => setQuantity(1)}
+                        >
+                          Add to cart
+                        </Button>
+                      }
                     >
-                      Add to cart
-                    </Button>
+                      <div className="flex flex-col gap-4">
+                        <DialogTitle className="text-[18px] font-bold">
+                          Cart Information
+                        </DialogTitle>
+                        <div className="flex flex-col gap-3">
+                          <div className="flex items-start gap-5 w-full">
+                            <div className="w-[100px] h-[100px] relative">
+                              <Image
+                                src={val.primaryImageUrl}
+                                alt={val.name}
+                                fill
+                                className="object-cover rounded-[12px]"
+                                unoptimized
+                              />
+                            </div>
+                            <div>
+                              <div className="text-[25px] font-bold">
+                                {val.name}
+                              </div>
+                              <div className="text-[16px] line-clamp-2">
+                                {val.shortDescription}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="w-full flex justify-between">
+                            <div className="flex gap-2.5 items-center">
+                              <button
+                                className="p-1 rounded border disabled:opacity-50"
+                                onClick={() => handleDecrease()}
+                              >
+                                <MdKeyboardArrowDown />
+                              </button>
+                              <div className="px-3 py-1 border rounded">
+                                {quantity}
+                              </div>
+                              <button
+                                className="p-1 rounded border"
+                                onClick={() => handleIncrease()}
+                              >
+                                <MdKeyboardArrowUp />
+                              </button>
+                            </div>
+                            <div className="text-sm italic">
+                              Stock: {stockValue}{" "}
+                            </div>
+                          </div>
+                          <div className="flex gap-4 items-center">
+                            <div className="font-semibold ">Sizes: </div>
+                            <div className="flex gap-2">
+                              {(() => {
+                                const defaultSizeId =
+                                  sizes.find((s) => s.isActive)?.id ?? 0;
+                                const selectedSizeId =
+                                  selectedSizes[val.productId] ?? defaultSizeId;
+                                return sizes.map((size) => {
+                                  const isSelected = selectedSizeId === size.id;
+                                  return (
+                                    <div
+                                      key={size.id}
+                                      onClick={() =>
+                                        handleSelectSize(val.productId, size.id)
+                                      }
+                                      className={`w-8 h-8 flex items-center justify-center border rounded text-md bg-white cursor-pointer transition-colors ${
+                                        isSelected
+                                          ? "border-[#4EA674] text-[#4EA674]"
+                                          : "border-gray-200 text-gray-600"
+                                      }`}
+                                    >
+                                      {size.value}
+                                    </div>
+                                  );
+                                });
+                              })()}
+                            </div>
+                          </div>
+                        </div>
+                        <DialogClose asChild>
+                          <Button
+                            onClick={() => {
+                              const defaultSizeId =
+                                sizes.find((s) => s.isActive)?.id ?? 0;
+                              const selectedSizeId =
+                                selectedSizes[val.productId] ?? defaultSizeId;
+                              const selectedSizeValue = sizes.find(
+                                (s) => s.id === selectedSizeId,
+                              )?.value;
+                              handleAddToCart(
+                                val.productId,
+                                quantity,
+                                selectedSizeValue,
+                              );
+                            }}
+                            className="px-4 py-2 bg-[#4EA674] text-white"
+                          >
+                            Confirm
+                          </Button>
+                        </DialogClose>
+                      </div>
+                    </Dialog>
                   </div>
                 </Card>
               )
