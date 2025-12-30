@@ -4,8 +4,8 @@ namespace EcommerceProject.Services.Interfaces
 {
     public interface IEsewaService
     {
-        Task<EsewaInitiateResponseDto> InitiateAsync(int orderId);
-        Task<bool> FinalizeEsewaPaymentAsync(EsewaVerifyResponseDto payload);
-        Task<EsewaStatusResponseDto> CheckStatusAsync(string txn, decimal amount);
+        Task<EsewaInitiateResponseDto> InitiateEsewaPaymentAsync(int orderId);
+        Task<bool> VerifyByStatusAsync(EsewaVerifyResponseDto payload);
+        Task<EsewaStatusResponseDto?> CheckStatusAsync(string transactionUuid, decimal totalAmount);
     }
 }

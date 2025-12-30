@@ -21,38 +21,42 @@ namespace EcommerceProject.Services.Implementations
             _http = http;
         }
 
-        public async Task<EsewaInitiateResponseDto> InitiateAsync(int orderId)
+        public async Task<EsewaInitiateResponseDto> InitiateEsewaPaymentAsync(int orderId)
         {
-            decimal amount = 1200.00m;  // fetch order amount from orders table
-            string total = amount.ToString("0.00");
+            var amount = await _repo.GetOrderAmountAsync(orderId);
+            if (amount == null || amount <= 0)
+                throw new InvalidOperationException("Invalid order");
+
+            string total = amount.Value.ToString("0.00");
             string txn = DateTime.UtcNow.ToString("yyMMdd-HHmmssfff");
 
-            await _repo.CreatePaymentAsync(orderId, amount, txn);
+            await _repo.CreatePaymentAsync(orderId, amount.Value, txn);
 
             var msg = $"total_amount={total},transaction_uuid={txn},product_code={ProductCode}";
 
             var sig = Convert.ToBase64String(
                 new HMACSHA256(Encoding.UTF8.GetBytes(Secret))
-                .ComputeHash(Encoding.UTF8.GetBytes(msg))
-            );
+                    .ComputeHash(Encoding.UTF8.GetBytes(msg))
+                );
 
-            return new EsewaInitiateResponseDto
-            {
-                PaymentUrl = "https://rc-epay.esewa.com.np/api/epay/main/v2/form",
-                Fields = new Dictionary<string, string>
+                return new EsewaInitiateResponseDto
                 {
-                    { "amount", total },
-                    { "tax_amount", "0" },
-                    { "total_amount", total },
-                    { "transaction_uuid", txn },
-                    { "product_code", ProductCode },
-                    { "signed_field_names", "total_amount,transaction_uuid,product_code" },
-                    { "signature", sig }
-                }
-            };
+                    PaymentUrl = "https://rc-epay.esewa.com.np/api/epay/main/v2/form",
+                    Fields = new Dictionary<string, string>
+                    {
+                        { "amount", total },
+                        { "tax_amount", "0" },
+                        { "total_amount", total },
+                        { "transaction_uuid", txn },
+                        { "product_code", ProductCode },
+                        { "signed_field_names", "total_amount,transaction_uuid,product_code" },
+                        { "signature", sig }
+                    }
+                };
         }
+        
 
-        public async Task<bool> FinalizeEsewaPaymentAsync(EsewaVerifyResponseDto payload)
+        public async Task<bool> VerifyByStatusAsync(EsewaVerifyResponseDto payload)
         {
             var map = new Dictionary<string, string>
             {
@@ -64,38 +68,39 @@ namespace EcommerceProject.Services.Implementations
                 { "signed_field_names", payload.signed_field_names }
             };
 
-            var msg = string.Join(",",
-            payload.signed_field_names
-                .Split(",")
-                .Select(f => $"{f}={map[f]}"));
+            var msg = string.Join(",", payload.signed_field_names.Split(",")
+                        .Select(f => $"{f}={map[f]}"));
 
-            var localSig = Convert.ToBase64String(
-            new HMACSHA256(Encoding.UTF8.GetBytes(Secret))
-                .ComputeHash(Encoding.UTF8.GetBytes(msg)));
+            var localSig = Convert.ToBase64String(new HMACSHA256(Encoding.UTF8.GetBytes(Secret))
+                            .ComputeHash(Encoding.UTF8.GetBytes(msg)));
 
-            if (localSig != payload.signature)
-            return false;
+            if (localSig != payload.signature) return false;
 
-
-            var res = await CheckStatusAsync(
-            payload.transaction_uuid,
-            decimal.Parse(payload.total_amount));
-
-            if (res.status != "COMPLETE")
-                return false;
+            Console.WriteLine("Signature verification PASSED");
+            Console.WriteLine("DEBUG: Signature Mismatch!");
+            Console.WriteLine($"Expected (Local): {localSig}");
+            Console.WriteLine($"Received (eSewa): {payload.signature}");
 
             var payment = await _repo.GetByTxnAsync(payload.transaction_uuid);
+            
+            if (payment == null) return false;
+            Console.WriteLine("Payment record found: " + JsonSerializer.Serialize(payment));
+            if (payment.PaymentStatus == "Success") return true;
 
-            if (payment == null)
+            var status = await CheckStatusAsync(payload.transaction_uuid, payment.Amount);
+            if (status == null || status.status != "COMPLETE")
+            {
+                Console.WriteLine("eSewa Status check failed: " + JsonSerializer.Serialize(status)); // for debugging
+                await _repo.MarkFailedAsync(payment.PaymentId, JsonSerializer.Serialize(status));
                 return false;
-
-            if (payment.PaymentStatus != "Pending" || payment.Amount != Math.Round(res.total_amount, 2))
-                return false;
+            }
 
             await _repo.MarkSuccessAsync(
                 payment.PaymentId,
-                res.ref_id,                       
-            JsonSerializer.Serialize(res));
+                status.ref_id ?? payload.transaction_code,
+                JsonSerializer.Serialize(status));
+
+                Console.WriteLine("Payment marked as SUCCESS in database."); // for debugging
 
             return true;
         }
@@ -109,13 +114,8 @@ namespace EcommerceProject.Services.Implementations
                 $"&transaction_uuid={txn}";
 
             var res = await _http.GetStringAsync(url);
-
-            Console.WriteLine("Esewa Status Response: " + res); // for debugging
-
-            return JsonSerializer.Deserialize<EsewaStatusResponseDto>(
-                res,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
-            );
+            return JsonSerializer.Deserialize<EsewaStatusResponseDto>(res,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
     }
 }

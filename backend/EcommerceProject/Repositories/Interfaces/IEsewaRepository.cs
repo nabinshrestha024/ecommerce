@@ -4,6 +4,7 @@ namespace EcommerceProject.Repositories.Interfaces
 {
     public interface IEsewaRepository
     {
+        Task<decimal?> GetOrderAmountAsync(int orderId);
         Task<int> CreatePaymentAsync(int orderId, decimal amount, string txn);
         Task<EsewaPayment> GetByTxnAsync(string txn);
         Task<Payment> GetPaymentByTransactionUUIDAsync(string txn);

@@ -1,7 +1,6 @@
 ﻿USE [EcommerceDB]
 GO
 
-
 CREATE OR ALTER   PROCEDURE spProduct_GetIdByName
     @ProductName VARCHAR(200)
 AS
