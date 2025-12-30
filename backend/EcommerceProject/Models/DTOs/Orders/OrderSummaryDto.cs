@@ -8,5 +8,6 @@
         public string Status { get; set; } = default!;
         public string PaymentStatus { get; set; } = default!;
         public string ShippingCity { get; set; } = default!;
+
     }
 }

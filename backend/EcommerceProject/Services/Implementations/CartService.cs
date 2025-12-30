@@ -10,11 +10,13 @@ namespace EcommerceProject.Services.Implementations
     {
         private readonly ICartRepository _cartRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IUrlService _urlService;
 
-        public CartService(ICartRepository cartRepository, IProductRepository productRepository )
+        public CartService(ICartRepository cartRepository, IProductRepository productRepository, IUrlService urlService)
         {
             _cartRepository = cartRepository;
             _productRepository = productRepository;
+            _urlService = urlService;
         }
 
         public async Task<IEnumerable<CartItemDto>> GetCartAsync(int userId)
@@ -22,7 +24,12 @@ namespace EcommerceProject.Services.Implementations
             if (userId <= 0)
                 throw new ArgumentException("Invalid user");
 
-            return await _cartRepository.GetCartAsync(userId);
+            var result = await _cartRepository.GetCartAsync(userId);
+            foreach (var item in result)
+            {
+                item.ProductImageUrl = _urlService.ToAbsoluteUrl(item.ProductImageUrl);
+            }
+            return result;
         }
 
         public async Task AddToCartAsync(int userId, int productId, int quantity, CancellationToken ct = default)

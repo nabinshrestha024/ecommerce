@@ -2,6 +2,7 @@
 using EcommerceProject.Models.DTOs.EcommerceProject.Models.DTOs;
 using EcommerceProject.Models.DTOs.Orders;
 using EcommerceProject.Models.DTOs.Stock;
+using EcommerceProject.Models.Entities;
 using EcommerceProject.Models.Validators.Order;
 using EcommerceProject.Models.Validators.Product;
 using EcommerceProject.Repositories.Interfaces;
@@ -15,11 +16,13 @@ namespace EcommerceProject.Services.Implementations
         private readonly IOrderRepository _repo;
         private readonly INotificationService _notification;
         private readonly IStockService _stockService;
-        public OrderService(IOrderRepository repo, INotificationService notification, IStockService stockService)
+        private readonly IUrlService _urlService;
+        public OrderService(IOrderRepository repo, INotificationService notification, IStockService stockService, IUrlService urlService)
         {
             _repo = repo;
             _notification = notification;
-            _stockService = stockService;    
+            _stockService = stockService;
+            _urlService = urlService;
         }
         public async Task<(int OrderId, decimal TotalAmount)> CreateOrderFromCartAsync(int userId, CreateOrderRequestDto dto, CancellationToken ct)
         {
@@ -56,14 +59,27 @@ namespace EcommerceProject.Services.Implementations
             return (orderId, totalAmount);
         }
 
-        public Task<List<OrderSummaryDto>> GetMyOrdersAsync(int userId, CancellationToken ct)
+        public async Task<List<OrderSummaryDto>> GetMyOrdersAsync(int userId, CancellationToken ct)
         {
-            return _repo.GetMyOrdersAsync(userId, ct);
+           var order = await _repo.GetMyOrdersAsync(userId, ct);
+            return order;
         }
 
-        public Task<OrderDetailDto?> GetMyOrderByIdAsync(int userId, int orderId, CancellationToken ct)
+        public async Task<OrderDetailDto?> GetMyOrderByIdAsync(int userId, int orderId, CancellationToken ct)
         {
-            return _repo.GetByIdForUserAsync(userId, orderId, ct);
+            var order = await _repo.GetByIdForUserAsync(userId, orderId, ct);
+            if (order == null)
+                return null;
+
+            if (order.Items != null)
+            {
+                foreach (var item in order.Items)
+                {
+                    item.ProductImageUrl = _urlService.ToAbsoluteUrl(item.ProductImageUrl);
+                }
+            }
+
+            return order;
         }
         public async Task CancelOrderAsync(int userId,int orderId, CancellationToken ct)
         {
@@ -80,17 +96,43 @@ namespace EcommerceProject.Services.Implementations
         }
 
 
-        public Task<PagedResult<AdminOrderRowDto>> AdminGetOrdersAsync(PaginationDto pagination, string? status, string? search,CancellationToken ct)
+        public async Task<PagedResult<AdminOrderRowDto>> AdminGetOrdersAsync(PaginationDto pagination, string? status, string? search,CancellationToken ct)
         {
-            return _repo.AdminGetPagedAsync(pagination, status, search, ct);
+            var result = await _repo.AdminGetPagedAsync(pagination, status, search, ct);
+
+            if (result?.Items != null)
+            {
+                foreach (var order in result.Items)
+                {
+                    if (order.Items != null)
+                    {
+                        foreach (var item in order.Items)
+                        {
+                            item.ProductImageUrl =
+                                _urlService.ToAbsoluteUrl(item.ProductImageUrl);
+                        }
+                    }
+                }
+            }
+
+            return result;
         }
 
-        public Task<OrderDetailDto?> AdminGetOrderByIdAsync(int orderId, CancellationToken ct)
+        public async Task<OrderDetailDto?> AdminGetOrderByIdAsync(int orderId, CancellationToken ct)
         {
-            return _repo.AdminGetByIdAsync(orderId, ct);
-        }
-           
+            var order = await _repo.AdminGetByIdAsync(orderId, ct);
+            if (order == null)
+                return null;
+            if (order.Items != null)
+            {
+                foreach (var item in order.Items)
+                {
+                    item.ProductImageUrl = _urlService.ToAbsoluteUrl(item.ProductImageUrl);
+                }
+            }
 
+            return order;
+        }
         public async Task AdminUpdateStatusAsync(int orderId, string status, CancellationToken ct)
         {
             var dto = new UpdateOrderStatusDto

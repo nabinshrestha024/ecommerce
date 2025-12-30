@@ -14,24 +14,14 @@ namespace EcommerceProject.Controllers.v1.Product
     public class AdminProductsController : ControllerBase
     {
         private readonly IProductService _service;
+        private readonly IUrlService _urlService;
 
-        public AdminProductsController(IProductService service)
+        public AdminProductsController(IProductService service, IUrlService urlService)
         {
             _service = service;
+            _urlService = urlService;
         }
-        private string? ToAbsoluteUrl(string? path)
-        {
-            if (string.IsNullOrWhiteSpace(path))
-                return path;
-
-            if (Uri.IsWellFormedUriString(path, UriKind.Absolute))
-                return path;
-
-            if (!path.StartsWith("/"))
-                path = "/" + path;
-
-            return $"{Request.Scheme}://{Request.Host}{path}";
-        }
+       
 
         [HttpPost]
         [Consumes("multipart/form-data")]
@@ -54,7 +44,7 @@ namespace EcommerceProject.Controllers.v1.Product
 
             foreach (var img in product.Images)
             {
-                img.ImageUrl = ToAbsoluteUrl(img.ImageUrl);
+                img.ImageUrl = _urlService.ToAbsoluteUrl(img.ImageUrl);
             }
 
             return Ok(product);
@@ -68,7 +58,7 @@ namespace EcommerceProject.Controllers.v1.Product
 
             foreach (var item in result.Items)
             {
-                item.PrimaryImageUrl = ToAbsoluteUrl(item.PrimaryImageUrl);
+                item.PrimaryImageUrl = _urlService.ToAbsoluteUrl(item.PrimaryImageUrl);
             }
 
             return Ok(result);
