@@ -8,8 +8,7 @@ CREATE OR ALTER PROCEDURE spEsewa_CreatePayment
 AS
 BEGIN
     SET NOCOUNT ON;
-    --BEGIN TRAN;
-
+    
     INSERT INTO Payments
     (
         OrderId,
