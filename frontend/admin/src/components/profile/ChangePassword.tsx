@@ -3,8 +3,8 @@ import { Card } from "../Card/Card";
 import { Input } from "../Input/Input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PasswordSchema } from "../profile/schemas/Password.zod";
 import { useChangePassword } from "@/hooks/changePassword/useChangePassword";
+import { PasswordSchema } from "./schemas/Password.zod";
 export const ChangePassword = () => {
   const {
     register,
