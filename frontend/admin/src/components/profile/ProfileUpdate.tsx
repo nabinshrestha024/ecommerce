@@ -5,7 +5,7 @@ import { Input } from "../Input/Input";
 import { Button } from "@/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ProfileUpdateSchema } from "../profile/schemas/Profile.zod";
+import { ProfileUpdateSchema } from "./schemas/Profile.zod";
 import { useGetProfile } from "@/hooks/profile/useGetProfile";
 import { usePutProfile } from "@/hooks/profile/usePutProfile";
 
