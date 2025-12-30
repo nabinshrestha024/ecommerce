@@ -43,8 +43,7 @@ BEGIN
 
         Select
          @TotalAmount =
-            CAST(SUM(ci.Quantity * p.Price) AS DECIMAL(10,2))
-        -- *  
+            CAST(SUM(ci.Quantity * p.Price) AS DECIMAL(10,2))  
         FROM ShoppingCarts ci
         INNER JOIN Products p ON p.ProductId = ci.ProductId
         where ci.UserId = @UserId
