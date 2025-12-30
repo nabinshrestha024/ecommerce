@@ -9,6 +9,8 @@ export type OrderData = {
   quantity: number;
   unitPrice: number;
   lineTotal: number;
+  productImageUrl?: string;
+  productDescription?: string;
 };
 
 export type OrderResponse = {

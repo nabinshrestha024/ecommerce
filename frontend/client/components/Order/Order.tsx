@@ -13,7 +13,7 @@ import { useState, useMemo } from "react";
 import { Input } from "@/ui/input";
 import { DropDown } from "../DropDown/DropDown";
 import { IoFilter } from "react-icons/io5";
-import { ProductData, useOrder } from "@/hooks/orders/useOrder";
+import { useOrder } from "@/hooks/orders/useOrder";
 import { OrderDetails } from "./OrderDetails";
 
 const statusType = {
@@ -24,14 +24,32 @@ const statusType = {
   PAID: "Paid",
 };
 
+type Product = {
+  orderItemId: number;
+  productId: number;
+  productName: string;
+  productImageUrl: string;
+  productDescription: string;
+  quantity: number;
+  unitPrice: number;
+  lineTotal: number;
+};
+
 export type OrderData = {
-  items: ProductData[];
+  items: Product[];
   orderId: number;
-  shippingCity: string;
+  userId: number;
   orderDate: number;
+  shippingCity: string;
   totalAmount: number;
   paymentStatus: string;
   status: string;
+  shippingName: string;
+  shippingAddress: string;
+  shippingPhone: string;
+  paymentMethodId: string;
+  paymentGateway: string;
+  notes: string;
 };
 
 export const Order = () => {
@@ -309,7 +327,7 @@ export const Order = () => {
   ];
 
   return (
-    <div className="flex p-3 rounded-lg w-screen">
+    <div className="flex p-3 rounded-lg w-screen gap-3">
       <div className="flex-1 relative">
         <Tabs
           defaultValue="All"
