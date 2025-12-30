@@ -2,28 +2,21 @@
 
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
-import { Input as Inp } from "@/components/input/Input";
 import Image from "next/image";
 import Link from "next/link";
-import { FaShoppingCart } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
-import { Sidebar } from "./Sidebar";
-import { Bell, Heart, Trash2, X } from "lucide-react";
+import { Bell, Heart, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useFetchCart } from "@/hooks/cart/useFetchCart";
-import { useDeleteCart } from "@/hooks/cart/useDeleteCart";
-import { MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
-import { useUpdateCart } from "@/hooks/cart/useUpdateCart";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useSearch } from "@/hooks/search/useSearch";
 import { useDebounce } from "@/hooks/search/useDebounce";
 import { Notification } from "@/components/Notification/Notification";
-import { Dialog } from "@/components/dialog/Dialog";
-import { CheckoutForm } from "./CheckoutForm";
 import { CartComponent } from "./CartComponent";
+import { Sidebar } from "./Sidebar";
+// import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
 
 export interface CartProductType {
   cartId: number;
@@ -40,7 +33,7 @@ export interface CartProductType {
 export const TopNav = () => {
   const router = useRouter();
   const [searchData, setSearchData] = useState("");
-
+  // const { data } = useFetchProfile();
   const { token, logout } = useAuth();
   const isAuth = Boolean(token);
 
@@ -73,7 +66,10 @@ export const TopNav = () => {
           <FaLocationDot className="text-2xl" />
           <div>
             <div className="text-xs">Deliver to</div>
-            <div className="text-sm font-semibold">Your Address</div>
+            <div className="text-sm font-semibold">
+              {/* {data.address} */}
+              Your Address
+            </div>
           </div>
         </div>
       </div>
@@ -122,6 +118,7 @@ export const TopNav = () => {
                       alt={product.name}
                       fill
                       className="object-cover"
+                      unoptimized
                     />
                   </div>
                   <div className="text-sm font-medium">{product.name}</div>
@@ -132,27 +129,13 @@ export const TopNav = () => {
         </div>
 
         {isAuth ? (
-          <Link href="/home">
-            <Button onClick={logout}>Logout</Button>
+          <Link href="/profile">
+            <User />
           </Link>
         ) : (
           <Link href="/login">
             <Button>Login</Button>
           </Link>
-        )}
-
-        {isAuth && (
-          <Link href={"/order"}>
-            <Button variant={"secondary"}>Orders</Button>
-          </Link>
-        )}
-
-        {!isAuth ? (
-          <Heart
-            onClick={() => toast.error("Please log in to access wishlist!")}
-          />
-        ) : (
-          <Heart onClick={() => router.push("/wishlist")} />
         )}
 
         {!isAuth ? (

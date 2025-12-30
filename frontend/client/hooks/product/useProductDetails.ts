@@ -1,5 +1,4 @@
 "use client";
-import { ProductByCategory } from "@/lib/product/getProductCategory";
 import { ProductDetails } from "@/lib/product/getProductDetails";
 import { useQuery } from "@tanstack/react-query";
 
@@ -9,6 +8,7 @@ type ProductData = {
   slug: string;
   price: number;
   categoryId: number;
+  categoryName: string;
   shortDescription: string;
   description: string;
   isActive: boolean;

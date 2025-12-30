@@ -1,9 +1,13 @@
+"use client";
+
 import { Button } from "@/ui/button";
-import { exploreData } from "./exploreData.import";
 import { Card } from "../Card/Card";
 import Image from "next/image";
+import { useCategory } from "@/hooks/category/useCategory";
+import Link from "next/link";
 
 export const Explore = () => {
+  const { data } = useCategory();
   return (
     <div className="w-full px-6 mx-auto flex items-center justify-center">
       <div className="w-full max-w-[1216px]">
@@ -17,14 +21,25 @@ export const Explore = () => {
           </Button>
         </div>
         <div className="flex gap-5 justify-start text-center mt-8 flex-wrap">
-          {exploreData.map((val) => (
-            <Card key={val.id} className="shadow-none py-2">
-              <div>
-                <Image src={val.image} alt="Image" width={100} height={100} />
-                <p className="font-medium">{val.title}</p>
-              </div>
-            </Card>
-          ))}
+          {data?.items.map((val) => {
+            const href = `/product/?categoryId=${val.categoryId}`;
+            return (
+              <Link key={val.categoryId} href={href} className="block">
+                <Card className="shadow-none p-2 min-w-[220px] flex flex-col gap-2 cursor-pointer hover:shadow-lg">
+                  <div className="w-full h-[150px] relative">
+                    <Image
+                      src={val.categoryImageURL}
+                      alt={val.name ?? "Image"}
+                      fill
+                      className="object-cover rounded-[12px]"
+                      unoptimized
+                    />
+                  </div>
+                  <p className="font-medium">{val.name}</p>
+                </Card>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>
