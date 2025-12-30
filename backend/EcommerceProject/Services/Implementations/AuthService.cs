@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using EcommerceProject.Database;
+using EcommerceProject.Middlewares.Interface;
 using EcommerceProject.Models.DTOs.User;
 using EcommerceProject.Repositories.Implementations;
 using EcommerceProject.Repositories.Interfaces;
@@ -21,7 +22,8 @@ namespace EcommerceProject.Services.Implementations
         private readonly IAuthRepository _auth;
         private readonly IHttpContextAccessor _httpContext;
         private readonly IPasswordRepository _passwordResetRepository;
-        public AuthService(IConfiguration configuration, ISqlConnectionFactory connectionFactory, IUserService userService, IJwtTokenService jwtService, IAuthRepository auth, IHttpContextAccessor httpcontext,IPasswordRepository passwordRepository)
+        private readonly ILoginRateLimitRepo _loginRateLimiter;
+        public AuthService(IConfiguration configuration, ISqlConnectionFactory connectionFactory, IUserService userService, IJwtTokenService jwtService, IAuthRepository auth, IHttpContextAccessor httpcontext,IPasswordRepository passwordRepository,ILoginRateLimitRepo loginRateLimiter)
         {
             _configuration = configuration;
             _connectionFactory = connectionFactory;
@@ -30,6 +32,7 @@ namespace EcommerceProject.Services.Implementations
             _auth = auth ?? throw new ArgumentNullException(nameof(auth));
             _httpContext = httpcontext ?? throw new ArgumentNullException(nameof(httpcontext));
             _passwordResetRepository = passwordRepository;
+            _loginRateLimiter = loginRateLimiter;
         }
 
         public async Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto)
@@ -87,15 +90,27 @@ namespace EcommerceProject.Services.Implementations
 
         public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
         {
+            var ipAddress = _httpContext.HttpContext?
+                .Connection.RemoteIpAddress?.ToString()?? "unknown";
+
+            if(await _loginRateLimiter.IsLockedAsync(loginDto.Email, ipAddress))
+            {
+                throw new Exception("Too many failed login attempts. Try again later");
+            }
+
             var user = await _userService.GetUserByEmailAsync(loginDto.Email,true);
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash!))
             {
+                await _loginRateLimiter.RegisterFailureAsync(loginDto.Email, ipAddress);
+                
                 throw new Exception("Invalid email or password.");
             }
             if (!user.IsActive)
             {
                 throw new Exception("User account is inactive.");
             }
+
+            await _loginRateLimiter.ResetAsync(loginDto.Email, ipAddress);
 
             var accesstoken = _jwtService.GenerateJwtToken(user);
             var refreshToken = TokenGenerator.GenerateRefreshToken();
@@ -185,10 +200,13 @@ namespace EcommerceProject.Services.Implementations
         }
 
 
-        public async Task GeneratePasswordResetAsync(string email)
+        public async Task <string?> GeneratePasswordResetAsync(string email)
         {
             var user = await _userService.GetUserByEmailAsync(email,false);
-            if (user == null) return; 
+            if (user == null)
+            {
+                return null;
+            }
 
             var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64))
                                 .Replace("/", "")
@@ -198,6 +216,8 @@ namespace EcommerceProject.Services.Implementations
             var expiry = DateTime.UtcNow.AddMinutes(30);
 
             await _passwordResetRepository.SaveTokenAsync(user.UserId, token, expiry);
+
+            return token;
 
             
         }

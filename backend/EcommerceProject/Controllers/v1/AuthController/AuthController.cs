@@ -99,8 +99,9 @@ namespace EcommerceProject.Controllers.v1.AuthController
         [HttpPost("auth/forgot-password")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
         {
-            await _authService.GeneratePasswordResetAsync(dto.Email);
-            return Ok(new  { message = "If the email exists, a reset link has been sent." });
+            var token = await _authService.GeneratePasswordResetAsync(dto.Email);
+            return Ok(new  { message = "If the email exists, a reset link has been sent.",
+            resetToken = token});
         }
 
         [HttpPost("auth/reset-password")]
