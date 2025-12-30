@@ -1,6 +1,5 @@
 "use client";
 
-import { Input } from "@/ui/input";
 import { Label } from "@/ui/label";
 import { LoginFormSchema, LoginFormSchemaType } from "./loginForm.zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +8,7 @@ import { Button } from "@/ui/button";
 import Link from "next/link";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { useRouter } from "next/navigation";
+import { Input } from "../Input/Input";
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -41,7 +41,7 @@ export const LoginForm = () => {
       <div className="flex flex-col gap-3">
         <Label htmlFor="email">Email</Label>
         <Input
-          id="email"
+          type="email"
           {...register("email")}
           placeholder="Enter your email"
         />
@@ -50,9 +50,8 @@ export const LoginForm = () => {
       <div className="flex flex-col gap-3">
         <Label htmlFor="password">Password</Label>
         <Input
-          id="password"
-          {...register("password")}
           type="password"
+          {...register("password")}
           placeholder="Enter your password"
         />
         <p className="text-red-500">{errors.password?.message}</p>

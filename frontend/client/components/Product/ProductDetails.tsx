@@ -110,7 +110,7 @@ const ProductDetails = () => {
               <div className="flex justify-between items-center">
                 <div className="font-bold text-[18px]">
                   <span className="font-normal">Category: </span>
-                  {productItems.data?.categoryId}
+                  {productItems.data?.categoryName}
                 </div>
                 <div className="font-bold text-[18px]">
                   <span className="font-normal">Stock Quantity: </span>
