@@ -3,6 +3,7 @@ using EcommerceProject.Models.DTOs.Orders;
 using EcommerceProject.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceProject.Controllers.v1.Orders
@@ -13,10 +14,12 @@ namespace EcommerceProject.Controllers.v1.Orders
     public class AdminOrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly IUrlService _urlService;
 
-        public AdminOrdersController(IOrderService orderService)
+        public AdminOrdersController(IOrderService orderService, IUrlService urlService)
         {
             _orderService = orderService;
+            _urlService = urlService;
         }
 
         [HttpGet]
@@ -27,14 +30,21 @@ namespace EcommerceProject.Controllers.v1.Orders
                 status,
                 search,
                 ct);
-
+            
             return Ok(result);
+           
         }
 
         [HttpGet("{orderId:int}")]
         public async Task<IActionResult> GetById(int orderId, CancellationToken ct)
         {
             var order = await _orderService.AdminGetOrderByIdAsync(orderId, ct);
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            foreach (var item in order.Items)
+            {
+                item.ProductImageUrl = _urlService.ToAbsoluteUrl(item.ProductImageUrl);
+            }
 
             if (order == null)
                 return NotFound(new { message = "Order not found." });
