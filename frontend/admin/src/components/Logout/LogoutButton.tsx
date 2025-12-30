@@ -13,7 +13,7 @@ export const LogoutButton = () => {
   };
 
   return (
-    <Button onClick={handleLogout} variant="destructive">
+    <Button onClick={handleLogout} variant="default">
       <IoExitOutline className="text-2xl" />
     </Button>
   );
