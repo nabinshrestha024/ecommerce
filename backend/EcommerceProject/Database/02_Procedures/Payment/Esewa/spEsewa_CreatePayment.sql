@@ -8,43 +8,54 @@ CREATE OR ALTER PROCEDURE spEsewa_CreatePayment
 AS
 BEGIN
     SET NOCOUNT ON;
-    BEGIN TRAN;
+    --BEGIN TRAN;
 
     INSERT INTO Payments
     (
-        OrderId, Amount, PaymentMethod, PaymentGateway,
-        PaymentStatus, Status, TransactionId
+        OrderId,
+        Amount,
+        PaymentMethod,
+        PaymentGateway,
+        PaymentStatus,
+        TransactionId,
+        CreatedAt
     )
     VALUES
     (
-        @OrderId, @Amount, 'esewa', 'eSewa',
-        'Pending', 'Pending', @TransactionUUID
+        @OrderId, 
+        @Amount, 
+        'esewa',
+        'eSewa',
+        'Pending',
+        @TransactionUUID,
+        SYSUTCDATETIME()
     );
 
-    DECLARE @PaymentId INT = SCOPE_IDENTITY();
+    SELECT SCOPE_IDENTITY() AS PaymentId;
 
-    INSERT INTO PaymentGatewayTransactions
-    (
-        GatewayName, PaymentId, TransactionId,
-        Amount, Status
-    )
-    VALUES
-    (
-        'eSewa', @PaymentId, @TransactionUUID,
-        @Amount, 'Pending'
-    );
+    -- DECLARE @PaymentId INT = SCOPE_IDENTITY();
 
-    UPDATE Orders
-    SET PaymentStatus = 'Processing',
-        PaymentGateway = 'eSewa'
-    WHERE OrderId = @OrderId;
+    -- INSERT INTO PaymentGatewayTransactions
+    -- (
+    --     GatewayName, PaymentId, TransactionId,
+    --     Amount, Status
+    -- )
+    -- VALUES
+    -- (
+    --     'eSewa', @PaymentId, @TransactionUUID,
+    --     @Amount, 'Pending'
+    -- );
 
-    COMMIT;
+    -- UPDATE Orders
+    -- SET PaymentStatus = 'Processing',
+    --     PaymentGateway = 'eSewa'
+    -- WHERE OrderId = @OrderId;
 
-    SELECT @PaymentId AS PaymentId;
+    -- COMMIT;
+
+    -- SELECT @PaymentId AS PaymentId;
 END
 GO
 
 PRINT 'Stored Procedure ''spEsewa_CreatePayment'' created or altered successfully.';
 GO
-

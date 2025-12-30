@@ -6,28 +6,25 @@ using System.Text.Json;
 
 [ApiController]
 [Route("v1/payments/esewa")]
-public class PaymentEsewaController : ControllerBase
+public class EsewaController : ControllerBase
 {
     private readonly IEsewaService _service;
 
-    public PaymentEsewaController(IEsewaService service)
+    public EsewaController(IEsewaService service)
     {
         _service = service;
     }
 
     [HttpPost("initiate")]
-    public async Task<IActionResult> Initiate(EsewaInitiateRequestDto dto)
+    public async Task<IActionResult> Initiate([FromBody] EsewaInitiateRequestDto dto)
     {
-        if (dto == null || dto.OrderId <= 0)
-            return BadRequest("Invalid OrderId.");
-
-        var response = await _service.InitiateAsync(dto.OrderId);
-        return Ok(response);
+        var result = await _service.InitiateEsewaPaymentAsync(dto.OrderId);
+        return Ok(result);
     }
 
-
-    [HttpGet("verify/success")]
-    public async Task<IActionResult> Success([FromQuery] string data)
+    [HttpGet("callback")]
+    public async Task<IActionResult> Callback(
+        [FromQuery] string data)
     {
         if (string.IsNullOrEmpty(data))
             return Redirect("/failure.html");
@@ -35,38 +32,23 @@ public class PaymentEsewaController : ControllerBase
         try
         {
             var json = Encoding.UTF8.GetString(Convert.FromBase64String(data));
-
             var payload = JsonSerializer.Deserialize<EsewaVerifyResponseDto>(json);
 
-            if (payload == null)
-                return Redirect("/failure.html");
+            if (payload == null) return Redirect("/failure.html");
+            var success = await _service.VerifyByStatusAsync(payload);
 
-            Console.WriteLine("Esewa Success Payload: " + JsonSerializer.Serialize(payload));
-            var success = await _service.FinalizeEsewaPaymentAsync(payload);
-
-            return success
-                ? Redirect("/success.html")
+            return success 
+                ? Redirect("/success.html") 
                 : Redirect("/failure.html");
         }
-        catch
+        catch (Exception ex)
         {
+            Console.WriteLine("Error in Esewa Callback: " + ex.Message); // For logging purpose
             return Redirect("/failure.html");
         }
     }
 
-    [HttpGet("checkstatus")]
-    public async Task<IActionResult> CheckStatus(
-        [FromQuery] string transaction_uuid,
-        [FromQuery] decimal total_amount)
-    {
-        if (string.IsNullOrEmpty(transaction_uuid) || total_amount <= 0)
-            return BadRequest("Invalid transaction_uuid or total_amount.");
-
-        var status = await _service.CheckStatusAsync(transaction_uuid, total_amount);
-        return Ok(status);
-    }
-
-    [HttpGet("failure")]
-    public IActionResult Failure() => Redirect("/failure.html");
+    [HttpGet("status")]
+    public async Task<IActionResult> Status(string transaction_uuid, decimal total_amount)
+        => Ok(await _service.CheckStatusAsync(transaction_uuid, total_amount));
 }
-

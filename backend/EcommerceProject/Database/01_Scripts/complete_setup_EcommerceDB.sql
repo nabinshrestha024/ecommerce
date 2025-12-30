@@ -165,6 +165,7 @@ CREATE TABLE Payments (
     PaymentURL              VARCHAR(500) NULL,
     GatewayReference        VARCHAR(200) NULL,
     Metadata                VARCHAR(MAX) NULL,
+    CreatedAt               DATETIME2,
     UpdatedAt               DATETIME2 NULL,
     FOREIGN KEY (OrderId) REFERENCES Orders(OrderId)
 );
