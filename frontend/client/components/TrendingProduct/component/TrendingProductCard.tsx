@@ -138,6 +138,11 @@ export const TrendingProductCard = () => {
                     className="object-cover rounded-[12px]"
                     unoptimized
                   />
+                  {product.stockQuantity === 0 && (
+                    <div className="absolute top-3 left-3 px-1 rounded-sm text-white bg-gray-500 font-bold flex justify-center items-center cursor-pointer">
+                      Out of Stock
+                    </div>
+                  )}
                   <div className="absolute top-3 right-3 rounded-full w-6 h-6 shadow-sm flex justify-center items-center cursor-pointer">
                     {wishedIds.has(product.productId) ? (
                       <IoIosHeart
@@ -171,7 +176,7 @@ export const TrendingProductCard = () => {
                   </div>
 
                   <div className="text-[14px] text-[#4EA674] font-bold">
-                    Rs {product.price}
+                    Rs. {product.price}
                   </div>
                 </div>
               </div>
@@ -182,116 +187,128 @@ export const TrendingProductCard = () => {
                     View Details
                   </span>
                 </Link>
-
-                <Dialog
-                  triggerText={
-                    <Button
-                      className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px] hover:bg-[#fffcfc]"
-                      onPointerDownCapture={() => setQuantity(1)}
-                    >
-                      Add to cart
-                    </Button>
-                  }
-                >
-                  <div className="flex flex-col gap-4">
-                    <DialogTitle className="text-[18px] font-bold">
-                      Cart Information
-                    </DialogTitle>
-                    <div className="flex flex-col gap-3">
-                      <div className="flex items-start gap-5 w-full">
-                        <div className="w-[100px] h-[100px] relative">
-                          <Image
-                            src={product.primaryImageUrl}
-                            alt={product.name}
-                            fill
-                            className="object-cover rounded-[12px]"
-                            unoptimized
-                          />
-                        </div>
-                        <div>
-                          <div className="text-[25px] font-bold">
-                            {product.name}
+                {product.stockQuantity === 0 ? (
+                  <Button
+                    className="px-5 py-4 text-[14px] font-bold bg-gray-500 text-white rounded-[200px] hover:bg-[#fffcfc]"
+                    disabled
+                  >
+                    Out of stock
+                  </Button>
+                ) : (
+                  <Dialog
+                    triggerText={
+                      <Button
+                        className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px] hover:bg-[#fffcfc]"
+                        onPointerDownCapture={() => setQuantity(1)}
+                      >
+                        Add to cart
+                      </Button>
+                    }
+                  >
+                    <div className="flex flex-col gap-4">
+                      <DialogTitle className="text-[18px] font-bold">
+                        Cart Information
+                      </DialogTitle>
+                      <div className="flex flex-col gap-3">
+                        <div className="flex items-start gap-5 w-full">
+                          <div className="w-[100px] h-[100px] relative">
+                            <Image
+                              src={product.primaryImageUrl}
+                              alt={product.name}
+                              fill
+                              className="object-cover rounded-[12px]"
+                              unoptimized
+                            />
                           </div>
-                          <div className="text-[16px] line-clamp-2">
-                            {product.shortDescription}
+                          <div>
+                            <div className="text-[25px] font-bold">
+                              {product.name}
+                            </div>
+                            <div className="text-[16px] line-clamp-2">
+                              {product.shortDescription}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="w-full flex justify-between">
+                          <div className="flex gap-2.5 items-center">
+                            <button
+                              className="p-1 rounded border disabled:opacity-50"
+                              onClick={() => handleDecrease()}
+                            >
+                              <MdKeyboardArrowDown />
+                            </button>
+                            <div className="px-3 py-1 border rounded">
+                              {quantity}
+                            </div>
+                            <button
+                              className="p-1 rounded border"
+                              onClick={() => handleIncrease()}
+                            >
+                              <MdKeyboardArrowUp />
+                            </button>
+                          </div>
+                          <div className="text-sm italic">
+                            Stock: {stockValue}{" "}
+                          </div>
+                        </div>
+                        <div className="flex gap-4 items-center">
+                          <div className="font-semibold ">Sizes: </div>
+                          <div className="flex gap-2">
+                            {(() => {
+                              const defaultSizeId =
+                                sizes.find((s) => s.isActive)?.id ?? 0;
+                              const selectedSizeId =
+                                selectedSizes[product.productId] ??
+                                defaultSizeId;
+                              return sizes.map((size) => {
+                                const isSelected = selectedSizeId === size.id;
+                                return (
+                                  <div
+                                    key={size.id}
+                                    onClick={() =>
+                                      handleSelectSize(
+                                        product.productId,
+                                        size.id,
+                                      )
+                                    }
+                                    className={`w-8 h-8 flex items-center justify-center border rounded text-md bg-white cursor-pointer transition-colors ${
+                                      isSelected
+                                        ? "border-[#4EA674] text-[#4EA674]"
+                                        : "border-gray-200 text-gray-600"
+                                    }`}
+                                  >
+                                    {size.value}
+                                  </div>
+                                );
+                              });
+                            })()}
                           </div>
                         </div>
                       </div>
-                      <div className="w-full flex justify-between">
-                        <div className="flex gap-2.5 items-center">
-                          <button
-                            className="p-1 rounded border disabled:opacity-50"
-                            onClick={() => handleDecrease()}
-                          >
-                            <MdKeyboardArrowDown />
-                          </button>
-                          <div className="px-3 py-1 border rounded">
-                            {quantity}
-                          </div>
-                          <button
-                            className="p-1 rounded border"
-                            onClick={() => handleIncrease()}
-                          >
-                            <MdKeyboardArrowUp />
-                          </button>
-                        </div>
-                        <div className="text-sm italic">
-                          Stock: {stockValue}{" "}
-                        </div>
-                      </div>
-                      <div className="flex gap-4 items-center">
-                        <div className="font-semibold ">Sizes: </div>
-                        <div className="flex gap-2">
-                          {(() => {
+                      <DialogClose asChild>
+                        <Button
+                          onClick={() => {
                             const defaultSizeId =
                               sizes.find((s) => s.isActive)?.id ?? 0;
                             const selectedSizeId =
                               selectedSizes[product.productId] ?? defaultSizeId;
-                            return sizes.map((size) => {
-                              const isSelected = selectedSizeId === size.id;
-                              return (
-                                <div
-                                  key={size.id}
-                                  onClick={() =>
-                                    handleSelectSize(product.productId, size.id)
-                                  }
-                                  className={`w-8 h-8 flex items-center justify-center border rounded text-md bg-white cursor-pointer transition-colors ${
-                                    isSelected
-                                      ? "border-[#4EA674] text-[#4EA674]"
-                                      : "border-gray-200 text-gray-600"
-                                  }`}
-                                >
-                                  {size.value}
-                                </div>
-                              );
-                            });
-                          })()}
-                        </div>
-                      </div>
+                            const selectedSizeValue = sizes.find(
+                              (s) => s.id === selectedSizeId,
+                            )?.value;
+                            handleAddToCart(
+                              product.productId,
+                              quantity,
+                              selectedSizeValue,
+                            );
+                          }}
+                          className="px-4 py-2 bg-[#4EA674] text-white"
+                        >
+                          Confirm
+                        </Button>
+                      </DialogClose>
                     </div>
-                    <DialogClose asChild>
-                      <Button
-                        onClick={() => {
-                          const defaultSizeId =
-                            sizes.find((s) => s.isActive)?.id ?? 0;
-                          const selectedSizeId =
-                            selectedSizes[product.productId] ?? defaultSizeId;
-                          const selectedSizeValue = sizes.find(
-                            (s) => s.id === selectedSizeId,
-                          )?.value;
-                          handleAddToCart(
-                            product.productId,
-                            quantity,
-                            selectedSizeValue,
-                          );
-                        }}
-                        className="px-4 py-2 bg-[#4EA674] text-white"
-                      >
-                        Confirm
-                      </Button>
-                    </DialogClose>
-                  </div>
-                </Dialog>
+                  </Dialog>
+                )}
               </div>
             </Card>
           ),
