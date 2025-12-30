@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using EcommerceProject.Models.DTOs.Review;
 using EcommerceProject.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace EcommerceProject.Controllers.v1.Review
 {
     [ApiController]
     [Route("v1/website-reviews")]
+    [Authorize(Roles = "Admin, Customer")]
     public class WebsiteReviewsController : ControllerBase
     {
         private readonly IReviewService _service;
