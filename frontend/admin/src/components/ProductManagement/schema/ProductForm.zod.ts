@@ -25,12 +25,16 @@ export const ProductFormSchema = z
 
     categoryId: z.coerce.number().min(1, "Product category is required"),
 
-    images: z
-      .instanceof(FileList)
-      .refine(
-        (files) => files.length > 0,
-        "At least one product image is required",
-      ),
+    images: z.preprocess(
+      (val) => {
+        if (val instanceof FileList) return Array.from(val);
+        if (Array.isArray(val)) return val;
+        return [];
+      },
+      z
+        .array(z.instanceof(File))
+        .min(1, "At least one product image is required"),
+    ),
 
     primaryIndex: z
       .union([z.coerce.number().int(), z.string().length(0)])
@@ -39,11 +43,21 @@ export const ProductFormSchema = z
 
     stockQuantity: z.coerce
       .number({ message: "Stock quantity must be a number" })
-      .optional(),
+      .min(1, "Stock quantity must be at least 1"),
 
     isActive: z.boolean().optional(),
 
     highlightFeatured: z.boolean().optional(),
+
+    tags: z
+      .array(z.string())
+      .default([])
+      .refine((arr) => arr.length > 2, "At least 3 tags are required"),
+    variants: z
+      .array(z.string())
+      .default([])
+      .refine((arr) => arr.length > 0, "Variants cannot be empty"),
+    variantName: z.string().min(1, "Variant name is required"),
   })
   .refine(
     (data) => {

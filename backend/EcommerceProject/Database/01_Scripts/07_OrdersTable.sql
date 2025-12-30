@@ -6,7 +6,7 @@ CREATE TABLE Orders (
     UserId          INT NOT NULL,
     OrderDate       DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
     TotalAmount     DECIMAL(10,2) NOT NULL,
-    Status          VARCHAR(20) NOT NULL DEFAULT 'Pending',
+    Status          VARCHAR(20) NOT NULL DEFAULT 'Pending', -- Packed, Shipped, Delivered, Returned
 
     ShippingName    VARCHAR(100) NULL,
     ShippingAddress VARCHAR(300) NOT NULL,

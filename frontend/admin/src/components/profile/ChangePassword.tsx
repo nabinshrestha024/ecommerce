@@ -10,7 +10,7 @@ export const ChangePassword = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(PasswordSchema), mode: "all" });
+  } = useForm({ resolver: zodResolver(PasswordSchema), mode: "onChange" });
 
   const changePassword = useChangePassword();
 
@@ -37,7 +37,7 @@ export const ChangePassword = () => {
           className="mt-4 sm:mt-5 flex flex-col gap-3 sm:gap-4"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col ">
             <label className="text-sm sm:text-base">Current Password</label>
             <Input
               type="password"
@@ -46,12 +46,12 @@ export const ChangePassword = () => {
               placeholder="Current password..."
             />
             {errors.currentPassword && (
-              <p className="text-sm text-red-600 mt-1">
+              <div className="text-sm text-red-600 ">
                 {errors.currentPassword.message}
-              </p>
+              </div>
             )}
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col ">
             <label className="text-sm sm:text-base">New Password</label>
             <Input
               type="password"
@@ -60,12 +60,12 @@ export const ChangePassword = () => {
               placeholder="New password..."
             />
             {errors.newPassword && (
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-red-600">
                 {errors.newPassword.message}
               </p>
             )}
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col ">
             <label className="text-sm sm:text-base">Confirm Password</label>
             <Input
               type="password"
@@ -73,12 +73,13 @@ export const ChangePassword = () => {
               className="w-full mt-2"
               placeholder="Confirm password..."
             />
+            {errors.confirmPassword && (
+              <div className="text-sm text-red-600">
+                {errors.confirmPassword.message}
+              </div>
+            )}
           </div>
-          {errors.confirmPassword && (
-            <p className="text-sm text-red-600 mt-1">
-              {errors.confirmPassword.message}
-            </p>
-          )}
+
           <Button
             className="mt-3 sm:mt-4 h-10 w-full text-sm sm:text-base"
             variant={"default"}

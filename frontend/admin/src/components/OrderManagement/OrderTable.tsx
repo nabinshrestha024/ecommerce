@@ -167,20 +167,26 @@ export const OrderTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredData = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
     const filterBySearch = (orders: OrderData[]) => {
-      if (!searchTerm) return orders;
-      return orders.filter(
-        (order) =>
-          order.orderId ||
-          order.items[0].productName
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          order.paymentStatus
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          order.status.toLowerCase().includes(searchTerm.toLowerCase()),
-      );
+      if (!term) return orders;
+      return orders.filter((order) => {
+        const idStr = (order.orderId ?? "").toString().toLowerCase();
+        const productNames = (order.items ?? [])
+          .map((it) => it.productName ?? "")
+          .join(" ")
+          .toLowerCase();
+        const paymentStatus = (order.paymentStatus ?? "").toLowerCase();
+        const status = (order.status ?? "").toLowerCase();
+        return (
+          idStr.includes(term) ||
+          productNames.includes(term) ||
+          paymentStatus.includes(term) ||
+          status.includes(term)
+        );
+      });
     };
+
     const sortOrder = (orders: OrderData[]) => {
       if (sortType === "date") {
         return [...orders].sort(
@@ -196,38 +202,24 @@ export const OrderTable = () => {
       return orders;
     };
 
+    const items = (data?.items ?? []) as OrderData[];
+
     return {
-      all: sortOrder(filterBySearch((data?.items ?? []) as OrderData[])),
+      all: sortOrder(filterBySearch(items)),
       delivered: sortOrder(
-        filterBySearch(
-          ((data?.items ?? []) as OrderData[]).filter(
-            (d) => d.status === statusType.DELIVERED,
-          ),
-        ),
+        filterBySearch(items.filter((d) => d.status === statusType.DELIVERED)),
       ),
       pending: sortOrder(
-        filterBySearch(
-          ((data?.items ?? []) as OrderData[]).filter(
-            (d) => d.status === statusType.PENDING,
-          ),
-        ),
+        filterBySearch(items.filter((d) => d.status === statusType.PENDING)),
       ),
       shipped: sortOrder(
-        filterBySearch(
-          ((data?.items ?? []) as OrderData[]).filter(
-            (d) => d.status === statusType.SHIPPED,
-          ),
-        ),
+        filterBySearch(items.filter((d) => d.status === statusType.SHIPPED)),
       ),
       cancelled: sortOrder(
-        filterBySearch(
-          ((data?.items ?? []) as OrderData[]).filter(
-            (d) => d.status === statusType.CANCELLED,
-          ),
-        ),
+        filterBySearch(items.filter((d) => d.status === statusType.CANCELLED)),
       ),
     };
-  }, [searchTerm, sortType]);
+  }, [searchTerm, sortType, data]);
 
   const tableAll = useReactTable({
     columns,
