@@ -13,7 +13,7 @@ export const useEditOrder = () => {
 
     onSuccess: () => {
       toast.success("Order updated successfully");
-      queryClient.invalidateQueries({ queryKey: ["OrderData"] });
+      queryClient.invalidateQueries({ queryKey: ["orderData"] });
     },
 
     onError: () => {

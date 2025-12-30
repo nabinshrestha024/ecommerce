@@ -15,7 +15,9 @@ interface SelectDataType {
 }
 
 interface SelectProps {
-  defaultValue: string;
+  defaultValue?: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
   triggerClassName?: string;
   itemClassName?: string;
   selectData: SelectDataType[];
@@ -23,12 +25,18 @@ interface SelectProps {
 
 export const Select = ({
   defaultValue,
+  value,
+  onValueChange,
   triggerClassName,
   itemClassName,
   selectData,
 }: SelectProps) => {
   return (
-    <Root defaultValue={defaultValue}>
+    <Root
+      defaultValue={defaultValue}
+      value={value}
+      onValueChange={onValueChange}
+    >
       <SelectTrigger className={triggerClassName}>
         <SelectValue />
       </SelectTrigger>
