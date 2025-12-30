@@ -126,7 +126,11 @@ export const ProfileUpdate = () => {
       dataToSend.append("ProfileImageFile", selectedImage);
     }
 
-    mutate(dataToSend);
+    mutate(dataToSend, {
+      onSuccess: () => {
+        setIsEditing(false);
+      },
+    });
   };
 
   return (

@@ -222,7 +222,7 @@ export const VendorTable = () => {
             }
           >
             {selectedVendor && (
-              <div className="max-h-[70vh] overflow-y-auto px-4 py-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              <div className=" px-4 py-3 ">
                 <VendorForm
                   vendor={mapTableToVendor(selectedVendor) as any}
                   onSave={() => {
