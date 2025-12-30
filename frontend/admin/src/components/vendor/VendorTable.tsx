@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -12,6 +12,10 @@ import { Dialog } from "../Dialog/Dialog.tsx";
 import { VendorForm } from "./VendorForm.tsx";
 import { useGetVendor } from "@/hooks/vendor/useGetVendor.ts";
 import { useDeleteVendor } from "@/hooks/vendor/useDeleteVendor.ts";
+import { Tabs } from "../Tabs/Tabs.tsx";
+
+import { useDebounce } from "@/hooks/search/useDebounce.tsx";
+import { useSearch } from "@/hooks/product/useSearch.ts";
 
 export interface VendorTableProps {
   vendorId: number;
@@ -32,12 +36,49 @@ const mapTableToVendor = (v: VendorTableProps): any => ({
   phone: v.phone,
   address: v.address,
   status: v.isActive ? "active" : "inactive",
-  joinedOn: (v.createdAt ?? "").split("T")[0],
+  joinedOn: formatDateOnly(v.createdAt),
 });
+
+const formatDateOnly = (raw: string): string => {
+  if (!raw) return "";
+  if (/^\d{4}-\d{2}-\d{2}T/.test(raw)) return raw.slice(0, 10);
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+
+  const m1 = raw.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (m1) return `${m1[3]}-${m1[2]}-${m1[1]}`;
+
+  const d = new Date(raw);
+  if (!isNaN(d.getTime())) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+  return "";
+};
 
 export const VendorTable = () => {
   const { data, isError } = useGetVendor();
   const { mutate } = useDeleteVendor();
+
+  const [searchProduct, setSearchProduct] = useState("");
+  const isSearching = searchProduct.trim().length > 0;
+  const debounceSearch = useDebounce(searchProduct, 500);
+
+  useEffect(() => {
+    if (!debounceSearch) return;
+  }, [debounceSearch]);
+  const columnHelper = createColumnHelper<VendorTableProps>();
+  const pagination = {
+    pageIndex: 0,
+    pageSize: 10,
+  };
+
+  const search = useSearch(debounceSearch, pagination.pageIndex);
+  const [selectedVendor, setSelectedVendor] = useState<VendorTableProps | null>(
+    null,
+  );
   const sortedVendorData: VendorTableProps[] = useMemo(() => {
     const list = Array.isArray(data?.data) ? [...data!.data] : [];
     return list.sort((a: any, b: any) => {
@@ -49,16 +90,9 @@ export const VendorTable = () => {
       return ai - bi;
     });
   }, [data]);
-
-  const columnHelper = createColumnHelper<VendorTableProps>();
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-
-  const [selectedVendor, setSelectedVendor] = useState<VendorTableProps | null>(
-    null,
-  );
+  const tableData = useMemo(() => {
+    return isSearching ? search.data?.items || [] : sortedVendorData;
+  }, [isSearching, search.data?.items, sortedVendorData]);
 
   const handleRowClick = (row: VendorTableProps) => {
     if (selectedVendor?.vendorId === row.vendorId) {
@@ -140,7 +174,7 @@ export const VendorTable = () => {
       header: "Joined On",
       cell: (info) => {
         const raw = info.getValue() as string;
-        const dateOnly = (raw ?? "").split("T")[0];
+        const dateOnly = formatDateOnly(raw ?? "");
         return (
           <div
             onClick={() => handleRowClick(info.row.original)}
@@ -207,15 +241,29 @@ export const VendorTable = () => {
     }),
   ];
 
-  const table = useReactTable({
-    data: sortedVendorData as VendorTableProps[],
+  const tableFeature = useReactTable({
     columns,
+    data: tableData as VendorTableProps[],
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    state: { pagination },
-    onPaginationChange: setPagination,
   });
-
+  const tableActive = useReactTable({
+    columns,
+    data: tableData.filter((vendor) => vendor.isActive) as VendorTableProps[],
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+  const tableInactive = useReactTable({
+    columns,
+    data: tableData.filter((vendor) => !vendor.isActive) as VendorTableProps[],
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+  const tabsData = [
+    { name: "All Vendors", table: tableFeature },
+    { name: "Active Vendors", table: tableActive },
+    { name: "Inactive Vendors", table: tableInactive },
+  ];
   return (
     <div className="w-full px-0 sm:px-4 lg:px-0">
       <div className="text-base sm:text-lg leading-normal font-bold mb-4">
@@ -223,11 +271,22 @@ export const VendorTable = () => {
       </div>
 
       <div className="flex gap-4 max-lg:flex-col">
-        <div className="flex-1/2 overflow-x-auto">
-          <Table table={table} pageIndex={pagination.pageIndex} />
+        <div className="flex flex-col gap-4">
+          <Tabs
+            defaultValue="All Vendors"
+            data={tabsData.map((tab, index) => ({
+              id: index + 1,
+              value: tab.name,
+              triggerText: tab.name,
+              content: (
+                <Table table={tab.table} pageIndex={pagination.pageIndex} />
+              ),
+            }))}
+            tabsListClassName="bg-[#EAF8E7] flex"
+          />
           {isError && (
-            <div className="text-red-500 text-center mt-4 text-sm sm:text-base">
-              Failed to load vendor data.
+            <div className="text-red-600 text-center">
+              Error fetching vendor data.
             </div>
           )}
         </div>
