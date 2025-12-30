@@ -37,10 +37,10 @@ export const AboutUsPage: React.FC = () => {
               catalog is chosen with care and attention to detail.
             </p>
             <p className="text-gray-600 leading-relaxed">
-              Our commitment to excellence extends beyond products. We've built
-              a team of passionate individuals who share our vision of creating
-              meaningful shopping experiences and building lasting relationships
-              with our customers.
+              Our commitment to excellence extends beyond products. We&apos;ve
+              built a team of passionate individuals who share our vision of
+              creating meaningful shopping experiences and building lasting
+              relationships with our customers.
             </p>
           </div>
           <div className="relative h-96 rounded-lg overflow-hidden shadow-xl">
