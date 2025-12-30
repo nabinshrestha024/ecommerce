@@ -1,9 +1,12 @@
 using EcommerceProject.Database;
 using EcommerceProject.Filters;
 using EcommerceProject.Hubs;
+using EcommerceProject.Middlewares.Implementation;
+using EcommerceProject.Middlewares.Interface;
 using EcommerceProject.Models.DTOs.Discount;
 using EcommerceProject.Models.Validators.Discount;
 using EcommerceProject.Models.Validators.Report;
+using EcommerceProject.Models.Validators.User;
 using EcommerceProject.Models.Validators.Wishlist;
 using EcommerceProject.Repositories.Implementations;
 using EcommerceProject.Repositories.Interfaces;
@@ -102,12 +105,11 @@ builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<IVendorService, VendorService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
-builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IEsewaService, EsewaService>();
 builder.Services.AddScoped<IShipmentService, ShipmentService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
-builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();    
 builder.Services.AddHttpContextAccessor(); 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -118,6 +120,10 @@ builder.Services.AddScoped<IWishlistService, WishlistService>();
 builder.Services.AddScoped<IValidator<int>, GetWishlistValidator>();
 builder.Services.AddScoped<IValidator<CreateDiscountDto>, CreateDiscountValidator>();
 builder.Services.AddScoped<IValidator<ReportFilter>, ReportFilterValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
+
+builder.Services.AddScoped<ILoginRateLimitRepo, LoginRateLimitRepo>();
 
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");

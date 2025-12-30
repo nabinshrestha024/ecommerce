@@ -1,4 +1,5 @@
-﻿using EcommerceProject.Models.DTOs.User;
+﻿using EcommerceProject.Middlewares.Interface;
+using EcommerceProject.Models.DTOs.User;
 using FluentValidation;
 using System.Data;
 
@@ -6,7 +7,7 @@ namespace EcommerceProject.Models.Validators.User
 {
     public class LoginDtoValidator : AbstractValidator<LoginDto>
     {
-        public LoginDtoValidator()
+        public LoginDtoValidator(ILoginRateLimitRepo rateRepo,IHttpContextAccessor accessor)
         {
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email is required.")
@@ -18,6 +19,24 @@ namespace EcommerceProject.Models.Validators.User
                 .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter")
                 .Matches("[0-9]").WithMessage("Password must contain at least one number")
                 .Matches("[^a-zA-Z0-9]").WithMessage("Password must contain at least one special character");
+
+            RuleFor(x => x)
+                .CustomAsync(async (dto, context, ct) =>
+                {
+                    var ip = accessor.HttpContext?
+                    .Connection.RemoteIpAddress?.ToString();
+
+                    if (ip == null)
+                    {
+                        return;
+                    }
+
+                    var locked = await rateRepo.IsLockedAsync(dto.Email, ip);
+                    if (locked)
+                    {
+                        context.AddFailure("Too many failed login atttempts. Try Again later");
+                    }
+                });
         }
     }
 }

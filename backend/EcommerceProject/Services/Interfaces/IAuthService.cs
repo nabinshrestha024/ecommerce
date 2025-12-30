@@ -10,7 +10,7 @@ namespace EcommerceProject.Services.Interfaces
 
         Task<AuthResponseDto> RefreshTokenAsync(string refreshToken);
 
-        Task GeneratePasswordResetAsync(string email);
+        Task <string?>GeneratePasswordResetAsync(string email);
 
         Task ResetPasswordAsync(string token, string newPassword);
         Task LogoutAsync(int userId);
