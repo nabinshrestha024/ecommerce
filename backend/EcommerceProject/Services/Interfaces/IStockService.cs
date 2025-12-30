@@ -8,7 +8,7 @@ namespace EcommerceProject.Services.Interfaces
     {
         Task<List<StockDto>> GetAllStockAsync();
         Task<List<LowStockAlertDto>> GetLowStockProductsAsync();
-        Task<StockAdjustmentRequestDto> AdjustStockAsync(StockAdjustmentRequestDto request, int adjustedBy);
+        Task<StockAdjustmentResultDto> AdjustStockAsync(StockAdjustmentRequestDto request, int adjustedBy);
         Task<int> GetProductStockAsync(int productId);
     }
 }

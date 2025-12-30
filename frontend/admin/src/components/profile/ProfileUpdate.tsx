@@ -1,43 +1,98 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Card } from "../Card/Card";
 import { SquarePen } from "lucide-react";
 import { Input } from "../Input/Input";
 import { Button } from "@/ui/button";
-import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProfileUpdateSchema } from "../profile/schemas/Profile.zod";
+import { useGetProfile } from "@/hooks/profile/useGetProfile";
+import { usePutProfile } from "@/hooks/profile/usePutProfile";
+
 export const ProfileUpdate = () => {
+  const { data } = useGetProfile();
+  const { mutate } = usePutProfile();
+
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: zodResolver(ProfileUpdateSchema), mode: "all" });
+
   const [preview, setPreview] = useState<string>("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
   };
-  const onSubmit = (data: any) => {
-    console.log(data);
-  };
-  const imageInputRef = useRef<HTMLInputElement>(null);
-  const handleImageInput = () => {
-    if (imageInputRef.current) {
-      imageInputRef.current.click();
+
+  useEffect(() => {
+    if (!data) return;
+
+    reset({
+      fullName: data.fullName ?? "",
+      email: data.email ?? "",
+      phoneNumber: data.phone ?? "",
+      address: data.address ?? "",
+      dateOfBirth: data.dateOfBirth ?? "",
+      biography: data.bio ?? "",
+    });
+
+    if (data.profileImageUrl) {
+      setPreview(data.profileImageUrl);
     }
+  }, [data, reset]);
+
+  const handleImageInput = () => {
+    imageInputRef.current?.click();
   };
+
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+
+    setSelectedImage(file);
     const imgUrl = URL.createObjectURL(file);
     setPreview(imgUrl);
   };
+
   useEffect(() => {
     return () => {
       if (preview) URL.revokeObjectURL(preview);
     };
   }, [preview]);
+
+  const onSubmit = (formData: any) => {
+    const dataToSend = new FormData();
+
+    const dob = formData.dateOfBirth
+      ? new Date(formData.dateOfBirth)
+      : new Date("2000-01-01");
+
+    const day = String(dob.getDate()).padStart(2, "0");
+    const month = String(dob.getMonth() + 1).padStart(2, "0");
+    const year = dob.getFullYear();
+    const formattedDate = `${day}/${month}/${year}`;
+
+    dataToSend.append("FullName", formData.fullName || "Unknown");
+    dataToSend.append("Gender", formData.gender || "Male");
+    dataToSend.append("Bio", formData.biography || "N/A");
+    dataToSend.append("City", formData.city || "Unknown");
+    dataToSend.append("Phone", formData.phoneNumber || "0000000000");
+    dataToSend.append("Status", formData.status ?? "0");
+    dataToSend.append("Address", formData.address || "N/A");
+    dataToSend.append("RemoveProfileImage", "false");
+    dataToSend.append("DateOfBirth", formattedDate);
+
+    if (selectedImage) {
+      dataToSend.append("ProfileImageUrl", selectedImage, selectedImage.name);
+    }
+
+    mutate(dataToSend);
+  };
 
   return (
     <Card
@@ -74,17 +129,17 @@ export const ProfileUpdate = () => {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={handleImageChange}
+              {...register("profilePicture")}
               ref={imageInputRef}
+              onChange={handleImageChange}
             />
             <button
               type="button"
               disabled={!isEditing}
               onClick={handleImageInput}
-              {...register("profilePicture")}
               className={`w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-lg border transition-all duration-200 ${
                 !isEditing
-                  ? "border-gray-200 text-gray-400 cursor-not-allowed "
+                  ? "border-gray-200 text-gray-400 cursor-not-allowed"
                   : "border-blue-600 text-blue-600 hover:bg-blue-50"
               }`}
             >
@@ -94,13 +149,12 @@ export const ProfileUpdate = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium ">Full Name</label>
+              <label className="text-sm font-medium">Full Name</label>
               <Input
                 type="text"
-                placeholder="Wade"
                 disabled={!isEditing}
                 {...register("fullName")}
-                className={"w-full " + (!isEditing ? "cursor-not-allowed" : "")}
+                className={`w-full ${!isEditing ? "cursor-not-allowed" : ""}`}
               />
               {errors.fullName && (
                 <p className="text-red-600 text-sm">
@@ -112,25 +166,11 @@ export const ProfileUpdate = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium ">Password</label>
-              <Input
-                type="password"
-                placeholder="********"
-                disabled={!isEditing}
-                className={!isEditing ? "cursor-not-allowed" : ""}
-              />
-              {errors.password && (
-                <p className="text-red-600 text-sm">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium ">Phone Number</label>
+              <label className="text-sm font-medium">Phone Number</label>
               <Input
                 type="tel"
-                placeholder="1234567890"
                 disabled={!isEditing}
+                {...register("phoneNumber")}
                 className={!isEditing ? "cursor-not-allowed" : ""}
               />
               {errors.phoneNumber && (
@@ -143,11 +183,11 @@ export const ProfileUpdate = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium ">Email</label>
+              <label className="text-sm font-medium">Email</label>
               <Input
                 type="email"
-                placeholder="wade@example.com"
                 disabled={!isEditing}
+                {...register("email")}
                 className={!isEditing ? "cursor-not-allowed" : ""}
               />
               {errors.email && (
@@ -155,10 +195,9 @@ export const ProfileUpdate = () => {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium ">Date of Birth</label>
+              <label className="text-sm font-medium">Date of Birth</label>
               <Input
                 type="date"
-                placeholder="01/01/2003"
                 disabled={!isEditing}
                 {...register("dateOfBirth")}
                 className={!isEditing ? "cursor-not-allowed" : ""}
@@ -172,11 +211,11 @@ export const ProfileUpdate = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium ">Location</label>
+            <label className="text-sm font-medium">Location</label>
             <Input
               type="text"
-              placeholder="1234 Main St, City, Country"
               disabled={!isEditing}
+              {...register("address")}
               className={!isEditing ? "cursor-not-allowed" : ""}
             />
             {errors.address && (
@@ -187,10 +226,10 @@ export const ProfileUpdate = () => {
           <div className="flex flex-col gap-2">
             <label className="text-sm font-medium">Biography</label>
             <textarea
-              placeholder="Tell us about yourself"
               disabled={!isEditing}
+              {...register("biography")}
               className={`w-full border rounded-lg p-3 h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm sm:text-base ${
-                !isEditing ? " cursor-not-allowed" : ""
+                !isEditing ? "cursor-not-allowed" : ""
               }`}
             />
             {errors.biography && (

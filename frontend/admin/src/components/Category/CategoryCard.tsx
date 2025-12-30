@@ -1,10 +1,11 @@
+import { useFetchCategory } from "@/hooks/category/useFetchCategory";
 import { Card } from "../Card/Card";
-import { Categories } from "./CategoryData.import";
 
 export const CategoryCard = () => {
+  const categories = useFetchCategory();
   return (
     <div className="w-full grid grid-cols-4 gap-5 mb-[42px]">
-      {Categories.map((category) => (
+      {categories.data?.map((category) => (
         <Card
           key={category.categoryId}
           className="w-full p-0 rounded-md "
@@ -13,12 +14,12 @@ export const CategoryCard = () => {
           <div className="w-ull flex gap-3 items-center ">
             <div className="w-16 h-16 border border-[#E5E7EB] rounded-md overflow-hidden">
               <img
-                src={category.image}
+                src={category.categoryImageUrl || "/placeholder-image.png"}
                 alt="image"
                 className="w-full h-full object-cover"
               />
             </div>
-            <div>{category.categoryName}</div>
+            <div>{category.name}</div>
           </div>
         </Card>
       ))}

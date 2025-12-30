@@ -1,6 +1,7 @@
 ﻿using EcommerceProject.Models.DTOs.Common;
 using EcommerceProject.Models.DTOs.EcommerceProject.Models.DTOs;
 using EcommerceProject.Models.DTOs.Orders;
+using EcommerceProject.Models.DTOs.Stock;
 using EcommerceProject.Models.Validators.Order;
 using EcommerceProject.Models.Validators.Product;
 using EcommerceProject.Repositories.Interfaces;
@@ -13,15 +14,31 @@ namespace EcommerceProject.Services.Implementations
     {
         private readonly IOrderRepository _repo;
         private readonly INotificationService _notification;
-        public OrderService(IOrderRepository repo, INotificationService notification)
+        private readonly IStockService _stockService;
+        public OrderService(IOrderRepository repo, INotificationService notification, IStockService stockService)
         {
             _repo = repo;
             _notification = notification;
+            _stockService = stockService;    
         }
         public async Task<(int OrderId, decimal TotalAmount)> CreateOrderFromCartAsync(int userId, CreateOrderRequestDto dto, CancellationToken ct)
         {
             await new CreateOrderRequestValidator().ValidateAsync(dto, ct);
-            var (orderId, totalAmount) = await _repo.CreateFromCartAsync(userId, dto, ct);
+            var (orderId, totalAmount, items) = await _repo.CreateFromCartAsync(userId, dto, ct);
+
+            foreach (var item in items)
+            {
+                await _stockService.AdjustStockAsync(
+                    new StockAdjustmentRequestDto
+                    {
+                        ProductId = item.ProductId,
+                        AdjustmentQuantity = -item.Quantity,
+                        Reason = "Order Placed",
+                        Notes = $"Order #{orderId}"
+                    },
+                    userId
+                );
+            }
             await _notification.NotifyUserAsync(
                 userId,
                 "Order Placed",

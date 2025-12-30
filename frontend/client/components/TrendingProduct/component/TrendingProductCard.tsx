@@ -13,6 +13,10 @@ import { toast } from "sonner";
 import { useAddWishlist } from "@/hooks/wishlist/useAddWishlist";
 import { useFetchWishlist } from "@/hooks/wishlist/useFetchWishlist";
 import { useDeleteWishlist } from "@/hooks/wishlist/useDeleteWishlist";
+import { Dialog } from "@/components/Dialog/Dialog";
+import { DialogClose, DialogTitle } from "@/ui/dialog";
+import { useState } from "react";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 
 export interface WishlistItem {
   productId: number;
@@ -25,7 +29,30 @@ export interface WishlistItem {
 
 export type wishlistData = number;
 
+const sizes = [
+  {
+    id: 0,
+    value: "s",
+    isActive: true,
+  },
+  {
+    id: 1,
+    value: "m",
+    isActive: false,
+  },
+  {
+    id: 2,
+    value: "xl",
+    isActive: false,
+  },
+];
+
 export const TrendingProductCard = () => {
+  const stockValue = 20;
+  const [quantity, setQuantity] = useState(1);
+  const [selectedSizes, setSelectedSizes] = useState<
+    Record<number, number | null>
+  >({});
   const { data, isLoading, isError } = useProduct();
   const addMutate = useAddWishlist();
   const deleteMutate = useDeleteWishlist();
@@ -33,12 +60,32 @@ export const TrendingProductCard = () => {
   const addToCart = useAddToCart();
   const { token } = useAuth();
 
-  const handleAddToCart = (productId: number) => {
+  const handleIncrease = () => {
+    if (quantity < stockValue) {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  const handleDecrease = () => {
+    if (quantity === 1) {
+      return 1;
+    }
+    setQuantity(quantity - 1);
+  };
+
+  const handleAddToCart = (
+    productId: number,
+    quantity: number,
+    sizeValue?: string,
+  ) => {
     if (token) {
-      addToCart.mutate({
-        productId: productId,
-        quantity: 1,
-      });
+      // addToCart.mutate({
+      //   productId: productId,
+      //   quantity: 1,
+      // });
+      console.log("Product: ", productId);
+      console.log("Quantity: ", quantity);
+      console.log("Size: ", sizeValue);
     } else {
       toast.message("Login to add to cart");
     }
@@ -51,7 +98,7 @@ export const TrendingProductCard = () => {
   const wishedIds = new Set<number>(
     wishlistItems
       .map((wishlist: WishlistItem) => Number(wishlist.productId))
-      .filter((id) => !Number.isNaN(id)),
+      .filter((id: number) => !Number.isNaN(id)),
   );
 
   const handleAddWishlist = (productId: wishlistData) => {
@@ -62,6 +109,10 @@ export const TrendingProductCard = () => {
   const handleDeleteWishlist = (productId: wishlistData) => {
     console.log(productId);
     deleteMutate.mutate(productId);
+  };
+
+  const handleSelectSize = (productId: number, sizeId: number) => {
+    setSelectedSizes((prev) => ({ ...prev, [productId]: sizeId }));
   };
 
   return isLoading ? (
@@ -85,6 +136,7 @@ export const TrendingProductCard = () => {
                     alt={product.name}
                     fill
                     className="object-cover rounded-[12px]"
+                    unoptimized
                   />
                   <div className="absolute top-3 right-3 rounded-full w-6 h-6 shadow-sm flex justify-center items-center cursor-pointer">
                     {wishedIds.has(product.productId) ? (
@@ -131,12 +183,115 @@ export const TrendingProductCard = () => {
                   </span>
                 </Link>
 
-                <Button
-                  className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px] hover:bg-[#fffcfc]"
-                  onClick={() => handleAddToCart(product.productId)}
+                <Dialog
+                  triggerText={
+                    <Button
+                      className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px] hover:bg-[#fffcfc]"
+                      onPointerDownCapture={() => setQuantity(1)}
+                    >
+                      Add to cart
+                    </Button>
+                  }
                 >
-                  Add to cart
-                </Button>
+                  <div className="flex flex-col gap-4">
+                    <DialogTitle className="text-[18px] font-bold">
+                      Cart Information
+                    </DialogTitle>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-start gap-5 w-full">
+                        <div className="w-[100px] h-[100px] relative">
+                          <Image
+                            src={product.primaryImageUrl}
+                            alt={product.name}
+                            fill
+                            className="object-cover rounded-[12px]"
+                            unoptimized
+                          />
+                        </div>
+                        <div>
+                          <div className="text-[25px] font-bold">
+                            {product.name}
+                          </div>
+                          <div className="text-[16px] line-clamp-2">
+                            {product.shortDescription}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="w-full flex justify-between">
+                        <div className="flex gap-2.5 items-center">
+                          <button
+                            className="p-1 rounded border disabled:opacity-50"
+                            onClick={() => handleDecrease()}
+                          >
+                            <MdKeyboardArrowDown />
+                          </button>
+                          <div className="px-3 py-1 border rounded">
+                            {quantity}
+                          </div>
+                          <button
+                            className="p-1 rounded border"
+                            onClick={() => handleIncrease()}
+                          >
+                            <MdKeyboardArrowUp />
+                          </button>
+                        </div>
+                        <div className="text-sm italic">
+                          Stock: {stockValue}{" "}
+                        </div>
+                      </div>
+                      <div className="flex gap-4 items-center">
+                        <div className="font-semibold ">Sizes: </div>
+                        <div className="flex gap-2">
+                          {(() => {
+                            const defaultSizeId =
+                              sizes.find((s) => s.isActive)?.id ?? 0;
+                            const selectedSizeId =
+                              selectedSizes[product.productId] ?? defaultSizeId;
+                            return sizes.map((size) => {
+                              const isSelected = selectedSizeId === size.id;
+                              return (
+                                <div
+                                  key={size.id}
+                                  onClick={() =>
+                                    handleSelectSize(product.productId, size.id)
+                                  }
+                                  className={`w-8 h-8 flex items-center justify-center border rounded text-md bg-white cursor-pointer transition-colors ${
+                                    isSelected
+                                      ? "border-[#4EA674] text-[#4EA674]"
+                                      : "border-gray-200 text-gray-600"
+                                  }`}
+                                >
+                                  {size.value}
+                                </div>
+                              );
+                            });
+                          })()}
+                        </div>
+                      </div>
+                    </div>
+                    <DialogClose asChild>
+                      <Button
+                        onClick={() => {
+                          const defaultSizeId =
+                            sizes.find((s) => s.isActive)?.id ?? 0;
+                          const selectedSizeId =
+                            selectedSizes[product.productId] ?? defaultSizeId;
+                          const selectedSizeValue = sizes.find(
+                            (s) => s.id === selectedSizeId,
+                          )?.value;
+                          handleAddToCart(
+                            product.productId,
+                            quantity,
+                            selectedSizeValue,
+                          );
+                        }}
+                        className="px-4 py-2 bg-[#4EA674] text-white"
+                      >
+                        Confirm
+                      </Button>
+                    </DialogClose>
+                  </div>
+                </Dialog>
               </div>
             </Card>
           ),

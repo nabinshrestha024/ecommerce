@@ -9,8 +9,12 @@ import { useProductDetails } from "@/hooks/product/useProductDetails";
 import { useAddToCart } from "@/hooks/cart/useAddToCart";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { Carousel } from "../Carousel/Carousel";
 
 const ProductDetails = () => {
+  const sizes = ["S", "M", "L", "XL", "XXL"];
+  const [selectedSize, setSelectedSize] = useState("S");
   const [quantity, setQuantity] = useState(1);
   const searchParams = useParams();
   const slug = searchParams.id;
@@ -43,19 +47,57 @@ const ProductDetails = () => {
   };
   if (productItems.isLoading) return <p>Loading product details...</p>;
   if (productItems.isError) return <p>Failed to load product details</p>;
+
+  const imageUrls = productItems.data?.images?.map((img) => img.imageUrl);
+
   return (
     <div className="w-full px-20 py-10">
       <Card key={productItems.data?.productId} className="p-0">
         <div className="grid grid-cols-2 gap-3 py-5">
-          <div className="px-5 py-8">
+          <div className="flex gap-5 flex-col px-5 py-8">
             <div className="max-w-[600px] h-[400px] relative">
               <Image
-                src={productItems.data?.images[0].url || ""}
+                src={productItems.data?.images[0]?.imageUrl || ""}
                 alt="Image"
                 fill
                 className="w-full h-full rounded-xl object-cover"
+                unoptimized
               />
             </div>
+            <Carousel
+              rootClassName="w-[500px]"
+              previousClassName="absolute left-4 top-12 bg-white text-gray-700 p-2 rounded-full shadow hover:bg-gray-100"
+              nextClassName="absolute right-4 top-12 bg-white text-gray-700 p-2 rounded-full shadow hover:bg-gray-100"
+              contentClassName="flex gap-2"
+              itemClassName="basis-1/3"
+              items={
+                imageUrls?.map((image, index) => (
+                  <div key={index} className="w-[250px] h-[100px] relative">
+                    <Image
+                      src={image || ""}
+                      alt="Image"
+                      fill
+                      className="w-full h-full rounded-xl object-contain"
+                      unoptimized
+                    />
+                  </div>
+                )) ?? []
+              }
+            />
+
+            {/* <div className="flex  gap-2 border-t-2 pt-2">
+              {imageUrls?.map((image, index) => (
+                <div key={index} className=" w-[60px] h-[60px] relative">
+                  <Image
+                    src={image || ""}
+                    alt="Image"
+                    fill
+                    className="w-full h-full rounded-xl object-cover"
+                    unoptimized
+                  />
+                </div>
+              ))}
+            </div> */}
           </div>
 
           <div className="p-4 flex flex-col gap-3">
@@ -64,47 +106,74 @@ const ProductDetails = () => {
                 {productItems.data?.name}
               </div>
               <div className="font-normal text-[18px]">
-                {productItems.data?.shortDescription} Lorem ipsum dolor sit amet
-                consectetur adipisicing elit. Ullam sit culpa optio vero nostrum
-                molestias nam pariatur quam, fugit reiciendis omnis iste, a
-                commodi. Eaque voluptas illum hic cupiditate omnis! Lorem ipsum
-                dolor sit amet consectetur adipisicing elit. Suscipit, minus!
-                Quas dolorem, quaerat modi qui deleniti provident eligendi
-                delectus fuga aliquid accusantium dolore molestias fugit tenetur
-                deserunt. Quasi, officiis eaque.q
+                {productItems.data?.description}
               </div>
             </div>
             <div>
               <div>
                 <span className="text-[30px] text-[#4EA674] font-bold">
-                  $ {productItems.data?.price}
+                  Rs. {productItems.data?.price}
                 </span>
                 {/* &nbsp;&nbsp;&nbsp;
                   <span className="line-through text-[25px] text-[red] font-medium">
                     $ {product.originalPrice}
                   </span> */}
               </div>
-              <div className="font-normal text-[20px]">
-                <span className="font-bold">Category: </span>
-                {productItems.data?.categoryId}
+              <div className="flex justify-between items-center">
+                <div className="font-bold text-[18px]">
+                  <span className="font-normal">Category: </span>
+                  {productItems.data?.categoryId}
+                </div>
+                <div className="font-bold text-[18px]">
+                  <span className="font-normal">Stock Quantity: </span>
+                  {productItems.data?.stockQuantity}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <div className="font-bold text-[18px]">Variant</div>
+              <div>Size:</div>
+              <div className="flex gap-2">
+                {sizes.map((size) => (
+                  <label
+                    key={size}
+                    className={`flex items-center justify-center px-4 py-2 border rounded-md cursor-pointer 
+                     ${
+                       selectedSize === size
+                         ? "border-green-500 bg-green-50 text-green-600"
+                         : "border-gray-300"
+                     }`}
+                  >
+                    <input
+                      type="radio"
+                      name="size"
+                      value={size}
+                      onChange={() => setSelectedSize(size)}
+                      className="hidden"
+                    />
+                    {size}
+                  </label>
+                ))}
               </div>
             </div>
 
             <div className="flex flex-col gap-3">
               <div className="flex gap-3 items-center mt-3">
-                <div
-                  className="px-3 py-2 bg-[#4EA674] rounded-lg w-10 flex justify-center items-center"
+                <button
+                  className="p-1 rounded border flex justify-center items-center"
                   onClick={handleSubQuantity}
                 >
-                  <RiSubtractFill color="white" />
-                </div>
-                {quantity}
-                <div
-                  className="px-3 py-2 bg-[#4EA674] rounded-lg w-10 flex justify-center items-center"
+                  <MdKeyboardArrowDown />
+                </button>
+                <div className="px-3 py-1 border rounded">{quantity}</div>
+                <button
+                  className="p-1 rounded border flex justify-center items-center"
                   onClick={handleAddQuantity}
+                  disabled={quantity >= (productItems.data?.stockQuantity ?? 0)}
                 >
-                  <RiAddFill color="white" />
-                </div>
+                  <MdKeyboardArrowUp />
+                </button>
               </div>
               <Button
                 className="w-[200px]"

@@ -2,14 +2,15 @@
 
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
+import { Input as Inp } from "@/components/input/Input";
 import Image from "next/image";
 import Link from "next/link";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
 import { Sidebar } from "./Sidebar";
-import { Heart, Trash2, X } from "lucide-react";
-import { useState } from "react";
+import { Bell, Heart, Trash2, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFetchCart } from "@/hooks/cart/useFetchCart";
 import { useDeleteCart } from "@/hooks/cart/useDeleteCart";
@@ -17,6 +18,12 @@ import { MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
 import { useUpdateCart } from "@/hooks/cart/useUpdateCart";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useSearch } from "@/hooks/search/useSearch";
+import { useDebounce } from "@/hooks/search/useDebounce";
+import { Notification } from "@/components/Notification/Notification";
+import { Dialog } from "@/components/dialog/Dialog";
+import { CheckoutForm } from "./CheckoutForm";
+import { CartComponent } from "./CartComponent";
 
 export interface CartProductType {
   cartId: number;
@@ -32,33 +39,18 @@ export interface CartProductType {
 
 export const TopNav = () => {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
-  const { data, isLoading, isError, error } = useFetchCart();
-  const deleteCart = useDeleteCart();
-  const calculateTotal = () => {
-    let total = 0;
-    data?.map((val) => {
-      total = total + val.quantity * val.price;
-    });
-    return total;
-  };
+  const [searchData, setSearchData] = useState("");
 
   const { token, logout } = useAuth();
   const isAuth = Boolean(token);
-  const updateCart = useUpdateCart();
 
-  const handleQuantityDecrease = ({
-    cartId,
-    quantity,
-  }: {
-    cartId: number;
-    quantity: number;
-  }) => {
-    updateCart.mutate({
-      cartId: cartId,
-      quantity: quantity - 1,
-    });
-  };
+  const debounceSearch = useDebounce(searchData, 500);
+
+  useEffect(() => {
+    if (!debounceSearch) return;
+  }, [debounceSearch]);
+
+  const search = useSearch(debounceSearch);
 
   return (
     <div className="flex justify-between px-5 lg:px-10 items-center py-5 border-b">
@@ -86,20 +78,59 @@ export const TopNav = () => {
         </div>
       </div>
       <div className="gap-4 items-center hidden lg:flex">
-        <div className="relative">
+        <div className="relative w-[500px]">
           <Input
-            type={"text"}
+            type="text"
+            value={searchData}
             placeholder="What you're looking for"
-            className="bg-[#EAF8E7] shrink-0 w-[500px] h-12 rounded-3xl pr-25"
+            onChange={(e) => setSearchData(e.target.value)}
+            className="bg-[#EAF8E7] h-12 rounded-3xl pr-24"
           />
+
           <Button
-            variant={"ghost"}
-            className="bg-white rounded-3xl absolute right-2 top-1/2 -translate-y-1/2"
+            variant="ghost"
+            className="bg-white rounded-3xl absolute right-2 top-1/2 -translate-y-1/2 "
           >
             <IoSearch />
             Search
           </Button>
+
+          {debounceSearch && (
+            <div className="absolute top-14 left-0 w-full bg-white shadow-lg  z-50 max-h-80 overflow-y-auto ">
+              {search.isLoading && (
+                <div className="p-4 text-sm text-gray-500">Searching...</div>
+              )}
+
+              {search.isError && (
+                <div className="p-4 text-sm text-red-500">
+                  Failed to fetch products
+                </div>
+              )}
+
+              {search.data?.items.map((product) => (
+                <div
+                  key={product.productId}
+                  onClick={() => {
+                    router.push(`/product/id/${product.slug}`);
+                    setSearchData("");
+                  }}
+                  className="flex items-center gap-3 p-3 hover:bg-[#EAF8E7] cursor-pointer"
+                >
+                  <div className="w-10 h-10 relative rounded overflow-hidden">
+                    <Image
+                      src={product.primaryImageUrl}
+                      alt={product.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="text-sm font-medium">{product.name}</div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
+
         {isAuth ? (
           <Link href="/home">
             <Button onClick={logout}>Logout</Button>
@@ -107,6 +138,12 @@ export const TopNav = () => {
         ) : (
           <Link href="/login">
             <Button>Login</Button>
+          </Link>
+        )}
+
+        {isAuth && (
+          <Link href={"/order"}>
+            <Button variant={"secondary"}>Orders</Button>
           </Link>
         )}
 
@@ -118,116 +155,17 @@ export const TopNav = () => {
           <Heart onClick={() => router.push("/wishlist")} />
         )}
 
-        <div className="flex gap-2 shrink-0 items-center text-xl">
-          <div onClick={() => setOpen(true)} className="cursor-pointer">
-            <FaShoppingCart />
-          </div>
-          <div
-            className="text-sm font-semibold cursor-pointer"
-            onClick={() => setOpen(true)}
-          >
-            Cart
-          </div>
-          <div
-            className={`fixed right-0 top-0 z-20 h-screen w-[500px] bg-white ${open ? "tranlsate-x-0" : "translate-x-[500px]"} transition-all ease-in-out duration-500`}
-          >
-            <div className="relative px-10 pt-12 flex flex-col gap-5">
-              <div
-                className="absolute left-4 top-4"
-                onClick={() => setOpen(false)}
-              >
-                <X />
-              </div>
-              {!isAuth ? (
-                <div>Please login to check your cart</div>
-              ) : isLoading ? (
-                <div>Loading...</div>
-              ) : isError ? (
-                <div>{error?.message}</div>
-              ) : data?.length === 0 ? (
-                <div>No items in cart</div>
-              ) : (
-                <>
-                  {data?.map((val) => (
-                    <div
-                      key={val.cartId}
-                      className={`flex gap-4 pb-4 border-b transition-opacity duration-300 `}
-                    >
-                      <div className="w-20 h-20 shrink-0 relative rounded-md overflow-hidden bg-gray-100">
-                        <Image
-                          src={val.productImageUrl || "/a.jpg"}
-                          fill
-                          alt={val.productName}
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="flex-1 flex flex-col justify-between">
-                        <div>
-                          <div className="text-sm font-semibold text-gray-800">
-                            {val.productName}
-                          </div>
-                          <div className="text-xs text-gray-600 line-clamp-1">
-                            {val.description}
-                          </div>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <div className="text-lg text-gray-700 flex flex-col gap-2">
-                            <span className="font-semibold">
-                              Price: $ {val.price}
-                            </span>{" "}
-                            <div
-                              className={`flex items-center justify-center gap-2 `}
-                            >
-                              <div>Quantity: </div>
-                              <div
-                                className={`${val.quantity === 1 ? "hidden" : ""}`}
-                                onClick={() =>
-                                  handleQuantityDecrease({
-                                    cartId: val.cartId,
-                                    quantity: val.quantity,
-                                  })
-                                }
-                              >
-                                <MdKeyboardArrowDown className="text-lg" />
-                              </div>{" "}
-                              {val.quantity}{" "}
-                              <div
-                                onClick={() =>
-                                  updateCart.mutate({
-                                    cartId: val.cartId,
-                                    quantity: val.quantity + 1,
-                                  })
-                                }
-                              >
-                                <MdKeyboardArrowUp className="text-lg" />
-                              </div>
-                            </div>
-                          </div>
-                          <button
-                            className="p-1 hover:bg-red-50 rounded transition-colors"
-                            title="Remove from cart"
-                            onClick={() => deleteCart.mutate(val.cartId)}
-                          >
-                            <Trash2
-                              size={16}
-                              className="text-red-500 hover:text-red-600"
-                            />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  <div className="text-xl font-semibold flex items-center gap-2">
-                    Grand Total:{" "}
-                    <span className="text-3xl text-green-500">
-                      ${calculateTotal()}
-                    </span>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
+        {!isAuth ? (
+          <Bell
+            onClick={() =>
+              toast.error("Please log in to see your notifications")
+            }
+          />
+        ) : (
+          <Notification />
+        )}
+
+        <CartComponent />
       </div>
 
       <div className="md:hidden">

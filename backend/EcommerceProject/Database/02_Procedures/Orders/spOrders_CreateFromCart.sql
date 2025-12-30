@@ -1,7 +1,11 @@
-USE EcommerceDB;
+USE [EcommerceDB]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE OR ALTER PROCEDURE spOrders_CreateFromCart
+ALTER   PROCEDURE [dbo].[spOrders_CreateFromCart]
     @UserId INT,
     @ShippingName VARCHAR(100) = NULL,
     @ShippingAddress VARCHAR(300),
@@ -73,6 +77,13 @@ BEGIN
         DELETE FROM ShoppingCarts WHERE UserId = @UserId;
         
         COMMIT;
+
+               SELECT 
+            ProductId,
+            Quantity
+        FROM OrderItems
+        WHERE OrderId = @OrderId;
+
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0 ROLLBACK;
@@ -81,4 +92,3 @@ BEGIN
         RETURN;
     END CATCH
 END
-GO

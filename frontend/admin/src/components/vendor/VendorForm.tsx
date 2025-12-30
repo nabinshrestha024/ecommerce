@@ -11,7 +11,7 @@ interface Vendor {
   email: string;
   phone: string;
   address: string;
-  status: "active" | "inactive";
+  isActive: boolean;
   joinedOn: string;
 }
 
@@ -35,7 +35,7 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
       email: vendor.email,
       phone: vendor.phone,
       address: vendor.address,
-      status: vendor.status,
+      isActive: vendor.isActive ? "true" : "false",
       joinedOn: vendor.joinedOn,
     },
     mode: "onChange",
@@ -49,12 +49,20 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
       email: data.email,
       phone: data.phone,
       address: data.address,
-      status: data.status,
+      isActive: data.isActive === "true",
       joinedOn: data.joinedOn,
     };
     mutate({ vendorId: vendor.vendorId, vendorData: updatedVendor } as any);
     onSave(updatedVendor);
-    reset(updatedVendor);
+    reset({
+      name: updatedVendor.businessName,
+      contactPerson: updatedVendor.contactPerson,
+      email: updatedVendor.email,
+      phone: updatedVendor.phone,
+      address: updatedVendor.address,
+      isActive: updatedVendor.isActive ? "true" : "false",
+      joinedOn: updatedVendor.joinedOn,
+    });
   };
 
   return (
@@ -69,7 +77,7 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
               type="text"
               placeholder="Enter business name"
               {...register("name")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className="w-full px-4 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
             {errors.name && (
               <p className="text-[12px] text-red-500">{errors.name.message}</p>
@@ -83,7 +91,7 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
               type="text"
               placeholder="Enter contact person"
               {...register("contactPerson")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className="w-full px-4  border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
             {errors.contactPerson && (
               <p className="text-[12px] text-red-500">
@@ -100,7 +108,7 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
               type="email"
               placeholder="Enter email address"
               {...register("email")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className="w-full px-4  border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
             {errors.email && (
               <p className="text-[12px] text-red-500">{errors.email.message}</p>
@@ -115,7 +123,7 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
               type="text"
               placeholder="Enter phone number"
               {...register("phone")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className="w-full px-4 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
             {errors.phone && (
               <p className="text-[12px] text-red-500">{errors.phone.message}</p>
@@ -130,7 +138,7 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
               type="text"
               placeholder="Enter address"
               {...register("address")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className="w-full px-4 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
             {errors.address && (
               <p className="text-[12px] text-red-500">
@@ -144,15 +152,15 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
           <label className="font-medium ">Status</label>
           <div className="col-span-3">
             <select
-              {...register("status")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 bg-white"
+              {...register("isActive")}
+              className="w-full px-4 flex justify-center py-1 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 bg-white"
             >
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
             </select>
-            {errors.status && (
+            {errors.isActive && (
               <p className="text-[12px] text-red-500">
-                {errors.status.message}
+                {errors.isActive.message}
               </p>
             )}
           </div>
@@ -165,7 +173,7 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
               type="date"
               placeholder="Enter joined date"
               {...register("joinedOn")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className="w-full px-4  border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
             {errors.joinedOn && (
               <p className="text-[12px] text-red-500">
