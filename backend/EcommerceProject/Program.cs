@@ -86,11 +86,12 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IShipmentRepository, ShipmentRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IAdminDiscountRepository, AdminDiscountRepository>();
 builder.Services.AddScoped<IAdminDiscountService, AdminDiscountService>();
-
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 
 builder.Services.AddScoped<IReportsService, ReportsService>();
