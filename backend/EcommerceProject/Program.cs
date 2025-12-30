@@ -109,7 +109,8 @@ builder.Services.AddScoped<IEsewaService, EsewaService>();
 builder.Services.AddScoped<IShipmentService, ShipmentService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
-builder.Services.AddScoped<IEmailSender, EmailSender>();    
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IUrlService, UrlService>();
 builder.Services.AddHttpContextAccessor(); 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();

@@ -34,6 +34,6 @@ BEGIN
             WHEN @PageSize IS NULL
                 THEN 1000000   -- effectively "no pagination"
             ELSE @PageSize
-        END ROWS ONLY;
+        END ROWS ONLY
 END
 GO

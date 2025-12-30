@@ -2,8 +2,8 @@ USE [EcommerceDB];
 GO
 
 CREATE OR ALTER PROCEDURE spEsewa_MarkFailed
-    @PaymentId INT,
-    @RawResponse VARCHAR(MAX)
+    @PaymentId      INT,
+    @RawResponse    VARCHAR(MAX)
 AS
 BEGIN
     UPDATE Payments
@@ -12,11 +12,24 @@ BEGIN
         UpdatedAt = SYSUTCDATETIME()
     WHERE PaymentId = @PaymentId;
 
-    UPDATE PaymentGatewayTransactions
-    SET Status = 'Failed',
-        RawResponse = @RawResponse,
-        UpdatedAt = SYSUTCDATETIME()
-    WHERE PaymentId = @PaymentId;
+
+    INSERT INTO PaymentGatewayTransactions
+    (
+        GatewayName,
+        PaymentId,
+        Status,
+        RawResponse,
+        CreatedAt
+    )
+
+    VALUES
+    (
+        'eSewa',
+        @PaymentId,
+        'Failed',
+        @RawResponse,
+        SYSUTCDATETIME()
+    );
 END
 GO
 

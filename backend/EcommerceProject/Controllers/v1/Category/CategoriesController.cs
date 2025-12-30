@@ -13,24 +13,14 @@ namespace EcommerceProject.Controllers.v1.Category
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _service;
+        private readonly IUrlService _urlService;
 
-        public CategoriesController(ICategoryService service)
+        public CategoriesController(ICategoryService service, IUrlService urlService)
         {
             _service = service;
+            _urlService = urlService;
         }
-        private string? ToAbsoluteUrl(string? path)
-        {
-            if (string.IsNullOrWhiteSpace(path))
-                return path;
-
-            if (Uri.IsWellFormedUriString(path, UriKind.Absolute))
-                return path;
-
-            if (!path.StartsWith("/"))
-                path = "/" + path;
-
-            return $"{Request.Scheme}://{Request.Host}{path}";
-        }
+       
 
 
         [HttpGet]
@@ -40,7 +30,7 @@ namespace EcommerceProject.Controllers.v1.Category
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
             foreach (var category in result.Items)
             {
-                category.CategoryImageURL = ToAbsoluteUrl(category.CategoryImageURL);
+                category.CategoryImageURL = _urlService.ToAbsoluteUrl(category.CategoryImageURL);
             }
 
             return Ok(result);

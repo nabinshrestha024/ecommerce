@@ -14,25 +14,15 @@ namespace EcommerceProject.Controllers.v1.Product
     public class CatalogProductsController : ControllerBase
     {
         private readonly IProductService _service;
+        private readonly IUrlService _urlService;
 
-        public CatalogProductsController(IProductService service)
+        public CatalogProductsController(IProductService service, IUrlService urlService)
         {
             _service = service;
+            _urlService = urlService;
         }
 
-        private string? ToAbsoluteUrl(string? path)
-        {
-            if (string.IsNullOrWhiteSpace(path))
-                return path;
-
-            if (Uri.IsWellFormedUriString(path, UriKind.Absolute))
-                return path;
-
-            if (!path.StartsWith("/"))
-                path = "/" + path;
-
-            return $"{Request.Scheme}://{Request.Host}{path}";
-        }
+       
 
         [HttpGet]
         public async Task<IActionResult> GetProducts([FromQuery] int? categoryId, [FromQuery] string? search, [FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
@@ -42,7 +32,7 @@ namespace EcommerceProject.Controllers.v1.Product
             var result = await _service.GetPagedAsync(categoryId, search, page, pageSize, ct);
             foreach (var item in result.Items)
             {
-                item.PrimaryImageUrl = ToAbsoluteUrl(item.PrimaryImageUrl);
+                item.PrimaryImageUrl = _urlService.ToAbsoluteUrl(item.PrimaryImageUrl);
             }
 
 
@@ -59,7 +49,7 @@ namespace EcommerceProject.Controllers.v1.Product
 
             foreach (var img in product.Images)
             {
-                img.ImageUrl = ToAbsoluteUrl(img.ImageUrl);
+                img.ImageUrl = _urlService.ToAbsoluteUrl(img.ImageUrl);
             }
 
             return Ok(product);

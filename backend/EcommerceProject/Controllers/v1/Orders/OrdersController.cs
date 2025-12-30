@@ -1,5 +1,7 @@
 ﻿using System.Security.Claims;
 using EcommerceProject.Models.DTOs.Orders;
+using EcommerceProject.Models.Entities;
+using EcommerceProject.Services.Implementations;
 using EcommerceProject.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,10 +15,11 @@ namespace EcommerceProject.Controllers.v1.Orders
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
-
-        public OrdersController(IOrderService orderService)
+        private readonly IUrlService _urlService;
+        public OrdersController(IOrderService orderService, IUrlService urlService  )
         {
             _orderService = orderService;
+            _urlService = urlService;
         }
 
         [HttpPost]
@@ -52,6 +55,9 @@ namespace EcommerceProject.Controllers.v1.Orders
                 return Unauthorized("Invalid user id.");
 
             var orders = await _orderService.GetMyOrdersAsync(userId, ct);
+
+            
+
             return Ok(orders);
         }
 

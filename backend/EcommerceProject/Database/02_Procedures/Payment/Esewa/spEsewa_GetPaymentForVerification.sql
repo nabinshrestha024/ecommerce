@@ -6,11 +6,12 @@ CREATE OR ALTER PROCEDURE spEsewa_GetPaymentForVerification
 AS
 BEGIN
     SELECT
-        p.PaymentId,
-        p.OrderId,
-        p.Amount
-    FROM Payments p
-    WHERE p.TransactionId = @TransactionUUID;
+        PaymentId,
+        OrderId,
+        Amount,
+        PaymentStatus
+    FROM Payments
+    WHERE TransactionId = @TransactionUUID;
 END
 GO
 

@@ -1,9 +1,10 @@
 import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "../Input/Input.tsx";
 import type { OrderData } from "@/hooks/order/useFetchOrder.tsx";
 import { orderSchema, type OrderFormValues } from "./OrderZod.tsx";
 import { useEditOrder } from "@/hooks/order/useEditOrder.tsx";
+import { Button } from "@/ui/button.tsx";
+import { Select } from "../Select/Select.tsx";
 
 type Props = {
   order: OrderData;
@@ -12,12 +13,25 @@ type Props = {
 
 export const OrderForm = ({ order, onSave }: Props) => {
   const editOrder = useEditOrder();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<OrderFormValues>({
+
+  const selectData = [
+    {
+      id: 1,
+      value: "Pending",
+      content: "Pending",
+    },
+    {
+      id: 2,
+      value: "Cancelled",
+      content: "Cancelled",
+    },
+    {
+      id: 3,
+      value: "Shipped",
+      content: "Shipped",
+    },
+  ];
+  const { handleSubmit, setValue } = useForm<OrderFormValues>({
     resolver: zodResolver(orderSchema) as Resolver<OrderFormValues>,
     defaultValues: {
       status: order.status,
@@ -33,7 +47,6 @@ export const OrderForm = ({ order, onSave }: Props) => {
       {
         onSuccess: () => {
           onSave({ ...order, ...data });
-          reset(data);
         },
       },
     );
@@ -42,33 +55,26 @@ export const OrderForm = ({ order, onSave }: Props) => {
   return (
     <div className="flex justify-center">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-        <h2 className="text-[24px] font-bold text-[#23272E] mb-6 text-center">
-          Edit Order
+        <h2 className="text-[24px] font-bold text-[#23272E] mb-6">
+          Edit Order Status
         </h2>
 
         <div className="grid grid-cols-4 gap-4 items-center ">
           <label className="col-span-1 font-medium text-gray-700">Status</label>
           <div className="col-span-3">
-            <Input
-              type="text"
-              placeholder=""
-              {...register("status")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+            <Select
+              defaultValue={order.status}
+              selectData={selectData}
+              triggerClassName="w-full border rounded-md px-3 py-2"
+              itemClassName="cursor-pointer"
+              onValueChange={(v) => setValue("status", v)}
             />
-            {errors.status && (
-              <p className="text-[12px] text-red-500 ">
-                {errors.status.message}
-              </p>
-            )}
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="bg-green-600 hover:bg-green-700 text-white px-10 py-2 rounded transition mt-5"
-        >
-          Save Product
-        </button>
+        <Button type="submit" className="w-full hover:bg-green-700 mt-5">
+          Save Status
+        </Button>
       </form>
     </div>
   );

@@ -33,7 +33,7 @@ BEGIN
             RETURN;
         END
         
-        SET @NewStock = @AdjustmentQuantity;
+        SET @NewStock = @CurrentStock + @AdjustmentQuantity;
         
         IF @NewStock < 0
         BEGIN

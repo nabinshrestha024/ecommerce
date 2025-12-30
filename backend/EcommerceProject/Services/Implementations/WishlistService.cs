@@ -12,11 +12,13 @@ namespace EcommerceProject.Services.Implementations
     {
         private readonly IWishlistRepository _wishlistRepository;
         private readonly IValidator<int> _validator;
+        private readonly IUrlService _urlService;
 
-        public WishlistService(IWishlistRepository wishlistRepository, IValidator<int> validator)
+        public WishlistService(IWishlistRepository wishlistRepository, IValidator<int> validator, IUrlService urlService)
         {
             _wishlistRepository = wishlistRepository;
             _validator = validator;
+            _urlService = urlService;
         }
 
         public async Task<PagedResult<WishListItemDto>> GetAsync(int userId, int page, int size)
@@ -26,7 +28,16 @@ namespace EcommerceProject.Services.Implementations
             {
                 throw new ValidationException(validation.Errors);
             }
-            return await _wishlistRepository.GetPagedAsync(userId, page, size);
+            var result = await _wishlistRepository.GetPagedAsync(userId, page, size);
+            if (result.Items != null)
+            {
+                foreach (var item in result.Items)
+                {
+                    item.ProductImageUrl = _urlService.ToAbsoluteUrl(item.ProductImageUrl);
+                }
+            }
+           
+            return result;
         }
 
         public async Task AddWishlistItemAsync(int userId, int productId)

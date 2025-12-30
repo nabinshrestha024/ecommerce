@@ -14,51 +14,50 @@ export const BasicDetails = () => {
       <div className="flex justify-start font-bold text-[22px] leading-[26px] tracking-[0%]">
         Basic Details
       </div>
-      <div className="flex flex-col mt-6 gap-8">
+      <div className="flex flex-col mt-6 gap-4">
         <div className="flex flex-col gap-3">
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col ">
             <label className="block text-sm font-medium ">Product Name</label>
             <Input
               type="text"
               placeholder="Enter product name...."
-              className="w-full bg-[#F9FAFB] h-12"
+              className="w-full h-9 px-3 border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
               {...register("name")}
             />
             {errors.name && (
-              <p className="text-sm text-red-500 mt-1">
+              <div className="text-sm text-red-500">
                 {errors.name?.message as string}
-              </p>
+              </div>
             )}
           </div>
-
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col">
             <label className="block text-sm font-medium ">
               Short Description
             </label>
             <Input
               type="textarea"
               placeholder="Enter short description...."
-              className="w-full h-15 p-3 border rounded-md focus:outline-none bg-[#F9FAFB] focus:ring-2  focus:border-transparent"
+              className="w-full border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
               {...register("shortDescription")}
             />
             {errors.shortDescription && (
-              <p className="text-sm text-red-500 mt-1">
+              <div className="text-sm text-red-500">
                 {errors.shortDescription?.message as string}
-              </p>
+              </div>
             )}
           </div>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col ">
             <label className="block text-sm font-medium ">Description</label>
             <Input
               type="textarea"
               placeholder="Enter product description...."
-              className="w-full h-24 p-3 border rounded-md focus:outline-none bg-[#F9FAFB] focus:ring-2  focus:border-transparent"
+              className="w-full border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
               {...register("description")}
             />
             {errors.description && (
-              <p className="text-sm text-red-500 mt-1">
+              <div className="text-sm text-red-500">
                 {errors.description?.message as string}
-              </p>
+              </div>
             )}
           </div>
         </div>
@@ -66,34 +65,34 @@ export const BasicDetails = () => {
           <div className="font-bold text-[22px] leading-[26px] tracking-[0%]">
             Pricing
           </div>
-          <div className="flex flex-col mt-6 gap-5">
-            <div className="flex flex-col gap-3">
+          <div className="flex flex-col mt-1 ">
+            <div className="flex flex-col ">
               <label className="block text-sm font-medium">Product Price</label>
               <div className="relative w-full">
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 font-bold">
+                <div className="absolute left-3 top-1/2 mt-1 transform -translate-y-1/2 font-bold">
                   Rs
                 </div>
                 <Input
                   type="number"
                   placeholder="Enter product price...."
-                  className="w-full bg-[#F9FAFB] h-full p-3 pl-10 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                  className="w-full h-9 border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent p-3 pl-10 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                   {...register("productPrice")}
                 />
               </div>
               {errors.productPrice && (
-                <p className="text-sm text-red-500 mt-1">
+                <div className="text-sm text-red-500">
                   {errors.productPrice?.message as string}
-                </p>
+                </div>
               )}
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
           <div className="font-bold text-[22px] leading-[26px] tracking-[0%]">
             Inventory
           </div>
-          <div className="grid grid-cols-2 mt-3 gap-5">
-            <div className="flex flex-col gap-3">
+          <div className="grid grid-cols-1 mt-2 ">
+            <div className="flex flex-col">
               <label className="block text-sm font-medium ">
                 Stock Quantity
               </label>
@@ -101,30 +100,31 @@ export const BasicDetails = () => {
                 type="number"
                 placeholder="Stock quantity..."
                 {...register("stockQuantity")}
-                className="[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                className="w-full h-9 px-3 border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
               />
               {errors.stockQuantity && (
-                <p className="text-sm text-red-500 mt-1">
+                <div className="text-sm text-red-500">
                   {errors.stockQuantity?.message as string}
-                </p>
+                </div>
               )}
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              {...register("highlightFeatured")}
-              className="h-4 w-4"
-            />
+          <div className="flex flex-col gap-3 mt-4">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                {...register("highlightFeatured")}
+                className="h-4 w-4"
+              />
+              <label className="text-sm font-medium ">
+                Highlight this product in featured section
+              </label>
+            </div>
             {errors.highlightFeatured && (
-              <p className="text-sm text-red-500 mt-1">
+              <p className="text-sm text-red-500">
                 {errors.highlightFeatured?.message as string}
               </p>
             )}
-
-            <label className="text-sm font-medium ">
-              Highlight this product in featured section
-            </label>
           </div>
         </div>
       </div>

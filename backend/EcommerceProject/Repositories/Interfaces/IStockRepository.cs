@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using EcommerceProject.Models.DTOs.Stock;
 
@@ -10,6 +11,6 @@ namespace EcommerceProject.Repositories.Interfaces
         Task<List<LowStockAlertDto>> GetLowStockProductsAsync();
         Task<StockAdjustmentResultDto> AdjustStockAsync(StockAdjustmentRequestDto request, int adjustedBy);
         Task<int> GetProductStockAsync(int productId);
-        Task UpdateProductStockAsync(int productId, int newStockQuantity);
+        Task DecreaseStockOnOrderAsync(int productId, int quantity, IDbTransaction tx);
     }
 }

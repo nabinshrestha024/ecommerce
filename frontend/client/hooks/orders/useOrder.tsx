@@ -2,7 +2,7 @@
 import { getOrders } from "@/services/orders.services";
 import { useQuery } from "@tanstack/react-query";
 
-type ProductData = {
+export type ProductData = {
   orderItemId: number;
   productId: number;
   productName: string;

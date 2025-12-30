@@ -16,9 +16,9 @@ BEGIN
             CASE WHEN @Status = 'Shipped' THEN SYSUTCDATETIME() ELSE ShippedAt END,
         DeliveredAt =
             CASE WHEN @Status = 'Delivered' THEN SYSUTCDATETIME() ELSE DeliveredAt END
-    WHERE ShipmentId = @ShipmentId;
+    WHERE ShipmentId = @ShipmentId
 
     IF @@ROWCOUNT = 0
-        RAISERROR('Shipment not found.', 16, 1);
+        RAISERROR('Shipment not found.', 16, 1)
 END
 GO
