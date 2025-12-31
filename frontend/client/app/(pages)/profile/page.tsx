@@ -13,6 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
 import { LogOut } from "lucide-react";
+import { useQueryState } from "nuqs";
 
 export default function UserProfile() {
   const { data, isLoading } = useFetchProfile();
@@ -67,6 +68,10 @@ export default function UserProfile() {
     router.push("/home");
     logout();
   };
+
+  const [page, setPage] = useQueryState("page", {
+    defaultValue: "editProfile",
+  });
 
   return isLoading || orders.isLoading || wishlist.isLoading ? (
     <div>Loading....</div>
@@ -124,8 +129,9 @@ export default function UserProfile() {
           </div>
           <Tabs
             data={tabsData}
-            defaultValue="editProfile"
+            defaultValue={page}
             tabsListClassName=" w-full bg-[#EAF8E7]"
+            setPage={setPage}
           ></Tabs>
         </div>
       </div>
