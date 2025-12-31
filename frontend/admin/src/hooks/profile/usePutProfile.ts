@@ -10,8 +10,8 @@ export const usePutProfile = () => {
       toast.success("Profile updated successfully");
       queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.error || "Profile update failed");
+    onError: () => {
+      toast.error("Profile update failed");
     },
   });
 };

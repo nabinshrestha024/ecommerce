@@ -10,8 +10,8 @@ export const useUpdateVendor = () => {
       toast.success("Vendor updated successfully");
       queryClient.invalidateQueries({ queryKey: ["vendor"] });
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.error || "Vendor update failed");
+    onError: () => {
+      toast.error("Vendor update failed");
     },
   });
 };

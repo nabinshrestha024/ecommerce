@@ -10,8 +10,8 @@ export const useDeleteVendor = () => {
       toast.success("Vendor deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["vendor"] });
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.error || "Vendor deletion failed");
+    onError: () => {
+      toast.error("Vendor deletion failed");
     },
   });
 };
