@@ -7,9 +7,29 @@ CREATE OR ALTER PROCEDURE spProfile_PostSocialLink
     @ProfileLinkUrl VARCHAR(300)
 AS
 BEGIN
-    INSERT INTO UserSocialLinks (UserId, Platform, ProfileLinkUrl)
-    VALUES (@UserId, @Platform, @ProfileLinkUrl);
+    SET NOCOUNT ON;
 
-    SELECT CAST(SCOPE_IDENTITY() AS INT) AS SocialLinkId;
+    DECLARE @SocialLinkId INT;
+
+    SELECT @SocialLinkId = SocialLinkId
+    FROM UserSocialLinks
+    WHERE UserId = @UserId AND Platform = @Platform;
+
+    IF @SocialLinkId IS NOT NULL
+    BEGIN
+        UPDATE UserSocialLinks
+        SET ProfileLinkUrl = @ProfileLinkUrl
+        WHERE SocialLinkId = @SocialLinkId;
+
+        SELECT @SocialLinkId AS SocialLinkId;   
+        RETURN;
+    END
+
+    INSERT INTO UserSocialLinks (UserId, Platform, ProfileLinkUrl, CreatedAt)
+    VALUES (@UserId, @Platform, @ProfileLinkUrl, SYSUTCDATETIME());
+
+    SET @SocialLinkId = CAST(SCOPE_IDENTITY() AS INT);
+
+    SELECT @SocialLinkId AS SocialLinkedId;     
 END;
 GO

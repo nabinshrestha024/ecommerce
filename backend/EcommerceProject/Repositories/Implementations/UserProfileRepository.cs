@@ -82,13 +82,26 @@ namespace EcommerceProject.Repositories.Implementations
                 new { UserId = userId },
                 commandType: CommandType.StoredProcedure);
 
-        public async Task<int> AddSocialLinkAsync(int userId, UserSocialLinkDto dto)
-            => await _dbConnection.ExecuteAsync(
+        public async Task<int> AddSocialLinkAsync(
+    int userId,
+    UpsertUserSocialLinkRequestDto dto)
+        {
+            int socialLinkId = await _dbConnection.QuerySingleAsync<int>(
                 "spProfile_PostSocialLink",
-                new { UserId = userId, dto.Platform, dto.ProfileLinkUrl },
-                commandType: CommandType.StoredProcedure);
+                new
+                {
+                    UserId = userId,
+                    dto.Platform,
+                    ProfileLinkUrl = dto.ProfileLinkUrl
+                },
+                commandType: CommandType.StoredProcedure
+            );
 
-        public async Task UpdateSocialLinkAsync(int socialLinkId, UserSocialLinkDto dto)
+            return socialLinkId;
+        }
+
+
+        public async Task UpdateSocialLinkAsync(int socialLinkId, UpsertUserSocialLinkRequestDto dto)
         => await _dbConnection.ExecuteAsync(
             "spProfile_PutSocialLink",
             new { SocialLinkId = socialLinkId, dto.Platform, dto.ProfileLinkUrl },
