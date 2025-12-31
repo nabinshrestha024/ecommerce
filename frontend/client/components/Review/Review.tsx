@@ -17,7 +17,7 @@ export const Review = () => {
         {ReviewData.map((item) => (
           <div
             key={item.id}
-            className={`rounded-2xl border bg-white p-6 text-left transition hover:-translate-y-1 hover:shadow-lg hover:bg-[#EAF8E7]`}
+            className={`rounded-2xl border bg-white p-6 text-left transition hover:-translate-y-1 hover:shadow-lg hover:bg-[#EAF8E7] hover:cursor-pointer`}
           >
             <div className="mb-4 flex items-center gap-4">
               <Image
@@ -53,7 +53,7 @@ export const Review = () => {
         ))}
       </div>
 
-      <button className="mx-auto mt-14 rounded-full bg-slate-900 px-10 py-4 text-sm font-medium text-white transition hover:bg-slate-800">
+      <button className="mx-auto mt-14 rounded-full bg-slate-900 px-10 py-4 text-sm font-medium text-white transition hover:bg-slate-600 hover:cursor-pointer">
         GET STARTED
       </button>
     </section>

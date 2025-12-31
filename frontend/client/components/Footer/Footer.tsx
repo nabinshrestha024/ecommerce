@@ -1,34 +1,30 @@
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
 import Image from "next/image";
-import { AiFillInstagram } from "react-icons/ai";
-import {
-  FaFacebook,
-  FaInstagram,
-  FaInstagramSquare,
-  FaLinkedin,
-} from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { IoSearch } from "react-icons/io5";
 
 export const Footer = () => {
   return (
     <div className="bg-[#EAF8E7] hidden md:block">
-      <div className="flex justify-between px-10 items-center border-b py-5">
-        <Image src={"/logo.png"} alt="Logo" height={80} width={200} />
-        <div className="relative">
-          <Input
-            type={"text"}
-            placeholder="Enter your email address"
-            className="bg-[#C1E6BA] shrink-0 w-[500px] h-12 rounded-3xl pr-25"
-          />
-          <Button
-            variant={"ghost"}
-            className="bg-white rounded-3xl absolute right-2 top-1/2 -translate-y-1/2"
-          >
-            Subscribe
-          </Button>
+      <div className="w-full flex justify-around flex-col items-center lg:flex-row px-10 gap-5 border-b py-5">
+        <div className="flex items-center">
+          <Image src={"/logo.png"} alt="Logo" height={80} width={180} />
+          <div className="relative">
+            <Input
+              type={"text"}
+              placeholder="Enter your email address"
+              className="bg-[#C1E6BA] shrink-0 w-[480px] h-12 rounded-3xl pr-25"
+            />
+            <Button
+              variant={"ghost"}
+              className="bg-white rounded-3xl absolute right-2 top-1/2 -translate-y-1/2"
+            >
+              Subscribe
+            </Button>
+          </div>
         </div>
+
         <div>
           <div>Connect With Us</div>
           <div className="flex gap-2 text-2xl">

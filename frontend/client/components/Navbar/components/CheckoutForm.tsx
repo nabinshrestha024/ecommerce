@@ -12,7 +12,24 @@ import { useState } from "react";
 import { CartProductType } from "./TopNav";
 import Image from "next/image";
 import { ScrollArea } from "@/ui/scroll-area";
-import { useFetchCart } from "@/hooks/cart/useFetchCart";
+
+interface OrderResponse {
+  orderId: number;
+  totalAmount: number;
+}
+
+export interface EsewaPaymentPayload {
+  paymentUrl: string;
+  fields: {
+    amount: string;
+    tax_amount: string;
+    total_amount: string;
+    transaction_uuid: string;
+    product_code: string;
+    signed_field_names: string;
+    signature: string;
+  };
+}
 
 export const CheckoutForm = ({
   data,
@@ -24,7 +41,7 @@ export const CheckoutForm = ({
   const [pay, setPay] = useState(false);
   const [signature, setSignature] = useState("");
   const [transactionUid, setTransactionUid] = useState("");
-  const [total, setTotal] = useState<number>();
+  const [total, setTotal] = useState<string>();
   const {
     register,
     handleSubmit,
@@ -37,30 +54,14 @@ export const CheckoutForm = ({
   const addOrder = useAddOrder();
   const initiatePayment = useInitiatePayment();
 
-  interface OrderResponse {
-    orderId: number;
-    totalAmount: number;
-  }
-
-  interface EsewaPaymentPayload {
-    paymentUrl: string;
-    fields: {
-      amount: string;
-      tax_amount: string;
-      total_amount: string;
-      transaction_uuid: string;
-      product_code: string;
-      signed_field_names: string;
-      signature: string;
-    };
-  }
-
   const onSubmit = (data: CheckoutFormSchemaType) => {
     addOrder.mutate(data, {
       onSuccess: (orderData: OrderResponse) => {
-        setTotal(orderData.totalAmount);
+        // console.log(orderData)
+        // setTotal(orderData.totalAmount);
         initiatePayment.mutate(orderData.orderId, {
           onSuccess: (paymentData: EsewaPaymentPayload) => {
+            setTotal(paymentData.fields.amount);
             setPay(true);
             setSignature(paymentData.fields.signature);
             setTransactionUid(paymentData.fields.transaction_uuid);
@@ -84,9 +85,7 @@ export const CheckoutForm = ({
             <div key={val.cartId} className="flex gap-4 items-start">
               <div className="w-20 h-20 relative rounded-md overflow-hidden bg-gray-100 shrink-0">
                 <Image
-                  src={
-                    `http://192.168.80.229${val.productImageUrl}` || "/a.jpg"
-                  }
+                  src={`${val.productImageUrl}` || "/a.jpg"}
                   fill
                   alt={val.productName}
                   className="object-cover"
@@ -121,9 +120,9 @@ export const CheckoutForm = ({
           ))}
         </div>
       </ScrollArea>
-      <input type="hidden" name="amount" value="1200.00" />
+      <input type="hidden" name="amount" value={total} />
       <input type="hidden" name="tax_amount" value="0" />
-      <input type="hidden" name="total_amount" value="1200.00" />
+      <input type="hidden" name="total_amount" value={total} />
       <input type="hidden" name="product_service_charge" value="0" />
       <input type="hidden" name="product_delivery_charge" value="0" />
       <input type="hidden" name="transaction_uuid" value={transactionUid} />

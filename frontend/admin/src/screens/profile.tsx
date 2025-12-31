@@ -1,6 +1,6 @@
-import { ChangePassword } from "@/components/profile/ChangePassword";
-import { ProfileUpdate } from "@/components/profile/ProfileUpdate";
-import { ShortProfile } from "@/components/profile/ShortProfile";
+import { ChangePassword } from "@/components/Profile/ChangePassword";
+import { ProfileUpdate } from "@/components/Profile/ProfileUpdate";
+import { ShortProfile } from "@/components/Profile/ShortProfile";
 
 export const Profile = () => {
   return (

@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
-import { Bell, Heart, User } from "lucide-react";
+import { Bell, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
@@ -15,8 +15,7 @@ import { useSearch } from "@/hooks/search/useSearch";
 import { useDebounce } from "@/hooks/search/useDebounce";
 import { Notification } from "@/components/Notification/Notification";
 import { CartComponent } from "./CartComponent";
-import { Sidebar } from "./Sidebar";
-// import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
+import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
 
 export interface CartProductType {
   cartId: number;
@@ -33,8 +32,8 @@ export interface CartProductType {
 export const TopNav = () => {
   const router = useRouter();
   const [searchData, setSearchData] = useState("");
-  // const { data } = useFetchProfile();
-  const { token, logout } = useAuth();
+  const { data } = useFetchProfile();
+  const { token } = useAuth();
   const isAuth = Boolean(token);
 
   const debounceSearch = useDebounce(searchData, 500);
@@ -44,7 +43,6 @@ export const TopNav = () => {
   }, [debounceSearch]);
 
   const search = useSearch(debounceSearch);
-
   return (
     <div className="flex justify-between px-5 lg:px-10 items-center py-5 border-b">
       <div className="flex gap-2 divide-x-2">
@@ -52,7 +50,7 @@ export const TopNav = () => {
           src={"/logo.png"}
           alt="Logo"
           height={80}
-          width={200}
+          width={180}
           className="hidden lg:block"
         />
         <Image
@@ -66,10 +64,11 @@ export const TopNav = () => {
           <FaLocationDot className="text-2xl" />
           <div>
             <div className="text-xs">Deliver to</div>
-            <div className="text-sm font-semibold">
-              {/* {data.address} */}
-              Your Address
-            </div>
+            {isAuth ? (
+              <div className="text-sm font-semibold">{data?.address}</div>
+            ) : (
+              <div className="text-sm font-semibold">Your address</div>
+            )}
           </div>
         </div>
       </div>
@@ -151,9 +150,9 @@ export const TopNav = () => {
         <CartComponent />
       </div>
 
-      <div className="md:hidden">
+      {/* <div className="md:hidden">
         <Sidebar />
-      </div>
+      </div> */}
     </div>
   );
 };
