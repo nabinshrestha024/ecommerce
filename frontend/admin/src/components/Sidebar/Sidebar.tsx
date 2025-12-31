@@ -1,7 +1,6 @@
 import { IoMdHome, IoMdPerson } from "react-icons/io";
 import { FaRegCreditCard, FaShoppingCart } from "react-icons/fa";
 import { BsPlusCircleFill } from "react-icons/bs";
-import { FaBagShopping } from "react-icons/fa6";
 import { CgProfile } from "react-icons/cg";
 import { BiCategory } from "react-icons/bi";
 import {
@@ -44,7 +43,6 @@ const items = [
         url: "/product-management",
         icon: BsPlusCircleFill,
       },
-      { title: "View Products", url: "/view-products", icon: FaBagShopping },
     ],
   },
   {

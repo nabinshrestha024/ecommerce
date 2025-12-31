@@ -2,15 +2,13 @@
 import Image from "next/image";
 import { Card } from "../Card/Card";
 import { useParams } from "next/navigation";
-import { RiAddFill, RiSubtractFill } from "react-icons/ri";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/ui/button";
 import { useProductDetails } from "@/hooks/product/useProductDetails";
 import { useAddToCart } from "@/hooks/cart/useAddToCart";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
-import { Carousel } from "../Carousel/Carousel";
 
 const ProductDetails = () => {
   const sizes = ["S", "M", "L", "XL", "XXL"];
@@ -19,6 +17,12 @@ const ProductDetails = () => {
   const searchParams = useParams();
   const slug = searchParams.id;
   const productItems = useProductDetails((slug as string) || "");
+
+  const defaultImage = productItems?.data?.images?.[0]?.imageUrl;
+  const [images, setImages] = useState(defaultImage);
+
+  const displayedImage = images ?? defaultImage;
+
   const addToCart = useAddToCart();
   const handleSubQuantity = () => {
     if (quantity === 1) {
@@ -57,37 +61,21 @@ const ProductDetails = () => {
           <div className="flex gap-5 flex-col px-5 py-8">
             <div className="max-w-[600px] h-[400px] relative">
               <Image
-                src={productItems.data?.images[0]?.imageUrl || ""}
+                src={displayedImage || ""}
                 alt="Image"
                 fill
                 className="w-full h-full rounded-xl object-cover"
                 unoptimized
               />
             </div>
-            <Carousel
-              rootClassName="w-[500px]"
-              previousClassName="absolute left-4 top-12 bg-white text-gray-700 p-2 rounded-full shadow hover:bg-gray-100"
-              nextClassName="absolute right-4 top-12 bg-white text-gray-700 p-2 rounded-full shadow hover:bg-gray-100"
-              contentClassName="flex gap-2"
-              itemClassName="basis-1/3"
-              items={
-                imageUrls?.map((image, index) => (
-                  <div key={index} className="w-[250px] h-[100px] relative">
-                    <Image
-                      src={image || ""}
-                      alt="Image"
-                      fill
-                      className="w-full h-full rounded-xl object-contain"
-                      unoptimized
-                    />
-                  </div>
-                )) ?? []
-              }
-            />
 
-            {/* <div className="flex  gap-2 border-t-2 pt-2">
+            <div className="flex justify-center  gap-3 border-t-2 pt-2">
               {imageUrls?.map((image, index) => (
-                <div key={index} className=" w-[60px] h-[60px] relative">
+                <div
+                  key={index}
+                  className=" w-[100px] h-[100px] relative"
+                  onClick={() => setImages(image)}
+                >
                   <Image
                     src={image || ""}
                     alt="Image"
@@ -97,7 +85,7 @@ const ProductDetails = () => {
                   />
                 </div>
               ))}
-            </div> */}
+            </div>
           </div>
 
           <div className="p-4 flex flex-col gap-3">
@@ -122,7 +110,7 @@ const ProductDetails = () => {
               <div className="flex justify-between items-center">
                 <div className="font-bold text-[18px]">
                   <span className="font-normal">Category: </span>
-                  {productItems.data?.categoryId}
+                  {productItems.data?.categoryName}
                 </div>
                 <div className="font-bold text-[18px]">
                   <span className="font-normal">Stock Quantity: </span>
@@ -175,17 +163,23 @@ const ProductDetails = () => {
                   <MdKeyboardArrowUp />
                 </button>
               </div>
-              <Button
-                className="w-[200px]"
-                onClick={() =>
-                  handleAddToCart({
-                    productId: productItems?.data?.productId || 1,
-                    quantity: quantity,
-                  })
-                }
-              >
-                Add to cart
-              </Button>
+              {productItems.data?.stockQuantity === 0 ? (
+                <Button className="w-[200px] bg-gray-500 text-white" disabled>
+                  Out of Stock
+                </Button>
+              ) : (
+                <Button
+                  className="w-[200px]"
+                  onClick={() =>
+                    handleAddToCart({
+                      productId: productItems?.data?.productId || 1,
+                      quantity: quantity,
+                    })
+                  }
+                >
+                  Add to cart
+                </Button>
+              )}
             </div>
           </div>
         </div>

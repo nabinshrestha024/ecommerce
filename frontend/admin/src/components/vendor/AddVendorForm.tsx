@@ -5,6 +5,7 @@ import {
   type AddVendorFormValues,
 } from "./AddVendorFormSchema.zod.ts";
 import { useCreateVendor } from "@/hooks/vendor/useCreateVendor.ts";
+import { Button } from "@/ui/button.tsx";
 export const AddVendorForm = () => {
   const { mutate } = useCreateVendor();
   const {
@@ -110,12 +111,13 @@ export const AddVendorForm = () => {
         </div>
 
         <div className="flex justify-center mt-4">
-          <button
+          <Button
             type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            variant={"default"}
+            className="px-4 py-4  text-white rounded-md "
           >
             Add Vendor
-          </button>
+          </Button>
         </div>
       </div>
     </form>

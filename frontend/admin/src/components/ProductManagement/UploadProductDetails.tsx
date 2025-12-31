@@ -87,7 +87,6 @@ export const UploadProductDetails = forwardRef((_, ref) => {
     URL.revokeObjectURL(images[index].preview);
     setImages((prev) => {
       const updated = prev.filter((_, i) => i !== index);
-      // Update RHF form value to reflect removed image(s)
       setValue(
         "images",
         updated.map((i) => i.file),

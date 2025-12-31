@@ -16,7 +16,11 @@ export const ShortProfile = () => {
         <div className="flex flex-col items-center">
           <div className="h-20 w-20 sm:h-24 sm:w-24 flex justify-center items-center rounded-full bg-gray-200 shadow-md mt-1 mb-2">
             <img
-              src={data?.profilePicture ?? "profile.webp"}
+              src={
+                data?.profileImageUrl
+                  ? `http://192.168.80.229/${data.profileImageUrl}`
+                  : "profile.webp"
+              }
               alt="Profile"
               className="h-full w-full rounded-full object-cover border-2 border-white"
             />
