@@ -12,6 +12,7 @@ import { Wishlist } from "@/components/Wishlist/Wishlist";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
+import { LogOut } from "lucide-react";
 import { useQueryState } from "nuqs";
 
 export default function UserProfile() {
@@ -35,7 +36,7 @@ export default function UserProfile() {
     {
       id: 3,
       value: "myOrders",
-      triggerText: "My Orders",
+      triggerText: "Orders",
       content: <Order />,
     },
     {
@@ -77,7 +78,7 @@ export default function UserProfile() {
   ) : (
     <div className="w-full">
       <div className="min-h-screen bg-gray-50">
-        <div className="mx-auto p-6">
+        <div className="mx-auto p-3 md:p-6">
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-4">
@@ -96,9 +97,10 @@ export default function UserProfile() {
               </div>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-red-500"
+                className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-red-500 flex gap-2"
               >
-                Log Out
+                <LogOut className="p-0.5" />{" "}
+                <p className="hidden md:block">Log Out</p>
               </button>
             </div>
 

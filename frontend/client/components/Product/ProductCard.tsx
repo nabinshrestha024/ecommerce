@@ -121,7 +121,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <Card
-      className="p-3 w-full max-w-[285px] h-[400px] md:h-[380px] border-0 shadow-none flex flex-col justify-between"
+      className="p-3 w-full max-w-[285px] border-0 shadow-none flex flex-col justify-between h-[400px] md:h-[380px] "
       key={product.productId}
       rootClassName="py-0 border shadow-xl"
     >
@@ -200,7 +200,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </Link>
         {product.stockQuantity === 0 ? (
           <Button
-            className="px-5 py-4 text-[14px] font-bold bg-gray-500 text-white rounded-[200px] hover:bg-[#fffcfc]"
+            className="px-5 py-4 text-[14px] font-bold bg-gray-500 text-white rounded-[200px]"
             disabled
           >
             Out of stock
@@ -209,7 +209,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <Dialog
             triggerText={
               <Button
-                className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px] hover:bg-[#fffcfc]"
+                className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px]"
                 onPointerDownCapture={() => setQuantity(1)}
               >
                 Add to cart
