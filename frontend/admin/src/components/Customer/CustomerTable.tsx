@@ -5,36 +5,50 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { data } from "./CustomerTable.import";
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import { Table } from "../Table/Table";
 import { CustomerProfile } from "../Customer/CustomerProfile.tsx";
 import { Dialog } from "../Dialog/Dialog.tsx";
 import { CustomerForm } from "./CustomerForm.tsx";
+import { useUser } from "@/hooks/user/useUser.ts";
+import { useDeleteUser } from "@/hooks/user/useDelete.ts";
 
 type Person = {
-  id: string;
-  name: string;
+  userId: number;
+  email: string;
+  fullName: string;
+  passwordHash: string;
+  status: number;
+  profileImageUrl: string | null;
   phone: string;
-  orderCount: string;
-  totalSpend: string;
-  status: string;
+  address: string;
+  city: string;
+  role: boolean;
+  refreshToken: string | null;
+  accessToken: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  userProfile: string;
+  socialLinks: string;
+  orders: string;
 };
 
 export const CustomerTable = () => {
-  const [products, setProducts] = useState<Person[]>(data);
-  const columnHelper = createColumnHelper<Person>();
-
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   });
+  const user = useUser(pagination.pageIndex);
+  const columnHelper = createColumnHelper<Person>();
+  const [loading, setLoading] = useState(false);
 
   const [selectedCustomer, setSelectedCustomer] = useState<Person | null>(null);
 
   const handleRowClick = (row: Person) => {
-    if (selectedCustomer?.id === row.id) {
+    if (selectedCustomer?.userId === row.userId) {
       setSelectedCustomer(null);
     } else {
       setSelectedCustomer(row);
@@ -45,12 +59,18 @@ export const CustomerTable = () => {
     setSelectedCustomer(row);
   };
 
-  const handleDelete = (id: string) => {
-    setProducts((prev) => prev.filter((product) => product.id !== id));
+  const deleteUser = useDeleteUser();
+  const handleDelete = (userId: number) => {
+    setLoading(true);
+    deleteUser.mutate(userId, {
+      onSuccess: () => {
+        setLoading(false);
+      },
+    });
   };
 
   const columns = [
-    columnHelper.accessor("id", {
+    columnHelper.accessor("userId", {
       header: "Customer Id",
       cell: (info) => (
         <div
@@ -62,7 +82,7 @@ export const CustomerTable = () => {
       ),
     }),
 
-    columnHelper.accessor("name", {
+    columnHelper.accessor("fullName", {
       header: "Name",
       cell: (info) => (
         <div
@@ -86,26 +106,26 @@ export const CustomerTable = () => {
       ),
     }),
 
-    columnHelper.accessor("orderCount", {
-      header: "Order Count",
+    columnHelper.accessor("address", {
+      header: "Address",
       cell: (info) => (
         <div
           onClick={() => handleRowClick(info.row.original)}
           className="cursor-pointer"
         >
-          {info.getValue()}
+          {info.getValue() ?? "-"}
         </div>
       ),
     }),
 
-    columnHelper.accessor("totalSpend", {
-      header: "Total Spend",
+    columnHelper.accessor("role", {
+      header: "Role",
       cell: (info) => (
         <div
           onClick={() => handleRowClick(info.row.original)}
           className="cursor-pointer"
         >
-          {info.getValue()}
+          {info.getValue() ? "Admin" : "User"}
         </div>
       ),
     }),
@@ -122,13 +142,11 @@ export const CustomerTable = () => {
           >
             <div
               className={`w-2 h-2 rounded-full ${
-                value === "Active" ? "bg-[#21C45D]" : "bg-[#EF4343]"
+                value === 1 ? "bg-[#21C45D]" : "bg-[#EF4343]"
               }`}
             ></div>
             <div
-              className={`${
-                value === "Active" ? "text-[#21C45D]" : "text-[#EF4343]"
-              }`}
+              className={`${value === 1 ? "text-[#21C45D]" : "text-[#EF4343]"}`}
             >
               {value}
             </div>
@@ -153,20 +171,24 @@ export const CustomerTable = () => {
             {selectedCustomer && (
               <CustomerForm
                 customer={selectedCustomer}
-                onSave={(updatedProduct) => {
-                  setProducts((prev) =>
-                    prev.map((p) =>
-                      p.id === updatedProduct.id ? updatedProduct : p,
-                    ),
-                  );
+                onSave={() => {
+                  setSelectedCustomer(null);
                 }}
               />
             )}
           </Dialog>
-          <MdDelete
-            className="text-[#6A717F] text-[20px]"
-            onClick={() => handleDelete(info.row.original.id)}
-          />
+          <button
+            type="button"
+            onClick={() => handleDelete(info.row.original.userId)}
+            disabled={loading}
+            className="p-1 disabled:cursor-not-allowed"
+          >
+            <MdDelete
+              className={`text-[20px] ${
+                loading ? "text-gray-400" : "text-[#6A717F] hover:text-red-600"
+              }`}
+            />
+          </button>
         </div>
       ),
     }),
@@ -174,7 +196,7 @@ export const CustomerTable = () => {
 
   const table = useReactTable({
     columns,
-    data: products,
+    data: user.data?.data || [],
     state: { pagination },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

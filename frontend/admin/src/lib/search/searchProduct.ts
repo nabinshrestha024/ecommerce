@@ -4,7 +4,7 @@ import { endpoint } from "../endpoint";
 
 export const searchProduct = async (productName: string) => {
   try {
-    const res = await axiosInstance.get(endpoint.PRODUCT, {
+    const res = await axiosInstance.get(endpoint.FETCH_PRODUCT, {
       params: { search: productName, OnlyActive: true, Page: 1, PageSize: 20 },
     });
     return res.data;

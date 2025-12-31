@@ -6,7 +6,7 @@ export type CategoryData = {
   categoryId: number;
   name: string;
   slug: string;
-  categoryImageUrl: null;
+  categoryImageURL: null;
   description: string;
   isFeatured: boolean;
   sortOrder: number;

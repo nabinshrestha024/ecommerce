@@ -1,18 +1,32 @@
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   customerSchema,
   type CustomerFormValues,
 } from "../Customer/CustomerFormZod.ts";
 import { Input } from "../Input/Input.tsx";
+import { useEditUser } from "@/hooks/user/useEdit.ts";
 
 interface Person {
-  id: string;
-  name: string;
+  userId: number;
+  email: string;
+  fullName: string;
+  passwordHash: string;
+  status: number;
+  profileImageUrl: string | null;
   phone: string;
-  orderCount: string;
-  totalSpend: string;
-  status: string;
+  address: string;
+  city: string;
+  role: boolean;
+  refreshToken: string | null;
+  accessToken: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  userProfile: string;
+  socialLinks: string;
+  orders: string;
 }
 type Props = {
   customer: Person;
@@ -26,18 +40,45 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
     formState: { errors },
     reset,
   } = useForm<CustomerFormValues>({
-    resolver: zodResolver(customerSchema),
+    resolver: zodResolver(customerSchema) as Resolver<CustomerFormValues>,
+    defaultValues: {
+      name: customer.fullName,
+      password: customer.passwordHash,
+      address: customer.address,
+      phone: customer.phone,
+      city: customer.city,
+      isActive: customer.isActive ? "true" : "false",
+    },
     mode: "onChange",
   });
 
+  const editUser = useEditUser();
   const onSubmit = (data: CustomerFormValues) => {
-    console.log("Form Data:", data);
-    const updatedProduct: Person = {
+    const updatedUser: Person = {
       ...customer,
-      ...data,
+      fullName: data.name,
+      phone: data.phone,
+      passwordHash: data.password,
+      address: data.address,
+      city: data.city,
+      isActive: data.isActive === "true",
     };
-    onSave(updatedProduct);
-    reset(updatedProduct);
+
+    editUser.mutate({
+      userId: customer.userId,
+      userData: updatedUser,
+    });
+
+    onSave(updatedUser);
+
+    reset({
+      name: updatedUser.fullName,
+      phone: updatedUser.phone,
+      password: data.password,
+      address: updatedUser.address,
+      city: updatedUser.city,
+      isActive: updatedUser.isActive ? "true" : "false",
+    });
   };
 
   return (
@@ -47,32 +88,11 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
           Edit Customer
         </h2>
 
-        <div className="grid grid-cols-4 gap-4 items-center ">
-          <label className="col-span-1 font-medium text-gray-700">
-            Customer ID
-          </label>
-          <div className="col-span-3">
-            <Input
-              type="text"
-              defaultValue={customer.id}
-              placeholder=""
-              {...register("customerId")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0"
-            />
-            {errors.customerId && (
-              <p className="text-[12px] text-red-500 ">
-                {errors.customerId.message}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-4 gap-4 items-center mt-5">
+        <div className="grid grid-cols-4 gap-4  mt-5">
           <label className="font-medium text-gray-700">Name</label>
           <div className="col-span-3">
             <Input
               type="text"
-              defaultValue={customer.name}
               placeholder=""
               {...register("name")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
@@ -83,12 +103,31 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 items-center mt-5">
+        <div className="grid grid-cols-4 gap-4 mt-5">
+          <label className="col-span-1 font-medium text-gray-700">
+            Password
+          </label>
+          <div className="col-span-3">
+            <Input
+              type="text"
+              placeholder=""
+              {...register("password")}
+              maxLength={10}
+              className="w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+            />
+            {errors.password && (
+              <p className="text-[12px] text-red-500 ">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-4 gap-4  mt-5">
           <label className="font-medium text-gray-700">Phone Number</label>
           <div className="col-span-3">
             <Input
               type="phone"
-              defaultValue={customer.phone}
               placeholder=""
               {...register("phone")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
@@ -101,48 +140,79 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium text-gray-700">Order Count</label>
+        <div className="grid grid-cols-4 gap-4 mt-5">
+          <label className="font-medium text-gray-700">Address</label>
           <div className="col-span-3">
             <Input
               type="text"
-              defaultValue={customer.orderCount}
               placeholder=""
-              {...register("orderCount")}
+              {...register("address")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
-            {errors.orderCount && (
+            {errors.address && (
               <p className="text-[12px] text-red-500 ">
-                {errors.orderCount.message}
+                {errors.address.message}
               </p>
             )}
           </div>
         </div>
 
         <div className="grid grid-cols-4 gap-4 mt-5">
-          <label className="font-medium text-gray-700 mt-2">Total Spend</label>
+          <label className="font-medium text-gray-700 mt-2">City</label>
           <div className="col-span-3">
             <Input
               type="text"
-              defaultValue={customer.totalSpend}
               placeholder=""
-              {...register("totalSpend")}
+              {...register("city")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded resize-none focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
-            {errors.totalSpend && (
-              <p className="text-[12px] text-red-500 ">
-                {errors.totalSpend.message}
-              </p>
+            {errors.city && (
+              <p className="text-[12px] text-red-500 ">{errors.city.message}</p>
             )}
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="bg-green-600 hover:bg-green-700 text-white px-10 py-2 rounded transition mt-5"
-        >
-          Save Product
-        </button>
+        <div className="grid grid-cols-4 gap-4 mt-5">
+          <label className="col-span-1 font-medium text-gray-700">
+            isActive
+          </label>
+
+          <div className="col-span-3 flex items-center gap-6">
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                value="true"
+                {...register("isActive")}
+                className="accent-blue-600"
+              />
+              <span>True</span>
+            </label>
+
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                value="false"
+                {...register("isActive")}
+                className="accent-blue-600"
+              />
+              <span>False</span>
+            </label>
+          </div>
+
+          {errors.isActive && (
+            <p className="col-span-4 text-[12px] text-red-500">
+              {errors.isActive.message}
+            </p>
+          )}
+        </div>
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="bg-green-600 hover:bg-green-700 text-white px-10 py-2 rounded transition mt-5"
+          >
+            Save Product
+          </button>
+        </div>
       </form>
     </div>
   );

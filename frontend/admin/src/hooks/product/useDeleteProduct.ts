@@ -28,8 +28,8 @@ export const useDeleteProduct = () => {
       queryClient.invalidateQueries({ queryKey: ["productData"] });
     },
 
-    onError: () => {
-      toast.error("An error occurred during login.");
+    onError: (error: Error) => {
+      toast.error(error.message);
     },
   });
 };

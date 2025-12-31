@@ -10,7 +10,7 @@ export const getUser = async (pageIndex: number) => {
         PageSize: 10,
       },
     });
-    return res.data.data;
+    return res.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
       return e.response?.data;

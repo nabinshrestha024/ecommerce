@@ -14,7 +14,7 @@ export const CategoryCard = () => {
           <div className="w-ull flex gap-3 items-center ">
             <div className="w-16 h-16 border border-[#E5E7EB] rounded-md overflow-hidden">
               <img
-                src={category.categoryImageUrl || "/placeholder-image.png"}
+                src={category?.categoryImageURL ?? ""}
                 alt="image"
                 className="w-full h-full object-cover"
               />
