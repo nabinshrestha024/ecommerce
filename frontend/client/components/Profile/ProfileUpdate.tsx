@@ -11,6 +11,20 @@ import { Input } from "@/ui/input";
 import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
 import Image from "next/image";
 
+export interface ProfileFormData {
+  profilePicture?: File;
+  fullName?: string;
+  password?: string;
+  email?: string;
+  phoneNumber?: string;
+  address?: string;
+  biography?: string;
+  dateOfBirth?: string;
+  gender?: string;
+  status?: string;
+  city?: string;
+}
+
 export const ProfileUpdate = () => {
   const { data } = useFetchProfile();
   // const { mutate } = usePutProfile();
@@ -19,7 +33,10 @@ export const ProfileUpdate = () => {
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(ProfileUpdateSchema), mode: "all" });
+  } = useForm<ProfileFormData>({
+    resolver: zodResolver(ProfileUpdateSchema),
+    mode: "all",
+  });
 
   const [preview, setPreview] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -41,11 +58,8 @@ export const ProfileUpdate = () => {
       dateOfBirth: data.dateOfBirth ?? "",
       biography: data.bio ?? "",
     });
-
-    if (data.profileImageUrl) {
-      setPreview(data.profileImageUrl);
-    }
   }, [data, reset]);
+  const defaultImage = data.profileImageUrl;
 
   const handleImageInput = () => {
     imageInputRef.current?.click();
@@ -66,7 +80,7 @@ export const ProfileUpdate = () => {
     };
   }, [preview]);
 
-  const onSubmit = (formData: any) => {
+  const onSubmit = (formData: ProfileFormData) => {
     const dataToSend = new FormData();
 
     const dob = formData.dateOfBirth
@@ -121,7 +135,7 @@ export const ProfileUpdate = () => {
           <div className="flex flex-col sm:flex-row items-center gap-4 pb-4 sm:pb-6 border-b border-gray-200">
             <div className="relative">
               <Image
-                src={preview}
+                src={preview || defaultImage}
                 alt="Profile"
                 width={20}
                 height={20}

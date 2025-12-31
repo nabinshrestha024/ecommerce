@@ -151,9 +151,9 @@ export const TopNav = () => {
         <CartComponent />
       </div>
 
-      <div className="md:hidden">
+      {/* <div className="md:hidden">
         <Sidebar />
-      </div>
+      </div> */}
     </div>
   );
 };
