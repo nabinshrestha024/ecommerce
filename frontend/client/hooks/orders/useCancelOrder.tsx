@@ -10,8 +10,8 @@ export const useCancelOrder = (orderId: number) => {
       toast.success("Order cancelled successfully");
       queryClient.invalidateQueries({ queryKey: ["orderData"] });
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.error || "Order cancellation failed");
+    onError: () => {
+      toast.error("Order cancellation failed");
     },
   });
 };
