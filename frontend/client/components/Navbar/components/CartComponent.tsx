@@ -44,14 +44,13 @@ export const CartComponent = () => {
 
   return (
     <div className="flex gap-2 shrink-0 items-center text-xl">
-      <div onClick={() => setOpen(true)} className="cursor-pointer">
+      <div onClick={() => setOpen(true)} className="cursor-pointer relative">
+        {isAuth && (
+          <div className="absolute -top-2 -right-2 h-4 w-4 bg-red-500 rounded-full flex items-center justify-center text-xs text-white font-semibold">
+            {data?.length || 0}
+          </div>
+        )}
         <FaShoppingCart />
-      </div>
-      <div
-        className="text-sm font-semibold cursor-pointer"
-        onClick={() => setOpen(true)}
-      >
-        Cart
       </div>
       <div
         className={`fixed right-0 top-0 z-20 h-screen transform ${open ? "translate-x-0" : "translate-x-full"} transition-transform duration-300 w-full max-w-md bg-white shadow-lg overflow-y-auto`}
@@ -113,10 +112,7 @@ export const CartComponent = () => {
                   <div key={val.cartId} className="flex gap-4 items-start">
                     <div className="w-20 h-20 relative rounded-md overflow-hidden bg-gray-100 shrink-0">
                       <Image
-                        src={
-                          `http://192.168.80.229${val.productImageUrl}` ||
-                          "/a.jpg"
-                        }
+                        src={`${val.productImageUrl}` || "/a.jpg"}
                         fill
                         alt={val.productName}
                         className="object-cover"
@@ -147,7 +143,7 @@ export const CartComponent = () => {
                       <div className="mt-3 flex items-center justify-between">
                         <div className="text-sm text-gray-700">
                           Price:{" "}
-                          <span className="font-semibold">${val.price}</span>
+                          <span className="font-semibold">Rs. {val.price}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <button
@@ -192,7 +188,7 @@ export const CartComponent = () => {
               <div className="flex items-center justify-between mb-3">
                 <div className="text-sm text-gray-600">Grand Total</div>
                 <div className="text-2xl font-semibold text-green-600">
-                  ${totalPrice}
+                  Rs. {totalPrice}
                 </div>
               </div>
 

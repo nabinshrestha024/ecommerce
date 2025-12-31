@@ -135,7 +135,7 @@ export const ProfileUpdate = () => {
           <div className="flex flex-col sm:flex-row items-center gap-4 pb-4 sm:pb-6 border-b border-gray-200">
             <div className="relative">
               <Image
-                src={preview || defaultImage}
+                src={preview || defaultImage || "/default.jpg"}
                 alt="Profile"
                 width={20}
                 height={20}

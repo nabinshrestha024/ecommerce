@@ -79,13 +79,13 @@ export const TrendingProductCard = () => {
     sizeValue?: string,
   ) => {
     if (token) {
-      // addToCart.mutate({
-      //   productId: productId,
-      //   quantity: 1,
-      // });
-      console.log("Product: ", productId);
-      console.log("Quantity: ", quantity);
-      console.log("Size: ", sizeValue);
+      addToCart.mutate({
+        productId: productId,
+        quantity: quantity,
+      });
+      // console.log("Product: ", productId);
+      // console.log("Quantity: ", quantity);
+      // console.log("Size: ", sizeValue);
     } else {
       toast.message("Login to add to cart");
     }
@@ -303,7 +303,7 @@ export const TrendingProductCard = () => {
                           }}
                           className="px-4 py-2 bg-[#4EA674] text-white"
                         >
-                          Confirm
+                          Add to Cart
                         </Button>
                       </DialogClose>
                     </div>
