@@ -248,9 +248,9 @@ export const UploadProductDetails = forwardRef((_, ref) => {
                 {variants.map((variant, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between px-3 py-2 rounded-xl transition-colors shadow-sm"
+                    className="flex items-center justify-between px-3 py-2 mt-4 rounded-xl transition-colors shadow-md"
                   >
-                    <span className="text-sm font-medium truncate mr-2">
+                    <span className="text-md font-medium truncate mr-1">
                       {variant}
                     </span>
                     <button
@@ -279,13 +279,13 @@ export const UploadProductDetails = forwardRef((_, ref) => {
               </p>
             )}
             {tags.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {tags.map((tag, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between px-3 py-2 rounded-xl transition-colors shadow-sm"
+                    className="flex items-center justify-between px-3 py-2 mt-4 rounded-xl transition-colors shadow-md"
                   >
-                    <span className="text-sm font-medium truncate mr-2">
+                    <span className="text-md font-medium truncate mr-1">
                       {tag}
                     </span>
                     <button

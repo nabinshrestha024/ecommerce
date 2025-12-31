@@ -67,10 +67,13 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
 
   return (
     <div className="flex justify-center items-center">
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-h-40vh overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+      >
         <h2 className="text-[24px] font-bold mb-6 text-center">Edit Vendor</h2>
 
-        <div className="grid grid-cols-4 gap-4 items-center mt-5">
+        <div className="grid grid-cols-4 gap-4 items-center mt-5 ">
           <label className="font-medium ">Business Name</label>
           <div className="col-span-3">
             <Input

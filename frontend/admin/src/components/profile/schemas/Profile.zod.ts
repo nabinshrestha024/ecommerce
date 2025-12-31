@@ -31,7 +31,9 @@ export const ProfileUpdateSchema = z.object({
     .max(500, "Biography must be at most 500 characters")
     .min(1, "Biography is required")
     .optional(),
-
+  gender: z.enum(["Male", "Female", "Other"]).optional(),
+  city: z.string().min(1, "City is required").optional(),
+  status: z.enum(["0", "1"]).optional(),
   dateOfBirth: z
     .string()
     .optional()
@@ -53,3 +55,4 @@ export const ProfileUpdateSchema = z.object({
       },
     ),
 });
+export type ProfileUpdateType = z.infer<typeof ProfileUpdateSchema>;

@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { updateProfile } from "@/services/profile.services";
 import { toast } from "sonner";
 export const usePutProfile = () => {
