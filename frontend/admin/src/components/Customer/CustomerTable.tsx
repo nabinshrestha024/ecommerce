@@ -114,7 +114,7 @@ export const CustomerTable = () => {
           onClick={() => handleRowClick(info.row.original)}
           className="cursor-pointer"
         >
-          {info.getValue()}
+          {info.getValue() ?? "-"}
         </div>
       ),
     }),

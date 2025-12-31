@@ -174,7 +174,7 @@ export const CategoryTable = () => {
     {
       id: 1,
       value: "All",
-      triggerText: "All Orders",
+      triggerText: "All Products",
       content: <Table table={table} pageIndex={pagination.pageIndex} />,
     },
 
