@@ -65,7 +65,7 @@ namespace EcommerceProject.Controllers.v1.AuthController
             }
         }
 
-        [HttpPut("update")]
+        [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateUser(int id , UpdateUserDto dto)
         {
@@ -88,7 +88,7 @@ namespace EcommerceProject.Controllers.v1.AuthController
 
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int userId)
         {

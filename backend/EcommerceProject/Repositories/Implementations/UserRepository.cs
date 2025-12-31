@@ -86,6 +86,20 @@ namespace EcommerceProject.Repositories.Implementations
                 commandType: CommandType.StoredProcedure
             );
         }
+
+        public async Task UpdatePasswordAsync(int userId, string passwordHash)
+        {
+            using var conn = _factory.CreateConnection();
+            await conn.ExecuteAsync(
+                "spUser_UpdatePassword",
+                new
+                {
+                    UserId = userId,
+                    PasswordHash = passwordHash
+
+                },
+                commandType:CommandType.StoredProcedure);
+        }
         public async Task DeleteUserAsync(int userId)
         {
             using var conn = _factory.CreateConnection();

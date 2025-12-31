@@ -23,7 +23,15 @@ namespace EcommerceProject.Services.Implementations
         private readonly IHttpContextAccessor _httpContext;
         private readonly IPasswordRepository _passwordResetRepository;
         private readonly ILoginRateLimitRepo _loginRateLimiter;
-        public AuthService(IConfiguration configuration, ISqlConnectionFactory connectionFactory, IUserService userService, IJwtTokenService jwtService, IAuthRepository auth, IHttpContextAccessor httpcontext,IPasswordRepository passwordRepository,ILoginRateLimitRepo loginRateLimiter)
+        private readonly IEmailService _emailService;
+
+        public AuthService(IConfiguration configuration,
+            ISqlConnectionFactory connectionFactory, 
+            IUserService userService, IJwtTokenService jwtService, 
+            IAuthRepository auth, IHttpContextAccessor httpcontext,
+            IPasswordRepository passwordRepository,
+            ILoginRateLimitRepo loginRateLimiter,
+            IEmailService emailService)
         {
             _configuration = configuration;
             _connectionFactory = connectionFactory;
@@ -33,6 +41,7 @@ namespace EcommerceProject.Services.Implementations
             _httpContext = httpcontext ?? throw new ArgumentNullException(nameof(httpcontext));
             _passwordResetRepository = passwordRepository;
             _loginRateLimiter = loginRateLimiter;
+            _emailService = emailService;
         }
 
         public async Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto)
@@ -200,34 +209,77 @@ namespace EcommerceProject.Services.Implementations
         }
 
 
-        public async Task <string?> GeneratePasswordResetAsync(string email)
+
+
+        public async Task ResetPasswordAsync(string email, string otp, string newPassword)
         {
-            var user = await _userService.GetUserByEmailAsync(email,false);
-            if (user == null)
+
+            var user = await _userService.GetUserByEmailAsync(email, false);
+            if(user == null)
             {
-                return null;
+                throw new Exception("User not found");
             }
 
-            var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64))
-                                .Replace("/", "")
-                                .Replace("+", "")
-                                .Replace("=", "");
+            var otpRecord = await _auth.ValidateOtpRecordAsync(user.UserId, otp);
 
-            var expiry = DateTime.UtcNow.AddMinutes(30);
+            if(otpRecord == null)
+            {
+                throw new Exception("INvalid or expired OTP");
 
-            await _passwordResetRepository.SaveTokenAsync(user.UserId, token, expiry);
+            }
 
-            return token;
+            await _userService.ResetPasswordAsync(user.UserId,newPassword);
+            await _auth.MarkOtpUsedAsync(otpRecord.OtpId);  
+
+        }
+
+
+        public async Task ForgotPasswordAsync(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                email = "sujalmhzn@gmail.com";
+            var user = await _userService.GetUserByEmailAsync(email,false);
+
+            if(user == null)
+            {
+                throw new Exception("user not found");
+
+            }
+
+            var otp = new Random().Next(100000, 999999).ToString();
+            var expires = DateTime.UtcNow.AddMinutes(10);
+
+            await _auth.CreateOtpAsync(user.UserId, otp, expires);
 
             
+            
+            await _emailService.SendEmail(new MailRequest
+            {
+                Email = email,
+                Subject = "Password Reset OTP",
+                Emailbody = $"<p> YOUR OTP IS <b>{otp}<b>.</p><p> IT Expires in 10 minutes.</p>",
+                IsHtml = true
+            });
+               
         }
 
-        public async Task ResetPasswordAsync(string token, string newPassword)
+
+        public async Task VerifyOtpAsync(string email, string otp)
         {
-            var hash = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            await _passwordResetRepository.ResetPasswordAsync(token, hash);
-        }
+            var user = await _userService.GetUserByEmailAsync(email,false);
+            if(user == null)
+            {
+                throw new Exception("User not found with this email.");
 
+            }
+
+            var otpRecord = await _auth.ValidateOtpRecordAsync(user.UserId, otp);
+
+            if(otpRecord == null)
+            {
+                throw new Exception("InValid or Expired OTP");
+            }
+        }
 
         public async Task LogoutAsync(int userId)
         {
