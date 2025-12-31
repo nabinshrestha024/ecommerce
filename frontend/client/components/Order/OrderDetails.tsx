@@ -6,6 +6,8 @@ import { Button } from "@/ui/button";
 export const OrderDetails = ({ order }: { order: OrderData }) => {
   const { data } = useGetOrderById(order.orderId);
   console.log(data?.items);
+
+  const handleCancelOrder = () => {};
   return (
     <div className="space-y-4">
       {data?.items?.map((item) => (
@@ -42,7 +44,12 @@ export const OrderDetails = ({ order }: { order: OrderData }) => {
       ))}
       {order.paymentStatus === "Processing" ? (
         <div className="w-full grid grid-cols-2 gap-3">
-          <Button>Cancel Order</Button>
+          <Button
+            onClick={() => handleCancelOrder()}
+            className="bg-red-500 hover:bg-red-600"
+          >
+            Cancel Order
+          </Button>
           <Button>Pay with eSewa</Button>
         </div>
       ) : (

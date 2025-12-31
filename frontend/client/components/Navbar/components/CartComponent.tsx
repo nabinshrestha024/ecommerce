@@ -1,4 +1,4 @@
-import { Dialog } from "@/components/dialog/Dialog";
+import { Dialog } from "@/components/Dialog/Dialog";
 import { Button } from "@/ui/button";
 import { Trash2, X } from "lucide-react";
 import Image from "next/image";
