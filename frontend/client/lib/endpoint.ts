@@ -16,7 +16,7 @@ export const endpoint = {
   FETCHNOTIFICATION: "notifications",
   ADDORDER: "orders",
   ESEWAPAYMENT: "payments/esewa/initiate",
-  PAYMENTSUCCESS: "payments/esewa/verify/success",
+  PAYMENTSUCCESS: "payments/esewa/callback",
   NOTIFICATIONSEEN: "notifications",
   FETCHPROFILE: "profile/me",
   CHANGEPASSWORD: "auth/change_password",
