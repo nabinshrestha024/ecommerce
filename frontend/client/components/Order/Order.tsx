@@ -327,7 +327,7 @@ export const Order = () => {
   ];
 
   return (
-    <div className="flex p-3 rounded-lg w-screen gap-3">
+    <div className="flex p-3 rounded-lg w-full gap-3">
       <div className="flex-1 relative">
         <Tabs
           defaultValue="All"

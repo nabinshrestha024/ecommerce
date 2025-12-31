@@ -18,4 +18,5 @@ export const endpoint = {
   ESEWAPAYMENT: "payments/esewa/initiate",
   PAYMENTSUCCESS: "payments/esewa/verify/success",
   NOTIFICATIONSEEN: "notifications",
+  CHANGEPASSWORD: "auth/change_password",
 };

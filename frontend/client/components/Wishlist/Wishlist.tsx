@@ -19,7 +19,7 @@ interface WishlistItem {
   wishlistId: number;
   productId: number;
   slug: string;
-  primaryImageUrl: string;
+  productImageUrl: string;
   productName: string;
   description: string;
   price: number;
@@ -95,7 +95,7 @@ export const Wishlist = () => {
   };
 
   return (
-    <div className="w-screen">
+    <div className="w-full">
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 p-5">
         {data?.items?.map((wishlist: WishlistItem) => (
           <Card
@@ -106,7 +106,7 @@ export const Wishlist = () => {
             <div className="flex flex-col gap-2">
               <div className="w-full h-[185px] relative">
                 <Image
-                  src={wishlist.primaryImageUrl}
+                  src={wishlist.productImageUrl}
                   alt={wishlist.productName}
                   fill
                   className="object-cover rounded-[12px]"
@@ -154,7 +154,7 @@ export const Wishlist = () => {
                       <div className="flex items-start gap-5 w-full">
                         <div className="w-[100px] h-[100px] relative">
                           <Image
-                            src={wishlist.primaryImageUrl}
+                            src={wishlist.productImageUrl}
                             alt={wishlist.productName}
                             fill
                             className="object-cover rounded-[12px]"
