@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/Navbar/Navbar";
-import { SidebarProvider } from "@/ui/sidebar";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export default function Layout({
   children,
@@ -9,7 +9,7 @@ export default function Layout({
   return (
     <div>
       <Navbar />
-      {children}
+      <NuqsAdapter>{children}</NuqsAdapter>
     </div>
   );
 }

@@ -25,7 +25,10 @@ export default function PaymentSuccessPage() {
         </p>
 
         <div className="mt-6 space-y-3">
-          <Button className="w-full" onClick={() => router.push("/order")}>
+          <Button
+            className="w-full"
+            onClick={() => router.push("/profile?page=myOrders")}
+          >
             Go to Orders
           </Button>
 
