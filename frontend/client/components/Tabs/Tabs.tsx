@@ -1,4 +1,5 @@
 import { Tabs as Root, TabsContent, TabsList, TabsTrigger } from "@/ui/tabs";
+import { Options } from "nuqs";
 import type { ReactNode } from "react";
 
 interface DataType {
@@ -15,6 +16,10 @@ interface TabsProps {
   tabsListClassName: string;
   tabsTriggerClassName?: string;
   tabsContentClassName?: string;
+  setPage?: (
+    value: string | ((old: string) => string | null) | null,
+    options?: Options | undefined,
+  ) => Promise<URLSearchParams>;
 }
 
 export const Tabs = ({
@@ -24,6 +29,7 @@ export const Tabs = ({
   tabsContentClassName,
   tabsTriggerClassName,
   tabsListClassName,
+  setPage,
 }: TabsProps) => {
   return (
     <Root defaultValue={defaultValue} className={rootClassName}>
@@ -33,6 +39,9 @@ export const Tabs = ({
             value={val.value}
             key={val.value}
             className={tabsTriggerClassName}
+            onPointerDownCapture={() => {
+              if (setPage) setPage(val.value);
+            }}
           >
             {val.triggerText}
           </TabsTrigger>

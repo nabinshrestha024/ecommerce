@@ -2,12 +2,30 @@ import Image from "next/image";
 import type { OrderData } from "./Order";
 import { useGetOrderById } from "@/hooks/orders/useGetOrderById";
 import { Button } from "@/ui/button";
+import { useEffect, useState } from "react";
+import { useInitiatePayment } from "@/hooks/esewa/useInitiatePayment";
+import { EsewaPaymentPayload } from "../Navbar/components/CheckoutForm";
 
 export const OrderDetails = ({ order }: { order: OrderData }) => {
   const { data } = useGetOrderById(order.orderId);
   console.log(data?.items);
-
+  const [total, setTotal] = useState("");
+  const [signature, setSignature] = useState("");
+  const [transactionUid, setTransactionUid] = useState("");
+  const esewaInitiate = useInitiatePayment();
+  useEffect(() => {
+    if (data && data?.paymentStatus !== "Paid") {
+      esewaInitiate.mutate(order.orderId, {
+        onSuccess: (data: EsewaPaymentPayload) => {
+          setTotal(data.fields.amount);
+          setSignature(data.fields.signature);
+          setTransactionUid(data.fields.transaction_uuid);
+        },
+      });
+    }
+  }, [data]);
   const handleCancelOrder = () => {};
+
   return (
     <div className="space-y-4">
       {data?.items?.map((item) => (
@@ -42,15 +60,53 @@ export const OrderDetails = ({ order }: { order: OrderData }) => {
           </div>
         </div>
       ))}
-      {order.paymentStatus === "Processing" ? (
-        <div className="w-full grid grid-cols-2 gap-3">
-          <Button
-            onClick={() => handleCancelOrder()}
-            className="bg-red-500 hover:bg-red-600"
-          >
-            Cancel Order
-          </Button>
-          <Button>Pay with eSewa</Button>
+      {order.paymentStatus !== "Paid" ? (
+        <div>
+          <div className="text-lg text-gray-700">
+            Total: <span className="font-semibold">Rs. {total}</span>
+          </div>
+          <div className="w-full grid grid-cols-2 gap-3">
+            <Button
+              onClick={() => handleCancelOrder()}
+              className="bg-red-500 hover:bg-red-600"
+            >
+              Cancel Order
+            </Button>
+            <form
+              action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"
+              method="POST"
+            >
+              <input type="hidden" name="amount" value={total} />
+              <input type="hidden" name="tax_amount" value="0" />
+              <input type="hidden" name="total_amount" value={total} />
+              <input type="hidden" name="product_service_charge" value="0" />
+              <input type="hidden" name="product_delivery_charge" value="0" />
+              <input
+                type="hidden"
+                name="transaction_uuid"
+                value={transactionUid}
+              />
+              <input type="hidden" name="product_code" value="EPAYTEST" />
+              <input
+                type="hidden"
+                name="success_url"
+                value="http://localhost:3000/success"
+              />
+              <input
+                type="hidden"
+                name="failure_url"
+                value="http://localhost:3000/failure"
+              />
+              <input
+                type="hidden"
+                name="signed_field_names"
+                value="total_amount,transaction_uuid,product_code"
+              />
+              <input type="hidden" name="signature" value={signature} />
+
+              <Button type="submit">Pay with eSewa</Button>
+            </form>
+          </div>
         </div>
       ) : (
         <></>

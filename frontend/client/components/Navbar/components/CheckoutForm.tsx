@@ -12,7 +12,24 @@ import { useState } from "react";
 import { CartProductType } from "./TopNav";
 import Image from "next/image";
 import { ScrollArea } from "@/ui/scroll-area";
-import { useFetchCart } from "@/hooks/cart/useFetchCart";
+
+interface OrderResponse {
+  orderId: number;
+  totalAmount: number;
+}
+
+export interface EsewaPaymentPayload {
+  paymentUrl: string;
+  fields: {
+    amount: string;
+    tax_amount: string;
+    total_amount: string;
+    transaction_uuid: string;
+    product_code: string;
+    signed_field_names: string;
+    signature: string;
+  };
+}
 
 export const CheckoutForm = ({
   data,
@@ -36,24 +53,6 @@ export const CheckoutForm = ({
   });
   const addOrder = useAddOrder();
   const initiatePayment = useInitiatePayment();
-
-  interface OrderResponse {
-    orderId: number;
-    totalAmount: number;
-  }
-
-  interface EsewaPaymentPayload {
-    paymentUrl: string;
-    fields: {
-      amount: string;
-      tax_amount: string;
-      total_amount: string;
-      transaction_uuid: string;
-      product_code: string;
-      signed_field_names: string;
-      signature: string;
-    };
-  }
 
   const onSubmit = (data: CheckoutFormSchemaType) => {
     addOrder.mutate(data, {
