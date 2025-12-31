@@ -9,8 +9,8 @@ export const useCreateProduct = () => {
     onSuccess: () => {
       toast.success("Product created successfully");
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.error || "Product creation failed");
+    onError: () => {
+      toast.error("Product creation failed");
     },
   });
 };
