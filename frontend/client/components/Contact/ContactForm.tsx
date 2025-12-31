@@ -27,7 +27,7 @@ export const ContactForm = ({}: {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-      <div className="text-3xl font-bold mb-5 text-green-600">Contact Form</div>
+      <div className="text-4xl font-bold mb-5 text-green-600">Contact Form</div>
       <div>
         <div className="grid grid-cols-2 gap-6">
           <div className="grid gap-2">
