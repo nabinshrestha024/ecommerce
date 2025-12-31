@@ -45,42 +45,36 @@ namespace EcommerceProject.Repositories.Implementations
                 dto.Address,
                 dto.City,
                 dto.ProfileImageUrl,
-                dto.DateOfBirth,
-                dto.Gender,
+                DateOfBirth = dto.DateOfBirth.HasValue
+            ? dto.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue)
+            : (DateTime?)null,
+                Gender = dto.Gender?.ToString(),
                 dto.Bio,
-                dto.Status
             },
             commandType: CommandType.StoredProcedure);
         }
-
-        public async Task UpdateProfileAsync(int userId, PatchProfileRequestDto dto)
+        public async Task RemoveProfileImageAsync(int userId)
         {
             await _dbConnection.ExecuteAsync(
-                "spProfile_PatchUpdate",
-            new
-            {
-                UserId = userId,
-                dto.FullName,
-                dto.Phone,
-                dto.Address,
-                dto.City,
-                dto.ProfileImageUrl,
-                dto.Status,
-                dto.DateOfBirth,
-                dto.Gender,
-                dto.Bio
-            },
-            commandType: CommandType.StoredProcedure
-            );
+                "spProfile_RemoveImage",
+                new { UserId = userId },
+                commandType: CommandType.StoredProcedure);
         }
 
-        public async Task ChangePasswordAsync(int userId, string passwordHash)
+        public async Task UpdateProfileImageAsync(int userId, string profileImageUrl)
         {
             await _dbConnection.ExecuteAsync(
-                "spProfile_ChangePassword",
-            new { UserId = userId, PasswordHash = passwordHash },
-            commandType: CommandType.StoredProcedure);
+                "spProfile_UpdateImage",
+                new
+                {
+                    UserId = userId,
+                    ProfileImageUrl = profileImageUrl
+                },
+                commandType: CommandType.StoredProcedure);
         }
+
+
+
 
         public async Task<IEnumerable<UserSocialLinkDto>> GetSocialLinksAsync(int userId)
             => await _dbConnection.QueryAsync<UserSocialLinkDto>(
@@ -88,16 +82,16 @@ namespace EcommerceProject.Repositories.Implementations
                 new { UserId = userId },
                 commandType: CommandType.StoredProcedure);
 
-        public async Task AddSocialLinkAsync(int userId, UserSocialLinkDto dto)
+        public async Task<int> AddSocialLinkAsync(int userId, UserSocialLinkDto dto)
             => await _dbConnection.ExecuteAsync(
                 "spProfile_PostSocialLink",
-                new { UserId = userId, dto.Platform, dto.ProfileUrl },
+                new { UserId = userId, dto.Platform, dto.ProfileLinkUrl },
                 commandType: CommandType.StoredProcedure);
 
         public async Task UpdateSocialLinkAsync(int socialLinkId, UserSocialLinkDto dto)
         => await _dbConnection.ExecuteAsync(
             "spProfile_PutSocialLink",
-            new { SocialLinkId = socialLinkId, dto.Platform, dto.ProfileUrl },
+            new { SocialLinkId = socialLinkId, dto.Platform, dto.ProfileLinkUrl },
             commandType: CommandType.StoredProcedure);
 
         public async Task DeleteSocialLinkAsync(int socialLinkId)
@@ -105,21 +99,6 @@ namespace EcommerceProject.Repositories.Implementations
             "spProfile_DeleteSocialLink",
             new { SocialLinkId = socialLinkId },
             commandType: CommandType.StoredProcedure);
-
-        public async Task<IEnumerable<UserOrdersDto>> GetOrdersAsync(int userId)
-            => await _dbConnection.QueryAsync<UserOrdersDto>(
-                "spOrders_GetByUserId",
-                new { UserId = userId },
-                commandType: CommandType.StoredProcedure);
-    
-        public async Task<UserOrderDetailsDto?> GetOrderDetailsAsync(int userId, int orderId)
-        {
-            return await _dbConnection.QueryFirstOrDefaultAsync<UserOrderDetailsDto>(
-                "spOrders_GetDetailsByUserIdAndOrderId",
-                new { UserId = userId, OrderId = orderId },
-                commandType: CommandType.StoredProcedure);
-        }
-
 
 }
 }

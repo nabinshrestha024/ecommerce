@@ -27,8 +27,13 @@ namespace EcommerceProject.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserSocialLinkDto dto)
         {
-            await _service.AddSocialLinkAsync(dto);
-            return NoContent();
+            var result = await _service.AddSocialLinkAsync(dto);
+
+            return CreatedAtAction(
+                nameof(Get),
+                new { socialLinkId = result.SocialLinkId },
+                result
+            );
         }
 
         [HttpPut("{socialLinkId:int}")]

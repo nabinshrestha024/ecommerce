@@ -30,45 +30,26 @@ namespace EcommerceProject.Controllers
 
         [HttpPut("me")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> PutUpdateProfile(
-            [FromForm] UpdateProfileWithImageRequestDto body)
+        public async Task<IActionResult> PutUpdateProfile([FromForm] UpdateProfileWithImageRequestDto body)
         {
-            try
+            var dto = new UpdateProfileRequestDto
             {
-                await _userProfileService.PutUpdateProfileWithImageAsync(
-                    body,
-                    body.ProfileImageFile,
-                    body.RemoveProfileImage ?? false);
+                FullName = body.FullName,
+                Phone = body.Phone,
+                Address = body.Address,
+                City = body.City,
+                DateOfBirth = body.DateOfBirth,
+                Gender = body.Gender,
+                Bio = body.Bio
+            };
 
-                return NoContent();
-            }
-            catch (ArgumentException ex)
-            {
-                _logger.LogWarning(ex, "Validation error updating profile");
-                return BadRequest(new { error = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error updating profile");
-                return StatusCode(500, new { error = "Internal server error" });
-            }
-        }
+            await _userProfileService.PutUpdateProfileWithImageAsync(
+                dto,
+                body.ProfileImageFile);
 
-        [HttpPatch("me")]
-        public async Task<IActionResult> PatchUpdateProfile(
-            [FromBody] PatchProfileRequestDto dto)
-        {
-            await _userProfileService.UpdateProfileAsync(dto);
             return NoContent();
         }
 
-        [HttpPut("me/change-password")]
-        public async Task<IActionResult> ChangePassword(
-            [FromBody] ChangePasswordRequestDto dto)
-        {
-            await _userProfileService.ChangePasswordAsync(dto);
-            return NoContent();
-        }
 
         [HttpPost("me/upload-image")]
         [Consumes("multipart/form-data")]
