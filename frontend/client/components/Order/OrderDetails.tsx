@@ -2,12 +2,14 @@ import Image from "next/image";
 import type { OrderData } from "./Order";
 import { useGetOrderById } from "@/hooks/orders/useGetOrderById";
 import { Button } from "@/ui/button";
+import { useCancelOrder } from "@/hooks/orders/useCancelOrder";
 import { useEffect, useState } from "react";
 import { useInitiatePayment } from "@/hooks/esewa/useInitiatePayment";
 import { EsewaPaymentPayload } from "../Navbar/components/CheckoutForm";
 
 export const OrderDetails = ({ order }: { order: OrderData }) => {
   const { data } = useGetOrderById(order.orderId);
+  const { mutate } = useCancelOrder(order.orderId);
   console.log(data?.items);
   const [total, setTotal] = useState("");
   const [signature, setSignature] = useState("");
@@ -24,7 +26,9 @@ export const OrderDetails = ({ order }: { order: OrderData }) => {
       });
     }
   }, [data]);
-  const handleCancelOrder = () => {};
+  const handleCancelOrder = () => {
+    mutate(order.orderId);
+  };
 
   return (
     <div className="space-y-4">
