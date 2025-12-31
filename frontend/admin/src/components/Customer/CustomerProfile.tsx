@@ -4,13 +4,25 @@ import { RxCopy } from "react-icons/rx";
 import { MdLocationOn } from "react-icons/md";
 import { socialIcons } from "../Customer/SocialMediaIcons.import.ts";
 interface Person {
-  phone?: string;
-  address?: string;
-  avatar?: string;
-  name?: string;
-  email?: string;
-  registration?: string;
-  lastPurchase?: string;
+  userId: number;
+  email: string;
+  fullName: string;
+  passwordHash: string | null;
+  status: number;
+  profileImageUrl: string | null;
+  phone: string;
+  address: string;
+  city: string;
+  role: boolean;
+  refreshToken: string | null;
+  accessToken: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  userProfile: string;
+  socialLinks: string;
+  orders: string;
 }
 export const CustomerProfile = ({ customer }: { customer: Person }) => {
   return (
@@ -20,13 +32,13 @@ export const CustomerProfile = ({ customer }: { customer: Person }) => {
     >
       <div className="flex items-center gap-4">
         <img
-          src={customer.avatar}
-          alt={customer.name}
+          src={customer.profileImageUrl || ""}
+          alt={customer.fullName}
           className="w-16 h-16 rounded-full object-cover"
         />
         <div className="w-full flex-flex-col gap-2">
           <div className="text-[18px] font-bold text-[#023337]">
-            {customer.name}
+            {customer.fullName}
           </div>
           <div className="flex justify-between">
             <div className="text-[14px] text-[#6A717F] font-normal">
@@ -79,12 +91,12 @@ export const CustomerProfile = ({ customer }: { customer: Person }) => {
         <div className="w-full flex-flex-col gap-2">
           <div className="text-[14px]  text-[#4B5563]">
             Registration:&nbsp;
-            {customer.registration}
+            {customer.createdAt}
           </div>
 
           <div className="text-[14px] text-[#4B5563] font-normal">
             Last Purchase: &nbsp;
-            {customer.lastPurchase}
+            {customer.updatedAt}
           </div>
         </div>
       </div>

@@ -12,4 +12,6 @@ export const endpoint = {
   REPORT: "admin/reports",
   VENDOR: "admin/vendors",
   USER: "admin/user",
+  DELETE_USER: "admin/user/delete",
+  UPDATE_USER: "admin/user/update",
 };

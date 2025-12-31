@@ -3,6 +3,7 @@ import { Card } from "../Card/Card";
 
 export const CategoryCard = () => {
   const categories = useFetchCategory();
+  console.log(categories);
   return (
     <div className="w-full grid grid-cols-4 gap-5 mb-[42px]">
       {categories.data?.map((category) => (

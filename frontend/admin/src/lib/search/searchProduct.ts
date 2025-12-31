@@ -2,13 +2,10 @@ import axios from "axios";
 import { axiosInstance } from "../axiosInstance";
 import { endpoint } from "../endpoint";
 
-export const getUser = async (pageIndex: number) => {
+export const searchProduct = async (productName: string) => {
   try {
-    const res = await axiosInstance.get(endpoint.USER, {
-      params: {
-        Page: pageIndex,
-        PageSize: 10,
-      },
+    const res = await axiosInstance.get(endpoint.FETCH_PRODUCT, {
+      params: { search: productName, OnlyActive: true, Page: 1, PageSize: 20 },
     });
     return res.data;
   } catch (e) {

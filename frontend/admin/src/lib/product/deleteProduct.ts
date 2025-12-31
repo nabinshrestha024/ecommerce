@@ -10,7 +10,8 @@ export const DeleteProduct = async (productId: number) => {
     return res.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
-      return e.response?.data;
+      throw new Error(e.response?.data?.message || "Failed to delete product");
     }
+    throw e;
   }
 };

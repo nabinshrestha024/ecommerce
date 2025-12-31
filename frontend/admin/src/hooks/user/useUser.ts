@@ -3,30 +3,38 @@
 import { getUser } from "@/lib/user/getUser";
 import { useQuery } from "@tanstack/react-query";
 
-type ProductData = {
-  productId: number;
-  name: string;
-  slug: string;
-  shortDescription: string | null;
-  price: number;
-  stockQuantity: number;
-  primaryImageUrl: string;
+type userData = {
+  userId: number;
+  email: string;
+  fullName: string;
+  passwordHash: string | null;
+  status: number;
+  profileImageUrl: string | null;
+  phone: string;
+  address: string;
+  city: string;
+  role: boolean;
+  refreshToken: string | null;
+  accessToken: string | null;
   isActive: boolean;
-  categoryId: number;
-  sku: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  userProfile: string;
+  socialLinks: string;
+  orders: string;
 };
 
-type ProductResponse = {
-  items: ProductData[];
+type userResponse = {
+  data: userData[];
   page: number;
   pageSize: number;
   totalCount: number;
-  totalPages: number;
 };
 
-export const useProduct = (pageIndex: number) => {
-  const { data, isLoading, isError, refetch } = useQuery<ProductResponse>({
-    queryKey: ["productData"],
+export const useUser = (pageIndex: number) => {
+  const { data, isLoading, isError, refetch } = useQuery<userResponse>({
+    queryKey: ["userData"],
     queryFn: () => getUser(pageIndex),
   });
   return { data, isLoading, isError, refetch };
