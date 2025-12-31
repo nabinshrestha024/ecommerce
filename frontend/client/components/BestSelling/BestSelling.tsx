@@ -21,7 +21,7 @@ export const BestSelling = () => {
           {bestSelling.map((card) => (
             <div
               key={card.id}
-              className="relative w-full h-full rounded-xl shadow overflow-hidden"
+              className="relative w-full h-full rounded-xl shadow overflow-hidden hover:shadow-lg"
               style={{
                 gridColumn: `${card.colStart} / span ${card.colSpan}`,
                 gridRow: `${card.rowStart} / span ${card.rowSpan}`,

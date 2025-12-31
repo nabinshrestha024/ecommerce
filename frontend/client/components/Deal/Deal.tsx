@@ -205,7 +205,7 @@ export const Deal = () => {
                       <Dialog
                         triggerText={
                           <Button
-                            className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px] hover:bg-[#fffcfc]"
+                            className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px] "
                             onPointerDownCapture={() => setQuantity(1)}
                           >
                             Add to cart

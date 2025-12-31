@@ -16,7 +16,7 @@ import {
 import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { useState } from "react";
-import { Dialog } from "../dialog/Dialog";
+import { Dialog } from "../Dialog/Dialog";
 
 interface Product {
   productId: number;
@@ -121,7 +121,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <Card
-      className="p-3 w-full max-w-[285px] border-0 shadow-none"
+      className="p-3 w-full max-w-[285px] h-[400px] md:h-[380px] border-0 shadow-none flex flex-col justify-between"
       key={product.productId}
       rootClassName="py-0 border shadow-xl"
     >
@@ -139,7 +139,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               Out of Stock
             </div>
           )}
-          <div className="absolute top-3 right-3 rounded-full w-6 h-6 shadow-sm flex justify-center items-center cursor-pointer">
+          <div className="absolute top-3 right-3 rounded-full w-6 h-6 shadow-md flex justify-center items-center cursor-pointer bg-white">
             {wishedIds.has(product.productId) ? (
               <IoIosHeart
                 size={16}
@@ -160,9 +160,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <div className="text-[20px] font-medium line-clamp-1">
             {product.name}
           </div>
-          <div className="text-[16px] font-normal leading-[22px] text-[#00000099]/60 line-clamp-2">
-            {product.shortDescription}
-          </div>
+          {product.shortDescription && (
+            <div className="text-[16px] font-normal leading-[22px] text-[#00000099]/60 line-clamp-2">
+              {product.shortDescription}
+            </div>
+          )}
           {/* <div className="flex items-center mb-2">
             {[...Array(5)].map((_, i) => (
               <Star
@@ -180,17 +182,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </span>
           </div> */}
           <div>
-            <span className="text-[14px] text-[#4EA674] font-bold">
+            <span className="text-[18px] text-[#4EA674] font-bold">
               Rs. {product.price}
             </span>
             &nbsp;&nbsp;&nbsp;
-            <span className="line-through text-[12px] text-[red] font-medium">
+            <span className="line-through text-[15px] text-[red] font-medium">
               Rs. {product.price}
             </span>
           </div>
         </div>
       </div>
-      <div className="flex justify-between flex-col md:flex-row items-center mt-2">
+      <div className="flex justify-between flex-row items-center mt-2">
         <Link href={`/product/id/${product.slug}`}>
           <div className="text-[14px] text-[#6467F2] font-normal">
             View Details
