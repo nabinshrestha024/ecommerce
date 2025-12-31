@@ -1,4 +1,7 @@
-﻿CREATE TABLE PasswordResetOtps (
+﻿USE [EcommerceDB];
+GO
+
+CREATE TABLE PasswordResetOtps (
     OtpId INT IDENTITY PRIMARY KEY,
     UserId INT NOT NULL,
     OtpCode VARCHAR(6) NOT NULL,
