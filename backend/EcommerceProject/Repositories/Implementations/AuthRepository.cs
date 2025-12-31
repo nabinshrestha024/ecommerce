@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using EcommerceProject.Database;
+using EcommerceProject.Models.DTOs.User;
 using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
 using System.Data;
@@ -62,5 +63,35 @@ namespace EcommerceProject.Repositories.Implementations
                 commandType: CommandType.StoredProcedure);
         }
 
+
+        public async Task CreateOtpAsync(int userId, string otp, DateTime expiresAt)
+        {
+            using var conn = _sqlConnectionFactory.CreateConnection();
+
+            await conn.ExecuteAsync(
+                "spPassword_GenerateOtp",
+                new { UserId = userId, OtpCode = otp, ExpiresAt = expiresAt },
+                commandType: CommandType.StoredProcedure);
+        }
+
+        public async Task<PasswordResetDto?> ValidateOtpRecordAsync(int userId, string otp)
+        {
+            using var con = _sqlConnectionFactory.CreateConnection();
+            return await con.QueryFirstOrDefaultAsync<PasswordResetDto>(
+                "spPassword_ValidateOtp",
+                new { UserId = userId, OtpCode = otp },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public async Task MarkOtpUsedAsync(int otpId)
+        {
+            using var con = _sqlConnectionFactory.CreateConnection();
+            await con.ExecuteAsync(
+                "spPassword_MarkOtpUsed",
+                new { OtpId = otpId },
+                commandType: CommandType.StoredProcedure
+            );
+        }
     }
 }

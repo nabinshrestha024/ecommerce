@@ -50,6 +50,11 @@ namespace EcommerceProject.Services.Implementations
 
         }
 
+        public async Task ResetPasswordAsync(int userId, string newPassword)
+        {
+            var hash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            await _userRepository.UpdatePasswordAsync(userId, hash);
+        }
         public async Task DeleteUserAsync(int userId)
         {
             await GetUserByIdAsync(userId);

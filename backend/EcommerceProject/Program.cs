@@ -4,6 +4,7 @@ using EcommerceProject.Hubs;
 using EcommerceProject.Middlewares.Implementation;
 using EcommerceProject.Middlewares.Interface;
 using EcommerceProject.Models.DTOs.Discount;
+using EcommerceProject.Models.Entities;
 using EcommerceProject.Models.Validators.Discount;
 using EcommerceProject.Models.Validators.Report;
 using EcommerceProject.Models.Validators.User;
@@ -62,6 +63,8 @@ builder.Services.AddSwaggerGen(x =>
     x.CustomSchemaIds(type => type.FullName);
 });
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
 builder.Services.AddSignalR();
 
 builder.Services.AddHttpContextAccessor();
@@ -111,6 +114,7 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IUrlService, UrlService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddHttpContextAccessor(); 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();

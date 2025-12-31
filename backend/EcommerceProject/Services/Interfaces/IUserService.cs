@@ -14,6 +14,8 @@ namespace EcommerceProject.Services.Interfaces
         Task DeleteUserAsync(int userId);
 
         Task<(IEnumerable<User> Users, int TotalCount)> GetAllUsersPagedAsync(int pageNumber, int pageSize);
+        Task ResetPasswordAsync(int userId, string newPassword);
+
 
 
     }
