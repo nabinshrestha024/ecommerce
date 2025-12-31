@@ -42,7 +42,6 @@ export const CustomerTable = () => {
     pageSize: 10,
   });
   const user = useUser(pagination.pageIndex);
-  console.log(user);
   const columnHelper = createColumnHelper<Person>();
   const [loading, setLoading] = useState(false);
 
@@ -126,7 +125,7 @@ export const CustomerTable = () => {
           onClick={() => handleRowClick(info.row.original)}
           className="cursor-pointer"
         >
-          {info.getValue()}
+          {info.getValue() ? "Admin" : "User"}
         </div>
       ),
     }),
