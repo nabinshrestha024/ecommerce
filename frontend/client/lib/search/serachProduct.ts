@@ -7,7 +7,6 @@ export const searchProduct = async (productName: string) => {
     const res = await axiosInstance.get(endpoint.PRODUCT, {
       params: { search: productName, OnlyActive: true, Page: 1, PageSize: 20 },
     });
-    console.log("search response", res.data);
     return res.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {
