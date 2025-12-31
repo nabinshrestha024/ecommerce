@@ -25,7 +25,7 @@ export const Explore = () => {
             const href = `/product/?categoryId=${val.categoryId}`;
             return (
               <Link key={val.categoryId} href={href} className="block">
-                <Card className="shadow-none p-2 min-w-[220px] flex flex-col gap-2 cursor-pointer hover:shadow-lg">
+                <Card className="shadow-none p-2 min-w-[220px] flex flex-col gap-2 cursor-pointer hover:shadow-lg hover:rounded-2xl">
                   <div className="w-full h-[150px] relative">
                     <Image
                       src={val.categoryImageURL}
