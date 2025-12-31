@@ -7,8 +7,10 @@ CREATE OR ALTER PROCEDURE spProducts_Delete
 AS
 BEGIN
     SET NOCOUNT ON;
-
-    DELETE FROM Products WHERE ProductId = @ProductId;
+    UPDATE Products
+SET IsActive = 0,
+    UpdatedAt = SYSUTCDATETIME()
+WHERE ProductId = @ProductId;
 
     SELECT @@ROWCOUNT AS Affected;
 END

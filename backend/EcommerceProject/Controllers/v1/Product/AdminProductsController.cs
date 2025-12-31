@@ -81,7 +81,7 @@ namespace EcommerceProject.Controllers.v1.Product
         {
             var ok = await _service.DeleteAsync(id, ct);
             if (!ok) return NotFound(new { message = "Product not found." });
-            return Ok(new { message = "Deleted." });
+            return Ok(new { message = "Product deactivated." });
         }
     }
 }
