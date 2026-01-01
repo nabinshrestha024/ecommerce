@@ -41,7 +41,6 @@ export const CustomerTable = () => {
     pageSize: 10,
   });
   const user = useUser(pagination.pageIndex + 1);
-  console.log(user);
   const columnHelper = createColumnHelper<Person>();
   const [loading, setLoading] = useState(false);
 
