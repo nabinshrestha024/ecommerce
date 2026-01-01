@@ -35,11 +35,11 @@ namespace EcommerceProject.Controllers
             var dto = new UpdateProfileRequestDto
             {
                 FullName = body.FullName,
-                Phone = body.Phone,
+                //Phone = body.Phone, // remove it
                 Address = body.Address,
                 City = body.City,
-                DateOfBirth = body.DateOfBirth,
-                Gender = body.Gender,
+                //DateOfBirth = body.DateOfBirth, // remove it
+                //Gender = body.Gender, // remove it
                 Bio = body.Bio
             };
 

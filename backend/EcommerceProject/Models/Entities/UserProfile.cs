@@ -4,8 +4,8 @@ namespace EcommerceProject.Models.Entities
     {
         public int UserId { get; set; }
 
-        public DateTime? DateOfBirth { get; set; }
-        public string? Gender { get; set; }
+        // public DateTime? DateOfBirth { get; set; }
+        // public string? Gender { get; set; }  // remove it
         public string? Bio { get; set; }    
     }
 }

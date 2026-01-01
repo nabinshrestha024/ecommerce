@@ -45,8 +45,6 @@ namespace EcommerceProject.Services.Implementations
             await _repo.PutUpdateProfileAsync(UserId, dto);
         }
 
-       
-
       
         public async Task<IEnumerable<UserSocialLinkDto>> GetSocialLinksAsync()
             => await _repo.GetSocialLinksAsync(UserId);
