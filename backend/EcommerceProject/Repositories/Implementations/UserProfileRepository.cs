@@ -41,14 +41,14 @@ namespace EcommerceProject.Repositories.Implementations
             {
                 UserId = userId,
                 dto.FullName,
-                dto.Phone,
+                //dto.Phone,  // remove it
                 dto.Address,
                 dto.City,
                 dto.ProfileImageUrl,
-                DateOfBirth = dto.DateOfBirth.HasValue
-            ? dto.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue)
-            : (DateTime?)null,
-                Gender = dto.Gender?.ToString(),
+                //DateOfBirth = dto.DateOfBirth.HasValue // remove it
+            //? dto.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue)
+            //: (DateTime?)null,
+                //Gender = dto.Gender?.ToString(), // remove it
                 dto.Bio,
             },
             commandType: CommandType.StoredProcedure);
@@ -72,9 +72,6 @@ namespace EcommerceProject.Repositories.Implementations
                 },
                 commandType: CommandType.StoredProcedure);
         }
-
-
-
 
         public async Task<IEnumerable<UserSocialLinkDto>> GetSocialLinksAsync(int userId)
             => await _dbConnection.QueryAsync<UserSocialLinkDto>(

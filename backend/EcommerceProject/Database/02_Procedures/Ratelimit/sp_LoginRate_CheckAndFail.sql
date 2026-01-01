@@ -1,4 +1,7 @@
-﻿CREATE OR ALTER PROCEDURE sp_LoginRate_CheckAndFail
+﻿USE [EcommerceDB];
+GO
+
+CREATE OR ALTER PROCEDURE sp_LoginRate_CheckAndFail
     @Email VARCHAR(200),
     @IpAddress VARCHAR(50),
     @MaxAttempts INT = 5,
