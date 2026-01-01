@@ -13,8 +13,8 @@ import { CustomerForm } from "./CustomerForm.tsx";
 import { useUser } from "@/hooks/user/useUser.ts";
 import { useDeleteUser } from "@/hooks/user/useDelete.ts";
 
-type Person = {
-  userId: number;
+export type Person = {
+  userid: number;
   email: string;
   fullName: string;
   passwordHash: string;
@@ -47,7 +47,7 @@ export const CustomerTable = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<Person | null>(null);
 
   const handleRowClick = (row: Person) => {
-    if (selectedCustomer?.userId === row.userId) {
+    if (selectedCustomer?.userid === row.userid) {
       setSelectedCustomer(null);
     } else {
       setSelectedCustomer(row);
@@ -69,7 +69,7 @@ export const CustomerTable = () => {
   };
 
   const columns = [
-    columnHelper.accessor("userId", {
+    columnHelper.accessor("userid", {
       header: "Customer Id",
       cell: (info) => (
         <div
@@ -129,7 +129,7 @@ export const CustomerTable = () => {
       ),
     }),
 
-    columnHelper.accessor("status", {
+    columnHelper.accessor("isActive", {
       header: "Status",
       cell: (info) => {
         const value = info.getValue();
@@ -137,17 +137,15 @@ export const CustomerTable = () => {
         return (
           <div
             onClick={() => handleRowClick(info.row.original)}
-            className="flex gap-3  items-center cursor-pointer"
+            className="flex gap-3 justify-center  items-center cursor-pointer"
           >
             <div
               className={`w-2 h-2 rounded-full ${
-                value === 1 ? "bg-[#21C45D]" : "bg-[#EF4343]"
+                value ? "bg-[#21C45D]" : "bg-[#EF4343]"
               }`}
             ></div>
-            <div
-              className={`${value === 1 ? "text-[#21C45D]" : "text-[#EF4343]"}`}
-            >
-              {value}
+            <div className={`${value ? "text-[#21C45D]" : "text-[#EF4343]"}`}>
+              {value ? "Active" : "Inactive"}
             </div>
           </div>
         );
@@ -169,7 +167,10 @@ export const CustomerTable = () => {
           >
             {selectedCustomer && (
               <CustomerForm
-                customer={selectedCustomer}
+                customer={{
+                  ...selectedCustomer,
+                  userId: selectedCustomer.userid,
+                }}
                 onSave={() => {
                   setSelectedCustomer(null);
                 }}
@@ -178,7 +179,7 @@ export const CustomerTable = () => {
           </Dialog>
           <button
             type="button"
-            onClick={() => handleDelete(info.row.original.userId)}
+            onClick={() => handleDelete(info.row.original.userid)}
             disabled={loading}
             className="p-1 disabled:cursor-not-allowed"
           >
@@ -211,7 +212,9 @@ export const CustomerTable = () => {
 
       {selectedCustomer && (
         <div className="w-[350px] mt-5">
-          <CustomerProfile customer={selectedCustomer} />
+          <CustomerProfile
+            customer={{ ...selectedCustomer, userId: selectedCustomer.userid }}
+          />
         </div>
       )}
     </div>
