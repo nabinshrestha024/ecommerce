@@ -97,7 +97,7 @@ namespace EcommerceProject.Controllers.v1.AuthController
         }
 
 
-        [HttpPost("auth/forgot-password")]
+        [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
         {
             await _authService.ForgotPasswordAsync(dto.Email);
@@ -113,7 +113,7 @@ namespace EcommerceProject.Controllers.v1.AuthController
         }
 
 
-        [HttpPost("auth/reset-password")]
+        [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody]ResetPasswordDto dto)
         {
             await _authService.ResetPasswordAsync(dto.Email, dto.Otp, dto.NewPassword);

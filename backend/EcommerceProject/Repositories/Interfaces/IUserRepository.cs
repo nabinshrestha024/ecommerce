@@ -8,12 +8,14 @@ namespace EcommerceProject.Repositories.Interfaces
         Task<User?> GetUserByEmailAsync(string email);
         Task<User?> GetUserByIdAsync(int userId);
 
+        Task<UserDetailWithOrderSummaryDto?> GetUsersByIdAsync(int userId);
+
         Task<IEnumerable<User>> GetAllUserAsync();
         Task UpdateUserAsync(int userId, UpdateUserDto dto);
 
         Task DeleteUserAsync(int userId);
 
-        Task<(IEnumerable<User> Users, int TotalCount)> GetAllUsersPagedAsync(int pageNumber, int pageSize);
+        Task<(IEnumerable<UserPagedOrderSummaryDto>, int)> GetAllUsersPagedAsync(int pageNumber, int pageSize);
 
         Task UpdatePasswordAsync(int userId, string passwordHash);
     }
