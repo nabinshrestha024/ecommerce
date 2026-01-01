@@ -12,7 +12,6 @@ import { Navbar } from "./components/Navbar/Navbar";
 import { Vendor } from "./screens/vendor";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { PublicRoute } from "./routes/PublicRoute";
-import { ForgotPassword } from "./components/ForgotPassword/ForgotPassword";
 
 export const App = () => {
   return (
@@ -21,7 +20,6 @@ export const App = () => {
         <Route element={<PublicRoute />}>
           <Route element={<LoginLayout />}>
             <Route path="/login" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
           </Route>
         </Route>
         <Route element={<ProtectedRoute />}>
