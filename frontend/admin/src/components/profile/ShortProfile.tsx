@@ -2,8 +2,31 @@ import { useGetProfile } from "@/hooks/profile/useGetProfile";
 import { Card } from "../Card/Card";
 import { CirclePlus, Link } from "lucide-react";
 import { Copy } from "lucide-react";
+import { useState } from "react";
+import { Input } from "../Input/Input";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  SocialLinkSchema,
+  type SocialLinkType,
+} from "../profile/schemas/SocialLink.zod";
+import { Button } from "@/ui/button";
+
 export const ShortProfile = () => {
+  const { register, handleSubmit } = useForm({
+    resolver: zodResolver(SocialLinkSchema),
+    mode: "onChange",
+  });
   const { data } = useGetProfile();
+  const [socialLink, setSocialLink] = useState<boolean>(false);
+
+  const handleSociallink = () => {
+    setSocialLink(!socialLink);
+  };
+  const onSubmit = (data: SocialLinkType) => {
+    console.log(data);
+  };
+
   return (
     <Card
       className="flex flex-col shadow-[0px_1px_3px_0px_#00000033] w-full py-4 sm:py-6 px-4 sm:px-6 rounded-xl"
@@ -69,10 +92,40 @@ export const ShortProfile = () => {
                 </div>
               </button>
             </div>
-            <button className="flex justify-center items-center rounded-md border gap-3 px-3 py-2 mt-2 border-[#E5E7EB] hover:bg-gray-50 w-full sm:w-auto">
+            <button
+              className={`flex justify-center items-center rounded-md border gap-3 px-3 py-2 mt-2 border-[#E5E7EB] hover:bg-gray-50 w-full sm:w-auto ${socialLink && "hidden"}`}
+              onClick={handleSociallink}
+            >
               <CirclePlus size={16} />
-              Social Media
+              Social Medias
             </button>
+            {socialLink && (
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex flex-col gap-2 mt-4"
+              >
+                <div className="text-[14px] font-semibold text-center">
+                  Update your social link
+                </div>
+                <div className=" flex gap-2 items-center">
+                  <label>Instagram</label>
+                  <Input
+                    type="text"
+                    placeholder="Enter social media name"
+                    {...register("profileLinkUrl")}
+                  />
+                </div>
+                <label>Social Links</label>
+                <Input
+                  type="text"
+                  placeholder="Add social links"
+                  {...register("profileLinkUrl")}
+                />
+                <Button variant="default" type="submit">
+                  Save Changes
+                </Button>
+              </form>
+            )}
           </div>
         </div>
       </div>

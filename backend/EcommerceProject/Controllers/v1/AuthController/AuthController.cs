@@ -2,6 +2,7 @@
 using EcommerceProject.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 
 namespace EcommerceProject.Controllers.v1.AuthController
@@ -96,18 +97,26 @@ namespace EcommerceProject.Controllers.v1.AuthController
         }
 
 
-        [HttpPost("auth/forgot-password")]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
         {
-            var token = await _authService.GeneratePasswordResetAsync(dto.Email);
-            return Ok(new  { message = "If the email exists, a reset link has been sent.",
-            resetToken = token});
+            await _authService.ForgotPasswordAsync(dto.Email);
+            return Ok(new  { message = "If the email exists, a reset link has been sent."});
         }
 
-        [HttpPost("auth/reset-password")]
-        public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDto dto)
         {
-            await _authService.ResetPasswordAsync(dto.Token, dto.NewPassword);
+            await _authService.VerifyOtpAsync(dto.Email, dto.Otp);
+            return Ok(new { message = "OTP VERFIED" });
+
+        }
+
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody]ResetPasswordDto dto)
+        {
+            await _authService.ResetPasswordAsync(dto.Email, dto.Otp, dto.NewPassword);
             return Ok(new { message = "Password reset successful." });
         }
 

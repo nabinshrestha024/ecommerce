@@ -2,16 +2,15 @@ USE [EcommerceDB];
 GO
 
 CREATE OR ALTER PROCEDURE spProfile_PutUpdate
-    @UserId INT,
-    @FullName VARCHAR(100),
-    @Phone VARCHAR(20),
-    @Address VARCHAR(500),
-    @City VARCHAR(100),
-    @ProfileImageUrl VARCHAR(1024),
-    @Status SMALLINT,
-    @DateOfBirth DATE,
-    @Gender VARCHAR(20),
-    @Bio VARCHAR(500)
+    @UserId             INT,
+    @FullName           VARCHAR(100),
+    --@Phone              VARCHAR(20),    -- remove it
+    @Address            VARCHAR(500),
+    @City               VARCHAR(100),
+    @ProfileImageUrl    VARCHAR(1024),
+    --@DateOfBirth        DATE,           -- remove it   
+    --@Gender             VARCHAR(20),    -- remove it
+    @Bio                VARCHAR(500)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -19,11 +18,10 @@ BEGIN
     UPDATE Users
     SET
         FullName = @FullName,
-        Phone = @Phone,
+        --Phone = @Phone, -- remove it
         Address = @Address,
         City = @City,
         ProfileImageUrl = @ProfileImageUrl,
-        Status = @Status,
         UpdatedAt = SYSUTCDATETIME()
     WHERE UserId = @UserId AND DeletedAt IS NULL;
 
@@ -32,10 +30,10 @@ BEGIN
     ON t.UserId = s.UserId
     WHEN MATCHED THEN
         UPDATE SET
-            DateOfBirth = @DateOfBirth,
-            Gender = @Gender,
+            --DateOfBirth = @DateOfBirth,     -- remove it
+            --Gender = @Gender,               -- remove it
             Bio = @Bio
     WHEN NOT MATCHED THEN
-        INSERT (UserId, DateOfBirth, Gender, Bio)
-        VALUES (@UserId, @DateOfBirth, @Gender, @Bio);
+        INSERT (UserId, Bio)        --(UserId, DateOfBirth, Gender, Bio) 
+        VALUES  (@UserId, @Bio);    --(@UserId, @DateOfBirth, @Gender, @Bio);
 END;

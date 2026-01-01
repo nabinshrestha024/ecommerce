@@ -47,7 +47,7 @@ CREATE TABLE UserSocialLinks (
     SocialLinkId    INT IDENTITY(1,1) PRIMARY KEY,
     UserId          INT NOT NULL,
     Platform        VARCHAR(50) NOT NULL,
-    ProfileUrl      VARCHAR(300) NOT NULL,
+    ProfileLinkUrl      VARCHAR(300) NOT NULL,
     CreatedAt       DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
     FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE
 );
@@ -246,14 +246,14 @@ PRINT 'Table Notifications created.';
 GO
 
 CREATE TABLE Vendors (
-    VendorId    INT IDENTITY(1,1) PRIMARY KEY,
-    Name        VARCHAR(200) NOT NULL,
-    ContactPerson VARCHAR(100) NULL,
-    Phone       VARCHAR(20) NULL,
-    Email       VARCHAR(100) NULL,
-    Address     VARCHAR(300) NULL,
-    IsActive    BIT NOT NULL DEFAULT 1,
-    CreatedAt   DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME()
+    VendorId        INT IDENTITY(1,1) PRIMARY KEY,
+    Name            VARCHAR(200) NOT NULL,
+    ContactPerson   VARCHAR(100) NULL,
+    Phone           VARCHAR(20) NULL,
+    Email           VARCHAR(100) NULL,
+    Address         VARCHAR(300) NULL,
+    IsActive        BIT NOT NULL DEFAULT 1,
+    CreatedAt       DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME()
 );
 PRINT 'Table Vendors created.';
 GO
@@ -367,6 +367,17 @@ CREATE TABLE Discounts (
 
 PRINT 'Table Discounttable created.';
 
+
+
+CREATE TABLE PasswordResetOtps (
+    OtpId INT IDENTITY PRIMARY KEY,
+    UserId INT NOT NULL,
+    OtpCode VARCHAR(6) NOT NULL,
+    ExpiresAt DATETIME NOT NULL,
+    IsUsed BIT DEFAULT 0,
+    CreatedAt DATETIME DEFAULT GETUTCDATE()
+)
+PRINT 'PASSWORD RESet COMPLETED SUCCESSFULLY';
 
 CREATE TABLE PasswordResetToken
 (

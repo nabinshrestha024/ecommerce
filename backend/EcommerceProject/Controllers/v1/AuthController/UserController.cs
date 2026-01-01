@@ -27,10 +27,6 @@ namespace EcommerceProject.Controllers.v1.AuthController
             {
                 var (users, totalCount) = await _userService.GetAllUsersPagedAsync(pageNumber, pageSize);
 
-                foreach (var user in users)
-                {
-                    user.PasswordHash = null;
-                }
 
                 return Ok(new
                 {
@@ -52,7 +48,7 @@ namespace EcommerceProject.Controllers.v1.AuthController
         {
             try
             {
-                var usersId = await _userService.GetUserByIdAsync(userId);
+                var usersId = await _userService.GetUsersByIdAsync(userId);
 
                 return Ok(new
                 {
@@ -65,7 +61,7 @@ namespace EcommerceProject.Controllers.v1.AuthController
             }
         }
 
-        [HttpPut("update")]
+        [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateUser(int id , UpdateUserDto dto)
         {

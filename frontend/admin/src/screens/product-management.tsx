@@ -4,7 +4,10 @@ import { UploadProductDetails } from "@/components/ProductManagement/UploadProdu
 import { Button } from "@/ui/button";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ProductFormSchema } from "@/components/ProductManagement/schema/ProductForm.zod";
+import {
+  ProductFormSchema,
+  type ProductFormType,
+} from "@/components/ProductManagement/schema/ProductForm.zod";
 import { useCreateProduct } from "@/hooks/useCreateProduct";
 import { useRef } from "react";
 export const ProductManagement = () => {
@@ -19,7 +22,7 @@ export const ProductManagement = () => {
     shouldUnregister: true,
     mode: "all",
   });
-  const handleFormSubmit = (data: any) => {
+  const handleFormSubmit = (data: ProductFormType) => {
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("description", data.description || "");

@@ -5,7 +5,10 @@ import { Input } from "../Input/Input";
 import { Button } from "@/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ProfileUpdateSchema } from "./schemas/Profile.zod";
+import {
+  ProfileUpdateSchema,
+  type ProfileUpdateType,
+} from "../profile/schemas/Profile.zod";
 import { useGetProfile } from "@/hooks/profile/useGetProfile";
 import { usePutProfile } from "@/hooks/profile/usePutProfile";
 
@@ -100,7 +103,7 @@ export const ProfileUpdate = () => {
     };
   }, [preview]);
 
-  const onSubmit = (formData: any) => {
+  const onSubmit = (formData: ProfileUpdateType) => {
     const dataToSend = new FormData();
 
     const dob = formData.dateOfBirth
@@ -126,7 +129,11 @@ export const ProfileUpdate = () => {
       dataToSend.append("ProfileImageFile", selectedImage);
     }
 
-    mutate(dataToSend);
+    mutate(dataToSend, {
+      onSuccess: () => {
+        setIsEditing(false);
+      },
+    });
   };
 
   return (

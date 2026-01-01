@@ -1,18 +1,15 @@
-﻿
-
-
-USE [EcommerceDB]
+﻿USE [EcommerceDB];
 GO
 
-CREATE OR ALTER PROCEDURE spUser_UpdateUser
+CREATE OR ALTER PROCEDURE [dbo].[spUser_UpdateUser]
     @UserId INT,
     @FullName NVARCHAR(255) = NULL,
-    @PasswordHash VARCHAR(100),
-
+    @Role BIT = NULL,
     @Phone NVARCHAR(20) = NULL,
     @Address NVARCHAR(500) = NULL,
     @City NVARCHAR(100) = NULL,
-    @ProfileImageUrl NVARCHAR(MAX) = NULL
+    @ProfileImageUrl NVARCHAR(MAX) = NULL,
+    @IsActive BIT = NULL
     AS
     
 BEGIN
@@ -22,10 +19,11 @@ BEGIN
     SET 
         FullName = ISNULL(@FullName, FullName),
         Phone = ISNULL(@Phone, Phone),
-        PasswordHash = ISNULL(@PasswordHash, PasswordHash),
         Address = ISNULL(@Address, Address),
+        Role = ISNULL(@Role, Role),
         City = ISNULL(@City, City),
         ProfileImageUrl = ISNULL(@ProfileImageUrl, ProfileImageUrl),
+        IsActive = IsNull(@IsActive, IsActive),
         UpdatedAt = GETDATE()
     WHERE UserId = @UserId;
     Select @@ROWCOUNT AS RowsAffected;

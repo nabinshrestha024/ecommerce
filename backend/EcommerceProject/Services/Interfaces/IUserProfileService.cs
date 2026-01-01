@@ -6,16 +6,13 @@ namespace EcommerceProject.Services.Interfaces
     {
         Task<ProfileResponseDto> GetMyProfileAsync();
         Task PutUpdateProfileAsync(UpdateProfileRequestDto dto);
-        Task UpdateProfileAsync(PatchProfileRequestDto dto);
-        Task ChangePasswordAsync(ChangePasswordRequestDto dto);
 
         Task<IEnumerable<UserSocialLinkDto>> GetSocialLinksAsync();
-        Task AddSocialLinkAsync(UserSocialLinkDto dto);
-        Task UpdateSocialLinkAsync(int socialLinkId, UserSocialLinkDto dto);
+        Task<UserSocialLinkDto> AddSocialLinkAsync(UpsertUserSocialLinkRequestDto dto);
+
+        Task UpdateSocialLinkAsync(int socialLinkId, UpsertUserSocialLinkRequestDto dto);
         Task DeleteSocialLinkAsync(int socialLinkId);
 
-        Task<IEnumerable<UserOrdersDto>> GetMyOrdersAsync();
-        Task<UserOrderDetailsDto?> GetOrderDetailsAsync(int orderId);
 
         Task<string?> UploadProfileImageAsync(IFormFile imageFile, CancellationToken ct = default);
         Task<bool> RemoveProfileImageAsync(CancellationToken ct = default);

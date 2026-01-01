@@ -69,3 +69,4 @@ export const ProductFormSchema = z
       path: ["discountedPrice"],
     },
   );
+export type ProductFormType = z.infer<typeof ProductFormSchema>;

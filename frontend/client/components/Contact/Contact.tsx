@@ -9,15 +9,12 @@ const datas = [
 export const Contact = () => {
   return (
     <div className="w-screen ">
-      <div className="flex justify-center mt-15">
+      <div className="flex flex-col md:flex-row justify-center mt-15 p-4 gap-6">
         <div className="space-y-4">
-          <h1 className="font-bold text-5xl text-green-600 w-[500px]">
-            Contact our Sales Team
-          </h1>
           <p className="italic font-serif text-[18px]">
             Let&apos;s explore how तपाइकोBazar can work for you.
           </p>
-          <div className="w-[450px] rounded-md bg-gray-100 p-2">
+          <div className=" w-full md:w-[450px] rounded-md bg-gray-100 p-2">
             {datas.map((data) => (
               <div key={data} className="flex gap-3">
                 <Check />

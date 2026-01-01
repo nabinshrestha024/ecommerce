@@ -12,17 +12,21 @@ namespace EcommerceProject.Services.Implementations
         private readonly IFileStorageService _files;
         private readonly ICurrentProfileService _currentUser;
         private readonly ILogger<UserProfileService> _logger;
+        private readonly IUrlService _urlService;
 
         public UserProfileService(
             IUserProfileRepository repo,
             IFileStorageService files,
             ICurrentProfileService currentUser,
-            ILogger<UserProfileService> logger)
+            ILogger<UserProfileService> logger,
+            IUrlService urlService)
+        
         {
             _repo = repo;
             _files = files;
             _currentUser = currentUser;
             _logger = logger;
+            _urlService = urlService;
         }
 
         private int UserId => _currentUser.UserId;
@@ -31,7 +35,7 @@ namespace EcommerceProject.Services.Implementations
         {
             var profile = await _repo.GetProfileByUserIdAsync(UserId)
                 ?? throw new KeyNotFoundException("User profile not found.");
-
+            profile.ProfileImageUrl = _urlService.ToAbsoluteUrl(profile.ProfileImageUrl);
             return profile;
         }
 
@@ -41,36 +45,26 @@ namespace EcommerceProject.Services.Implementations
             await _repo.PutUpdateProfileAsync(UserId, dto);
         }
 
-        public async Task UpdateProfileAsync(PatchProfileRequestDto dto)
-        {
-            ArgumentNullException.ThrowIfNull(dto);
-            await _repo.UpdateProfileAsync(UserId, dto);
-        }
-
-        public async Task ChangePasswordAsync(ChangePasswordRequestDto dto)
-        {
-            ArgumentNullException.ThrowIfNull(dto);
-
-            var profile = await _repo.GetProfileByUserIdAsync(UserId)
-                ?? throw new KeyNotFoundException("User not found.");
-
-            if (!BCrypt.Net.BCrypt.Verify(dto.CurrentPassword, profile.PasswordHash))
-                throw new UnauthorizedAccessException("Current password is incorrect.");
-
-            var newHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
-            await _repo.ChangePasswordAsync(UserId, newHash);
-        }
-
+      
         public async Task<IEnumerable<UserSocialLinkDto>> GetSocialLinksAsync()
             => await _repo.GetSocialLinksAsync(UserId);
 
-        public async Task AddSocialLinkAsync(UserSocialLinkDto dto)
+        public async Task<UserSocialLinkDto> AddSocialLinkAsync(UpsertUserSocialLinkRequestDto dto)
         {
             ArgumentNullException.ThrowIfNull(dto);
-            await _repo.AddSocialLinkAsync(UserId, dto);
+
+            var id = await _repo.AddSocialLinkAsync(UserId, dto);
+
+            return new UserSocialLinkDto
+            {
+                SocialLinkId = id,
+                Platform = dto.Platform,
+                ProfileLinkUrl = dto.ProfileLinkUrl,
+                CreatedAt = DateTime.UtcNow
+            };
         }
 
-        public async Task UpdateSocialLinkAsync(int socialLinkId, UserSocialLinkDto dto)
+        public async Task UpdateSocialLinkAsync(int socialLinkId, UpsertUserSocialLinkRequestDto dto)
         {
             if (socialLinkId <= 0)
                 throw new ArgumentException("Invalid social link ID.");
@@ -87,20 +81,11 @@ namespace EcommerceProject.Services.Implementations
             await _repo.DeleteSocialLinkAsync(socialLinkId);
         }
 
-        public async Task<IEnumerable<UserOrdersDto>> GetMyOrdersAsync()
-            => await _repo.GetOrdersAsync(UserId);
 
-        public async Task<UserOrderDetailsDto?> GetOrderDetailsAsync(int orderId)
-        {
-            if (orderId <= 0)
-                throw new ArgumentException("Invalid order ID.");
-
-            return await _repo.GetOrderDetailsAsync(UserId, orderId);
-        }
 
         public async Task<string?> UploadProfileImageAsync(
-            IFormFile imageFile,
-            CancellationToken ct = default)
+    IFormFile imageFile,
+    CancellationToken ct = default)
         {
             ArgumentNullException.ThrowIfNull(imageFile);
 
@@ -113,14 +98,15 @@ namespace EcommerceProject.Services.Implementations
 
             var imageUrl = await _files.SaveProfileImageAsync(imageFile, UserId, ct);
 
-            await _repo.UpdateProfileAsync(UserId, new PatchProfileRequestDto
-            {
-                ProfileImageUrl = imageUrl
-            });
+            await _repo.UpdateProfileImageAsync(UserId, imageUrl);
 
-            _logger.LogInformation("Profile image uploaded for user {UserId}", UserId);
+            _logger.LogInformation(
+                "Profile image uploaded for user {UserId}",
+                UserId);
+
             return imageUrl;
         }
+
 
         public async Task<bool> RemoveProfileImageAsync(CancellationToken ct = default)
         {
@@ -131,10 +117,7 @@ namespace EcommerceProject.Services.Implementations
 
             await _files.DeleteProfileImageAsync(profile.ProfileImageUrl, ct);
 
-            await _repo.UpdateProfileAsync(UserId, new PatchProfileRequestDto
-            {
-                ProfileImageUrl = null
-            });
+            await _repo.RemoveProfileImageAsync(UserId);
 
             _logger.LogInformation("Profile image removed for user {UserId}", UserId);
             return true;

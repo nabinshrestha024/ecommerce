@@ -1,10 +1,13 @@
 import { FaRegBell } from "react-icons/fa";
 import { Input } from "@/ui/input";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { IoMoonOutline, IoSunnyOutline } from "react-icons/io5";
+import { useDebounce } from "@/hooks/search/useDebounce";
+import { useSearchs } from "@/hooks/search/useSearch";
 
 export const Navbar = () => {
+  const [searchData, setSearchData] = useState("");
   const { pathname } = useLocation();
   const heading =
     pathname === "/dashboard"
@@ -31,6 +34,15 @@ export const Navbar = () => {
     document.documentElement.classList.toggle("dark", darkMode);
     localStorage.setItem("darkMode", JSON.stringify(darkMode));
   }, [darkMode]);
+
+  const debounceSearch = useDebounce(searchData, 500);
+
+  useEffect(() => {
+    if (!debounceSearch) return;
+  }, [debounceSearch]);
+
+  const search = useSearchs(debounceSearch);
+  const navigate = useNavigate();
   return (
     <nav className=" border-b h-16 flex items-center justify-between px-2 w-full">
       <h1 className="font-bold text-2xl">{heading}</h1>
@@ -38,11 +50,46 @@ export const Navbar = () => {
         <div className="relative w-80">
           <Input
             type="text"
+            value={searchData}
             placeholder="Search data, users, or reports"
             className="pr-10"
+            onChange={(e) => setSearchData(e.target.value)}
           />
-        </div>
 
+          {debounceSearch && (
+            <div className="absolute top-14 left-0 w-full bg-white shadow-lg  z-50 max-h-80 overflow-y-auto ">
+              {search.isLoading && (
+                <div className="p-4 text-sm text-gray-500">Searching...</div>
+              )}
+
+              {search.isError && (
+                <div className="p-4 text-sm text-red-500">
+                  Failed to fetch products
+                </div>
+              )}
+
+              {search.data?.items.map((product) => (
+                <div
+                  key={product.productId}
+                  onClick={() => {
+                    navigate(`/product/id/${product.slug}`);
+                    setSearchData("");
+                  }}
+                  className="flex items-center gap-3 p-3 hover:bg-[#EAF8E7] cursor-pointer"
+                >
+                  <div className="w-10 h-10 relative rounded overflow-hidden">
+                    <img
+                      src={product.primaryImageUrl}
+                      alt={product.name}
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="text-sm font-medium">{product.name}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         <div className="p-2 hover:bg-gray-100 rounded-full relative">
           <FaRegBell className="text-xl text-gray-600" />
           <div className="absolute w-2 h-2 bg-red-500 rounded-full top-[9px] right-[9px]"></div>

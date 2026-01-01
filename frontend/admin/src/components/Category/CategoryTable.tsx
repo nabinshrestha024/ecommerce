@@ -119,7 +119,7 @@ export const CategoryTable = () => {
             }
           >
             {selectedProduct && (
-              <div className="max-h-[70vh] overflow-y-auto px-4 py-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              <div className="max-h-[70vh] overflow-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                 <ProductForm
                   product={selectedProduct}
                   onSave={() => {
@@ -174,7 +174,7 @@ export const CategoryTable = () => {
     {
       id: 1,
       value: "All",
-      triggerText: "All Orders",
+      triggerText: "All Products",
       content: <Table table={table} pageIndex={pagination.pageIndex} />,
     },
 

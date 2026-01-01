@@ -8,8 +8,8 @@ export const useCreateVendor = () => {
     onSuccess: () => {
       toast.success("Vendor created successfully");
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.error || "Vendor creation failed");
+    onError: () => {
+      toast.error("Vendor creation failed");
     },
   });
 };

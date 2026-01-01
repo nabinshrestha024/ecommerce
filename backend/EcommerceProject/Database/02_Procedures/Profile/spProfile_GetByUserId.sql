@@ -28,7 +28,7 @@ BEGIN
     SELECT 
         SocialLinkId,
         Platform,
-        ProfileUrl,
+        ProfileLinkUrl,
         CreatedAt
     FROM UserSocialLinks
     WHERE UserId = @UserId
