@@ -9,9 +9,8 @@ GO
 -- 2. Execute the restore
 -- REMOVED THE DOUBLE QUOTES HERE:
 RESTORE DATABASE [EcommerceDB] 
-FROM DISK = 'C:\Users\NITRO\Desktop\Backups\EcommerceDB_Full_20251231_1450.bak' 
-WITH REPLACE,
-     STATS = 5; -- Provides progress updates every 5%
+FROM DISK = 'D:\C# Project\Backups\20251231_1504.bak'  -- change as required
+WITH REPLACE;
 GO
 
 -- 3. Bring the database back to normal mode

@@ -1,20 +1,41 @@
 import { ChangePassword } from "@/components/Profile/ChangePassword";
 import { ProfileUpdate } from "@/components/Profile/ProfileUpdate";
 import { ShortProfile } from "@/components/Profile/ShortProfile";
+import { Tabs } from "@/components/Tabs/Tabs";
+import { useQueryState } from "nuqs";
 
 export const Profile = () => {
+  const tabsData = [
+    {
+      id: 1,
+      value: "editProfile",
+      triggerText: "Edit Profile",
+      content: <ProfileUpdate />,
+    },
+    {
+      id: 2,
+      value: "changePassword",
+      triggerText: "Change Password",
+      content: <ChangePassword />,
+    },
+  ];
+
+  const [page, setPage] = useQueryState("page", {
+    defaultValue: "editProfile",
+  });
+
   return (
-    <div className="px-4 lg:px-5 pt-5 pb-8 w-full">
+    <div className="px-4 lg:px-5 pt-5 pb-8 w-full space-y-5">
       <div className="font-bold text-[22px] leading-[100%] tracking-[0.5%] shrink-0">
         About Section
       </div>
-      <div className="pl-0 pr-0 grid grid-cols-1 lg:grid-cols-[40%_60%] mt-8 gap-5 lg:pr-3 lg:pl-5">
-        <div className="flex flex-col gap-4">
-          <ShortProfile />
-          <ChangePassword />
-        </div>
-        <ProfileUpdate />
-      </div>
+      <ShortProfile />
+      <Tabs
+        data={tabsData}
+        defaultValue={page}
+        tabsListClassName=" w-full bg-[#EAF8E7]"
+        setPage={setPage}
+      ></Tabs>
     </div>
   );
 };

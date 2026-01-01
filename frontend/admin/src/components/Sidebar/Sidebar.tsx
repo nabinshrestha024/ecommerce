@@ -1,5 +1,5 @@
 import { IoMdHome, IoMdPerson } from "react-icons/io";
-import { FaRegCreditCard, FaShoppingCart } from "react-icons/fa";
+import { FaShoppingCart } from "react-icons/fa";
 import { BsPlusCircleFill } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { BiCategory } from "react-icons/bi";
@@ -32,7 +32,6 @@ const items = [
       },
       { title: "Customer", url: "/customer", icon: IoMdPerson },
       { title: "Categories", url: "/category", icon: BiCategory },
-      { title: "Transaction", url: "/transaction", icon: FaRegCreditCard },
     ],
   },
   {

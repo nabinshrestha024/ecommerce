@@ -4,7 +4,6 @@ import { OrderManagement } from "./screens/order-management";
 import { Customer } from "./screens/customer";
 import { Category } from "./screens/category";
 import { ProductManagement } from "./screens/product-management";
-import { Transaction } from "./screens/transaction";
 import { Profile } from "./screens/profile";
 import { Login } from "./screens/login";
 import { Sidebar } from "./components/Sidebar/Sidebar";
@@ -30,7 +29,6 @@ export const App = () => {
             <Route path="/customer" element={<Customer />} />
             <Route path="/category" element={<Category />} />
             <Route path="/product-management" element={<ProductManagement />} />
-            <Route path="/transaction" element={<Transaction />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/vendor" element={<Vendor />} />
           </Route>

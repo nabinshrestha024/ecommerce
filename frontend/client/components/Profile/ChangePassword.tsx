@@ -4,9 +4,9 @@ import { Button } from "@/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordSchema } from "./schemas/Password.zod";
-import { Input } from "@/ui/input";
 import { Card } from "../Card/Card";
 import { useChangePassword } from "@/hooks/profile/useChangePassword";
+import { Input } from "../Input/Input";
 export const ChangePassword = () => {
   const {
     register,
@@ -38,11 +38,13 @@ export const ChangePassword = () => {
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="flex flex-col gap-1">
-            <label className="text-sm sm:text-base">Current Password</label>
+            <label className="text-sm sm:text-base mb-2">
+              Current Password
+            </label>
             <Input
               type="password"
               {...register("currentPassword")}
-              className="w-full mt-2"
+              className="w-full"
               placeholder="Current password..."
             />
             {errors.currentPassword && (
@@ -52,11 +54,11 @@ export const ChangePassword = () => {
             )}
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm sm:text-base">New Password</label>
+            <label className="text-sm sm:text-base mb-2">New Password</label>
             <Input
               type="password"
               {...register("newPassword")}
-              className="w-full mt-2"
+              className="w-full"
               placeholder="New password..."
             />
             {errors.newPassword && (
@@ -66,11 +68,13 @@ export const ChangePassword = () => {
             )}
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-sm sm:text-base">Confirm Password</label>
+            <label className="text-sm sm:text-base mb-2">
+              Confirm Password
+            </label>
             <Input
               type="password"
               {...register("confirmPassword")}
-              className="w-full mt-2"
+              className="w-full"
               placeholder="Confirm password..."
             />
           </div>

@@ -31,9 +31,7 @@ export const editUser = async ({
   userData: Person;
 }) => {
   try {
-    const res = await axiosInstance.put(endpoint.UPDATE_USER, userData, {
-      params: { id: userId },
-    });
+    const res = await axiosInstance.put(`${endpoint.USER}/${userId}`, userData);
     return res.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {

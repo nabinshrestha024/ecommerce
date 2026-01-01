@@ -1,8 +1,9 @@
+import { useUser } from "@/hooks/user/useUser";
 import { Card } from "../Card/Card";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { FaArrowUpLong } from "react-icons/fa6";
 
 export const CustomerDetails = () => {
+  const user = useUser(1);
   return (
     <div className="w-full max-w-[270px] flex flex-col gap-5">
       <Card
@@ -14,12 +15,8 @@ export const CustomerDetails = () => {
           <BsThreeDotsVertical className="text-[#6A717F] text-[16px]" />
         </div>
         <div className="flex gap-2 mb-2 items-end">
-          <div className="text-[32px] leading-8 font-bold ">11,040</div>
-          <div className="flex items-center">
-            <FaArrowUpLong className="text-[#1EB564] text-[12px] font-bold" />
-            <div className="text-[14px] leading-5 font-medium text-[#1EB564]">
-              14.4%
-            </div>
+          <div className="text-[32px] leading-8 font-bold ">
+            {user.data?.totalCount}
           </div>
         </div>
         <div className="text-[14px] leading-normal font-normal ">
@@ -36,12 +33,8 @@ export const CustomerDetails = () => {
           <BsThreeDotsVertical className="text-[#6A717F] text-[16px]" />
         </div>
         <div className="flex gap-2 mb-2 items-end">
-          <div className="text-[32px] leading-8 font-bold ">2,370</div>
-          <div className="flex items-center">
-            <FaArrowUpLong className="text-[#1EB564] text-[12px]" />
-            <div className="text-[14px] leading-5 font-medium text-[#1EB564]">
-              14.4%
-            </div>
+          <div className="text-[32px] leading-8 font-bold ">
+            {user.data?.totalCount}
           </div>
         </div>
         <div className="text-[14px] leading-normal font-normal ">
@@ -58,12 +51,8 @@ export const CustomerDetails = () => {
           <BsThreeDotsVertical className="text-[#6A717F] text-[16px]" />
         </div>
         <div className="flex  gap-2 mb-2 items-end">
-          <div className="text-[32px] leading-8 font-bold ">250k</div>
-          <div className="flex items-center">
-            <FaArrowUpLong className="text-[#1EB564] text-[12px]" />
-            <div className="text-[14px] leading-5 font-medium text-[#1EB564]">
-              14.4%
-            </div>
+          <div className="text-[32px] leading-8 font-bold ">
+            {user.data?.totalCount}
           </div>
         </div>
         <div className="text-[14px] leading-normal font-normal ">

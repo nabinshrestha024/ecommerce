@@ -16,6 +16,7 @@ import { useFetchOrder, type OrderData } from "@/hooks/order/useFetchOrder";
 import { Dialog } from "../Dialog/Dialog";
 import { FaEdit } from "react-icons/fa";
 import { OrderForm } from "./OrderForm";
+import { OrderDetails } from "./OrderDetails";
 
 const statusType = {
   DELIVERED: "Delivered",
@@ -25,11 +26,25 @@ const statusType = {
 };
 
 export const OrderTable = () => {
-  const { data } = useFetchOrder();
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const orders = useFetchOrder(pagination.pageIndex + 1);
   const [sortType, setSortType] = useState<"date" | "price" | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<OrderData | null>(
     null,
   );
+
+  const [selectedOrder, setSelectedOrder] = useState<OrderData | null>(null);
+
+  const handleRowClick = (row: OrderData) => {
+    if (selectedOrder?.orderId === row.orderId) {
+      setSelectedOrder(null);
+    } else {
+      setSelectedOrder(row);
+    }
+  };
 
   const handleEdit = (row: OrderData) => {
     setSelectedProduct(row);
@@ -44,12 +59,17 @@ export const OrderTable = () => {
         id: "productName",
         header: "Product Name",
         cell: (info) => (
-          <div className="flex flex-col">
+          <div
+            className="flex flex-col w-64"
+            onClick={() => handleRowClick(info.row.original)}
+          >
             {info
               .getValue()
               ?.split(", ")
               .map((name, i) => (
-                <span key={i}>{name}</span>
+                <span key={i} className="truncate">
+                  {name}
+                </span>
               ))}
           </div>
         ),
@@ -61,13 +81,19 @@ export const OrderTable = () => {
       header: "Payment",
       cell: (info) => {
         return info.getValue() === "Paid" ? (
-          <div className="flex justify-center items-center">
+          <div
+            className="flex justify-center items-center"
+            onClick={() => handleRowClick(info.row.original)}
+          >
             <div className="text-green-500 flex items-center justify-start gap-3 w-18">
               <div className="rounded-full h-2 w-2 bg-green-500"></div> Paid
             </div>
           </div>
         ) : (
-          <div className="flex justify-center items-center">
+          <div
+            className="flex justify-center items-center"
+            onClick={() => handleRowClick(info.row.original)}
+          >
             <div className="text-red-500 flex items-center justify-start gap-3 w-18">
               <div className="rounded-full h-2 w-2 bg-red-500"></div> Unpaid
             </div>
@@ -80,39 +106,47 @@ export const OrderTable = () => {
       cell: ({ row }) => {
         const original = row.original;
         return original.status === statusType.DELIVERED ? (
-          <div className="flex justify-center items-center">
+          <div
+            className="flex justify-center items-center"
+            onClick={() => handleRowClick(row.original)}
+          >
             <div className="text-green-500 flex items-center justify-start gap-3 w-24">
               <LuBus style={{ color: "green" }} />
               Delivered
             </div>
           </div>
         ) : original.status === statusType.PENDING ? (
-          <div className="flex justify-center items-center">
+          <div
+            className="flex justify-center items-center"
+            onClick={() => handleRowClick(row.original)}
+          >
             <div className="text-orange-500 flex items-center justify-start gap-3 w-24">
               <LuBus style={{ color: "orange" }} />
               Pending
             </div>
           </div>
         ) : original.status === statusType.SHIPPED ? (
-          <div className="flex justify-center items-center">
+          <div
+            className="flex justify-center items-center"
+            onClick={() => handleRowClick(row.original)}
+          >
             <div className="text-gray-500 flex items-center justify-start gap-3 w-24">
               <LuBus style={{ color: "gray" }} />
               Shipped
             </div>
           </div>
-        ) : original.status === statusType.CANCELLED ? (
-          <div className="flex justify-center items-center">
-            <div className="text-red-500 flex items-center justify-start gap-3 w-24">
-              <LuBus style={{ color: "red" }} />
-              Cancelled
-            </div>
-          </div>
         ) : (
-          <div className="flex justify-center items-center">
-            <div className="text-red-500 flex items-center justify-start gap-3">
-              Error
+          original.status === statusType.CANCELLED && (
+            <div
+              className="flex justify-center items-center"
+              onClick={() => handleRowClick(row.original)}
+            >
+              <div className="text-red-500 flex items-center justify-start gap-3 w-24">
+                <LuBus style={{ color: "red" }} />
+                Cancelled
+              </div>
             </div>
-          </div>
+          )
         );
       },
     }),
@@ -121,7 +155,10 @@ export const OrderTable = () => {
       id: "actions",
       header: "Actions",
       cell: (info) => (
-        <div className="flex gap-2 justify-center items-center">
+        <div
+          className="flex gap-2 justify-center items-center"
+          onClick={() => handleRowClick(info.row.original)}
+        >
           <Dialog
             triggerContent={
               <FaEdit
@@ -145,11 +182,6 @@ export const OrderTable = () => {
       ),
     }),
   ];
-
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
 
   const [paginationDelivered, setPaginationDelivered] =
     useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
@@ -202,7 +234,7 @@ export const OrderTable = () => {
       return orders;
     };
 
-    const items = (data?.items ?? []) as OrderData[];
+    const items = (orders.data?.items ?? []) as OrderData[];
 
     return {
       all: sortOrder(filterBySearch(items)),
@@ -219,12 +251,14 @@ export const OrderTable = () => {
         filterBySearch(items.filter((d) => d.status === statusType.CANCELLED)),
       ),
     };
-  }, [searchTerm, sortType, data]);
+  }, [searchTerm, sortType, orders]);
 
   const tableAll = useReactTable({
     columns,
     data: filteredData.all,
     state: { pagination },
+    pageCount: Math.ceil((orders.data?.totalCount ?? 0) / pagination.pageSize),
+    manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
@@ -318,8 +352,8 @@ export const OrderTable = () => {
   };
 
   return (
-    <div className="p-3 rounded-lg">
-      <div className="relative">
+    <div className="flex p-2 rounded-lg w-full gap-5">
+      <div className="flex-1 relative hover:cursor-pointer">
         <Tabs
           defaultValue="All"
           data={tabsData}
@@ -360,6 +394,11 @@ export const OrderTable = () => {
           </div>
         </div>
       </div>
+      {selectedOrder && (
+        <div className="w-[350px] mt-5">
+          <OrderDetails order={selectedOrder} />
+        </div>
+      )}
     </div>
   );
 };

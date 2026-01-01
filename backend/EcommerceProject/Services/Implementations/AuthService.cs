@@ -63,6 +63,8 @@ namespace EcommerceProject.Services.Implementations
             parameters.Add("@Phone", registerDto.Phone);
             parameters.Add("@Address", registerDto.Address);
             parameters.Add("@City", registerDto.City);
+            parameters.Add("@Gender", registerDto.Gender);
+            parameters.Add("@DateOfBirth", registerDto.DateOfBirth);
             parameters.Add("@Role", false);
             parameters.Add("@UserId", dbType: DbType.Int32, direction: ParameterDirection.Output);
 

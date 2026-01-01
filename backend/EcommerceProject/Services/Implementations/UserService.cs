@@ -29,7 +29,7 @@ namespace EcommerceProject.Services.Implementations
         public async Task<User> GetUserByIdAsync(int userId)
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
-            if(user == null)
+            if (user == null)
             {
                 throw new KeyNotFoundException("user not found");
             }
@@ -37,6 +37,11 @@ namespace EcommerceProject.Services.Implementations
             return user;
         }
 
+
+        public async Task<UserDetailWithOrderSummaryDto?> GetUsersByIdAsync(int userId)
+        {
+            return await _userRepository.GetUsersByIdAsync(userId);
+        }
 
 
         public async Task<IEnumerable<User>> GetAllUsersAsync()
@@ -61,7 +66,7 @@ namespace EcommerceProject.Services.Implementations
             await _userRepository.DeleteUserAsync(userId);
         }
 
-        public async Task<(IEnumerable<User> Users, int TotalCount)> GetAllUsersPagedAsync(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<UserPagedOrderSummaryDto>,int)> GetAllUsersPagedAsync(int pageNumber, int pageSize)
         {
             return await _userRepository.GetAllUsersPagedAsync(pageNumber, pageSize);
         }
@@ -69,3 +74,4 @@ namespace EcommerceProject.Services.Implementations
 
     }
 }
+    
