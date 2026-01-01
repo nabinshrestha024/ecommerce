@@ -15,11 +15,13 @@ namespace EcommerceProject.Services.Implementations
     {
         private readonly IProductRepository _repo;
         private readonly IFileStorageService _files;
+        private readonly IProductVariantRepository _variantRepo;
 
-        public ProductService(IProductRepository repo, IFileStorageService files)
+        public ProductService(IProductRepository repo, IFileStorageService files, IProductVariantRepository variantRepo)
         {
             _repo = repo;
             _files = files;
+            _variantRepo = variantRepo;
         }
 
         public Task<PagedResult<ProductListItemDto>> GetPagedAsync(int? categoryId, string? search, int page, int pageSize, CancellationToken ct)
@@ -60,11 +62,11 @@ namespace EcommerceProject.Services.Implementations
 
 
 
-        public async Task<int> CreateAsync(ProductCreateDto dto, IFormFileCollection? images, int? primaryIndex, CancellationToken ct)
+        public async Task<int> CreateAsync(ProductCreateDto dto,IFormFileCollection? images,int? primaryIndex,CancellationToken ct)
         {
             await new ProductCreateValidator().ValidateAndThrowAsync(dto, ct);
+
             var slug = await GenerateUniqueSlugAsync(dto.Name, ct);
-            var sku = SkuGenerator.Generate();
 
             var productId = await _repo.CreateAsync(
                 dto.CategoryId,
@@ -72,12 +74,22 @@ namespace EcommerceProject.Services.Implementations
                 slug,
                 dto.Description,
                 dto.ShortDescription,
-                dto.Price,
-                dto.StockQuantity,
-                sku,
                 dto.IsActive,
                 ct
             );
+
+            var sku = SkuGenerator.Generate();
+
+            await _variantRepo.CreateAsync(
+                productId,
+                sku,
+                dto.DefaultVariant.Price,
+                dto.DefaultVariant.StockQuantity,
+                isDefault: true,
+                isActive: true,
+                ct
+            );
+
             if (images is not { Count: > 0 })
                 return productId;
 
@@ -85,15 +97,11 @@ namespace EcommerceProject.Services.Implementations
 
             for (int i = 0; i < urls.Count; i++)
             {
-                bool isPrimary = primaryIndex.HasValue
-                    ? i == primaryIndex.Value
-                    : i == 0; 
-
                 await _repo.InsertImageAsync(
                     productId,
                     urls[i],
-                    isPrimary,
-                    i, 
+                    primaryIndex.HasValue ? i == primaryIndex.Value : i == 0,
+                    i,
                     ct
                 );
             }
@@ -102,29 +110,35 @@ namespace EcommerceProject.Services.Implementations
         }
 
 
-        public async Task<bool> UpdateAsync(int id, ProductUpdateDto dto, IFormFileCollection? images, int? primaryIndex, CancellationToken ct)
+        public async Task<bool> UpdateAsync(int id, ProductUpdateDto dto, IFormFileCollection? images,int? primaryIndex, CancellationToken ct)
         {
             await new ProductUpdateValidator().ValidateAndThrowAsync(dto, ct);
 
             var existing = await _repo.GetByIdAsync(id, ct);
             if (existing == null)
                 return false;
-            string slug;
-            if (!string.Equals(existing.Name, dto.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                slug = await GenerateUniqueSlugAsync(dto.Name, ct);
-            }
-            else
-            {
-                slug = existing.Slug;
-            }
-            dto.Slug = slug;
 
-            var ok = await _repo.UpdateAsync(id, dto, ct);
+            var slug = !string.Equals(existing.Name, dto.Name, StringComparison.OrdinalIgnoreCase)
+                ? (await GenerateUniqueSlugAsync(dto.Name, ct)).Trim()
+                : existing.Slug;
+
+            var ok = await _repo.UpdateAsync(
+                id,
+                dto.CategoryId,
+                dto.Name,
+                slug,
+                dto.Description,
+                dto.ShortDescription,
+                dto.IsActive,
+                ct
+            );
+
             if (!ok) return false;
 
             if (images is { Count: > 0 })
             {
+                await _repo.DeleteImagesByProductIdAsync(id, ct);
+
                 var urls = await _files.SaveProductImagesAsync(images, ct);
 
                 var bulk = urls.Select((url, i) => (
@@ -138,6 +152,7 @@ namespace EcommerceProject.Services.Implementations
 
             return true;
         }
+
 
         public Task<bool> DeleteAsync(int id, CancellationToken ct)
         {

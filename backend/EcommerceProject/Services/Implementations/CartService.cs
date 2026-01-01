@@ -42,11 +42,7 @@ namespace EcommerceProject.Services.Implementations
 
             }
 
-            if(quantity > product.StockQuantity)
-            {
-                throw new Exception($"Only{product.StockQuantity} item avaiable in stock");
-
-            }
+            
 
             var cartItems = await _cartRepository.GetCartAsync(userId);
 
@@ -58,10 +54,7 @@ namespace EcommerceProject.Services.Implementations
 
                 var totalQuantity = cartItem.Quantity + quantity;
                 
-                if(totalQuantity > product.StockQuantity)
-                {
-                    throw new Exception($"Connot add more than {product.StockQuantity} items(s) to cart");
-                }
+                
 
 
                 cartItem.Quantity = totalQuantity;

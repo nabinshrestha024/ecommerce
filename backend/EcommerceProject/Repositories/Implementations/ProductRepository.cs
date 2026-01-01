@@ -69,6 +69,22 @@ namespace EcommerceProject.Repositories.Implementations
                 commandType: CommandType.StoredProcedure
             );
         }
+        public async Task<int> DeleteImagesByProductIdAsync(int productId, CancellationToken ct)
+        {
+            using var conn = _factory.CreateConnection();
+
+            var deleted = await conn.ExecuteScalarAsync<int>(
+                new CommandDefinition(
+                    "spProductImages_DeleteByProductId",
+                    new { ProductId = productId },
+                    commandType: CommandType.StoredProcedure,
+                    cancellationToken: ct
+                )
+            );
+
+            return deleted;
+        }
+
 
         public async Task<ProductDetailsDto?> GetBySlugOrIdAsync(string slugOrId, bool onlyActive, CancellationToken ct)
         {
@@ -85,41 +101,76 @@ namespace EcommerceProject.Repositories.Implementations
             var product = await multi.ReadFirstOrDefaultAsync<ProductDetailsDto>();
             if (product is null) return null;
 
+            var variants = (await multi.ReadAsync<ProductVariantDto>()).ToList();
+
+            var variantAttributes = await multi.ReadAsync<
+    (int VariantId, string AttributeName, string AttributeValue)
+>();
+
+            foreach (var variant in variants)
+            {
+                variant.Attributes = variantAttributes
+                    .Where(a => a.VariantId == variant.VariantId)
+                    .ToDictionary(a => a.AttributeName, a => a.AttributeValue);
+            }
+
+            product.Variants = variants;
+
+
             var images = (await multi.ReadAsync<ProductImageDto>()).ToList();
             product.Images = images;
             return product;
         }
 
-        public async Task<int> CreateAsync(int categoryId, string name, string slug, string? description, string? shortDescription, decimal price, int stockQuantity, string sku, bool isActive, CancellationToken ct)
+        public async Task<int> CreateAsync(
+    int categoryId,
+    string name,
+    string slug,
+    string? description,
+    string? shortDescription,
+    bool isActive,
+    CancellationToken ct
+)
         {
             using var conn = _factory.CreateConnection();
 
-            var p = new DynamicParameters();
-            p.Add("@CategoryId", categoryId);
-            p.Add("@Name", name);
-            p.Add("@Slug", slug);
-            p.Add("@Description", description);
-            p.Add("@ShortDescription", shortDescription);
-            p.Add("@Price", price);
-            p.Add("@StockQuantity", stockQuantity);
-            p.Add("@SKU", sku);
-            p.Add("@IsActive", isActive);
             return await conn.ExecuteScalarAsync<int>(
                 "spProducts_Create",
-                 p,
-                 commandType: CommandType.StoredProcedure
+                new
+                {
+                    CategoryId = categoryId,
+                    Name = name,
+                    Slug = slug,
+                    Description = description,
+                    ShortDescription = shortDescription,
+                    IsActive = isActive
+                },
+                commandType: CommandType.StoredProcedure
             );
         }
 
-        public async Task<bool> UpdateAsync(int id, ProductUpdateDto dto, CancellationToken ct)
+
+        public async Task<bool> UpdateAsync(int productId, int categoryId, string name, string slug, string? description, string? shortDescription, bool isActive, CancellationToken ct)
+
         {
             using var conn = _factory.CreateConnection();
 
-            var p = new DynamicParameters(dto);
-            p.Add("@ProductId", id);
-
             var affected = await conn.ExecuteScalarAsync<int>(
-                new CommandDefinition("spProducts_Update", p, commandType: CommandType.StoredProcedure, cancellationToken: ct)
+                new CommandDefinition(
+                    "spProducts_Update",
+                    new
+                    {
+                        ProductId = productId,
+                        CategoryId = categoryId,
+                        Name = name,
+                        Slug = slug,
+                        Description = description,
+                        ShortDescription = shortDescription,
+                        IsActive = isActive
+                    },
+                    commandType: CommandType.StoredProcedure,
+                    cancellationToken: ct
+                )
             );
 
             return affected > 0;
