@@ -14,11 +14,14 @@ import { useRouter } from "next/navigation";
 import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
 import { LogOut } from "lucide-react";
 import { useQueryState } from "nuqs";
+import { SocialLinks } from "@/components/Profile/SocialLinks";
+import { useFetchSocialLinks } from "@/hooks/socialLinks/useFetchSocialLinks";
 
 export default function UserProfile() {
   const { data, isLoading } = useFetchProfile();
   const orders = useOrder();
   const wishlist = useFetchWishlist();
+  const socialLinks = useFetchSocialLinks();
 
   const tabsData = [
     {
@@ -29,29 +32,29 @@ export default function UserProfile() {
     },
     {
       id: 2,
+      value: "socialLinks",
+      triggerText: "Social Links",
+      content: <SocialLinks data={socialLinks.data} />,
+    },
+    {
+      id: 3,
       value: "changePassword",
       triggerText: "Change Password",
       content: <ChangePassword />,
     },
     {
-      id: 3,
+      id: 4,
       value: "myOrders",
       triggerText: "Orders",
       content: <Order />,
     },
     {
-      id: 4,
+      id: 5,
       value: "wishlist",
       triggerText: "Wishlist",
       content: <Wishlist />,
     },
   ];
-
-  const [stats] = useState({
-    orders: 24,
-    wishlist: 8,
-    reviews: 12,
-  });
 
   const getInitials = (name: string) => {
     return name
@@ -73,7 +76,8 @@ export default function UserProfile() {
     defaultValue: "editProfile",
   });
 
-  return isLoading || orders.isLoading || wishlist.isLoading ? (
+  return isLoading || orders.isLoading || socialLinks.isLoading ? (
+    // || wishlist.isLoading
     <div>Loading....</div>
   ) : (
     <div className="w-full">
@@ -113,16 +117,14 @@ export default function UserProfile() {
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-gray-900">
-                  {Array.isArray(wishlist?.data.items)
+                  {Array.isArray(wishlist?.data?.items)
                     ? wishlist.data.items.length
                     : 0}
                 </div>
                 <div className="text-sm text-gray-600">Wishlist</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">
-                  {stats.reviews}
-                </div>
+                <div className="text-2xl font-bold text-gray-900">10</div>
                 <div className="text-sm text-gray-600">Reviews</div>
               </div>
             </div>

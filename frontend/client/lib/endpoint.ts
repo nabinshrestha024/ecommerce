@@ -23,4 +23,5 @@ export const endpoint = {
   FORGOTPASSWORD: "auth/auth/forgot-password",
   VERIFYOTP: "auth/verify-otp",
   RESETPASSWORD: "auth/auth/reset-password",
+  SOCIALLINKS: "profile/social-links",
 };
