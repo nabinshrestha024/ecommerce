@@ -25,7 +25,7 @@ namespace EcommerceProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] UserSocialLinkDto dto)
+        public async Task<IActionResult> Post([FromBody] UpsertUserSocialLinkRequestDto dto)
         {
             var result = await _service.AddSocialLinkAsync(dto);
 
@@ -39,7 +39,7 @@ namespace EcommerceProject.Controllers
         [HttpPut("{socialLinkId:int}")]
         public async Task<IActionResult> Put(
             int socialLinkId,
-            [FromBody] UserSocialLinkDto dto)
+            [FromBody] UpsertUserSocialLinkRequestDto dto)
         {
             await _service.UpdateSocialLinkAsync(socialLinkId, dto);
             return NoContent();

@@ -8,9 +8,9 @@ namespace EcommerceProject.Services.Interfaces
         Task PutUpdateProfileAsync(UpdateProfileRequestDto dto);
 
         Task<IEnumerable<UserSocialLinkDto>> GetSocialLinksAsync();
-        Task<UserSocialLinkDto> AddSocialLinkAsync(UserSocialLinkDto dto);
+        Task<UserSocialLinkDto> AddSocialLinkAsync(UpsertUserSocialLinkRequestDto dto);
 
-        Task UpdateSocialLinkAsync(int socialLinkId, UserSocialLinkDto dto);
+        Task UpdateSocialLinkAsync(int socialLinkId, UpsertUserSocialLinkRequestDto dto);
         Task DeleteSocialLinkAsync(int socialLinkId);
 
 

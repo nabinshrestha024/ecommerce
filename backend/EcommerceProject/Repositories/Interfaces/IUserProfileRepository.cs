@@ -10,8 +10,8 @@ namespace EcommerceProject.Repositories.Interfaces
         Task UpdateProfileImageAsync(int userId, string profileImageUrl);
 
         Task<IEnumerable<UserSocialLinkDto>> GetSocialLinksAsync(int userId);
-        Task<int> AddSocialLinkAsync(int userId, UserSocialLinkDto dto);
-        Task UpdateSocialLinkAsync(int socialLinkId, UserSocialLinkDto dto);
+        Task<int> AddSocialLinkAsync(int socialLinkId, UpsertUserSocialLinkRequestDto dto);
+        Task UpdateSocialLinkAsync(int socialLinkId, UpsertUserSocialLinkRequestDto dto);
         Task DeleteSocialLinkAsync(int socialLinkId);
 
     } 

@@ -51,23 +51,22 @@ namespace EcommerceProject.Services.Implementations
         public async Task<IEnumerable<UserSocialLinkDto>> GetSocialLinksAsync()
             => await _repo.GetSocialLinksAsync(UserId);
 
-        public async Task<UserSocialLinkDto> AddSocialLinkAsync(UserSocialLinkDto dto)
+        public async Task<UserSocialLinkDto> AddSocialLinkAsync(UpsertUserSocialLinkRequestDto dto)
         {
             ArgumentNullException.ThrowIfNull(dto);
 
-            var socialLinkId = await _repo.AddSocialLinkAsync(UserId, dto);
+            var id = await _repo.AddSocialLinkAsync(UserId, dto);
 
             return new UserSocialLinkDto
             {
-                SocialLinkId = socialLinkId,
+                SocialLinkId = id,
                 Platform = dto.Platform,
                 ProfileLinkUrl = dto.ProfileLinkUrl,
                 CreatedAt = DateTime.UtcNow
             };
         }
 
-
-        public async Task UpdateSocialLinkAsync(int socialLinkId, UserSocialLinkDto dto)
+        public async Task UpdateSocialLinkAsync(int socialLinkId, UpsertUserSocialLinkRequestDto dto)
         {
             if (socialLinkId <= 0)
                 throw new ArgumentException("Invalid social link ID.");
