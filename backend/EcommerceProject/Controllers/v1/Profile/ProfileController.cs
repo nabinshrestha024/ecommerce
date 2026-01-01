@@ -47,7 +47,7 @@ namespace EcommerceProject.Controllers
                 dto,
                 body.ProfileImageFile);
 
-            return NoContent();
+            return Ok(new { message = "Profile updated successfully!" });
         }
 
 
@@ -67,7 +67,7 @@ namespace EcommerceProject.Controllers
 
                 return Ok(new
                 {
-                    message = "Profile image uploaded successfully",
+                    message = "Profile image uploaded successfully!",
                     imageUrl
                 });
             }
@@ -77,8 +77,8 @@ namespace EcommerceProject.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error uploading profile image");
-                return StatusCode(500, new { error = "Internal server error" });
+                _logger.LogError(ex, "Error uploading profile image!");
+                return StatusCode(500, new { error = "Internal server error!" });
             }
         }
 
@@ -92,13 +92,13 @@ namespace EcommerceProject.Controllers
                     await _userProfileService.RemoveProfileImageAsync(ct);
 
                 return success
-                    ? Ok(new { message = "Profile image removed successfully" })
-                    : NotFound(new { error = "No profile image found to remove" });
+                    ? Ok(new { message = "Profile image removed successfully!" })
+                    : NotFound(new { error = "No profile image found to remove!" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error removing profile image");
-                return StatusCode(500, new { error = "Internal server error" });
+                _logger.LogError(ex, "Error removing profile image!");
+                return StatusCode(500, new { error = "Internal server error!" });
             }
         }
     }

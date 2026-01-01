@@ -21,7 +21,7 @@ namespace EcommerceProject.Controllers
         public async Task<IActionResult> Get()
         {
             var links = await _service.GetSocialLinksAsync();
-            return Ok(links);
+            return Ok(new { message = "Social links retrieved successfully!", links });
         }
 
         [HttpPost]
@@ -42,14 +42,14 @@ namespace EcommerceProject.Controllers
             [FromBody] UpsertUserSocialLinkRequestDto dto)
         {
             await _service.UpdateSocialLinkAsync(socialLinkId, dto);
-            return NoContent();
+            return Ok(new { message = "Social link updated successfully!" });
         }
         
         [HttpDelete("{socialLinkId:int}")]
         public async Task<IActionResult> Delete(int socialLinkId)
         {
             await _service.DeleteSocialLinkAsync(socialLinkId);
-            return NoContent();
+            return Ok(new { message = "Social link deleted successfully!" });
         }
     }
 }
