@@ -20,4 +20,5 @@ export const endpoint = {
   NOTIFICATIONSEEN: "notifications",
   FETCHPROFILE: "profile/me",
   CHANGEPASSWORD: "auth/change_password",
+  SOCIALLINKS: "profile/social-links",
 };
