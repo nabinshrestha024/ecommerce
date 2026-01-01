@@ -10,6 +10,6 @@ namespace EcommerceProject.Services.Interfaces
         Task RemoveItemAsync(int cartId);
 
 
-        Task AddToCartAsync(int userId, int productId, int quantity, CancellationToken ct = default);
+        Task AddToCartAsync(int userId, int variantId, int quantity, CancellationToken ct = default);
     }
 }

@@ -32,9 +32,9 @@ namespace EcommerceProject.Services.Implementations
             return result;
         }
 
-        public async Task AddToCartAsync(int userId, int productId, int quantity, CancellationToken ct = default)
+        public async Task AddToCartAsync(int userId, int variantId, int quantity, CancellationToken ct = default)
         {
-            var product = await _productRepository.GetByIdAsync(productId, ct);
+            var product = await _productRepository.GetByIdAsync(variantId, ct);
 
             if (product == null)
             {
@@ -50,7 +50,7 @@ namespace EcommerceProject.Services.Implementations
 
             var cartItems = await _cartRepository.GetCartAsync(userId);
 
-            var cartItem = cartItems.FirstOrDefault(x => x.ProductId == productId);
+            var cartItem = cartItems.FirstOrDefault(x => x.VariantId == variantId);
 
 
             if (cartItem != null)
@@ -70,7 +70,7 @@ namespace EcommerceProject.Services.Implementations
             }
             else
             {
-                await _cartRepository.AddToCartAsync(userId, productId, quantity);      
+                await _cartRepository.AddToCartAsync(userId, variantId, quantity);      
                
             }
 
