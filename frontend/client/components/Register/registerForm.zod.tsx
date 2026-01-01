@@ -17,7 +17,7 @@ export const RegisterFormSchema = z
       .min(1, "Date of Birth is required")
       .refine((value) => {
         const dob = new Date(value);
-        if (isNaN(dob.getTime())) return false; // invalid date
+        if (isNaN(dob.getTime())) return false;
         const today = new Date();
         const age = today.getFullYear() - dob.getFullYear();
         const monthDiff = today.getMonth() - dob.getMonth();
