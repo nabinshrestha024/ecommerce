@@ -7,7 +7,7 @@ namespace EcommerceProject.Repositories.Interfaces
     public interface ICartRepository
     {
         Task<IEnumerable<CartItemDto>> GetCartAsync(int userId);
-        Task AddToCartAsync(int userId, int productId, int quantity);
+        Task AddToCartAsync(int userId, int variantId, int quantity);
         Task UpdateQuantityAsync(int cartId, int quantity);
         Task RemoveCartAsync(int cartId);
 

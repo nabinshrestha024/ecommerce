@@ -45,7 +45,7 @@ namespace EcommerceProject.Controllers.v1.Cart
 
             try
             {
-                if (request.ProductId <=0)
+                if (request.VariantId <=0)
                 {
                     return BadRequest(new { message = " VALID ProductId is required" });
 
@@ -59,7 +59,7 @@ namespace EcommerceProject.Controllers.v1.Cart
 
                 int userId = User.GetUserId();
 
-                await _cartService.AddToCartAsync(userId, request.ProductId, request.Quantity);
+                await _cartService.AddToCartAsync(userId, request.VariantId, request.Quantity);
                 return Ok(new { message = "Product added to cart" });
 
             }catch(Exception ex)
