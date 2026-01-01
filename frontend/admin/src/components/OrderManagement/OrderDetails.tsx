@@ -13,7 +13,7 @@ export const OrderDetails = ({ order }: { order: OrderData }) => {
               <img
                 src={item.productImageUrl}
                 alt={item.productName}
-                className="object-cover rounded-md w-5 h-5"
+                className="object-cover rounded-md w-20 h-20"
               />
             ) : (
               <div className="w-full h-full bg-gray-100 rounded-md" />
