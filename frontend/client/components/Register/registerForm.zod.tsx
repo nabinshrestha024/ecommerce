@@ -12,6 +12,24 @@ export const RegisterFormSchema = z
         "Password must contain uppercase, lowercase, number, and special character",
       ),
     repassword: z.string().min(1, "Confirm password is required"),
+    dateOfBirth: z
+      .string()
+      .min(1, "Date of Birth is required")
+      .refine((value) => {
+        const dob = new Date(value);
+        if (isNaN(dob.getTime())) return false; // invalid date
+        const today = new Date();
+        const age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+        const dayDiff = today.getDate() - dob.getDate();
+
+        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+          return age - 1 >= 16;
+        }
+
+        return age >= 16;
+      }, "You must be at least 16 years old"),
+    gender: z.string().min(1, "Gender is required"),
     address: z.string().min(1, "Address is required"),
     city: z.string().min(1, "City is required"),
     phone: z
