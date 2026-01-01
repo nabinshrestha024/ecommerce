@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Runtime.InteropServices.Marshalling;
 using Dapper;
 using EcommerceProject.Database;
 using EcommerceProject.Models.DTOs.User;
@@ -6,6 +7,7 @@ using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.Data.SqlClient;
+using Org.BouncyCastle.Crypto.Prng;
 
 namespace EcommerceProject.Repositories.Implementations
 {
@@ -52,6 +54,18 @@ namespace EcommerceProject.Repositories.Implementations
             );
         }
 
+        public async Task<UserDetailWithOrderSummaryDto?> GetUsersByIdAsync(int userId)
+        {
+            using var con = _factory.CreateConnection();
+
+            return await con.QueryFirstOrDefaultAsync<UserDetailWithOrderSummaryDto>(
+                "spUsers_GetByIdWithOrderSummary",
+                new { UserId = userId },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+
         public async Task<IEnumerable<User>> GetAllUserAsync()
         {
             using var connection = _factory.CreateConnection();
@@ -65,11 +79,11 @@ namespace EcommerceProject.Repositories.Implementations
         {
             using var conn = _factory.CreateConnection();
 
-            string? passwordHash = null;
-            if (!string.IsNullOrEmpty(dto.PasswordHash))
-            {
-                passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.PasswordHash);
-            }
+            //string? passwordHash = null;
+            //if (!string.IsNullOrEmpty(dto.PasswordHash))
+            //{
+            //    passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.PasswordHash);
+            //}
 
             await conn.ExecuteAsync(
                 "spUser_UpdateUser",
@@ -77,7 +91,7 @@ namespace EcommerceProject.Repositories.Implementations
                 {
                     UserId = userId,
                     dto.FullName,
-                    PasswordHash = passwordHash,
+                    dto.Role,
                     dto.Phone,
                     dto.Address,
                     dto.City,
@@ -110,21 +124,19 @@ namespace EcommerceProject.Repositories.Implementations
             );
         }
 
-        public async Task<(IEnumerable<User> Users, int TotalCount)> GetAllUsersPagedAsync(int pageNumber, int pageSize)
+        public async Task<(IEnumerable<UserPagedOrderSummaryDto>, int)> GetAllUsersPagedAsync(int PageNumber, int pageSize)
         {
             using var connection = _factory.CreateConnection();
-
             using var multi = await connection.QueryMultipleAsync(
-                "spUser_GetAllUsersPaged",
-                new { PageNumber = pageNumber, PageSize = pageSize },
-                commandType: CommandType.StoredProcedure
-            );
+                "spUsers_GetPagedWithOrderSummary",
+                new { PageNumber = PageNumber, pageSize = pageSize },
+                commandType: CommandType.StoredProcedure);
 
-            var users = multi.Read<User>();
-            var totalCount = multi.ReadFirst<int>();
+            var users = await multi.ReadAsync<UserPagedOrderSummaryDto>();
+
+            var totalCount = await multi.ReadFirstAsync<int>();
 
             return (users, totalCount);
         }
-
     }
 }

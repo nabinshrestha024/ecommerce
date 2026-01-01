@@ -9,7 +9,7 @@ GO
 -- execute the restore
 -- replace '20251231_1351' with the actual timestamp on your file in C:\Backups
 RESTORE DATABASE [EcommerceDB] 
-FROM DISK = 'C:\Backups\EcommerceDB_Full_20251231_1351.bak'  -- change as required
+FROM DISK = 'D:\C# Project\Backups\20251231_1504.bak'  -- change as required
 WITH REPLACE;
 GO
 
