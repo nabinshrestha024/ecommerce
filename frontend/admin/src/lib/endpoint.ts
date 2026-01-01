@@ -15,4 +15,7 @@ export const endpoint = {
   USER: "admin/user",
   DELETE_USER: "admin/user/delete",
   UPDATE_USER: "admin/user/update",
+  FORGOT_PASSWORD: "auth/forgot-password",
+  VERIFY_OTP: "auth/verify-otp",
+  RESET_PASSWORD: "auth/reset-password",
 };

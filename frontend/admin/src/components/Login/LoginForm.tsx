@@ -7,6 +7,9 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/ui/button";
 import { useLogin } from "@/hooks/auth/useAuth";
 import { Input } from "../Input/Input";
+import { Dialog } from "../Dialog/Dialog";
+import { ForgotPassword } from "../ForgotPassword/ForgotPassword";
+import { useState } from "react";
 
 export const AdminLoginForm = () => {
   const { mutate, isPending } = useLogin();
@@ -20,7 +23,7 @@ export const AdminLoginForm = () => {
     resolver: zodResolver(LoginFormSchema),
     mode: "onChange",
   });
-
+  const [open, setOpen] = useState(false);
   const onSubmit = (data: LoginFormType) => {
     reset();
     mutate(data);
@@ -56,6 +59,17 @@ export const AdminLoginForm = () => {
           {isPending ? "Logging in..." : "Login"}
         </Button>
       </div>
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+        triggerContent={
+          <button className="text-sm underline" onClick={() => setOpen(true)}>
+            Forgot Password?
+          </button>
+        }
+      >
+        <ForgotPassword onClose={() => setOpen(false)} />
+      </Dialog>
     </form>
   );
 };
