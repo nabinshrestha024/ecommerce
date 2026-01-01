@@ -9,42 +9,68 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @Id INT = TRY_CONVERT(INT, @SlugOrId);
+    DECLARE @ProductId INT = TRY_CONVERT(INT, @SlugOrId);
+
+    IF @ProductId IS NULL
+    BEGIN
+        SELECT @ProductId = ProductId
+        FROM Products
+        WHERE Slug = @SlugOrId;
+    END
 
     SELECT TOP 1
         p.ProductId,
         p.CategoryId,
-        p.Name,
         c.Name AS CategoryName,
+        p.Name,
         p.Slug,
         p.Description,
         p.ShortDescription,
-        p.Price,
-        p.StockQuantity,
-        p.SKU,
+        CAST(CASE WHEN p.HasVariants = 1 THEN 0 ELSE 1 END AS BIT) AS HasVariants,
         p.IsActive,
-        p.CreatedAt,
-        p.UpdatedAt
+        v.StockQuantity
     FROM Products p
-    INNER JOIN Categories c
-        ON p.CategoryId = c.CategoryId
+    INNER JOIN Categories c ON p.CategoryId = c.CategoryId
+    INNER JOIN ProductVariants v
+        ON v.ProductId = p.ProductId
+       AND v.IsDefault = 1
+       AND v.IsActive = 1
     WHERE
-        (
-            (@Id IS NOT NULL AND p.ProductId = @Id)
-            OR (p.Slug = @SlugOrId)
-        )
+        p.ProductId = @ProductId
         AND (@OnlyActive = 0 OR p.IsActive = 1);
 
-   
+    SELECT
+        v.VariantId,
+        v.SKU,
+        v.Price,
+        v.StockQuantity,
+        v.IsDefault,
+        v.IsActive
+    FROM ProductVariants v
+    WHERE v.ProductId = @ProductId
+    ORDER BY v.IsDefault DESC, v.VariantId ASC;
+
+    SELECT
+        vav.VariantId,
+        pa.Name AS AttributeName,
+        pav.Value AS AttributeValue
+    FROM VariantAttributeValues vav
+    INNER JOIN ProductAttributeValues pav
+        ON vav.AttributeValueId = pav.AttributeValueId
+    INNER JOIN ProductAttributes pa
+        ON pav.AttributeId = pa.AttributeId
+    WHERE vav.VariantId IN (
+        SELECT VariantId FROM ProductVariants WHERE ProductId = @ProductId
+    );
+
     SELECT
         pi.ProductImageId,
-        pi.ProductId,
         pi.ImageUrl,
         pi.IsPrimary,
-        pi.SortOrder,
-        pi.CreatedAt
+        pi.SortOrder
     FROM ProductImages pi
-    WHERE pi.ProductId = ISNULL(@Id, (SELECT TOP 1 ProductId FROM Products WHERE Slug = @SlugOrId))
-    ORDER BY pi.IsPrimary DESC, pi.SortOrder ASC, pi.ProductImageId ASC;
+    WHERE pi.ProductId = @ProductId
+    ORDER BY pi.IsPrimary DESC, pi.SortOrder ASC;
 END
 GO
+
