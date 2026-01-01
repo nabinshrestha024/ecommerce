@@ -8,7 +8,7 @@ import { Input } from "../Input/Input.tsx";
 import { useEditUser } from "@/hooks/user/useEdit.ts";
 
 interface Person {
-  userId: number;
+  userid: number;
   email: string;
   fullName: string;
   passwordHash: string;
@@ -65,7 +65,7 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
     };
 
     editUser.mutate({
-      userId: customer.userId,
+      userid: customer.userid,
       userData: updatedUser,
     });
 
