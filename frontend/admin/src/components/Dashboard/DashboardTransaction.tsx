@@ -4,105 +4,11 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
+  type PaginationState,
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { Table } from "../Table/Table";
-import { IoSearch } from "react-icons/io5";
-import { Input } from "@/ui/input";
-
-const data = [
-  {
-    no: 1,
-    id: "#6545",
-    orderDate: "2025-10-20",
-    status: "Paid",
-    amount: "$500",
-  },
-  {
-    no: 1,
-    id: "#6545",
-    orderDate: "2025-10-20",
-    status: "Pending",
-    amount: "$500",
-  },
-  {
-    no: 1,
-    id: "#6545",
-    orderDate: "2025-10-20",
-    status: "Paid",
-    amount: "$500",
-  },
-  {
-    no: 1,
-    id: "#6545",
-    orderDate: "2025-10-20",
-    status: "Pending",
-    amount: "$500",
-  },
-  {
-    no: 1,
-    id: "#6545",
-    orderDate: "2025-10-20",
-    status: "Paid",
-    amount: "$500",
-  },
-  {
-    no: 1,
-    id: "#6545",
-    orderDate: "2025-10-20",
-    status: "Paid",
-    amount: "$500",
-  },
-  {
-    no: 1,
-    id: "#6545",
-    orderDate: "2025-10-20",
-    status: "Paid",
-    amount: "$500",
-  },
-  {
-    no: 1,
-    id: "#6545",
-    orderDate: "2025-10-20",
-    status: "Paid",
-    amount: "$500",
-  },
-  {
-    no: 1,
-    id: "#6545",
-    orderDate: "2025-10-20",
-    status: "Paid",
-    amount: "$500",
-  },
-  {
-    no: 1,
-    id: "#6545",
-    orderDate: "2025-10-20",
-    status: "Paid",
-    amount: "$500",
-  },
-  {
-    no: 1,
-    id: "#6545",
-    orderDate: "2025-10-20",
-    status: "Paid",
-    amount: "$500",
-  },
-  {
-    no: 1,
-    id: "#6545",
-    orderDate: "2025-10-20",
-    status: "Paid",
-    amount: "$500",
-  },
-  {
-    no: 1,
-    id: "#6545",
-    orderDate: "2025-10-20",
-    status: "Paid",
-    amount: "$500",
-  },
-];
+import { useFetchOrder, type OrderData } from "@/hooks/order/useFetchOrder";
 
 const recentProducts = [
   {
@@ -137,26 +43,28 @@ const recentProducts = [
   },
 ];
 
-interface DataType {
-  no: number;
-  id: string;
-  orderDate: string;
-  status: string;
-  amount: string;
-}
-
 export const DashboardTransaction = () => {
-  const columnHelper = createColumnHelper<DataType>();
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const orders = useFetchOrder(pagination.pageIndex + 1);
+  const columnHelper = createColumnHelper<OrderData>();
   const columns = [
-    columnHelper.accessor("no", { header: "No." }),
-    columnHelper.accessor("id", { header: "Id Customer" }),
-    columnHelper.accessor("orderDate", { header: "Order Date" }),
-    columnHelper.accessor("status", {
-      header: "Status",
+    columnHelper.accessor("orderId", { header: "Order ID" }),
+    columnHelper.accessor("userId", { header: "Customer ID" }),
+    columnHelper.accessor("orderDate", {
+      header: "Order Date",
+      cell: (info) => {
+        return <div>{String(info.getValue()).split("T")[0]}</div>;
+      },
+    }),
+    columnHelper.accessor("paymentStatus", {
+      header: "Payment Status",
       cell: (info) => {
         return (
           <div className="flex justify-center items-center">
-            <div className="flex gap-2 items-center w-20">
+            <div className="flex gap-2 items-center w-25">
               <div
                 className={`h-2 w-2 rounded-full ${info.getValue() === "Paid" ? "bg-green-500" : "bg-yellow-500"}`}
               ></div>
@@ -170,17 +78,17 @@ export const DashboardTransaction = () => {
         );
       },
     }),
-    columnHelper.accessor("amount", { header: "Amount" }),
+    columnHelper.accessor("totalAmount", {
+      header: "Amount",
+      cell: (info) => {
+        return <div>Rs. {info.getValue()}</div>;
+      },
+    }),
   ];
-
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 5,
-  });
 
   const table = useReactTable({
     columns,
-    data,
+    data: orders.data?.items.slice(0, 5) || [],
     state: { pagination },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -191,18 +99,18 @@ export const DashboardTransaction = () => {
       <Card>
         <div>
           <div className="flex justify-between">
-            <div className="text-xl font-semibold">Transactions</div>
+            <div className="text-xl font-semibold">Last 7 Orders</div>
           </div>
-          <Table table={table} pageIndex={pagination.pageIndex} />
+          <Table
+            table={table}
+            pageIndex={pagination.pageIndex}
+            showPagination={false}
+          />
         </div>
       </Card>
       <Card>
         <div className="space-y-5">
           <div className="text-xl font-semibold">Recent Products</div>
-          <div className="relative">
-            <Input placeholder="Search" className="pl-9" />
-            <IoSearch className="absolute left-2 top-1/2 -translate-y-1/2 text-xl" />
-          </div>
           <div className="flex flex-col gap-4">
             {recentProducts.map((val, index) => {
               if (index < 5) {
