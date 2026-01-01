@@ -10,7 +10,7 @@ CREATE OR ALTER PROCEDURE spUser_RegisterUser
     @City NVARCHAR(100) = NULL,
     @Role BIT = 0,
     @Gender VARCHAR(30),
-    @DateOfBirth DATETIME,
+    @DateOfBirth DATETIME2(3),
     @UserId INT OUTPUT
 AS
 BEGIN

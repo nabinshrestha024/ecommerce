@@ -27,10 +27,6 @@ namespace EcommerceProject.Controllers.v1.AuthController
             {
                 var (users, totalCount) = await _userService.GetAllUsersPagedAsync(pageNumber, pageSize);
 
-                //foreach (var user in users)
-                //{
-                //    user.PasswordHash = null;
-                //}
 
                 return Ok(new
                 {
@@ -88,7 +84,7 @@ namespace EcommerceProject.Controllers.v1.AuthController
 
         }
 
-        [HttpDelete("delect")]
+        [HttpDelete("delete")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int userId)
         {
