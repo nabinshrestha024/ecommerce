@@ -1,61 +1,41 @@
+"use client";
 import { useEffect, useState, useRef } from "react";
 import { Card } from "../Card/Card";
-import { SquarePen } from "lucide-react";
-import { Input } from "../Input/Input";
+import {
+  SquarePen,
+  User,
+  MapPin,
+  Mail,
+  MessageSquare,
+  Calendar,
+  Phone,
+} from "lucide-react";
 import { Button } from "@/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ProfileUpdateSchema,
-  type ProfileUpdateType,
-} from "../profile/schemas/Profile.zod";
+import { ProfileUpdateSchema } from "./schemas/Profile.zod";
+import { Input } from "@/ui/input";
 import { useGetProfile } from "@/hooks/profile/useGetProfile";
 import { usePutProfile } from "@/hooks/profile/usePutProfile";
+import type { ProfileResponse } from "@/services/profile.services";
 
 export const ProfileUpdate = () => {
   const { data } = useGetProfile();
   const { mutate } = usePutProfile();
-
   const {
     register,
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(ProfileUpdateSchema), mode: "all" });
+  } = useForm({
+    resolver: zodResolver(ProfileUpdateSchema),
+    mode: "all",
+  });
 
   const [preview, setPreview] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
-
-  const formatDateOfBirth = (dateStr: string) => {
-    if (!dateStr) return "";
-    if (/^\d{4}-\d{2}-\d{2}T/.test(dateStr)) {
-      return dateStr.slice(0, 10);
-    }
-    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-      return dateStr;
-    }
-
-    const m1 = dateStr.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-    if (m1) {
-      return `${m1[3]}-${m1[2]}-${m1[1]}`;
-    }
-
-    const m2 = dateStr.match(/^(\d{2})-(\d{2})-(\d{4})$/);
-    if (m2) {
-      return `${m2[3]}-${m2[2]}-${m2[1]}`;
-    }
-    const d = new Date(dateStr);
-    if (!isNaN(d.getTime())) {
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, "0");
-      const day = String(d.getDate()).padStart(2, "0");
-      return `${y}-${m}-${day}`;
-    }
-
-    return "";
-  };
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
@@ -66,23 +46,13 @@ export const ProfileUpdate = () => {
 
     reset({
       fullName: data.fullName ?? "",
-      email: data.email ?? "",
-      phoneNumber: data.phone ?? "",
       address: data.address ?? "",
-      dateOfBirth: formatDateOfBirth(data.dateOfBirth ?? ""),
-      biography: data.bio ?? "",
+      bio: data.bio ?? "",
+      city: data.city ?? "",
     });
-
-    if (data.profileImageUrl) {
-      setPreview(
-        data.profileImageUrl
-          ? `http://192.168.80.229/${data.profileImageUrl}`
-          : "",
-      );
-    } else {
-      setPreview("");
-    }
   }, [data, reset]);
+
+  const defaultImage = data?.profileImageUrl;
 
   const handleImageInput = () => {
     imageInputRef.current?.click();
@@ -99,202 +69,256 @@ export const ProfileUpdate = () => {
 
   useEffect(() => {
     return () => {
-      if (preview.startsWith("blob:")) URL.revokeObjectURL(preview);
+      if (preview) URL.revokeObjectURL(preview);
     };
   }, [preview]);
 
-  const onSubmit = (formData: ProfileUpdateType) => {
+  const onSubmit = (formData: ProfileResponse) => {
     const dataToSend = new FormData();
-
-    const dob = formData.dateOfBirth
-      ? new Date(formData.dateOfBirth)
-      : new Date("2000-01-01");
-
-    const day = String(dob.getDate()).padStart(2, "0");
-    const month = String(dob.getMonth() + 1).padStart(2, "0");
-    const year = dob.getFullYear();
-    const formattedDate = `${day}/${month}/${year}`;
-
     dataToSend.append("FullName", formData.fullName || "Unknown");
-    dataToSend.append("Gender", formData.gender || "Male");
-    dataToSend.append("Bio", formData.biography || "N/A");
+    dataToSend.append("Bio", formData.bio || "N/A");
     dataToSend.append("City", formData.city || "Unknown");
-    dataToSend.append("Phone", formData.phoneNumber || "0000000000");
-    dataToSend.append("Status", formData.status ?? "0");
     dataToSend.append("Address", formData.address || "N/A");
-    dataToSend.append("RemoveProfileImage", "false");
-    dataToSend.append("DateOfBirth", formattedDate);
-
     if (selectedImage) {
-      dataToSend.append("ProfileImageFile", selectedImage);
+      dataToSend.append("ProfileImageFile", selectedImage, selectedImage.name);
     }
+    console.log(dataToSend);
+    mutate(dataToSend as ProfileResponse);
+  };
 
-    mutate(dataToSend, {
-      onSuccess: () => {
-        setIsEditing(false);
-      },
-    });
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleSubmit(onSubmit)(e);
   };
 
   return (
     <Card
-      className="p-0 shadow-sm px-4 sm:px-6 rounded-md pb-6 sm:pb-10 border"
-      cardClassName="p-0 border-none shadow-none rounded-xl"
+      className="p-0 shadow-lg border-0 bg-white"
+      cardClassName="p-0 border-none shadow-none rounded-2xl overflow-hidden"
     >
-      <div className="pt-4">
-        <div className="flex flex-row justify-between items-center mb-4 sm:mb-6">
-          <div className="font-bold text-lg sm:text-[22px] leading-tight sm:leading-[26px] tracking-[0%]">
-            Profile Update
+      <div className="bg-[#4EA674] px-6 py-8 sm:px-8">
+        <div className="flex flex-row justify-between items-center">
+          <div>
+            <h2 className="font-bold text-2xl sm:text-3xl text-white mb-1">
+              Profile Settings
+            </h2>
+            <p className="text-blue-100 text-sm">
+              Manage your personal information
+            </p>
           </div>
           <button
-            className="rounded-lg border border-gray-200 p-2 sm:p-2.5 hover:bg-gray-50 transition-colors duration-200"
+            className={`rounded-xl p-3 transition-all duration-200 ${
+              isEditing
+                ? "bg-white text-[#4EA674] shadow-md hover:shadow-lg"
+                : " text-white"
+            }`}
             onClick={handleEditToggle}
             aria-label={isEditing ? "Cancel editing" : "Edit profile"}
           >
-            <SquarePen className="h-4 w-4 text-gray-600" />
+            <SquarePen className="h-5 w-5" />
           </button>
         </div>
+      </div>
 
-        <form
-          className="space-y-4 sm:space-y-6"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="flex flex-col sm:flex-row items-center gap-4 pb-4 sm:pb-6 border-b border-gray-200">
-            <div className="relative">
-              <img
-                src={preview || "profile.webp"}
-                alt="Profile"
-                className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover border-2 border-gray-200 shadow-sm"
-              />
+      <div className="px-6 py-8 sm:px-8">
+        <div className="space-y-8">
+          <div className="flex flex-col items-center gap-6 pb-8 border-b border-gray-100">
+            <div className="relative group">
+              <div className="absolute inset-0 rounded-full blur opacity-25 group-hover:opacity-40 transition-opacity duration-300"></div>
+              <div className="relative">
+                <img
+                  src={preview || defaultImage || "/default.jpg"}
+                  alt="Profile"
+                  className="h-28 w-28 sm:h-32 sm:w-32 rounded-full object-cover border-4 border-white shadow-xl relative"
+                />
+              </div>
             </div>
             <input
               type="file"
               accept="image/*"
               className="hidden"
+              {...register("profileImageFile")}
               ref={imageInputRef}
               onChange={handleImageChange}
             />
-            <button
+            <Button
               type="button"
               disabled={!isEditing}
               onClick={handleImageInput}
-              className={`w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-lg border transition-all duration-200 ${
+              className={`px-6 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 ${
                 !isEditing
-                  ? "border-gray-200 text-gray-400 cursor-not-allowed"
-                  : "border-blue-600 text-blue-600 hover:bg-blue-50"
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : " text-white hover:shadow-lg hover:scale-105 active:scale-95"
               }`}
             >
               Upload New Picture
-            </button>
+            </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-            <div className="flex flex-col">
-              <label className="text-sm font-medium">Full Name</label>
-              <Input
-                type="text"
-                disabled={!isEditing}
-                {...register("fullName")}
-                className={`w-full mt-2 ${!isEditing ? "cursor-not-allowed" : ""}`}
-              />
-              {errors.fullName && (
-                <div className="text-red-600 text-sm">
-                  {errors.fullName.message}
-                </div>
-              )}
-            </div>
-          </div>
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <User className="h-5 w-5 text-[#4EA674]" />
+              Personal Information
+            </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col ">
-              <label className="text-sm font-medium">Phone Number</label>
-              <Input
-                type="tel"
-                disabled={!isEditing}
-                {...register("phoneNumber")}
-                className={`w-full mt-2 ${!isEditing ? "cursor-not-allowed" : ""}`}
-              />
-              {errors.phoneNumber && (
-                <div className="text-red-600 text-sm">
-                  {errors.phoneNumber.message}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col ">
-              <label className="text-sm font-medium">Email</label>
-              <Input
-                type="email"
-                disabled={!isEditing}
-                {...register("email")}
-                className={`w-full mt-2 ${!isEditing ? "cursor-not-allowed" : ""}`}
-              />
-              {errors.email && (
-                <div className="text-red-600 text-sm">
-                  {errors.email.message}
-                </div>
-              )}
-            </div>
-            <div className="flex flex-col ">
-              <label className="text-sm font-medium">Date of Birth</label>
-              <Input
-                type="date"
-                disabled={!isEditing}
-                {...register("dateOfBirth")}
-                className={`w-full mt-2 ${!isEditing ? "cursor-not-allowed" : ""}`}
-              />
-              {errors.dateOfBirth && (
-                <div className="text-red-600 text-sm">
-                  {errors.dateOfBirth.message}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="flex flex-col ">
-            <label className="text-sm font-medium">Location</label>
-            <Input
-              type="text"
-              disabled={!isEditing}
-              {...register("address")}
-              className={`w-full mt-2 ${!isEditing ? "cursor-not-allowed" : ""}`}
-            />
-            {errors.address && (
-              <div className="text-red-600 text-sm">
-                {errors.address.message}
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <User className="h-4 w-4 text-gray-400" />
+                  Full Name
+                </label>
+                <Input
+                  type="text"
+                  disabled={!isEditing}
+                  {...register("fullName")}
+                  className={`h-12 border-gray-200 focus:border-[#4EA674] focus:ring-[#4EA674] rounded-xl transition-all ${
+                    !isEditing ? "bg-gray-50 cursor-not-allowed" : "bg-white"
+                  }`}
+                />
+                {errors.fullName && (
+                  <p className="text-red-500 text-sm flex items-center gap-1 mt-1">
+                    {errors.fullName.message}
+                  </p>
+                )}
               </div>
-            )}
+            </div>
           </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium">Biography</label>
-            <Input
-              type="textarea"
-              disabled={!isEditing}
-              {...register("biography")}
-              className={`w-full border rounded-lg p-3 h-32 resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm sm:text-base ${
-                !isEditing ? "cursor-not-allowed" : ""
-              }`}
-            />
-            {errors.biography && (
-              <div className="text-red-600 text-sm">
-                {errors.biography.message}
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <Mail className="h-5 w-5 text-[#4EA674]" />
+              Contact Details
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-gray-400" />
+                  Phone Number
+                </label>
+                <div className="h-12 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-600 flex items-center">
+                  {data?.phone || "Not provided"}
+                </div>
               </div>
-            )}
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <User className="h-4 w-4 text-gray-400" />
+                  Gender
+                </label>
+                <div className="h-12 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-600 flex items-center">
+                  {data?.gender || "Not specified"}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-gray-400" />
+                  Email
+                </label>
+                <div className="h-12 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-600 flex items-center truncate">
+                  {data?.email || "Not provided"}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-gray-400" />
+                  Date of Birth
+                </label>
+                <div className="h-12 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-600 flex items-center">
+                  {data?.dateOfBirth?.split("T")[0] || "Not provided"}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <MapPin className="h-5 w-5 text-[#4EA674]" />
+              Location
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-gray-400" />
+                  Address
+                </label>
+                <Input
+                  type="text"
+                  disabled={!isEditing}
+                  {...register("address")}
+                  className={`h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-all ${
+                    !isEditing ? "bg-gray-50 cursor-not-allowed" : "bg-white"
+                  }`}
+                />
+                {errors.address && (
+                  <p className="text-red-500 text-sm">
+                    {errors.address.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-gray-400" />
+                  City
+                </label>
+                <Input
+                  type="text"
+                  disabled={!isEditing}
+                  {...register("city")}
+                  className={`h-12 border-gray-200 focus:border-[#4EA674] focus:ring-[#4EA674]rounded-xl transition-all ${
+                    !isEditing ? "bg-gray-50 cursor-not-allowed" : "bg-white"
+                  }`}
+                  placeholder="Enter your city"
+                />
+                {errors.city && (
+                  <p className="text-red-500 text-sm">{errors.city.message}</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <MessageSquare className="h-5 w-5 text-[#4EA674]" />
+              About
+            </h3>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
+                Biography
+              </label>
+              <textarea
+                disabled={!isEditing}
+                {...register("bio")}
+                placeholder="Tell us about yourself..."
+                className={`w-full border border-gray-200 rounded-xl p-4 h-36 resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                  !isEditing
+                    ? "bg-gray-50 cursor-not-allowed text-gray-400"
+                    : "bg-white"
+                }`}
+              />
+              {errors.bio && (
+                <p className="text-red-500 text-sm">{errors.bio.message}</p>
+              )}
+            </div>
           </div>
 
           {isEditing && (
-            <Button
-              className="h-11 w-full font-medium"
-              variant="default"
-              type="submit"
-            >
-              Save Changes
-            </Button>
+            <div className="pt-4">
+              <Button
+                className="h-12 w-full font-semibold text-base rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                variant="default"
+                type="button"
+                onClick={handleFormSubmit}
+              >
+                Save Changes
+              </Button>
+            </div>
           )}
-        </form>
+        </div>
       </div>
     </Card>
   );

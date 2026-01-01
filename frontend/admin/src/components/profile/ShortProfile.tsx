@@ -6,11 +6,11 @@ import { useState } from "react";
 import { Input } from "../Input/Input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/ui/button";
 import {
   SocialLinkSchema,
   type SocialLinkType,
-} from "../profile/schemas/SocialLink.zod";
-import { Button } from "@/ui/button";
+} from "./schemas/SocialLink.zod";
 
 export const ShortProfile = () => {
   const { register, handleSubmit } = useForm({

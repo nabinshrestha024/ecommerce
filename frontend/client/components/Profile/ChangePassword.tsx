@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordSchema } from "./schemas/Password.zod";
 import { Card } from "../Card/Card";
 import { useChangePassword } from "@/hooks/profile/useChangePassword";
-import { Input } from "../input/Input";
+import { Input } from "../Input/Input";
 export const ChangePassword = () => {
   const {
     register,
