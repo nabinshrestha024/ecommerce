@@ -14,7 +14,7 @@ import { useSendEmail } from "@/hooks/forgotPassword/useSendEmail";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSendOtp } from "@/hooks/forgotPassword/useSendOtp";
 import { useSendPassword } from "@/hooks/forgotPassword/useSendPassword";
-import { InputOTPField } from "../Otp/InputOtpField";
+import { InputOTPField } from "../Otp/InputOTPField";
 
 type step = "Email" | "OTP" | "ResetPassword";
 interface onCloseProps {
@@ -41,22 +41,42 @@ export const ForgotPassword = ({ onClose }: onCloseProps) => {
     mode: "onChange",
   });
 
+  const handleEmailSubmit = (data: EmailType) => {
+    sendEmail.mutate(data, {
+      onSuccess: () => {
+        setEmail(data.email);
+        setStep("OTP");
+      },
+    });
+  };
+  const handleOtpSubmit = (data: OTPType) => {
+    sendOtp.mutate(
+      { email, otp: data.otp },
+      {
+        onSuccess: () => {
+          setOtp(data.otp);
+          setStep("ResetPassword");
+        },
+      },
+    );
+  };
+  const handlePasswordSubmit = (data: PasswordType) => {
+    sendNewPassword.mutate(
+      { email, otp, newPassword: data.newPassword },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+      },
+    );
+  };
+
   return (
     <div className="max-h-[70vh] h-full overflow-y-auto overflow-x-hidden bg-white rounded-lg shadow-lg">
       {step === "Email" && (
         <form
           className="p-6 space-y-4"
-          onSubmit={emailForm.handleSubmit(({ email }) => {
-            sendEmail.mutate(
-              { email },
-              {
-                onSuccess: () => {
-                  setEmail(email);
-                  setStep("OTP");
-                },
-              },
-            );
-          })}
+          onSubmit={emailForm.handleSubmit(handleEmailSubmit)}
         >
           <h2 className="text-3xl font-bold text-gray-800 mb-6">
             Forgot Password
@@ -92,17 +112,14 @@ export const ForgotPassword = ({ onClose }: onCloseProps) => {
       {step === "OTP" && (
         <form
           className="p-6 space-y-6"
-          onSubmit={OtpForm.handleSubmit(({ otp }) => {
-            sendOtp.mutate(
-              { email, otp },
-              {
-                onSuccess: () => {
-                  setOtp(otp);
-                  setStep("ResetPassword");
-                },
-              },
-            );
-          })}
+          onSubmit={(e) => {
+            e.preventDefault();
+            OtpForm.setValue("otp", otp, {
+              shouldValidate: true,
+              shouldDirty: true,
+            });
+            OtpForm.handleSubmit(handleOtpSubmit)();
+          }}
         >
           <div className="space-y-5">
             <div className="text-3xl font-bold">Verify OTP</div>
@@ -110,29 +127,16 @@ export const ForgotPassword = ({ onClose }: onCloseProps) => {
             <div className="space-y-2">
               <div>
                 Enter your one-time password sent to{" "}
-                <span className="text-blue-600">{email}</span>:
+                <span className="text-blue-600 break-all">{email}</span>:
               </div>
 
               <div className="flex items-center justify-center mt-5">
                 <InputOTPField
                   length={6}
-                  value={OtpForm.watch("otp")}
-                  onChange={(value) =>
-                    OtpForm.setValue("otp", value, {
-                      shouldValidate: true,
-                      shouldDirty: true,
-                    })
-                  }
-                  className="flex justify-center items-center gap-3"
-                  slotClassName="
-              h-12 w-12
-              text-xl font-semibold
-              border border-gray-400
-              rounded-md
-              focus:border-blue-500
-              transition
-              shrink-0
-            "
+                  value={otp}
+                  onChange={(value: string) => setOtp(value)}
+                  className="flex justify-center items-center gap-2 sm:gap-3 overflow-x-auto max-w-full"
+                  slotClassName="w-10 h-10 sm:w-12 sm:h-12 text-xl font-semibold border border-gray-400 rounded-md focus:border-blue-500 transition shrink-0"
                 />
               </div>
 
@@ -155,17 +159,7 @@ export const ForgotPassword = ({ onClose }: onCloseProps) => {
       {step === "ResetPassword" && (
         <form
           className="p-6 space-y-4"
-          onSubmit={PasswordForm.handleSubmit(({ newPassword }) => {
-            sendNewPassword.mutate(
-              { email, otp, newPassword },
-              {
-                onSuccess: () => {
-                  setStep("Email");
-                  onClose();
-                },
-              },
-            );
-          })}
+          onSubmit={PasswordForm.handleSubmit(handlePasswordSubmit)}
         >
           <h2 className="text-3xl font-bold text-gray-800 mb-6">
             Reset Password
