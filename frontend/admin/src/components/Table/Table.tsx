@@ -11,11 +11,13 @@ import {
 interface GenericTableProps<TData> {
   table: TableType<TData>;
   pageIndex: number;
+  showPagination?: boolean;
 }
 
 export const Table = <TData,>({
   table,
   pageIndex,
+  showPagination = true,
 }: GenericTableProps<TData>) => {
   const totalPages = table.getPageCount();
   return (
@@ -51,47 +53,49 @@ export const Table = <TData,>({
           ))}
         </tbody>
       </table>
-      <div className="flex items-center justify-between">
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                onClick={() => table.previousPage()}
-                aria-disabled={!table.getCanPreviousPage()}
-                className={
-                  !table.getCanPreviousPage()
-                    ? "pointer-events-none opacity-50"
-                    : ""
-                }
-              />
-            </PaginationItem>
-
-            {Array.from({ length: totalPages }).map((_, i) => (
-              <PaginationItem key={i}>
-                <PaginationLink
-                  onClick={() => table.setPageIndex(i)}
-                  isActive={pageIndex === i}
-                  className="data-[active=true]:bg-[#C1E6BA] data-[active=true]:text-foreground data-[inactive=true]:bg-foreground data-[inactive=true]:text-background"
-                >
-                  {i + 1}
-                </PaginationLink>
+      {showPagination && (
+        <div className="flex items-center justify-between">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => table.previousPage()}
+                  aria-disabled={!table.getCanPreviousPage()}
+                  className={
+                    !table.getCanPreviousPage()
+                      ? "pointer-events-none opacity-50"
+                      : ""
+                  }
+                />
               </PaginationItem>
-            ))}
 
-            <PaginationItem>
-              <PaginationNext
-                onClick={() => table.nextPage()}
-                aria-disabled={!table.getCanNextPage()}
-                className={
-                  !table.getCanNextPage()
-                    ? "pointer-events-none opacity-50"
-                    : ""
-                }
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <PaginationItem key={i}>
+                  <PaginationLink
+                    onClick={() => table.setPageIndex(i)}
+                    isActive={pageIndex === i}
+                    className="data-[active=true]:bg-[#C1E6BA] data-[active=true]:text-foreground data-[inactive=true]:bg-foreground data-[inactive=true]:text-background"
+                  >
+                    {i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => table.nextPage()}
+                  aria-disabled={!table.getCanNextPage()}
+                  className={
+                    !table.getCanNextPage()
+                      ? "pointer-events-none opacity-50"
+                      : ""
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 };

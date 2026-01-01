@@ -4,6 +4,8 @@
     {
         public int DiscountId { get; set; }
         public int ProductId { get; set; }
+        public int? VariantId { get; set; }
+
         public string DiscountType { get; set; }
         public decimal DiscountValue { get; set; }
         public bool IsPercentage { get; set; }

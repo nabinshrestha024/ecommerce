@@ -10,8 +10,6 @@ CREATE OR ALTER PROCEDURE spProducts_Update
     @Slug VARCHAR(200),
     @Description VARCHAR(MAX) = NULL,
     @ShortDescription VARCHAR(500) = NULL,
-    @Price DECIMAL(10,2),
-    @StockQuantity INT,
     @IsActive BIT
 )
 AS
@@ -25,8 +23,6 @@ BEGIN
         Slug = @Slug,
         Description = @Description,
         ShortDescription = @ShortDescription,
-        Price = @Price,
-        StockQuantity = @StockQuantity,
         IsActive = @IsActive,
         UpdatedAt = SYSUTCDATETIME()
     WHERE ProductId = @ProductId;
@@ -34,3 +30,4 @@ BEGIN
     SELECT @@ROWCOUNT AS Affected;
 END
 GO
+

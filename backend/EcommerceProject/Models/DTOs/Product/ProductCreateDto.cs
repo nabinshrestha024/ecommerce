@@ -6,8 +6,7 @@
         public string Name { get; set; } = default!;
         public string? Description { get; set; }
         public string? ShortDescription { get; set; }
-        public decimal Price { get; set; }
-        public int StockQuantity { get; set; }
         public bool IsActive { get; set; } = true;
+        public ProductVariantCreateDto DefaultVariant { get; set; } = default!;
     }
 }

@@ -4,6 +4,7 @@ export const endpoint = {
   LOGOUT: "auth/logout",
   FETCH_PRODUCT: "admin/products",
   FETCH_ORDER: "admin/orders",
+  FETCHORDERBYID: "admin/orders",
   CHANGEPASSWORD: "auth/change_password",
   FETCH_CATEGORY: "admin/categories",
   FETCH_PROFILE: "profile/me",
@@ -14,4 +15,7 @@ export const endpoint = {
   USER: "admin/user",
   DELETE_USER: "admin/user/delete",
   UPDATE_USER: "admin/user/update",
+  FORGOT_PASSWORD: "auth/forgot-password",
+  VERIFY_OTP: "auth/verify-otp",
+  RESET_PASSWORD: "auth/reset-password",
 };

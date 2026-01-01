@@ -33,7 +33,10 @@ export const OrderDetails = ({ order }: { order: OrderData }) => {
   return (
     <div className="space-y-4">
       {data?.items?.map((item) => (
-        <div key={item.orderItemId} className="flex items-start gap-4">
+        <div
+          key={item.orderItemId}
+          className="flex items-start gap-4 max-h-[500px] overflow-auto"
+        >
           <div className="w-20 h-20 relative shrink-0">
             {item.productImageUrl ? (
               <Image

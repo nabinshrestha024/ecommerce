@@ -10,11 +10,22 @@ namespace EcommerceProject.Repositories.Interfaces
         Task<PagedResult<ProductListItemDto>> GetPagedAsync(int? categoryId, string? search, int page, int pageSize, bool onlyActive, CancellationToken ct);
         Task<ProductDetailsDto?> GetBySlugOrIdAsync(string slugOrId, bool onlyActive, CancellationToken ct);
         Task InsertImageAsync(int productId, string imageUrl, bool isPrimary, int sortOrder, CancellationToken ct);
+        Task<int> DeleteImagesByProductIdAsync(int productId, CancellationToken ct);
+
         Task<ProductDetailsDto?> GetByIdAsync(int productId, CancellationToken ct);
         Task<int?> GetMaxSlugSuffixAsync(string baseSlug, CancellationToken ct);
 
-        Task<int> CreateAsync(int categoryId,string name,string slug, string? description, string? shortDescription,decimal price, int stockQuantity,string sku, bool isActive, CancellationToken ct);
-        Task<bool> UpdateAsync(int id, ProductUpdateDto dto, CancellationToken ct);
+        Task<int> CreateAsync(
+            int categoryId,
+            string name,
+            string slug,
+            string? description,
+            string? shortDescription,
+            bool isActive,
+            CancellationToken ct
+        );
+        Task<bool> UpdateAsync(int productId, int categoryId, string name, string slug,string? description, string? shortDescription, bool isActive, CancellationToken ct);
+
         Task<bool> DeleteAsync(int id, CancellationToken ct);
 
         Task InsertImagesBulkAsync(int productId, IReadOnlyList<(string url, bool isPrimary, int sortOrder)> images, CancellationToken ct);
