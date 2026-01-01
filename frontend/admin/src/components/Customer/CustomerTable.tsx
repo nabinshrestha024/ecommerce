@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   createColumnHelper,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { MdDelete } from "react-icons/md";
@@ -41,7 +40,7 @@ export const CustomerTable = () => {
     pageIndex: 0,
     pageSize: 10,
   });
-  const user = useUser(pagination.pageIndex);
+  const user = useUser(pagination.pageIndex + 1);
   const columnHelper = createColumnHelper<Person>();
   const [loading, setLoading] = useState(false);
 
@@ -63,7 +62,7 @@ export const CustomerTable = () => {
   const handleDelete = (userId: number) => {
     setLoading(true);
     deleteUser.mutate(userId, {
-      onSuccess: () => {
+      onSettled: () => {
         setLoading(false);
       },
     });
@@ -198,8 +197,9 @@ export const CustomerTable = () => {
     columns,
     data: user.data?.data || [],
     state: { pagination },
+    pageCount: Math.ceil((user.data?.totalCount ?? 0) / pagination.pageSize),
+    manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
   });
 

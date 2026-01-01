@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 type ProductData = {
   orderItemId: number;
   productId: number;
+  userId: number;
   productName: string;
   quantity: number;
   unitPrice: number;
@@ -29,10 +30,10 @@ export type OrderResponse = {
   totalPages: number;
 };
 
-export const useFetchOrder = () => {
+export const useFetchOrder = (pageIndex: number) => {
   const { data, isLoading, isError, refetch } = useQuery<OrderResponse>({
-    queryKey: ["orderData"],
-    queryFn: getOrder,
+    queryKey: ["orderData", pageIndex],
+    queryFn: () => getOrder(pageIndex),
   });
   return { data, isLoading, isError, refetch };
 };
