@@ -9,7 +9,6 @@ import { useGetOrderById } from "@/hooks/orders/useGetOrderById";
 import { useFetchWebsiteReview } from "@/hooks/websiteReview/useFetchWebsiteReview";
 export const Review = () => {
   const { data } = useFetchWebsiteReview();
-  console.log("Website Reviews:", data?.data);
   const [open, setOpen] = useState(false);
   const reviews = Array.isArray(data?.data) ? [...data?.data] : [];
   const displayReviews = reviews.slice(0, 6);

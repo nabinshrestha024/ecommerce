@@ -2,12 +2,8 @@ import { axiosInstance } from "@/lib/axiosInstance";
 import { endpoint } from "@/lib/endpoint";
 
 export const getWebsiteReview = async () => {
-  try {
-    const response = await axiosInstance.get(endpoint.WEBSITEREVIEW);
-    return response;
-  } catch (error) {
-    throw error;
-  }
+  const response = await axiosInstance.get(endpoint.WEBSITEREVIEW);
+  return response;
 };
 export const addWebsiteReview = async ({
   title,

@@ -25,7 +25,6 @@ export const ReviewForm = ({ onClose }: onCloseProps) => {
     },
   });
   const handleReviewSubmit = (data: ReviewFormValues) => {
-    console.log(data);
     const payload = {
       title: "",
       rating: data.rating,
