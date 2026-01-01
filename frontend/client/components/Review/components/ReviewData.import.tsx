@@ -11,7 +11,7 @@ export const ReviewData = [
     id: 2,
     name: "John D",
     image: "/Utsarga.jpg",
-    rating: 5,
+    rating: 4,
     message:
       "Fast delivery and fantastic quality! The customer support team was quick to resolve my query. Dealport has earned a loyal customer.",
   },
