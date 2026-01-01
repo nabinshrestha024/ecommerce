@@ -5,7 +5,7 @@ DECLARE @Timestamp NVARCHAR(50);
 
 -- Format: YYYYMMDD_HHmm
 SET @Timestamp = FORMAT(GETDATE(), 'yyyyMMdd_HHmm');
-SET @BackupFile = 'C:\Backups\EcommerceDB_Full_' + @Timestamp + '.bak'; 
+SET @BackupFile = 'D:\C# Project\Backups' + @Timestamp + '.bak'; 
 
 BACKUP DATABASE [EcommerceDB]
 TO DISK = @BackupFile

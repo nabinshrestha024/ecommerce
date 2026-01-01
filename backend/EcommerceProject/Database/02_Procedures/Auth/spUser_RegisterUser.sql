@@ -1,4 +1,4 @@
-﻿USE [EcommerceDB]
+﻿USE [EcommerceDB];
 GO
 
 CREATE OR ALTER PROCEDURE spUser_RegisterUser
@@ -9,6 +9,8 @@ CREATE OR ALTER PROCEDURE spUser_RegisterUser
     @Address NVARCHAR(500) = NULL,
     @City NVARCHAR(100) = NULL,
     @Role BIT = 0,
+    @Gender VARCHAR(30),
+    @DateOfBirth DATETIME2(3),
     @UserId INT OUTPUT
 AS
 BEGIN
@@ -22,6 +24,11 @@ BEGIN
     
     INSERT INTO Users (Email, PasswordHash, FullName, Phone, Address, City, Role, IsActive, CreatedAt)
     VALUES (@Email, @PasswordHash, @FullName, @Phone, @Address, @City, @Role, 1, GETDATE());
-    
+
     SET @UserId = SCOPE_IDENTITY();
+
+    INSERT INTO UserProfiles(UserId,Gender,DateOfBirth)
+    VALUES(@UserId,@Gender,@DateOfBirth);
+    
+    
 END
