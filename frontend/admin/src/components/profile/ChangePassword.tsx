@@ -66,7 +66,7 @@ export const ChangePassword = () => {
             )}
           </div>
           <div className="flex flex-col ">
-            <label className="text-sm sm:text-base">Confirm Password</label>
+            <label className="text-sm sm:text-base">Confirm Passjkjkword</label>
             <Input
               type="password"
               {...register("confirmPassword")}

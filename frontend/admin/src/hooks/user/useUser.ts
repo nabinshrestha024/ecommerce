@@ -34,7 +34,7 @@ type userResponse = {
 
 export const useUser = (pageIndex: number) => {
   const { data, isLoading, isError, refetch } = useQuery<userResponse>({
-    queryKey: ["userData"],
+    queryKey: ["userData", pageIndex],
     queryFn: () => getUser(pageIndex),
   });
   return { data, isLoading, isError, refetch };

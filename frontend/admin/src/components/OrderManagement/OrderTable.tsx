@@ -25,7 +25,11 @@ const statusType = {
 };
 
 export const OrderTable = () => {
-  const { data } = useFetchOrder();
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const orders = useFetchOrder(pagination.pageIndex + 1);
   const [sortType, setSortType] = useState<"date" | "price" | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<OrderData | null>(
     null,
@@ -146,11 +150,6 @@ export const OrderTable = () => {
     }),
   ];
 
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-
   const [paginationDelivered, setPaginationDelivered] =
     useState<PaginationState>({ pageIndex: 0, pageSize: 10 });
   const [paginationPending, setPaginationPending] = useState<PaginationState>({
@@ -202,7 +201,7 @@ export const OrderTable = () => {
       return orders;
     };
 
-    const items = (data?.items ?? []) as OrderData[];
+    const items = (orders.data?.items ?? []) as OrderData[];
 
     return {
       all: sortOrder(filterBySearch(items)),
@@ -219,12 +218,14 @@ export const OrderTable = () => {
         filterBySearch(items.filter((d) => d.status === statusType.CANCELLED)),
       ),
     };
-  }, [searchTerm, sortType, data]);
+  }, [searchTerm, sortType, orders]);
 
   const tableAll = useReactTable({
     columns,
     data: filteredData.all,
     state: { pagination },
+    pageCount: Math.ceil((orders.data?.totalCount ?? 0) / pagination.pageSize),
+    manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
