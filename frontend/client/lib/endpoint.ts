@@ -20,4 +20,7 @@ export const endpoint = {
   NOTIFICATIONSEEN: "notifications",
   FETCHPROFILE: "profile/me",
   CHANGEPASSWORD: "auth/change_password",
+  FORGOTPASSWORD: "auth/auth/forgot-password",
+  VERIFYOTP: "auth/verify-otp",
+  RESETPASSWORD: "auth/auth/reset-password",
 };

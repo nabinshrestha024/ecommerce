@@ -9,6 +9,9 @@ import Link from "next/link";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { useRouter } from "next/navigation";
 import { Input } from "../Input/Input";
+import { Dialog } from "../Dialog/Dialog";
+import { ForgetPasswordDialogContent } from "../ForgetPassword/ForgetPasswordDialogContent";
+import { useState } from "react";
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -31,6 +34,7 @@ export const LoginForm = () => {
       },
     });
   };
+  const [open, setOpen] = useState(false);
 
   return (
     <form
@@ -61,14 +65,27 @@ export const LoginForm = () => {
           Login
         </Button>
       </div>
-      <div className="mt-5 text-sm">
-        Don&apos;t have an account?{" "}
-        <Link
-          href={"/signup"}
-          className="text-blue-500 underline cursor-pointer"
+      <div className="mt-5 text-sm space-x-5 flex">
+        <div>
+          Don&apos;t have an account?{" "}
+          <Link
+            href={"/signup"}
+            className="text-blue-500 underline cursor-pointer"
+          >
+            Sign Up
+          </Link>
+        </div>
+        <Dialog
+          open={open}
+          onOpenChange={setOpen}
+          triggerText={
+            <div className="text-blue-500 underline cursor-pointer">
+              Forgot password?
+            </div>
+          }
         >
-          Sign Up
-        </Link>
+          <ForgetPasswordDialogContent setOpen={setOpen} />
+        </Dialog>
       </div>
     </form>
   );

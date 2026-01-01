@@ -1,17 +1,15 @@
 "use client";
 
 import type { ReactNode } from "react";
-import {
-  DialogContent,
-  DialogTrigger,
-  Dialog as Root,
-} from "@/ui/dialog";
+import { Dialog as Root, DialogContent, DialogTrigger } from "@/ui/dialog";
 
 interface DialogProps {
   contentClassName?: string;
   children: ReactNode;
   triggerText: ReactNode;
   triggerClassName?: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 export const Dialog = ({
@@ -19,9 +17,11 @@ export const Dialog = ({
   children,
   triggerText,
   triggerClassName,
+  open,
+  onOpenChange,
 }: DialogProps) => {
   return (
-    <Root>
+    <Root open={open} onOpenChange={onOpenChange}>
       <DialogTrigger className={triggerClassName}>{triggerText}</DialogTrigger>
       <DialogContent className={contentClassName}>{children}</DialogContent>
     </Root>
