@@ -92,5 +92,21 @@ namespace EcommerceProject.Repositories.Implementations
             );
             return affected > 0;
         }
+
+        public async Task<bool> ExistsAsync(int variantId, CancellationToken ct)
+        {
+            using var conn = _factory.CreateConnection();
+
+            var exists = await conn.ExecuteScalarAsync<int>(
+                new CommandDefinition(
+                "spProductVariants_Exists",
+                new { VariantId = variantId },
+                commandType: CommandType.StoredProcedure,
+                cancellationToken: ct
+                )
+             );
+
+            return exists == 1;
+        }
     }
 }

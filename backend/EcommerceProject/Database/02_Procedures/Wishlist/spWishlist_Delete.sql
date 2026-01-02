@@ -1,14 +1,15 @@
 ﻿USE [EcommerceDB]
-
 GO
-CREATE OR ALTER   PROCEDURE [dbo].[spWishlist_Delete]
-    @UserId INT,
-    @ProductId INT
+
+
+CREATE OR ALTER PROCEDURE [dbo].[spWishlist_Delete]
+    @WishlistId INT 
+
     
 AS
 BEGIN
     SET NOCOUNT ON;
 
     DELETE FROM Wishlists
-    WHERE UserId = @UserId AND ProductId = @ProductId;
+    WHERE WishlistId = @WishlistId;
 END

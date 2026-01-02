@@ -11,12 +11,13 @@ namespace EcommerceProject.Services.Implementations
         private readonly ICartRepository _cartRepository;
         private readonly IProductRepository _productRepository;
         private readonly IUrlService _urlService;
-
-        public CartService(ICartRepository cartRepository, IProductRepository productRepository, IUrlService urlService)
+        private readonly IProductVariantRepository _variantrepo;
+        public CartService(ICartRepository cartRepository, IProductRepository productRepository, IUrlService urlService, IProductVariantRepository variantrepo)
         {
             _cartRepository = cartRepository;
             _productRepository = productRepository;
             _urlService = urlService;
+            _variantrepo = variantrepo;
         }
 
         public async Task<IEnumerable<CartItemDto>> GetCartAsync(int userId)
@@ -34,11 +35,11 @@ namespace EcommerceProject.Services.Implementations
 
         public async Task AddToCartAsync(int userId, int variantId, int quantity, CancellationToken ct = default)
         {
-            var product = await _productRepository.GetByIdAsync(variantId, ct);
+            var exists = await _variantrepo.ExistsAsync(variantId, ct);
 
-            if (product == null)
+            if (!exists)
             {
-                throw new Exception($"Product cannot found");
+                throw new Exception($"Product variant cannot found");
 
             }
 

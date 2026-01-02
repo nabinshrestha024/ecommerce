@@ -5,12 +5,12 @@ namespace EcommerceProject.Repositories.Interfaces
     public interface IWishlistRepository
     {
 
-        Task<PagedResult<WishListItemDto>> GetPagedAsync(int userId, int page, int size);     
-        Task AddWishlistItem(int userId, int productId);
+        Task<PagedResult<WishListItemDto>> GetPagedAsync(int userId, int page, int size, CancellationToken ct = default);     
+        Task AddWishlistItem(int userId, int variantId, CancellationToken ct = default);
 
 
-        Task DeleteWishlistItem(int userId, int productId);
+        Task DeleteWishlistItem(int wishlistId);
 
-        Task MoveToCartAsync(int userId, int ProductId);
+        Task MoveToCartAsync(int wishlistId, int userId, int quantity);
     }
 }

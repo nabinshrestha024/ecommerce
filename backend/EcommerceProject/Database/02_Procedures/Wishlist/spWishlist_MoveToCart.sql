@@ -1,37 +1,57 @@
-﻿CREATE OR ALTER PROCEDURE spWishlist_MoveToCart
+﻿USE [EcommerceDB]
+GO
+
+
+CREATE OR ALTER   PROCEDURE [dbo].[spWishlist_MoveToCart]
+    @WishlistId INT,
     @UserId INT,
-    @ProductId INT
+    @Quantity INT
 AS
 BEGIN
     SET NOCOUNT ON;
-
+    DECLARE @VariantId INT;
     DECLARE @Stock INT;
 
-    SELECT @Stock = StockQuantity
-    FROM Products
-    WHERE ProductId = @ProductId AND IsActive = 1;
+    BEGIN TRAN;
 
-    IF @Stock IS NULL OR @Stock <= 0
+    SELECT @VariantId = VariantId
+    FROM Wishlists
+    WHERE WishlistId = @WishlistId AND UserId = @UserId;
+
+    IF @VariantId IS NULL 
+    BEGIN 
+        ROLLBACK;
+
+        THROW 50001,'Wishlist item not found',1;
+        END
+
+    SELECT @Stock = StockQuantity
+    FROM ProductVariants
+    WHERE VariantId = @VariantId AND IsActive = 1;
+
+     IF @Stock < @Quantity
     BEGIN
-        THROW 50002, 'Product out of stock', 1;
+        ROLLBACK;
+        THROW 50002, 'Insufficient stock', 1;
     END
 
     IF EXISTS (
         SELECT 1 FROM ShoppingCarts 
-        WHERE UserId = @UserId AND ProductId = @ProductId
+        WHERE UserId = @UserId AND VariantId = @VariantId
     )
     BEGIN
         UPDATE ShoppingCarts
-        SET Quantity = Quantity + 1
-        WHERE UserId = @UserId AND ProductId = @ProductId;
+        SET Quantity = Quantity + @Quantity
+        WHERE UserId = @UserId AND VariantId = @VariantId;
     END
     ELSE
     BEGIN
-        INSERT INTO ShoppingCarts (UserId, ProductId, Quantity, AddedDate)
-        VALUES (@UserId, @ProductId, 1, GETDATE());
+        INSERT INTO ShoppingCarts (UserId, VariantId, Quantity, AddedDate)
+        VALUES (@UserId, @VariantId, @Quantity, GETDATE());
     END
 
     DELETE FROM Wishlists
-    WHERE UserId = @UserId AND ProductId = @ProductId;
+    WHERE WishlistId = @WishlistId AND UserId = @UserId;
+
+    COMMIT;
 END
-GO
