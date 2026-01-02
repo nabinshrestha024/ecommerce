@@ -11,7 +11,7 @@ import { FiMinusCircle } from "react-icons/fi";
 import {
   SocialLinkSchema,
   type SocialLinkType,
-} from "../profile/schemas/SocialLink.zod";
+} from "./schemas/SocialLink.zod";
 import { Button } from "@/ui/button";
 import { usePostSocial } from "@/hooks/socialLinks/usePostSocial";
 import { toast } from "sonner";

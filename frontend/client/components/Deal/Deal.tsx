@@ -42,6 +42,7 @@ const sizes = [
 export const Deal = () => {
   const stockValue = 20;
   const [quantity, setQuantity] = useState(1);
+  const [open, setOpen] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState<
     Record<number, number | null>
   >({});
@@ -207,6 +208,8 @@ export const Deal = () => {
                       </Button>
                     ) : (
                       <Dialog
+                        open={open}
+                        onOpenChange={setOpen}
                         triggerText={
                           <Button
                             className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px] "
