@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceProject.Controllers.v1.ProductAttribute
 {
-    [Route("v1/admin/attribute")]
+    [Route("v1/admin/attributes")]
     [ApiController]
     [Authorize(Roles = "Admin")]
     public class AdminAttributesController : ControllerBase

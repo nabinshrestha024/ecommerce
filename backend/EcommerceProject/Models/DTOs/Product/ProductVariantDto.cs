@@ -2,6 +2,7 @@
 {
     public class ProductVariantDto
     {
+        public int ProductId { get; set; } 
         public int VariantId { get; set; }
         public string SKU { get; set; } = default!;
         public decimal Price { get; set; }

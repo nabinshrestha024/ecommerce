@@ -1,5 +1,4 @@
-﻿
-using EcommerceProject.Models.DTOs.Wishlist;
+﻿using EcommerceProject.Models.DTOs.Wishlist;
 using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;

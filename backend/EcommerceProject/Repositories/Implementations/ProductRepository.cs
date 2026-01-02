@@ -16,7 +16,14 @@ namespace EcommerceProject.Repositories.Implementations
         {
             _factory = factory;
         }
-        public async Task<PagedResult<ProductListItemDto>> GetPagedAsync(int? categoryId, string? search, int page, int pageSize, bool onlyActive, CancellationToken ct)
+
+        public async Task<PagedResult<ProductListItemDto>> GetPagedAsync(
+            int? categoryId, 
+            string? search, 
+            int page, 
+            int pageSize, 
+            bool onlyActive, 
+            CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
 
@@ -28,11 +35,22 @@ namespace EcommerceProject.Repositories.Implementations
             p.Add("@OnlyActive", onlyActive);
 
             using var multi = await conn.QueryMultipleAsync(
-                new CommandDefinition("spProducts_GetPaged", p, commandType: CommandType.StoredProcedure, cancellationToken: ct)
-            );
+                new CommandDefinition("spProducts_GetPaged", p, commandType:
+                CommandType.StoredProcedure, cancellationToken: ct
+            ));
 
             var items = (await multi.ReadAsync<ProductListItemDto>()).ToList();
+
+            var allVariants = (await multi.ReadAsync<ProductVariantDto>()).ToList();
+
             var total = await multi.ReadFirstAsync<int>();
+
+            foreach (var item in items)
+            {
+                item.Variants = allVariants
+                    .Where(v => v.ProductId == item.ProductId)
+                    .ToList();
+            }
 
             return new PagedResult<ProductListItemDto>
             (
@@ -42,6 +60,7 @@ namespace EcommerceProject.Repositories.Implementations
                 total
             );
         }
+
         public async Task<int?> GetMaxSlugSuffixAsync(string baseSlug, CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
@@ -85,17 +104,14 @@ namespace EcommerceProject.Repositories.Implementations
             return deleted;
         }
 
-
         public async Task<ProductDetailsDto?> GetBySlugOrIdAsync(string slugOrId, bool onlyActive, CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
 
-            var p = new DynamicParameters();
-            p.Add("@SlugOrId", slugOrId);
-            p.Add("@OnlyActive", onlyActive);
-
             using var multi = await conn.QueryMultipleAsync(
-                new CommandDefinition("dbo.spProducts_GetBySlugOrId", p, commandType: CommandType.StoredProcedure, cancellationToken: ct)
+                "spProducts_GetBySlugOrId",
+                new { SlugOrId = slugOrId, OnlyActive = onlyActive },
+                commandType: CommandType.StoredProcedure
             );
 
             var product = await multi.ReadFirstOrDefaultAsync<ProductDetailsDto>();
@@ -103,20 +119,18 @@ namespace EcommerceProject.Repositories.Implementations
 
             var variants = (await multi.ReadAsync<ProductVariantDto>()).ToList();
 
-            var variantAttributes = await multi.ReadAsync<(int VariantId, string AttributeName, string AttributeValue)>();
+            var attributeLinks = (await multi.ReadAsync<AttributeMapping>()).ToList();
 
             foreach (var variant in variants)
             {
-                variant.Attributes = variantAttributes
+                variant.Attributes = attributeLinks
                     .Where(a => a.VariantId == variant.VariantId)
                     .ToDictionary(a => a.AttributeName, a => a.AttributeValue);
             }
 
             product.Variants = variants;
-
-
-            var images = (await multi.ReadAsync<ProductImageDto>()).ToList();
-            product.Images = images;
+            product.Images = (await multi.ReadAsync<ProductImageDto>()).ToList();
+            
             return product;
         }
 
@@ -142,13 +156,12 @@ namespace EcommerceProject.Repositories.Implementations
                     Slug = slug,
                     Description = description,
                     ShortDescription = shortDescription,
-                    HasVariants = hasVariants, // added
+                    HasVariants = hasVariants, 
                     IsActive = isActive
                 },
                 commandType: CommandType.StoredProcedure
             );
         }
-
 
         public async Task<bool> UpdateAsync(int productId, int categoryId, string name, string slug, string? description, string? shortDescription, bool isActive, CancellationToken ct)
 
@@ -185,7 +198,6 @@ namespace EcommerceProject.Repositories.Implementations
                 commandType: CommandType.StoredProcedure
             );
         }
-
 
         public async Task<bool> DeleteAsync(int id, CancellationToken ct)
         {
@@ -227,13 +239,19 @@ namespace EcommerceProject.Repositories.Implementations
 
         public async Task <int?>GetProductIdByNameAsync(string productName)
         {
-
-
             return await _factory.CreateConnection().QueryFirstOrDefaultAsync<int?>(
                 "spProduct_GetIdByName",
                 new { ProductName = productName },
                 commandType: CommandType.StoredProcedure
             );
         }
-    }
+
+        // helper function
+        private class AttributeMapping
+        {
+            public int VariantId { get; set; }
+            public string AttributeName { get; set; } = default!;
+            public string AttributeValue { get; set; } = default!;
+        }
+    } 
 }
