@@ -75,9 +75,9 @@ CREATE TABLE Products (
     Slug                VARCHAR(200) NOT NULL UNIQUE,
     Description         VARCHAR(MAX) NULL,
     ShortDescription    VARCHAR(500) NULL,
-    Price               DECIMAL(10,2) NOT NULL,
-    StockQuantity       INT DEFAULT 0,
-    SKU                 VARCHAR(50) NOT NULL UNIQUE,
+    -- Price               DECIMAL(10,2) NOT NULL,
+    -- StockQuantity       INT DEFAULT 0,
+    -- SKU                 VARCHAR(50) NOT NULL UNIQUE,
     IsActive            BIT NOT NULL DEFAULT 1,
     CreatedAt           DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
     UpdatedAt           DATETIME2(3) NULL,
@@ -341,15 +341,6 @@ FOREIGN KEY (OrderId) REFERENCES Orders(OrderId) ON DELETE CASCADE
 PRINT 'Table Shipments created.';
 GO
 
-CREATE TABLE DiscountUsages (
-    UsageId INT PRIMARY KEY IDENTITY,
-    DiscountId INT,
-    UserId INT,
-    UsedDate DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (DiscountId) REFERENCES Discounts(DiscountId)
-);
-PRINT 'Table DiscountUsahes created.';
-
 CREATE TABLE Discounts (
     DiscountId INT PRIMARY KEY IDENTITY,
     ProductId INT NOT NULL,
@@ -366,8 +357,17 @@ CREATE TABLE Discounts (
 );
 
 PRINT 'Table Discounttable created.';
+GO
 
-
+CREATE TABLE DiscountUsages (
+    UsageId INT PRIMARY KEY IDENTITY,
+    DiscountId INT,
+    UserId INT,
+    UsedDate DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (DiscountId) REFERENCES Discounts(DiscountId)
+);
+PRINT 'Table DiscountUsahes created.';
+GO
 
 CREATE TABLE PasswordResetOtps (
     OtpId INT IDENTITY PRIMARY KEY,

@@ -14,10 +14,24 @@ namespace EcommerceProject.Repositories.Implementations
             _factory = factory;
         }
 
-        public async Task<int> CreateAsync( int productId, string sku,  decimal price, int stockQuantity, bool isDefault, bool isActive, CancellationToken ct )
+        public async Task<int> CreateProductVariantAsync(
+            int productId,
+            string sku,  
+            decimal price, 
+            int stockQuantity, 
+            bool isDefault, 
+            bool isActive,
+            List<int>? attributeValueIds, // added
+            CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
 
+            // added: Convert List [4, 6] to string "4,6" for SQL STRING_SPLIT
+            // Change: Ensure we pass an empty string instead of a true null if empty
+            string attrIds = (attributeValueIds != null && attributeValueIds.Any()) 
+              ? string.Join(",", attributeValueIds) 
+              : string.Empty; 
+              
             return await conn.ExecuteScalarAsync<int>(
                 "spProductVariants_Create",
                 new
@@ -27,11 +41,13 @@ namespace EcommerceProject.Repositories.Implementations
                     Price = price,
                     StockQuantity = stockQuantity,
                     IsDefault = isDefault,
-                    IsActive = isActive
+                    IsActive = isActive,
+                    AttributeValueIds = attrIds // added
                 },
                 commandType: CommandType.StoredProcedure
             );
         }
+
         public async Task<bool> UpdateAsync(int variantId, decimal price, int stock, bool isActive, bool isDefault, CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();

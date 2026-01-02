@@ -103,9 +103,7 @@ namespace EcommerceProject.Repositories.Implementations
 
             var variants = (await multi.ReadAsync<ProductVariantDto>()).ToList();
 
-            var variantAttributes = await multi.ReadAsync<
-    (int VariantId, string AttributeName, string AttributeValue)
->();
+            var variantAttributes = await multi.ReadAsync<(int VariantId, string AttributeName, string AttributeValue)>();
 
             foreach (var variant in variants)
             {
@@ -123,26 +121,28 @@ namespace EcommerceProject.Repositories.Implementations
         }
 
         public async Task<int> CreateAsync(
-    int categoryId,
-    string name,
-    string slug,
-    string? description,
-    string? shortDescription,
-    bool isActive,
-    CancellationToken ct
-)
+            int categoryId,
+            string name,
+            string slug,
+            string? description,
+            string? shortDescription,
+            bool hasVariants, // added
+            bool isActive,
+            CancellationToken ct
+        )
         {
             using var conn = _factory.CreateConnection();
 
             return await conn.ExecuteScalarAsync<int>(
                 "spProducts_Create",
                 new
-                {
+                {           
                     CategoryId = categoryId,
                     Name = name,
                     Slug = slug,
                     Description = description,
                     ShortDescription = shortDescription,
+                    HasVariants = hasVariants, // added
                     IsActive = isActive
                 },
                 commandType: CommandType.StoredProcedure

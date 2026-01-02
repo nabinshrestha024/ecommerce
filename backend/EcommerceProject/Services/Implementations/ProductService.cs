@@ -62,7 +62,7 @@ namespace EcommerceProject.Services.Implementations
 
 
 
-        public async Task<int> CreateAsync(ProductCreateDto dto,IFormFileCollection? images,int? primaryIndex,CancellationToken ct)
+        public async Task<int> CreateAsync(ProductCreateDto dto, IFormFileCollection? images, int? primaryIndex,CancellationToken ct)
         {
             await new ProductCreateValidator().ValidateAndThrowAsync(dto, ct);
 
@@ -74,21 +74,22 @@ namespace EcommerceProject.Services.Implementations
                 slug,
                 dto.Description,
                 dto.ShortDescription,
+                dto.HasVariants, // added
                 dto.IsActive,
                 ct
             );
 
-            var sku = SkuGenerator.Generate();
+            // var sku = SkuGenerator.Generate();
 
-            await _variantRepo.CreateAsync(
-                productId,
-                sku,
-                dto.DefaultVariant.Price,
-                dto.DefaultVariant.StockQuantity,
-                isDefault: true,
-                isActive: true,
-                ct
-            );
+            // await _variantRepo.CreateAsync(
+            //     productId,
+            //     sku,
+            //     dto.DefaultVariant.Price,           // remove it
+            //     dto.DefaultVariant.StockQuantity,   // remove it
+            //     isDefault: true,
+            //     isActive: true,
+            //     ct
+            // );
 
             if (images is not { Count: > 0 })
                 return productId;

@@ -21,6 +21,7 @@ namespace EcommerceProject.Repositories.Interfaces
             string slug,
             string? description,
             string? shortDescription,
+            bool hasVariants, // added
             bool isActive,
             CancellationToken ct
         );
