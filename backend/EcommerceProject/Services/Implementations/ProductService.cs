@@ -29,14 +29,11 @@ namespace EcommerceProject.Services.Implementations
             return _repo.GetPagedAsync(categoryId, search, page, pageSize, onlyActive: true, ct);
         }
        
-
         public Task<ProductDetailsDto?> GetDetailsAsync(string slugOrId, CancellationToken ct)
         {
             return _repo.GetBySlugOrIdAsync(slugOrId, onlyActive: true, ct);
         }
         
-
-
         public Task<PagedResult<ProductListItemDto>> AdminGetProductsAsync(AdminProductFilterDto filter, PaginationDto pagination, CancellationToken ct)
         {
             return _repo.GetPagedAsync(
@@ -60,8 +57,6 @@ namespace EcommerceProject.Services.Implementations
             return $"{baseSlug}-{maxSuffix + 1}";
         }
 
-
-
         public async Task<int> CreateAsync(ProductCreateDto dto, IFormFileCollection? images, int? primaryIndex,CancellationToken ct)
         {
             await new ProductCreateValidator().ValidateAndThrowAsync(dto, ct);
@@ -79,18 +74,6 @@ namespace EcommerceProject.Services.Implementations
                 ct
             );
 
-            // var sku = SkuGenerator.Generate();
-
-            // await _variantRepo.CreateAsync(
-            //     productId,
-            //     sku,
-            //     dto.DefaultVariant.Price,           // remove it
-            //     dto.DefaultVariant.StockQuantity,   // remove it
-            //     isDefault: true,
-            //     isActive: true,
-            //     ct
-            // );
-
             if (images is not { Count: > 0 })
                 return productId;
 
@@ -106,10 +89,8 @@ namespace EcommerceProject.Services.Implementations
                     ct
                 );
             }
-
             return productId;
         }
-
 
         public async Task<bool> UpdateAsync(int id, ProductUpdateDto dto, IFormFileCollection? images,int? primaryIndex, CancellationToken ct)
         {
@@ -154,11 +135,9 @@ namespace EcommerceProject.Services.Implementations
             return true;
         }
 
-
         public Task<bool> DeleteAsync(int id, CancellationToken ct)
         {
             return _repo.DeleteAsync(id, ct);
         }
-
     }
 }

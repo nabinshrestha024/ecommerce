@@ -26,12 +26,11 @@ namespace EcommerceProject.Repositories.Implementations
         {
             using var conn = _factory.CreateConnection();
 
-            // added: Convert List [4, 6] to string "4,6" for SQL STRING_SPLIT
-            // Change: Ensure we pass an empty string instead of a true null if empty
+            // added: convert list [4, 6] to string "4,6"
             string attrIds = (attributeValueIds != null && attributeValueIds.Any()) 
               ? string.Join(",", attributeValueIds) 
               : string.Empty; 
-              
+
             return await conn.ExecuteScalarAsync<int>(
                 "spProductVariants_Create",
                 new
@@ -67,10 +66,8 @@ namespace EcommerceProject.Repositories.Implementations
                     cancellationToken: ct
                 )
             );
-
             return affected > 0;
         }
-
 
         public async Task<bool> SetDefaultAsync(int variantId, CancellationToken ct)
         {
@@ -81,7 +78,6 @@ namespace EcommerceProject.Repositories.Implementations
                 new { VariantId = variantId },
                 commandType: CommandType.StoredProcedure
             );
-
             return affected > 0;
         }
 
@@ -94,9 +90,7 @@ namespace EcommerceProject.Repositories.Implementations
                 new { VariantId = variantId },
                 commandType: CommandType.StoredProcedure
             );
-
             return affected > 0;
         }
     }
-
 }
