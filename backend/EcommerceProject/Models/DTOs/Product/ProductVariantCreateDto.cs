@@ -7,6 +7,6 @@
         public bool IsDefault { get; set; } = true;
         public bool IsActive { get; set; } = true;
 
-        public List<int>? AttributeValueIds { get; set; }
+        public List<int>? AttributeValueIds { get; set; } 
     }
 }

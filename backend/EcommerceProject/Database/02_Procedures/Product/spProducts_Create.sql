@@ -7,6 +7,7 @@ CREATE OR ALTER PROCEDURE spProducts_Create
     @Slug VARCHAR(200),
     @Description VARCHAR(MAX) = NULL,
     @ShortDescription VARCHAR(500) = NULL,
+    @HasVariants BIT = 0,   -- added
     @IsActive BIT = 1
 )
 AS
@@ -30,7 +31,7 @@ BEGIN
         @Slug,
         @Description,
         @ShortDescription,
-        0,
+        @HasVariants, -- added
         @IsActive
     );
 

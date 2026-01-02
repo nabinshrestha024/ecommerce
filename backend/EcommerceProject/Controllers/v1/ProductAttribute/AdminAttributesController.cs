@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceProject.Controllers.v1.ProductAttribute
 {
-    [Route("v1/admin/attributes")]
+    [Route("v1/admin/attribute")]
     [ApiController]
     [Authorize(Roles = "Admin")]
     public class AdminAttributesController : ControllerBase
@@ -21,7 +21,7 @@ namespace EcommerceProject.Controllers.v1.ProductAttribute
         [HttpPost]
         public async Task<IActionResult> Create(CreateAttributeDto dto, CancellationToken ct)
         {
-            var id = await _service.CreateAsync(dto, ct);
+            var id = await _service.CreateAttributeAsync(dto, ct);
             return Ok(new { attributeId = id });
         }
 
@@ -41,5 +41,4 @@ namespace EcommerceProject.Controllers.v1.ProductAttribute
             return Ok(await _service.GetAllAsync(ct));
         }
     }
-
 }

@@ -14,9 +14,22 @@ namespace EcommerceProject.Repositories.Implementations
             _factory = factory;
         }
 
-        public async Task<int> CreateAsync( int productId, string sku,  decimal price, int stockQuantity, bool isDefault, bool isActive, CancellationToken ct )
+        public async Task<int> CreateProductVariantAsync(
+            int productId,
+            string sku,  
+            decimal price, 
+            int stockQuantity, 
+            bool isDefault, 
+            bool isActive,
+            List<int>? attributeValueIds, // added
+            CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
+
+            // added: convert list [4, 6] to string "4,6"
+            string attrIds = (attributeValueIds != null && attributeValueIds.Any()) 
+              ? string.Join(",", attributeValueIds) 
+              : string.Empty; 
 
             return await conn.ExecuteScalarAsync<int>(
                 "spProductVariants_Create",
@@ -27,11 +40,13 @@ namespace EcommerceProject.Repositories.Implementations
                     Price = price,
                     StockQuantity = stockQuantity,
                     IsDefault = isDefault,
-                    IsActive = isActive
+                    IsActive = isActive,
+                    AttributeValueIds = attrIds // added
                 },
                 commandType: CommandType.StoredProcedure
             );
         }
+
         public async Task<bool> UpdateAsync(int variantId, decimal price, int stock, bool isActive, bool isDefault, CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
@@ -51,10 +66,8 @@ namespace EcommerceProject.Repositories.Implementations
                     cancellationToken: ct
                 )
             );
-
             return affected > 0;
         }
-
 
         public async Task<bool> SetDefaultAsync(int variantId, CancellationToken ct)
         {
@@ -65,7 +78,6 @@ namespace EcommerceProject.Repositories.Implementations
                 new { VariantId = variantId },
                 commandType: CommandType.StoredProcedure
             );
-
             return affected > 0;
         }
 
@@ -78,9 +90,7 @@ namespace EcommerceProject.Repositories.Implementations
                 new { VariantId = variantId },
                 commandType: CommandType.StoredProcedure
             );
-
             return affected > 0;
         }
     }
-
 }

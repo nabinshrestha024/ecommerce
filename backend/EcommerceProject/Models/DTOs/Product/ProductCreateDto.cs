@@ -7,6 +7,6 @@
         public string? Description { get; set; }
         public string? ShortDescription { get; set; }
         public bool IsActive { get; set; } = true;
-        public ProductVariantCreateDto DefaultVariant { get; set; } = default!;
+        public bool HasVariants { get; set; }
     }
 }

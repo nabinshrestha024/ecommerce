@@ -13,9 +13,9 @@ namespace EcommerceProject.Services.Implementations
             _repo = repo;
         }
 
-        public Task<int> CreateAsync(CreateAttributeDto dto, CancellationToken ct)
+        public Task<int> CreateAttributeAsync(CreateAttributeDto dto, CancellationToken ct)
         {
-            return _repo.CreateAsync(dto.Name.Trim(), dto.IsVariant, ct);
+            return _repo.CreateAttributeAsync(dto.Name.Trim(), dto.IsVariant, ct);
 
         }
 

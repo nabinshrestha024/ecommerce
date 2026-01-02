@@ -19,7 +19,7 @@ BEGIN
         SKU             VARCHAR(50) NOT NULL UNIQUE,
         Price           DECIMAL(10,2) NOT NULL,
         StockQuantity   INT NOT NULL DEFAULT 0,
-        IsActive        BIT NOT NULL DEFAULT 1,
+        IsActive        BIT NOT NULL DEFAULT 1, -- for
         IsDefault       BIT NOT NULL DEFAULT 0,
         CreatedAt       DATETIME2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
         UpdatedAt       DATETIME2(3) NULL,
