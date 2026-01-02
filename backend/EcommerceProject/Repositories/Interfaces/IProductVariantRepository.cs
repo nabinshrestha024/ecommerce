@@ -15,5 +15,6 @@
         Task<bool> UpdateAsync(int variantId, decimal price, int stock, bool isActive, bool isDefault, CancellationToken ct);
         Task<bool> DeleteAsync(int variantId, CancellationToken ct);
         Task<bool> SetDefaultAsync(int variantId, CancellationToken ct);
+        Task <bool> ExistsAsync(int variantId, CancellationToken ct);
     }
 }
