@@ -71,5 +71,19 @@ namespace EcommerceProject.Repositories.Implementations
                 cancellationToken: ct));
         }
 
+        public async Task<int> CheckoutAsync(int userId)
+        {
+            using var conn = _connectionFactory.CreateConnection();
+
+            return await conn.ExecuteScalarAsync<int>(
+                "spCart_Checkout",
+                new
+                {
+                    UserId = userId
+                },
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
     }
 }
