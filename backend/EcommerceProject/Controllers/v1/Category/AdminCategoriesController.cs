@@ -14,11 +14,14 @@ namespace EcommerceProject.Controllers.v1.Category
     {
         private readonly ICategoryService _service;
         private readonly IUrlService _urlService;
+        private readonly IFileStorageService _fileStorage;
 
-        public AdminCategoriesController(ICategoryService service, IUrlService urlService)
+        public AdminCategoriesController(ICategoryService service, IUrlService urlService, IFileStorageService fileStorage)
         {
             _service = service;
             _urlService = urlService;
+            _fileStorage = fileStorage;
+
         }
       
 
@@ -35,27 +38,12 @@ namespace EcommerceProject.Controllers.v1.Category
             return Ok(result);
         }
         [HttpPost("upload-image")]
-        public async Task<IActionResult> UploadImage(IFormFile file)
+        public async Task<IActionResult> UploadImage(IFormFile file, CancellationToken ct)
         {
-            if (file == null || file.Length == 0)
+            if (file == null)
                 return BadRequest("No file uploaded");
 
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
-            var extension = Path.GetExtension(file.FileName).ToLower();
-
-            if (!allowedExtensions.Contains(extension))
-                return BadRequest("Invalid image format");
-
-            var uploadsFolder = Path.Combine("wwwroot", "images", "categories");
-            Directory.CreateDirectory(uploadsFolder);
-
-            var fileName = $"{Guid.NewGuid()}{extension}";
-            var filePath = Path.Combine(uploadsFolder, fileName);
-
-            using var stream = new FileStream(filePath, FileMode.Create);
-            await file.CopyToAsync(stream);
-
-            var imageUrl = $"/images/categories/{fileName}";
+            var imageUrl = await _fileStorage.SaveCategoryImageAsync(file, ct);
 
             return Ok(new { imageUrl });
         }
