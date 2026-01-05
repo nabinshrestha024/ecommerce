@@ -17,10 +17,7 @@ namespace EcommerceProject.Repositories.Implementations
         {
             _db = db;
         }
-        public async Task<(int OrderId, decimal TotalAmount, List<(int ProductId, int Quantity)>)>CreateFromCartAsync(
-    int userId,
-    CreateOrderRequestDto dto,
-    CancellationToken ct)
+        public async Task<(int OrderId, decimal TotalAmount, List<(int productId,int VariantId, int Quantity)>)> CreateFromCartAsync(int userId, CreateOrderRequestDto dto, CancellationToken ct)
         {
             using var conn = _db.CreateConnection();
 
@@ -34,22 +31,23 @@ namespace EcommerceProject.Repositories.Implementations
             p.Add("@PaymentGateway", "esewa");
             p.Add("@Notes", "notes");
             p.Add("@OrderId", dbType: DbType.Int32, direction: ParameterDirection.Output);
-            p.Add("@TotalAmount", dbType: DbType.Decimal, precision: 10, scale: 2, direction: ParameterDirection.Output);
+            p.Add("@TotalAmount", dbType: DbType.Decimal, precision: 18, scale: 2, direction: ParameterDirection.Output);
 
             using var multi = await conn.QueryMultipleAsync(
                 "spOrders_CreateFromCart",
                 p,
-                commandType: CommandType.StoredProcedure
-            );
+                commandType: CommandType.StoredProcedure);
 
-            var items = multi.Read<(int ProductId, int Quantity)>().AsList();
-
+            var items = multi.Read<(int productId,int VariantId, int Quantity)>().AsList();
             return (
                 p.Get<int>("@OrderId"),
                 p.Get<decimal>("@TotalAmount"),
-                items
-            );
+                items);
         }
+
+
+
+
 
 
         public async Task<List<OrderSummaryDto>> GetMyOrdersAsync(int userId, CancellationToken ct)

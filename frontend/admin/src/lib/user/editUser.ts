@@ -2,7 +2,7 @@ import axios from "axios";
 import { axiosInstance } from "../axiosInstance";
 import { endpoint } from "../endpoint";
 interface Person {
-  userId: number;
+  userid: number;
   email: string;
   fullName: string;
   passwordHash: string;
@@ -24,14 +24,14 @@ interface Person {
 }
 
 export const editUser = async ({
-  userId,
+  userid,
   userData,
 }: {
-  userId: number;
+  userid: number;
   userData: Person;
 }) => {
   try {
-    const res = await axiosInstance.put(`${endpoint.USER}/${userId}`, userData);
+    const res = await axiosInstance.put(`${endpoint.USER}/${userid}`, userData);
     return res.data;
   } catch (e) {
     if (axios.isAxiosError(e)) {

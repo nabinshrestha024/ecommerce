@@ -11,5 +11,7 @@ namespace EcommerceProject.Services.Interfaces
 
 
         Task AddToCartAsync(int userId, int variantId, int quantity, CancellationToken ct = default);
+        Task<int> CheckoutAsync(int userId);
+
     }
 }

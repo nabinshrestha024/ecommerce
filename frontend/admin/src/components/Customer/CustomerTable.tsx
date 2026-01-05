@@ -169,7 +169,7 @@ export const CustomerTable = () => {
               <CustomerForm
                 customer={{
                   ...selectedCustomer,
-                  userId: selectedCustomer.userid,
+                  userid: selectedCustomer.userid,
                 }}
                 onSave={() => {
                   setSelectedCustomer(null);
@@ -213,7 +213,7 @@ export const CustomerTable = () => {
       {selectedCustomer && (
         <div className="w-[350px] mt-5">
           <CustomerProfile
-            customer={{ ...selectedCustomer, userId: selectedCustomer.userid }}
+            customer={{ ...selectedCustomer, userid: selectedCustomer.userid }}
           />
         </div>
       )}

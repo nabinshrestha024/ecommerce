@@ -1,4 +1,5 @@
 ﻿using EcommerceProject.Models.DTOs.Cart;
+using EcommerceProject.Models.DTOs.Orders;
 using EcommerceProject.Models.DTOs.ShoppingCart;
 using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
@@ -7,11 +8,10 @@ using EcommerceProject.utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EcommerceProject.Controllers.v1.Cart
 {
-
-    [Authorize]
     [ApiController]
     [Route("v1/cart/")]
     [Authorize(Roles = "Customer, Admin")]
@@ -19,10 +19,12 @@ namespace EcommerceProject.Controllers.v1.Cart
     public class CartController : ControllerBase
     {
         private readonly ICartService _cartService;
+        private readonly IOrderService _orderService;
 
-        public CartController(ICartService cartService)
+        public CartController(ICartService cartService, IOrderService orderService)
         {
             _cartService = cartService;
+            _orderService = orderService;
         }
 
 
@@ -84,6 +86,22 @@ namespace EcommerceProject.Controllers.v1.Cart
         {
             await _cartService.RemoveItemAsync(cartId);
             return Ok("Item removed");
+        }
+
+        [HttpPost("checkout")]
+        public async Task<IActionResult> Checkout([FromBody] CreateOrderRequestDto dto, CancellationToken ct)
+        {
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+
+            var (orderId, totalAmount)= await _orderService.CreateOrderFromCartAsync(userId,dto,ct);
+
+            return Ok(new
+            {
+                message = "Checkout successful. Order created.",
+                orderId,
+                totalAmount
+            });
         }
 
 

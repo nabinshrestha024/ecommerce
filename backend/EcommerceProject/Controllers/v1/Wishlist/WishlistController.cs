@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Xml;
 
 namespace EcommerceProject.Controllers.v1.Wishlist
 {
@@ -24,36 +25,36 @@ namespace EcommerceProject.Controllers.v1.Wishlist
 
 
         [HttpGet]
-        public async Task<IActionResult> Get(int page = 1, int size = 10)
+        public async Task<IActionResult> Get(int page = 1, int size = 10, CancellationToken ct = default)
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             return Ok(await _wishlistService.GetAsync(userId, page, size));
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddWishlist(int productId)
+        public async Task<IActionResult> AddWishlist(int VariantId)
         {
 
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-            await _wishlistService.AddWishlistItemAsync(userId, productId);
+            await _wishlistService.AddWishlistItemAsync(userId, VariantId);
             return Ok("Added to wishlist");
         }
 
         [HttpDelete("delete")]
-        public async Task<IActionResult> DeleteWishlistItem(int productId)
+        public async Task<IActionResult> DeleteWishlistItem(int wishlistId)
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-            await _wishlistService.DeleteWishlistItemAsync(userId, productId);
+            await _wishlistService.DeleteWishlistItemAsync(wishlistId);
             return Ok("Removed From wishlist");
         }
 
 
         [HttpPost("move_to_cart")]
-        public async Task<IActionResult> MoveToCart(int productId)
+        public async Task<IActionResult> MoveToCart(int wishlistId)
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            await _wishlistService.MoveToCartAsync(userId, productId);
+            await _wishlistService.MoveToCartAsync(wishlistId, userId,1);
             return Ok(new { message = " moved TO Cart" });
         }
     }

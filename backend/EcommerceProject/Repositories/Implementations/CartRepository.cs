@@ -59,13 +59,30 @@ namespace EcommerceProject.Repositories.Implementations
             
         }
 
-        public async Task RemoveCartAsync(int cartId)
+        public async Task RemoveCartAsync(int cartId, CancellationToken ct = default)
         {
             using var conn = _connectionFactory.CreateConnection();
-            await conn.ExecuteAsync("spCart_RemoveCartItem",
+            await conn.ExecuteAsync(
+                new CommandDefinition(
+                    "spCart_RemoveCartItem",
                 new { 
                     CartId = cartId },
-                commandType: CommandType.StoredProcedure);
+                commandType: CommandType.StoredProcedure,
+                cancellationToken: ct));
+        }
+
+        public async Task<int> CheckoutAsync(int userId)
+        {
+            using var conn = _connectionFactory.CreateConnection();
+
+            return await conn.ExecuteScalarAsync<int>(
+                "spCart_Checkout",
+                new
+                {
+                    UserId = userId
+                },
+                commandType: CommandType.StoredProcedure
+            );
         }
 
     }

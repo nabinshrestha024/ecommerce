@@ -4,7 +4,7 @@ import { RxCopy } from "react-icons/rx";
 import { MdLocationOn } from "react-icons/md";
 import { socialIcons } from "../Customer/SocialMediaIcons.import.ts";
 interface Person {
-  userId: number;
+  userid: number;
   email: string;
   fullName: string;
   passwordHash: string | null;
