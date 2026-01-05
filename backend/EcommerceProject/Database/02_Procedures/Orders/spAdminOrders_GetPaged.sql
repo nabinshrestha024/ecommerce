@@ -14,6 +14,7 @@ BEGIN
         SELECT
             o.OrderId,
             o.UserId,
+            u.FullName AS UserName,
             o.OrderDate,
             o.TotalAmount,
             o.Status,
@@ -21,6 +22,7 @@ BEGIN
             o.ShippingName,
             o.ShippingPhone
         FROM Orders o
+        INNER JOIN Users u ON u.UserId = o.UserId
         WHERE
             (@Status IS NULL OR o.Status = @Status)
             AND (
