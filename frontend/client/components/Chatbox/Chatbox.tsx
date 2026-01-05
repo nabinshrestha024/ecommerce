@@ -89,6 +89,7 @@ export default function Chatbot() {
   };
 
   const handleSend = () => {
+    if (!Boolean(prompt)) return;
     const tempHistory = messages;
     setMessages((prev) => [
       ...prev,
@@ -203,7 +204,10 @@ export default function Chatbot() {
                 </button>
               ))}
             </div>
-            <form className="flex justify-between px-4 pb-3 gap-3">
+            <form
+              onSubmit={handleSend}
+              className="flex justify-between px-4 pb-3 gap-3"
+            >
               <Input
                 type="text"
                 placeholder="Type your message..."
