@@ -1,6 +1,12 @@
 "use client";
 
+import { useSendPrompt } from "@/hooks/chatbot/useSendPrompt";
+import { Button } from "@/ui/button";
+import { Input } from "@/ui/input";
+import { Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const predefinedQuestions = [
   {
@@ -23,31 +29,37 @@ const predefinedQuestions = [
     answer:
       "We accept only eSewa as digital payment for the time being and cash on delivery is accepted as well.",
   },
-  {
-    question: "How do I contact customer support?",
-    answer:
-      "You can reach our support team via email or phone from 9 AM to 6 PM.",
-  },
 ];
 
 type Message = {
-  sender: "user" | "bot";
-  text: string;
-  typing?: boolean;
+  role: "user" | "model";
+  parts: {
+    text: string;
+  }[];
 };
 
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [prompt, setPrompt] = useState("");
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const sendPrompt = useSendPrompt();
 
   useEffect(() => {
     if (open && messages.length === 0) {
       const t = setTimeout(() => {
         setMessages([
           {
-            sender: "bot",
-            text: "Hi! Welcome to our website! How can I help you?",
+            role: "user",
+            parts: [{ text: "Hello" }],
+          },
+          {
+            role: "model",
+            parts: [
+              {
+                text: "Hi! I am Tapaiko Bot, your personal AI Assistant! How can I help you?",
+              },
+            ],
           },
         ]);
       }, 0);
@@ -60,18 +72,57 @@ export default function Chatbot() {
   }, [messages]);
 
   const handleQuestionClick = (q: string, a: string) => {
-    setMessages((prev) => [...prev, { sender: "user", text: q }]);
+    setMessages((prev) => [...prev, { role: "user", parts: [{ text: q }] }]);
     setMessages((prev) => [
       ...prev,
-      { sender: "bot", text: "Typing...", typing: true },
+      { role: "model", parts: [{ text: "Loading" }] },
     ]);
-
     setTimeout(() => {
-      setMessages((prev) => [
-        ...prev.filter((m) => !m.typing),
-        { sender: "bot", text: a },
-      ]);
-    }, 1000);
+      setMessages((prev) =>
+        prev.map((val) =>
+          val.parts[0].text === "Loading"
+            ? { ...val, role: "model", parts: [{ text: a }] }
+            : val,
+        ),
+      );
+    }, 2000);
+  };
+
+  const handleSend = () => {
+    const tempHistory = messages;
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", parts: [{ text: prompt }] },
+      { role: "model", parts: [{ text: "Loading" }] },
+    ]);
+    sendPrompt.mutate(
+      { message: prompt, history: tempHistory },
+      {
+        onSuccess: (data) => {
+          setMessages((prev) =>
+            prev.map((val) =>
+              val.parts[0].text === "Loading"
+                ? { ...val, role: "model", parts: [{ text: data.text }] }
+                : val,
+            ),
+          );
+        },
+        onError: () => {
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "model",
+              parts: [
+                {
+                  text: "There was a problem with the AI assistant at the moment",
+                },
+              ],
+            },
+          ]);
+        },
+      },
+    );
+    setPrompt("");
   };
 
   return (
@@ -95,7 +146,7 @@ export default function Chatbot() {
         </svg>
       </button>
       {open && (
-        <div className="fixed bottom-24 right-6 w-80 h-[350px] bg-white rounded-xl flex flex-col shadow-xl animate-slideUp">
+        <div className="fixed bottom-24 right-6 w-100 h-[450px] bg-white rounded-xl flex flex-col shadow-xl animate-slideUp">
           <div className="px-4 py-3 bg-green-600 text-white font-semibold flex justify-between items-center rounded-t-xl">
             Store Support
             <span
@@ -106,22 +157,34 @@ export default function Chatbot() {
             </span>
           </div>
           <div className="flex flex-col bg-green-50 rounded-2xl">
-            <div className="h-[200px] p-4 overflow-y-auto">
+            <div className="h-80 p-4 overflow-y-auto">
               {messages.map((m, i) => (
                 <div
                   key={i}
                   className={`flex mb-2 ${
-                    m.sender === "user" ? "justify-end" : "justify-start"
+                    m.role === "user" ? "justify-end" : "justify-start"
                   } animate-fadeIn`}
                 >
                   <div
                     className={`max-w-[75%] px-3 py-2 rounded-2xl text-sm ${
-                      m.sender === "user"
+                      m.role === "user"
                         ? "bg-green-600 text-white"
                         : "bg-green-100 text-green-800"
-                    } ${m.typing ? "italic opacity-60" : ""}`}
+                    } `}
                   >
-                    {m.typing ? "Typing…" : m.text}
+                    {m.role === "model" && m.parts[0].text === "Loading" ? (
+                      <div className="flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 bg-green-600 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                        <span className="w-1.5 h-1.5 bg-green-600 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                        <span className="w-1.5 h-1.5 bg-green-600 rounded-full animate-bounce" />
+                      </div>
+                    ) : m.role === "model" ? (
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {m.parts[0].text}
+                      </ReactMarkdown>
+                    ) : (
+                      m.parts[0].text
+                    )}
                   </div>
                 </div>
               ))}
@@ -134,12 +197,29 @@ export default function Chatbot() {
                   onClick={() =>
                     handleQuestionClick(item.question, item.answer)
                   }
-                  className="whitespace-nowrap px-3 py-1 rounded-full border border-green-200 bg-green-50 text-green-700 text-xs cursor-pointer flex-shrink-0 hover:bg-green-100"
+                  className="whitespace-nowrap px-3 py-1 rounded-full border border-green-200 bg-green-50 text-green-700 text-xs cursor-pointer shrink-0 hover:bg-green-100"
                 >
                   {item.question}
                 </button>
               ))}
             </div>
+            <form className="flex justify-between px-4 pb-3 gap-3">
+              <Input
+                type="text"
+                placeholder="Type your message..."
+                className="h-9 rounded-full px-4 text-sm bg-gray-100 border border-gray-200 
+               focus:bg-white focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+              />
+              <Button
+                className="bg-[#4EA674] flex items-center justify-center h-9 w-9 shrink-0 rounded-full"
+                onClick={handleSend}
+                disabled={!Boolean(prompt)}
+              >
+                <Send size={20} color="white" />
+              </Button>
+            </form>
           </div>
         </div>
       )}
