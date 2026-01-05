@@ -5,13 +5,15 @@ CREATE OR ALTER PROCEDURE spWebsiteReviews_GetAll
 AS
 BEGIN
     SELECT
-        WebsiteReviewId AS ReviewId,
-        UserId,
-        Title,
-        Content,
-        Rating,
-        CreatedAt
-    FROM WebsiteReviews
+        wr.WebsiteReviewId AS ReviewId,
+        wr.UserId,
+        u.FullName AS UserName,
+        u.ProfileImageUrl As UserImageUrl,
+        wr.Content,
+        wr.Rating,
+        wr.CreatedAt
+    FROM WebsiteReviews wr
+    LEFT JOIN Users u ON u.UserId = wr.UserId
     ORDER BY CreatedAt DESC;
 END
 GO
