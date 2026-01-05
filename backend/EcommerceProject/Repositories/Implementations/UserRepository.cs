@@ -79,12 +79,6 @@ namespace EcommerceProject.Repositories.Implementations
         {
             using var conn = _factory.CreateConnection();
 
-            //string? passwordHash = null;
-            //if (!string.IsNullOrEmpty(dto.PasswordHash))
-            //{
-            //    passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.PasswordHash);
-            //}
-
             await conn.ExecuteAsync(
                 "spUser_UpdateUser",
                 new

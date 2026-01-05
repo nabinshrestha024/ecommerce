@@ -7,7 +7,7 @@ namespace EcommerceProject.Repositories.Interfaces
 {
     public interface IOrderRepository
     {
-        Task<(int OrderId, decimal TotalAmount, List<(int ProductId, int Quantity)>)> CreateFromCartAsync(int userId,CreateOrderRequestDto dto,CancellationToken ct);
+        Task<(int OrderId, decimal TotalAmount, List<(int productId,int VariantId, int Quantity)>)> CreateFromCartAsync(int userId, CreateOrderRequestDto dto, CancellationToken ct = default);
         Task<List<OrderSummaryDto>> GetMyOrdersAsync(int userId, CancellationToken ct);
         Task<OrderDetailDto?> GetByIdForUserAsync(int userId, int orderId, CancellationToken ct);
         Task<PagedResult<AdminOrderRowDto>> AdminGetPagedAsync(PaginationDto pagination,string? status,string? search,CancellationToken ct);

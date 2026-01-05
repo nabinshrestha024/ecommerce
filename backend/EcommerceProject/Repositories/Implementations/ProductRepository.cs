@@ -130,7 +130,7 @@ namespace EcommerceProject.Repositories.Implementations
 
             foreach (var variant in variants)
             {
-                variant.Attributes = attributeLinks
+                    variant.Attributes = variantAttributes
                     .Where(a => a.VariantId == variant.VariantId)
                     .ToDictionary(a => a.AttributeName, a => a.AttributeValue);
             }
