@@ -101,7 +101,6 @@ export const Deal = () => {
   };
 
   const handleDeleteWishlist = (productId: wishlistData) => {
-    console.log(productId);
     deleteMutate.mutate(productId);
   };
   const placeholderCount = 4;
