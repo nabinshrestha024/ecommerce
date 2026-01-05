@@ -7,7 +7,7 @@ interface Social {
   createdAt: string;
 }
 
-export const getPostSocial = async ({ socialData }: { socialData: Social }) => {
+export const postSocial = async ({ socialData }: { socialData: Social }) => {
   const res = await axiosInstance.post(endpoint.SOCIALLINKS, socialData);
   return res.data;
 };
