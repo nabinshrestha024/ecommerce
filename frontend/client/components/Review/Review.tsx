@@ -9,13 +9,15 @@ import { useFetchWebsiteReview } from "@/hooks/websiteReview/useFetchWebsiteRevi
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/ui/button";
+import { ReviewSkeleton } from "./components/ReviewSkeleton";
 export const Review = () => {
   const router = useRouter();
   const { token } = useAuth();
-  const { data } = useFetchWebsiteReview();
+  const { data, isError, isLoading } = useFetchWebsiteReview();
   const [open, setOpen] = useState(false);
   const reviews = Array.isArray(data?.data) ? [...data?.data] : [];
   const displayReviews = reviews.slice(0, 6);
+  const placeholderCount = 6;
   return (
     <section className="mx-auto max-w-7xl px-5 py-20 text-center">
       <h2 className="mb-3 text-4xl font-semibold text-emerald-600">
@@ -23,25 +25,35 @@ export const Review = () => {
       </h2>
 
       <p className="mx-auto mb-14 max-w-2xl text-gray-600">
-        Don't just take our word for it – see how our products and services have
+        Dont just take our word for it – see how our products and services have
         delighted customers across the globe, one experience at a time.
       </p>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 w-full">
+        {isLoading &&
+          Array.from({ length: placeholderCount }).map((_, index) => (
+            <ReviewSkeleton key={index} />
+          ))}
+
+        {isError &&
+          Array.from({ length: placeholderCount }).map((_, index) => (
+            <ReviewSkeleton key={index} />
+          ))}
         {displayReviews.map((item) => (
           <div
             key={item.userId}
             className={`rounded-2xl border bg-white p-6 text-left transition hover:-translate-y-1 hover:shadow-lg hover:bg-[#EAF8E7] hover:cursor-pointer`}
           >
-            <div className="mb-4 flex items-center gap-4">
-              <Image
-                src={item.userImageUrl || "/default.jpg"}
-                alt={item.userName}
-                width={48}
-                height={48}
-                className="rounded-full object-cover"
-                unoptimized
-              />
+            <div className="mb-4 flex items-center gap-4 shrink-0">
+              <div className="w-12 h-12 relative overflow-hidden rounded-full">
+                <Image
+                  src={item.userImageUrl || "/default.jpg"}
+                  alt={item.userName}
+                  fill
+                  className="w-full h-full  object-cover shrink-0"
+                  unoptimized
+                />
+              </div>
 
               <div>
                 <h4 className="text-lg font-semibold text-gray-900">
