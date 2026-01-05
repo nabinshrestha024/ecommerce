@@ -76,9 +76,6 @@ export const Deal = () => {
         productId: productId,
         quantity: quantity,
       });
-      // console.log("Product: ", productId);
-      // console.log("Quantity: ", quantity);
-      // console.log("Size: ", sizeValue);
     } else {
       toast.message("Login to add to cart");
     }
@@ -123,12 +120,12 @@ export const Deal = () => {
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
           {isLoading &&
             Array.from({ length: placeholderCount }).map((_, index) => (
-              <ProductCardSkeleton key={index} imageWidth="w-full" />
+              <ProductCardSkeleton key={index} />
             ))}
 
           {isError &&
             Array.from({ length: placeholderCount }).map((_, index) => (
-              <ProductCardSkeleton key={index} imageWidth="w-full" />
+              <ProductCardSkeleton key={index} />
             ))}
           {data?.items?.map((val, index) => {
             return (
