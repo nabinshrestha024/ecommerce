@@ -7,10 +7,11 @@ import { ReviewForm } from "./components/ReviewForm";
 import { useGetOrderById } from "@/hooks/orders/useGetOrderById";
 import { useFetchWebsiteReview } from "@/hooks/websiteReview/useFetchWebsiteReview";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/ui/button";
 export const Review = () => {
   const router = useRouter();
-  const token = localStorage.getItem("token");
+  const { token } = useAuth();
   const { data } = useFetchWebsiteReview();
   const [open, setOpen] = useState(false);
   const reviews = Array.isArray(data?.data) ? [...data?.data] : [];
