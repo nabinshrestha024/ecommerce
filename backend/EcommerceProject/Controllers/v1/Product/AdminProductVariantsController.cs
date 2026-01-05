@@ -37,7 +37,7 @@ namespace EcommerceProject.Controllers.v1.Product
         {
             var ok = await _service.UpdateAsync(variantId, dto, ct);
             if (!ok) return NotFound();
-            return Ok(new { message = "Variant updated." });
+            return Ok(new { message = "Variant updated successfully." });
         }
 
         [HttpPut("{variantId:int}/set-default")]
@@ -53,7 +53,7 @@ namespace EcommerceProject.Controllers.v1.Product
         {
             var ok = await _service.DeleteAsync(variantId, ct);
             if (!ok) return BadRequest();
-            return Ok(new { message = "Variant deleted." });
+            return Ok(new { message = "Variant deleted successfully." });
         }
     }
 }
