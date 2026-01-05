@@ -13,7 +13,6 @@ namespace EcommerceProject.Models.DTOs
         public string? ShortDescription { get; set; }
         public bool HasVariants { get; set; }
         public bool IsActive { get; set; }
-        public List<ProductVariantDto> Variants { get; set; } = new();
         public string? PrimaryImageUrl { get; set; }
 
         public List<ProductVariantDto> Variants { get; set; } = new(); 
