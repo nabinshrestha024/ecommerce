@@ -70,8 +70,6 @@ namespace EcommerceProject.Services.Implementations
         {
             return await _userRepository.GetAllUsersPagedAsync(pageNumber, pageSize);
         }
-
-
     }
 }
     

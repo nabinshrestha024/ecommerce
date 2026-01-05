@@ -25,14 +25,15 @@ namespace EcommerceProject.Controllers.v1.Product
             CancellationToken ct)
         {
             var id = await _service.CreateAsync(productId, dto, ct);
-            return Ok(new { variantId = id });
+            return Ok(new { message = "Variant created successfully.", variantId = id });
         }
 
         [HttpPut("{variantId:int}")]
         public async Task<IActionResult> Update(
             int variantId,
             [FromBody] ProductVariantUpdateDto dto,
-            CancellationToken ct)
+            CancellationToken ct
+        )
         {
             var ok = await _service.UpdateAsync(variantId, dto, ct);
             if (!ok) return NotFound();
@@ -55,5 +56,4 @@ namespace EcommerceProject.Controllers.v1.Product
             return Ok(new { message = "Variant deleted." });
         }
     }
-
 }
