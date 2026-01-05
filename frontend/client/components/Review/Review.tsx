@@ -1,13 +1,16 @@
 "use client";
 import Image from "next/image";
-import { ReviewData } from "./components/ReviewData.import";
 import { Star } from "lucide-react";
 import { Dialog } from "../Dialog/Dialog";
 import { useState } from "react";
 import { ReviewForm } from "./components/ReviewForm";
 import { useGetOrderById } from "@/hooks/orders/useGetOrderById";
 import { useFetchWebsiteReview } from "@/hooks/websiteReview/useFetchWebsiteReview";
+import { useRouter } from "next/navigation";
+import { Button } from "@/ui/button";
 export const Review = () => {
+  const router = useRouter();
+  const token = localStorage.getItem("token");
   const { data } = useFetchWebsiteReview();
   const [open, setOpen] = useState(false);
   const reviews = Array.isArray(data?.data) ? [...data?.data] : [];
@@ -19,28 +22,29 @@ export const Review = () => {
       </h2>
 
       <p className="mx-auto mb-14 max-w-2xl text-gray-600">
-        Don’t just take our word for it – see how our products and services have
+        Don't just take our word for it – see how our products and services have
         delighted customers across the globe, one experience at a time.
       </p>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {displayReviews.map((item) => (
           <div
-            key={item.id}
+            key={item.userId}
             className={`rounded-2xl border bg-white p-6 text-left transition hover:-translate-y-1 hover:shadow-lg hover:bg-[#EAF8E7] hover:cursor-pointer`}
           >
             <div className="mb-4 flex items-center gap-4">
               <Image
-                src={item.image || "/default.jpg"}
-                alt={item.name}
+                src={item.userImageUrl || "/default.jpg"}
+                alt={item.userName}
                 width={48}
                 height={48}
                 className="rounded-full object-cover"
+                unoptimized
               />
 
               <div>
                 <h4 className="text-lg font-semibold text-gray-900">
-                  {item.userId}
+                  {item.userName}
                 </h4>
                 <div className="flex items-center mb-2">
                   {[...Array(5)].map((_, i) => (
@@ -65,17 +69,22 @@ export const Review = () => {
       <Dialog
         open={open}
         onOpenChange={setOpen}
-        triggerText={
-          <button
-            onClick={() => setOpen(true)}
-            className="mx-auto mt-14 rounded-full bg-slate-900 px-10 py-4 text-sm font-medium text-white transition hover:bg-slate-600 hover:cursor-pointer"
-          >
-            Add Your Own Review
-          </button>
-        }
+        triggerClassName="mx-auto mt-14 rounded-full bg-slate-900 px-10 py-4 text-sm font-medium text-white transition hover:bg-slate-600 hover:cursor-pointer"
+        triggerText="Add Your Own Review"
       >
-        <div>
-          <ReviewForm onClose={() => setOpen(false)} />
+        <div className="p-6">
+          {token ? (
+            <ReviewForm onClose={() => setOpen(false)} />
+          ) : (
+            <div className="text-center py-4">
+              <p className="text-gray-700 text-lg mb-4">
+                Please log in to add a review.
+              </p>
+              <Button variant="default" onClick={() => router.push("/login")}>
+                Log In
+              </Button>
+            </div>
+          )}
         </div>
       </Dialog>
     </section>
