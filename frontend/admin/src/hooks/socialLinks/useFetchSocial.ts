@@ -1,6 +1,6 @@
 "use client";
 
-import { getFetchSocial } from "@/lib/socialLinks/getFetchSocial";
+import { fetchSocial } from "@/lib/socialLinks/fetchSocial";
 import { useQuery } from "@tanstack/react-query";
 
 interface Social {
@@ -13,7 +13,7 @@ interface Social {
 export const useFetchSocial = () => {
   const { data, isLoading, isError, refetch } = useQuery<Social[]>({
     queryKey: ["socialData"],
-    queryFn: getFetchSocial,
+    queryFn: fetchSocial,
   });
   return { data, isLoading, isError, refetch };
 };
