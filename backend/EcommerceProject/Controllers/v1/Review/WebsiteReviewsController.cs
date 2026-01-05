@@ -9,7 +9,7 @@ namespace EcommerceProject.Controllers.v1.Review
 {
     [ApiController]
     [Route("v1/website-reviews")]
-    [Authorize(Roles = "Admin, Customer")]
+    
     public class WebsiteReviewsController : ControllerBase
     {
         private readonly IReviewService _service;
@@ -19,6 +19,7 @@ namespace EcommerceProject.Controllers.v1.Review
             _service = service;
         }
 
+        [Authorize(Roles = "Admin, Customer")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateReviewDto dto, CancellationToken ct)
         {
@@ -36,7 +37,9 @@ namespace EcommerceProject.Controllers.v1.Review
         {
             return Ok(await _service.GetWebsiteReviewsAsync(ct));
         }
+
         [HttpDelete("{reviewId:int}")]
+        [Authorize(Roles = "Admin, Customer")]
         public async Task<IActionResult> DeleteWebsiteReview(int reviewId, CancellationToken ct)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
