@@ -1,6 +1,5 @@
 "use client";
 
-import { Card } from "@/components/Card/Card";
 import { Button } from "@/ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,6 +16,8 @@ import { Dialog } from "@/components/Dialog/Dialog";
 import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { Card } from "@/components/Card/Card";
+import { ProductCardSkeleton } from "./ProductCardLoading";
 
 export interface WishlistItem {
   productId: number;
@@ -59,7 +60,7 @@ export const TrendingProductCard = () => {
   const wishlists = useFetchWishlist();
   const addToCart = useAddToCart();
   const { token } = useAuth();
-
+  const placeholderCount = 3;
   const handleIncrease = () => {
     if (quantity < stockValue) {
       setQuantity(quantity + 1);
@@ -115,12 +116,18 @@ export const TrendingProductCard = () => {
     setSelectedSizes((prev) => ({ ...prev, [productId]: sizeId }));
   };
 
-  return isLoading ? (
-    <div>Loading...</div>
-  ) : isError ? (
-    <div>An Error Occured</div>
-  ) : (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full gap-4">
+      {isLoading &&
+        Array.from({ length: placeholderCount }).map((_, index) => (
+          <ProductCardSkeleton key={index} />
+        ))}
+
+      {isError &&
+        Array.from({ length: placeholderCount }).map((_, index) => (
+          <ProductCardSkeleton key={index} />
+        ))}
+
       {data?.items?.map(
         (product, index) =>
           index < 3 && (

@@ -8,8 +8,8 @@ interface DialogProps {
   children: ReactNode;
   triggerText: ReactNode;
   triggerClassName?: string;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const Dialog = ({
