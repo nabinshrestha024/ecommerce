@@ -20,6 +20,7 @@ import { useState } from "react";
 import { Dialog } from "../Dialog/Dialog";
 import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { ProductCardSkeleton } from "../TrendingProduct/component/ProductCardLoading";
 
 const sizes = [
   {
@@ -106,11 +107,8 @@ export const Deal = () => {
     console.log(productId);
     deleteMutate.mutate(productId);
   };
-  return isLoading ? (
-    <div>Loading...</div>
-  ) : isError ? (
-    <div>An Error Occured</div>
-  ) : (
+  const placeholderCount = 4;
+  return (
     <div className="w-full px-6 mx-auto flex items-center justify-center">
       <div className="w-full max-w-[1216px]">
         <div className="w-full flex justify-between items-center">
@@ -123,6 +121,15 @@ export const Deal = () => {
           </Button>
         </div>
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
+          {isLoading &&
+            Array.from({ length: placeholderCount }).map((_, index) => (
+              <ProductCardSkeleton key={index} imageWidth="w-full" />
+            ))}
+
+          {isError &&
+            Array.from({ length: placeholderCount }).map((_, index) => (
+              <ProductCardSkeleton key={index} imageWidth="w-full" />
+            ))}
           {data?.items?.map((val, index) => {
             return (
               index < 4 && (

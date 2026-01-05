@@ -17,6 +17,7 @@ import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { useState } from "react";
 import { Dialog } from "../Dialog/Dialog";
+import { Variant, VariantAttributes } from "./ProductDetails";
 
 interface Product {
   productId: number;
@@ -29,6 +30,8 @@ interface Product {
   isActive: boolean;
   categoryId: number;
   sku: string;
+  variants?: Variant[];
+  availableAttributes?: VariantAttributes[];
 }
 
 interface ProductCardProps {
