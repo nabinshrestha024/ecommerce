@@ -19,7 +19,7 @@ type ProductData = {
   stockQuantity: number;
   sku: string;
   images: ProductImage[];
-  varients: Variant[];
+  variants: Variant[];
   availableAttributes: VariantAttributes[];
 };
 
