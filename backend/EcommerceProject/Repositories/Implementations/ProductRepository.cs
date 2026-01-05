@@ -17,6 +17,8 @@ namespace EcommerceProject.Repositories.Implementations
             _factory = factory;
         }
 
+
+
         public async Task<PagedResult<ProductListItemDto>> GetPagedAsync(
             int? categoryId, 
             string? search, 
@@ -35,15 +37,26 @@ namespace EcommerceProject.Repositories.Implementations
             p.Add("@OnlyActive", onlyActive);
 
             using var multi = await conn.QueryMultipleAsync(
-                new CommandDefinition("spProducts_GetPaged", p, commandType:
-                CommandType.StoredProcedure, cancellationToken: ct
-            ));
+                new CommandDefinition("spProducts_GetPaged", p, commandType: CommandType.StoredProcedure, cancellationToken: ct)
+            );
 
-            var items = (await multi.ReadAsync<ProductListItemDto>()).ToList();
+            var items = (await multi.ReadAsync<ProductListItemDto>()).ToList(); // products
 
-            var allVariants = (await multi.ReadAsync<ProductVariantDto>()).ToList();
+            var allVariants = (await multi.ReadAsync<ProductVariantDto>()).ToList(); // variants
+
+            var allAttributes = (await multi.ReadAsync<dynamic>()).ToList(); // attribute mappings
 
             var total = await multi.ReadFirstAsync<int>();
+
+            foreach (var variant in allVariants)
+            {
+                variant.Attributes = allAttributes
+                    .Where(a => (int)a.VariantId == variant.VariantId)
+                    .ToDictionary(
+                        a => (string)a.AttributeName, 
+                        a => (string)a.AttributeValue
+                    );
+            }
 
             foreach (var item in items)
             {
@@ -52,13 +65,7 @@ namespace EcommerceProject.Repositories.Implementations
                     .ToList();
             }
 
-            return new PagedResult<ProductListItemDto>
-            (
-                items,
-                page,
-                pageSize,
-                total
-            );
+            return new PagedResult<ProductListItemDto>(items, page, pageSize, total);
         }
 
         public async Task<int?> GetMaxSlugSuffixAsync(string baseSlug, CancellationToken ct)
