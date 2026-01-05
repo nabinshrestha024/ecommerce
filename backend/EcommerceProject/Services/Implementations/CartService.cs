@@ -86,5 +86,11 @@ namespace EcommerceProject.Services.Implementations
             await _cartRepository.RemoveCartAsync(cartId);
         }
 
+        public async Task<int> CheckoutAsync(int userId)
+        {
+            return await _cartRepository.CheckoutAsync(userId);
+        }
+
+
     }
 }

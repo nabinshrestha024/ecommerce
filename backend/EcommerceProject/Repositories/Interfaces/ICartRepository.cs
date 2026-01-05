@@ -11,5 +11,6 @@ namespace EcommerceProject.Repositories.Interfaces
         Task UpdateQuantityAsync(int cartId, int quantity);
         Task RemoveCartAsync(int cartId, CancellationToken ct = default);
 
+        Task<int> CheckoutAsync(int userId);
     }
 }
