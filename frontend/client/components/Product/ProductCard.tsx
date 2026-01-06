@@ -126,7 +126,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <Card
       className="p-3 w-full max-w-[285px] border-0 shadow-none flex flex-col justify-between h-[400px] md:h-[380px] "
       key={product.productId}
-      rootClassName="py-0 border shadow-xl"
+      rootClassName="py-0 border shadow-xl max-w-[285px]"
     >
       <div className="flex flex-col gap-2">
         <div className="w-full h-[185px] relative ">

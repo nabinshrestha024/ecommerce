@@ -34,7 +34,7 @@ export const ProductDisplay = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-8 flex flex-col md:flex-row gap-5 items-start w-full">
       <Category />
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 w-full gap-6">
         {products.isLoading &&
           Array.from({ length: placeholderCount }).map((_, index) => (
             <ProductCardSkeleton key={index} />

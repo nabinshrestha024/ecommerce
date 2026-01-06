@@ -248,7 +248,7 @@ const ProductDetails = () => {
       </Card>
 
       <div>Related Products</div>
-      <div className="grid grid-cols-1 mx-auto md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
         {productItems.data?.categoryId === currentCategoryId &&
           (prod.data?.items || []).map(
             (product: Product, index) =>
