@@ -33,7 +33,8 @@ export const ProductFormSchema = z
       },
       z
         .array(z.instanceof(File))
-        .min(1, "At least one product image is required"),
+        .min(1, "At least one product image is required")
+        .max(4, "You can upload up to 4 images only"),
     ),
 
     primaryIndex: z
@@ -48,16 +49,13 @@ export const ProductFormSchema = z
     isActive: z.boolean().optional(),
 
     highlightFeatured: z.boolean().optional(),
-
-    tags: z
-      .array(z.string())
-      .default([])
-      .refine((arr) => arr.length > 2, "At least 3 tags are required"),
-    variants: z
-      .array(z.string())
-      .default([])
-      .refine((arr) => arr.length > 0, "Variants cannot be empty"),
-    variantName: z.string().min(1, "Variant name is required"),
+    attributes: z.preprocess(
+      (val) => {
+        if (Array.isArray(val)) return val;
+        return [];
+      },
+      z.array(z.string()).min(1, "At least one attribute is required"),
+    ),
   })
   .refine(
     (data) => {

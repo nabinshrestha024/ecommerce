@@ -19,4 +19,5 @@ export const endpoint = {
   VERIFY_OTP: "auth/verify-otp",
   RESET_PASSWORD: "auth/reset-password",
   SOCIALLINKS: "profile/social-links",
+  ATTRIBUTES: "admin/attributes",
 };
