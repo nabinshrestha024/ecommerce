@@ -41,10 +41,10 @@ export const values = [
 
 export const teamMembers = [
   {
-    name: "Utsarga Manandhar",
-    role: "Frontend Developer",
-    image: "/Utsarga.jpg",
-    link: "https://www.linkedin.com/in/utsargamanandhar/",
+    name: "Amardeep Limbu",
+    role: "Frontend Engineer",
+    image: "/Amardeep.jpg",
+    link: "https://www.instagram.com/amardeep.limbu/",
   },
   {
     name: "Pranawa KC",
@@ -59,10 +59,16 @@ export const teamMembers = [
     link: "https://www.linkedin.com/in/simran-maharjan-57b865253/",
   },
   {
-    name: "Amardeep Limbu",
-    role: "Frontend Engineer",
-    image: "/Amardeep.jpg",
-    link: "https://www.instagram.com/amardeep.limbu/",
+    name: "Utsarga Manandhar",
+    role: "Frontend Developer",
+    image: "/Utsarga.jpg",
+    link: "https://www.linkedin.com/in/utsargamanandhar/",
+  },
+  {
+    name: "Aadarsha Khadka",
+    role: "Database Engineer",
+    image: "/aadarsha.jpg",
+    link: "http://linkedin.com/in/aadarkdk/",
   },
   {
     name: "Ritika Maharjan",
@@ -75,11 +81,5 @@ export const teamMembers = [
     role: "Backend Developer",
     image: "/sujal.jpg",
     link: "https://www.linkedin.com/in/sujal-maharjan-27bb06267/",
-  },
-  {
-    name: "Aadarsha Khadka",
-    role: "Database Engineer",
-    image: "/aadarsha.jpg",
-    link: "http://linkedin.com/in/aadarkdk/",
   },
 ];
