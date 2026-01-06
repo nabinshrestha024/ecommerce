@@ -1,6 +1,6 @@
 import { Dialog } from "@/components/Dialog/Dialog";
 import { Button } from "@/ui/button";
-import { Trash2, X } from "lucide-react";
+import { Trash2, X, ShoppingBag } from "lucide-react"; // Added ShoppingBag for empty state
 import Image from "next/image";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
@@ -26,8 +26,8 @@ export const CartComponent = () => {
   const router = useRouter();
 
   useEffect(() => {
-    refetch();
-  }, [open]);
+    if (open) refetch();
+  }, [open, refetch]);
 
   const handleQuantityDecrease = ({
     cartId,
@@ -36,116 +36,153 @@ export const CartComponent = () => {
     cartId: number;
     quantity: number;
   }) => {
-    updateCart.mutate({
-      cartId: cartId,
-      quantity: quantity - 1,
-    });
+    updateCart.mutate({ cartId, quantity: quantity - 1 });
   };
 
   return (
-    <div className="flex gap-2 shrink-0 items-center text-xl">
-      <div onClick={() => setOpen(true)} className="cursor-pointer relative">
-        {isAuth && (
-          <div className="absolute -top-2 -right-2 h-4 w-4 bg-red-500 rounded-full flex items-center justify-center text-xs text-white font-semibold">
-            {data?.length || 0}
-          </div>
-        )}
-        <FaShoppingCart />
-      </div>
-      <div
-        className={`fixed right-0 top-0 z-20 h-screen transform ${open ? "translate-x-0" : "translate-x-full"} transition-transform duration-300 w-full max-w-md bg-white shadow-lg overflow-y-auto`}
-        role="dialog"
-        aria-label="Cart drawer"
+    <div className="flex gap-2 shrink-0 items-center">
+      {/* Cart Trigger Icon */}
+      <button
+        onClick={() => setOpen(true)}
+        className="relative p-2 transition-transform hover:scale-110 active:scale-95 text-2xl"
       >
-        <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between px-6 py-4 border-b">
-            <div className="flex items-center gap-3">
-              <FaShoppingCart className="text-xl" />
-              <div className="text-lg font-semibold">Your Cart</div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="text-sm text-gray-500">
-                {data
-                  ? `${data.length} item${data.length === 1 ? "" : "s"}`
-                  : ""}
-              </div>
-              <button
-                onClick={() => setOpen(false)}
-                className="p-2 rounded hover:bg-gray-100"
-                aria-label="Close cart"
-              >
-                <X />
-              </button>
-            </div>
-          </div>
+        {isAuth && (data?.length ?? 0) > 0 && (
+          <span className="absolute top-0 right-0 h-5 w-5 bg-red-600 rounded-full flex items-center justify-center text-[10px] text-white font-bold ring-2 ring-white animate-in zoom-in">
+            {data?.length}
+          </span>
+        )}
+        <FaShoppingCart className="text-gray-700" />
+      </button>
 
-          <div className="flex-1 px-6 py-4 space-y-4">
+      {/* Backdrop Overlay */}
+      {open && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      {/* Cart Drawer */}
+      <aside
+        className={`fixed right-0 top-0 z-50 h-screen w-full max-w-md bg-slate-50 shadow-2xl transform transition-transform duration-500 ease-out ${
+          open ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="flex flex-col h-full bg-white">
+          {/* Header */}
+          <header className="flex items-center justify-between px-6 py-5 border-b bg-white">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gray-100 rounded-lg">
+                <FaShoppingCart className="text-xl text-gray-800" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-gray-900">Your Cart</h2>
+                <p className="text-xs text-gray-500">
+                  {data?.length
+                    ? `${data.length} items reserved`
+                    : "Items you've added"}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setOpen(false)}
+              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              aria-label="Close cart"
+            >
+              <X size={20} className="text-gray-500" />
+            </button>
+          </header>
+
+          {/* Scrollable Content */}
+          <div className="flex-1 overflow-y-auto px-6 py-4 custom-scrollbar">
             {!isAuth ? (
-              <div className="py-12 text-center text-gray-600">
-                Please login to check your cart
+              <div className="h-full flex flex-col items-center justify-center text-center">
+                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                  <ShoppingBag className="text-gray-300" size={32} />
+                </div>
+                <p className="text-gray-600 font-medium">
+                  Please login to view your cart
+                </p>
               </div>
             ) : isLoading ? (
-              <div className="py-12 text-center text-gray-600">Loading...</div>
-            ) : isError ? (
-              <div className="py-12 text-center text-red-600">
-                {error?.message}
+              <div className="flex items-center justify-center h-40">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
               </div>
             ) : data?.length === 0 ? (
-              <div className="py-12 flex flex-col items-center gap-4">
-                <div className="text-lg font-semibold">Your cart is empty</div>
-                <div className="text-sm text-gray-500">
-                  Add items you like to start shopping.
+              <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
+                <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center">
+                  <ShoppingBag className="text-gray-200" size={40} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    Your cart is empty
+                  </h3>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Looks like you haven't added anything yet.
+                  </p>
                 </div>
                 <Button
                   onClick={() => {
                     setOpen(false);
                     router.push("/product");
                   }}
-                  className="mt-2"
+                  className="rounded-full px-8"
                 >
-                  Start shopping
+                  Start Shopping
                 </Button>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {data?.map((val) => (
-                  <div key={val.cartId} className="flex gap-4 items-start">
-                    <div className="w-20 h-20 relative rounded-md overflow-hidden bg-gray-100 shrink-0">
+                  <div
+                    key={val.cartId}
+                    className="group flex gap-4 p-3 rounded-xl border border-transparent hover:border-gray-100 hover:bg-gray-50 transition-all"
+                  >
+                    <div className="w-24 h-24 relative rounded-xl overflow-hidden bg-gray-100 border shrink-0 shadow-sm">
                       <Image
                         src={`${val.productImageUrl}` || "/a.jpg"}
                         fill
                         alt={val.productName}
-                        className="object-cover"
+                        className="object-cover group-hover:scale-105 transition-transform"
                         unoptimized
                       />
                     </div>
-                    <div className="flex-1 flex flex-col">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <div className="text-sm font-semibold text-gray-800">
+
+                    <div className="flex-1 flex flex-col min-w-0">
+                      <div className="flex justify-between items-start gap-2">
+                        <div className="min-w-0">
+                          <h4 className="text-sm font-bold text-gray-900 truncate uppercase tracking-tight">
                             {val.productName}
-                          </div>
-                          <div className="text-xs text-gray-600 line-clamp-2">
+                          </h4>
+                          <p className="text-xs text-gray-500 line-clamp-1 mt-0.5">
                             {val.description}
-                          </div>
+                          </p>
                         </div>
                         <button
-                          className="p-1 hover:bg-red-50 rounded transition-colors ml-2"
-                          title="Remove from cart"
+                          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                           onClick={() => deleteCart.mutate(val.cartId)}
                         >
-                          <Trash2
-                            size={16}
-                            className="text-red-500 hover:text-red-600"
-                          />
+                          <Trash2 size={16} />
                         </button>
                       </div>
-                      <div className="mt-3 flex items-center justify-between">
-                        <div className="text-sm text-gray-700">
-                          Price:{" "}
-                          <span className="font-semibold">Rs. {val.price}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
+
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {val.attributes.map((attr, ind) => (
+                          <span
+                            key={ind}
+                            className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded-md font-medium"
+                          >
+                            {attr.name}: {attr.value}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="mt-auto pt-3 flex items-center justify-between">
+                        <span className="text-sm font-bold text-gray-900">
+                          Rs. {val.totalPrice.toLocaleString()}
+                        </span>
+
+                        <div className="flex items-center bg-white border rounded-lg shadow-sm overflow-hidden">
                           <button
                             onClick={() =>
                               handleQuantityDecrease({
@@ -154,14 +191,13 @@ export const CartComponent = () => {
                               })
                             }
                             disabled={val.quantity <= 1}
-                            className="p-1 rounded border disabled:opacity-50"
-                            aria-label="Decrease quantity"
+                            className="p-1.5 hover:bg-gray-50 disabled:opacity-30 transition-colors"
                           >
-                            <MdKeyboardArrowDown />
+                            <MdKeyboardArrowDown size={18} />
                           </button>
-                          <div className="px-3 py-1 border rounded">
+                          <span className="px-3 text-xs font-bold w-8 text-center">
                             {val.quantity}
-                          </div>
+                          </span>
                           <button
                             onClick={() =>
                               updateCart.mutate({
@@ -169,10 +205,9 @@ export const CartComponent = () => {
                                 quantity: val.quantity + 1,
                               })
                             }
-                            className="p-1 rounded border"
-                            aria-label="Increase quantity"
+                            className="p-1.5 hover:bg-gray-50 transition-colors"
                           >
-                            <MdKeyboardArrowUp />
+                            <MdKeyboardArrowUp size={18} />
                           </button>
                         </div>
                       </div>
@@ -183,12 +218,22 @@ export const CartComponent = () => {
             )}
           </div>
 
-          {data?.length !== 0 && (
-            <div className="px-6 py-4 border-t bg-white sticky bottom-0">
-              <div className="flex items-center justify-between mb-3">
-                <div className="text-sm text-gray-600">Grand Total</div>
-                <div className="text-2xl font-semibold text-green-600">
-                  Rs. {totalPrice}
+          {/* Footer Checkout Section */}
+          {isAuth && data && data.length > 0 && (
+            <div className="p-6 border-t bg-gray-50/50 space-y-4">
+              <div className="flex items-end justify-between">
+                <div className="space-y-1">
+                  <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold">
+                    Subtotal
+                  </p>
+                  <p className="text-sm text-gray-400 italic">
+                    Taxes calculated at checkout
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-2xl font-black text-gray-900 leading-none">
+                    Rs. {totalPrice.toLocaleString()}
+                  </p>
                 </div>
               </div>
 
@@ -197,10 +242,10 @@ export const CartComponent = () => {
                 triggerText={
                   <Button
                     variant="default"
-                    className="w-full"
+                    className="w-full h-12 text-md font-bold rounded-xl shadow-lg shadow-gray-200 transition-all hover:-translate-y-px active:translate-y-px"
                     onClick={() => setOpen(false)}
                   >
-                    Checkout
+                    Proceed to Checkout
                   </Button>
                 }
               >
@@ -209,7 +254,7 @@ export const CartComponent = () => {
             </div>
           )}
         </div>
-      </div>
+      </aside>
     </div>
   );
 };

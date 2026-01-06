@@ -17,6 +17,11 @@ import { Notification } from "@/components/Notification/Notification";
 import { CartComponent } from "./CartComponent";
 import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
 
+interface AttributeType {
+  name: string;
+  value: string;
+}
+
 export interface CartProductType {
   cartId: number;
   productId: number;
@@ -27,6 +32,7 @@ export interface CartProductType {
   addedDate: string;
   productImageUrl: string;
   description: string;
+  attributes: AttributeType[];
 }
 
 export const TopNav = () => {
