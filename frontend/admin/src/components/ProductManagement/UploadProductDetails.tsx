@@ -178,14 +178,14 @@ export const UploadProductDetails = forwardRef((_, ref) => {
           <div className="grid grid-cols-4">
             {attributesData.data?.map((item) => {
               return (
-                <div className="flex items-center gap-2 p-2 pb-0 hover:bg-gray-50 rounded-md transition-colors">
+                <div className="flex items-center gap-2 p-2 pb-0 ">
                   <input
                     type="checkbox"
                     value={item.name}
                     {...register("attributes")}
-                    className="h-4 w-4 border-gray-300 rounded cursor-pointer"
+                    className="h-4 w-4 border-gray-300 rounded cursor-pointer accent-[#01a73e] dark:accent-emerald-600"
                   />
-                  <label className="text-sm font-medium text-gray-700 cursor-pointer">
+                  <label className="text-sm font-medium cursor-pointer">
                     {item.name}
                   </label>
                 </div>
