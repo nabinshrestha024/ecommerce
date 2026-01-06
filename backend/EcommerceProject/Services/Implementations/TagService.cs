@@ -14,19 +14,32 @@ namespace EcommerceProject.Services.Implementations
         }
 
         public Task<int> CreateAsync(CreateTagDto dto, CancellationToken ct)
-            => _repo.CreateAsync(dto.Name, ct);
+        {
+            return _repo.CreateAsync(dto.Name, ct);
+        }
+            
 
         public Task<List<TagDto>> GetAllAsync(CancellationToken ct)
-            => _repo.GetAllAsync(ct);
-
+        {
+            return _repo.GetAllAsync(ct);
+        }
+           
         public Task AddToProductAsync(int productId, int tagId, CancellationToken ct)
-            => _repo.AddToProductAsync(productId, tagId, ct);
-
+        {
+            return _repo.AddToProductAsync(productId, tagId, ct);
+        }
+          
         public Task<List<TagDto>> GetByProductIdAsync(int productId, CancellationToken ct)
-    => _repo.GetByProductIdAsync(productId, ct);
+        {
+            return _repo.GetByProductIdAsync(productId, ct);
+        }
+ 
 
         public Task RemoveFromProductAsync(int productId, int tagId, CancellationToken ct)
-            => _repo.RemoveFromProductAsync(productId, tagId, ct);
+        {
+            return _repo.RemoveFromProductAsync(productId, tagId, ct);
+        }
+           
     }
 
 }
