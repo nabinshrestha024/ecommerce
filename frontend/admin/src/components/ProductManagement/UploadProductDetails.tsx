@@ -3,7 +3,7 @@ import { Card } from "../Card/Card";
 import { useFormContext } from "react-hook-form";
 import { X } from "lucide-react";
 import { useGetCategories } from "@/hooks/product/useGetCategories";
-import { Input } from "../Input/Input";
+import { useGetAttributes } from "@/hooks/attribute/useGetAttribute";
 
 type ImageItem = {
   file: File;
@@ -12,6 +12,7 @@ type ImageItem = {
 
 export const UploadProductDetails = forwardRef((_, ref) => {
   const { data } = useGetCategories();
+  const attributesData = useGetAttributes();
   const categories = data?.items ?? [];
   const {
     register,
@@ -21,28 +22,6 @@ export const UploadProductDetails = forwardRef((_, ref) => {
 
   const [images, setImages] = useState<ImageItem[]>([]);
   const [primaryImage, setPrimaryImage] = useState<number>(0);
-  const [variants, setVariants] = useState<string[]>([]);
-  const [tags, setTags] = useState<string[]>([]);
-
-  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== "Enter") return;
-    e.preventDefault();
-    const value = e.currentTarget.value.trim();
-    if (!value || tags.includes(value)) {
-      e.currentTarget.value = "";
-      return;
-    }
-    const updatedTags = [...tags, value];
-    setTags(updatedTags);
-    setValue("tags", updatedTags, { shouldValidate: false });
-    e.currentTarget.value = "";
-  };
-
-  const handleRemoveTag = (index: number) => {
-    const updatedTags = tags.filter((_, i) => i !== index);
-    setTags(updatedTags);
-    setValue("tags", updatedTags, { shouldValidate: false });
-  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -61,26 +40,6 @@ export const UploadProductDetails = forwardRef((_, ref) => {
       setValue("primaryIndex", primaryImage, { shouldValidate: false });
       return updated;
     });
-  };
-
-  const handleAddVariant = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== "Enter") return;
-    e.preventDefault();
-    const value = e.currentTarget.value.trim();
-    if (!value || variants.includes(value)) {
-      e.currentTarget.value = "";
-      return;
-    }
-    const updatedVariants = [...variants, value];
-    setVariants(updatedVariants);
-    setValue("variants", updatedVariants, { shouldValidate: false });
-    e.currentTarget.value = "";
-  };
-
-  const handleRemoveVariant = (index: number) => {
-    const updatedVariants = variants.filter((_, i) => i !== index);
-    setVariants(updatedVariants);
-    setValue("variants", updatedVariants, { shouldValidate: false });
   };
 
   const handleDeleteImage = (index: number) => {
@@ -214,92 +173,30 @@ export const UploadProductDetails = forwardRef((_, ref) => {
 
         <div className="flex flex-col gap-3">
           <div className="font-bold text-[22px] leading-[26px] tracking-[0%]">
-            Variants
+            Attributes
           </div>
-          <div className="flex flex-col">
-            <label className="block text-sm font-medium">Variant Name</label>
-            <Input
-              type="text"
-              placeholder="Enter variant name..."
-              {...register("variantName")}
-              className="w-full h-9 px-3 border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
-            />
-            {errors.variantName && (
-              <p className="text-sm text-red-500">
-                {errors.variantName?.message as string}
-              </p>
-            )}
+          <div className="grid grid-cols-4">
+            {attributesData.data?.map((item) => {
+              return (
+                <div className="flex items-center gap-2 p-2 pb-0 hover:bg-gray-50 rounded-md transition-colors">
+                  <input
+                    type="checkbox"
+                    value={item.name}
+                    {...register("attributes")}
+                    className="h-4 w-4 border-gray-300 rounded cursor-pointer"
+                  />
+                  <label className="text-sm font-medium text-gray-700 cursor-pointer">
+                    {item.name}
+                  </label>
+                </div>
+              );
+            })}
           </div>
-          <div className="flex flex-col ">
-            <label className="block text-sm font-medium">Variants</label>
-            <Input
-              type="text"
-              placeholder="Enter variants..."
-              onKeyDown={handleAddVariant}
-              className="w-full h-9 px-3 border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
-            />
-            {errors.variants && (
-              <p className="text-sm text-red-500">
-                {errors.variants?.message as string}
-              </p>
-            )}
-            {variants.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                {variants.map((variant, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between px-3 py-2 mt-4 rounded-xl transition-colors shadow-md"
-                  >
-                    <span className="text-md font-medium truncate mr-1">
-                      {variant}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveVariant(index)}
-                      className="flex-0 bg-transparent hover:text-red-600 transition-colors"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col ">
-            <label className="block text-sm font-medium">Tags</label>
-            <Input
-              type="text"
-              placeholder="Enter tags for product..."
-              onKeyDown={handleAddTag}
-              className="w-full h-9 px-3 border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
-            />
-            {errors.tags && (
-              <p className="text-sm text-red-500">
-                {errors.tags?.message as string}
-              </p>
-            )}
-            {tags.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {tags.map((tag, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between px-3 py-2 mt-4 rounded-xl transition-colors shadow-md"
-                  >
-                    <span className="text-md font-medium truncate mr-1">
-                      {tag}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveTag(index)}
-                      className="shrink-0 bg-transparent hover:text-red-600 transition-colors"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          {errors.attributes && (
+            <p className="text-sm text-red-500">
+              {errors.attributes?.message as string}
+            </p>
+          )}
         </div>
       </div>
     </Card>
