@@ -1,8 +1,7 @@
 ﻿USE [EcommerceDB]
 GO
 
-
-CREATE OR ALTER   PROCEDURE [dbo].[spCart_GetCartByUser]
+CREATE OR ALTER   PROCEDURE spCart_GetCartByUser
     @UserId INT
 AS
 BEGIN
@@ -10,18 +9,23 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT 
+        sc.UserId           AS UserId,
         sc.CartId           AS CartId,
-        sc.ProductId        AS ProductId,
+        p.ProductId        AS ProductId,
+        sc.VariantId        AS VariantId,
         p.Name              AS ProductName,
+        p.Slug              AS Slug,
+        pv.SKU              AS SKU,
         pp.ImageUrl         AS ProductImageUrl,
         p.Description       AS Description,
-        p.Price             AS Price,
+        pv.Price             AS Price,
         sc.Quantity         AS Quantity,
-        (p.Price * sc.Quantity) AS TotalPrice,
+        (pv.Price * sc.Quantity) AS TotalPrice,
         sc.AddedDate        AS AddedDate
     FROM ShoppingCarts sc
-    INNER JOIN Products p ON sc.ProductId = p.ProductId
+    INNER JOIN ProductVariants pv ON sc.VariantId = pv.VariantId
+    INNER JOIN Products p ON pv.ProductId = p.ProductId
     LEFT JOIN ProductImages pp
     ON pp.ProductId = p.ProductId AND pp.IsPrimary = 1
-        WHERE sc.UserId = @UserId
+        WHERE sc.UserId = @UserId;
 END
