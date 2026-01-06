@@ -19,13 +19,7 @@ namespace EcommerceProject.Repositories.Implementations
             _tagRepository = tagRepository;
         }
 
-        public async Task<PagedResult<ProductListItemDto>> GetPagedAsync(
-            int? categoryId,
-            string? search,
-            int page,
-            int pageSize,
-            bool onlyActive,
-            CancellationToken ct)
+        public async Task<PagedResult<ProductListItemDto>> GetPagedAsync(int? categoryId, string? search, List<string>? tags, decimal? minPrice, decimal? maxPrice, int page, int pageSize, bool onlyActive, CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
 
@@ -33,10 +27,14 @@ namespace EcommerceProject.Repositories.Implementations
             {
                 CategoryId = categoryId,
                 Search = search,
+                TagNames = tags != null && tags.Any() ? string.Join(",", tags) : null,
+                MinPrice = minPrice,
+                MaxPrice = maxPrice,
                 Page = page,
                 PageSize = pageSize,
                 OnlyActive = onlyActive
             };
+
 
             using var multi = await conn.QueryMultipleAsync(
                 "spProducts_GetPaged", p, commandType: CommandType.StoredProcedure
