@@ -15,13 +15,13 @@ namespace EcommerceProject.Repositories.Implementations
             _factory = factory;
         }
 
-        public async Task<int> CreateAsync(string name, bool isVariant, CancellationToken ct)
+        public async Task<int> CreateAttributeAsync(string name, bool isVariant, CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
 
             return await conn.ExecuteScalarAsync<int>(
                 new CommandDefinition(
-                    "spProductAttributes_Create",
+                    "spProductAttribute_Create",
                     new { Name = name, IsVariant = isVariant },
                     commandType: CommandType.StoredProcedure,
                     cancellationToken: ct
@@ -59,9 +59,7 @@ namespace EcommerceProject.Repositories.Implementations
             var values = (await multi.ReadAsync<ProductAttributeValueDto>()).ToList();
 
             attributes.ForEach(a =>a.Values = values.Where(v => v.AttributeId == a.AttributeId).ToList()
-);
-
-
+        );
             return attributes;
         }
     }

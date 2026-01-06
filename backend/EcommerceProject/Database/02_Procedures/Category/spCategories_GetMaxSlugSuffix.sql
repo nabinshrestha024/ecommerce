@@ -25,6 +25,6 @@ BEGIN
     ) AS MaxSuffix
     FROM Products
     WHERE Slug = @BaseSlug
-       OR Slug LIKE @BaseSlug + '-%';
+       OR Slug LIKE @BaseSlug + '-%'
 END
 GO

@@ -7,7 +7,7 @@ interface Social {
   createdAt: string;
 }
 
-export const getEditSocial = async ({
+export const editSocial = async ({
   socialData,
   socialLinkId,
 }: {

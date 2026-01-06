@@ -1,8 +1,8 @@
-USE [EcommerceDB];
+USE [EcommerceDB]
 GO
 
 CREATE OR ALTER PROCEDURE spStock_Adjust
-    @ProductId INT,
+    @VariantId INT,
     @AdjustmentQuantity INT,
     @Reason VARCHAR(200),
     @Notes VARCHAR(500) = NULL,
@@ -20,12 +20,13 @@ BEGIN
         DECLARE @CategoryName VARCHAR(300);
 
         SELECT 
-            @CurrentStock = p.StockQuantity,
+            @CurrentStock = pv.StockQuantity,
             @ProductName = p.Name,
             @CategoryName = c.Name
-        FROM Products p
+        FROM ProductVariants pv
+        INNER JOIN Products p ON pv.ProductId = p.ProductId
         LEFT JOIN Categories c ON p.CategoryId = c.CategoryId
-        WHERE p.ProductId = @ProductId;
+        WHERE pv.variantId = @VariantId;
         
         IF @CurrentStock IS NULL
         BEGIN
@@ -41,14 +42,14 @@ BEGIN
             RETURN;
         END
         
-        UPDATE Products 
+        UPDATE ProductVariants
         SET 
             StockQuantity = @NewStock,
             UpdatedAt = GETDATE()
-        WHERE ProductId = @ProductId;
+        WHERE VariantId = @VariantId;
         
         SELECT 
-            @ProductId AS ProductId,
+            @VariantId AS VariantId,
             @ProductName AS ProductName,
             @AdjustmentQuantity AS AdjustmentQuantity,
             @CurrentStock AS PreviousStock,
@@ -66,7 +67,3 @@ BEGIN
         THROW;
     END CATCH
 END
-GO
-
-PRINT 'Procedure spStock_Adjust created successfully.';
-GO

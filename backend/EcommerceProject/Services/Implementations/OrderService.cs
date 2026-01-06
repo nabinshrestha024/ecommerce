@@ -34,8 +34,8 @@ namespace EcommerceProject.Services.Implementations
                 await _stockService.AdjustStockAsync(
                     new StockAdjustmentRequestDto
                     {
-                        ProductId = item.ProductId,
-                        AdjustmentQuantity = -item.Quantity,
+                        VariantId = item.VariantId,
+                        AdjustmentQuantity = item.Quantity,
                         Reason = "Order Placed",
                         Notes = $"Order #{orderId}"
                     },

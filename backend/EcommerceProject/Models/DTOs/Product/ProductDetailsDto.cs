@@ -11,11 +11,10 @@
         public string? ShortDescription { get; set; }
         public bool HasVariants { get; set; }
         public bool IsActive { get; set; }
+        public decimal Price { get; set; } // added
         public int StockQuantity { get; set; }
 
         public List<ProductVariantDto> Variants { get; set; } = new();
         public List<ProductImageDto> Images { get; set; } = new();
     }
-
-
 }

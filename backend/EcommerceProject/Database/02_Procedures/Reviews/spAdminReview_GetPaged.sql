@@ -13,12 +13,14 @@ BEGIN
             r.ReviewId,
             r.ProductId,
             r.UserId,
-            r.Title,
+            u.FullName AS UserName,
+            u.ProfileImageUrl AS UserImageUrl,
             r.Content,
             r.Rating,
             r.IsDeleted,
             r.CreatedAt
         FROM Reviews r
+        LEFT JOIN Users u ON u.UserId = r.UserId
         ORDER BY r.CreatedAt DESC
         OFFSET (@Page - 1) * @PageSize ROWS
         FETCH NEXT @PageSize ROWS ONLY

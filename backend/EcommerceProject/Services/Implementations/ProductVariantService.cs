@@ -23,16 +23,17 @@ namespace EcommerceProject.Services.Implementations
         )
         {
             await new ProductVariantCreateValidator().ValidateAndThrowAsync(dto, ct);
+
             var sku = SkuGenerator.Generate();
               
-
-            return await _repo.CreateAsync(
+            return await _repo.CreateProductVariantAsync(
                 productId,
                 sku,
                 dto.Price,
                 dto.StockQuantity,
                 dto.IsDefault,
                 dto.IsActive,
+                dto.AttributeValueIds, // added
                 ct
             );
         }

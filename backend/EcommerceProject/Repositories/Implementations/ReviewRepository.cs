@@ -26,7 +26,6 @@ namespace EcommerceProject.Repositories.Implementations
                 {
                     ProductId = productId,
                     UserId = userId,
-                    dto.Title,
                     dto.Content,
                     dto.Rating
                 },
@@ -50,7 +49,6 @@ namespace EcommerceProject.Repositories.Implementations
                 new
                 {
                     UserId = userId,
-                    dto.Title,
                     dto.Content,
                     dto.Rating
                 },

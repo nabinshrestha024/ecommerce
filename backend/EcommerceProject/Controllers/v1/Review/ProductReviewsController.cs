@@ -9,7 +9,6 @@ namespace EcommerceProject.Controllers.v1.Review
 {
     [ApiController]
     [Route("v1/reviews")]
-    [Authorize(Roles = "Admin, Customer")]
     public class ProductReviewsController : ControllerBase
     {
         private readonly IReviewService _service;
@@ -19,6 +18,7 @@ namespace EcommerceProject.Controllers.v1.Review
             _service = service;
         }
 
+        [Authorize(Roles = "Admin, Customer")]
         [HttpPost]
         public async Task<IActionResult> Create(
             int productId,
@@ -41,6 +41,7 @@ namespace EcommerceProject.Controllers.v1.Review
             return Ok(await _service.GetProductReviewsAsync(productId, ct));
         }
 
+        [Authorize(Roles = "Admin, Customer")]
         [HttpDelete("{reviewId:int}")]
         public async Task<IActionResult> DeleteProductReview(int reviewId, CancellationToken ct)
         {

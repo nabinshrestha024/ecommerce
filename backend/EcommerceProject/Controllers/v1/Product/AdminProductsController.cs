@@ -22,7 +22,6 @@ namespace EcommerceProject.Controllers.v1.Product
             _urlService = urlService;
         }
        
-
         [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create(
@@ -34,7 +33,7 @@ namespace EcommerceProject.Controllers.v1.Product
             var id = await _service.CreateAsync(body, images, primaryIndex, ct);
             return CreatedAtAction(nameof(GetById), new { id }, new { productId = id });
         }
-
+     
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id, CancellationToken ct)
         {
@@ -46,26 +45,23 @@ namespace EcommerceProject.Controllers.v1.Product
             {
                 img.ImageUrl = _urlService.ToAbsoluteUrl(img.ImageUrl);
             }
-
             return Ok(product);
-
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] AdminProductFilterDto filter, [FromQuery] PaginationDto pagination, CancellationToken ct)
         {
             var result = await _service.AdminGetProductsAsync(filter, pagination, ct);
-            var baseUrl = $"{Request.Scheme}://{Request.Host}";
-
+            
             foreach (var item in result.Items)
             {
-                item.PrimaryImageUrl = _urlService.ToAbsoluteUrl(item.PrimaryImageUrl);
+                if (!string.IsNullOrEmpty(item.PrimaryImageUrl))
+                {
+                    item.PrimaryImageUrl = _urlService.ToAbsoluteUrl(item.PrimaryImageUrl);
+                }
             }
-
             return Ok(result);
-           
-
         }
-
 
         [HttpPut("{id:int}")]
         [Consumes("multipart/form-data")]

@@ -68,7 +68,7 @@ namespace EcommerceProject.Repositories.Implementations
                     "spStock_Adjust",
                     new
                     {
-                        ProductId = request.ProductId,
+                        VariantId = request.VariantId,
                         AdjustmentQuantity = request.AdjustmentQuantity,
                         request.Reason,
                         request.Notes,

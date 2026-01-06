@@ -35,7 +35,9 @@ export const RegisterFormSchema = z
     phone: z
       .string()
       .max(10, { message: "Phone number must be exactly 10 digits" })
-      .regex(/^98\d{8}$/, { message: "Phone number must start with 98" }),
+      .regex(/^98|97\d{8}$/, {
+        message: "Phone number must start with 98 or 97",
+      }),
   })
   .refine((data) => data.password === data.repassword, {
     message: "Passwords do not match",

@@ -1,7 +1,7 @@
 USE EcommerceDB;
 GO
 
-CREATE OR ALTER PROCEDURE spProductAttributes_Create
+CREATE OR ALTER PROCEDURE spProductAttribute_Create
 (
     @Name VARCHAR(100),
     @IsVariant BIT

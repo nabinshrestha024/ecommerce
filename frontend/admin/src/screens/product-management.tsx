@@ -50,6 +50,11 @@ export const ProductManagement = () => {
     if (typeof data.primaryIndex === "number") {
       formData.append("primaryIndex", String(data.primaryIndex));
     }
+
+    if (data.attributes && data.attributes.length > 0) {
+      formData.append("RequiredAttributeNames", data.attributes.join(","));
+    }
+
     mutate(formData, {
       onSuccess: () => {
         methods.reset();

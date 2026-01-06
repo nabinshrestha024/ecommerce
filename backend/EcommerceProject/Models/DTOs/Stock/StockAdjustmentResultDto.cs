@@ -3,6 +3,8 @@ namespace EcommerceProject.Models.DTOs.Stock
     public class StockAdjustmentResultDto
     {
         public int ProductId { get; set; }
+
+        public int VariantId { get; set; }
         public string? ProductName { get; set; }
         public int AdjustmentQuantity { get; set; }
         public int PreviousStock { get; set; }

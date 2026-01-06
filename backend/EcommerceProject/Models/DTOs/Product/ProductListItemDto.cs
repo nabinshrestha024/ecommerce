@@ -1,4 +1,6 @@
-﻿namespace EcommerceProject.Models.DTOs
+﻿using EcommerceProject.Models.DTOs.Product;
+
+namespace EcommerceProject.Models.DTOs
 {
     public class ProductListItemDto
     {
@@ -11,12 +13,8 @@
         public string? ShortDescription { get; set; }
         public bool HasVariants { get; set; }
         public bool IsActive { get; set; }
-        public int VariantId { get; set; }             
-        public string SKU { get; set; } = default!;
-        public decimal Price { get; set; }
-        public int StockQuantity { get; set; }
-
         public string? PrimaryImageUrl { get; set; }
-    }
 
+        public List<ProductVariantDto> Variants { get; set; } = new(); 
+    }
 }
