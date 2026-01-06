@@ -15,22 +15,14 @@ namespace EcommerceProject.Repositories.Interfaces
         Task<ProductDetailsDto?> GetByIdAsync(int productId, CancellationToken ct);
         Task<int?> GetMaxSlugSuffixAsync(string baseSlug, CancellationToken ct);
 
-        Task<int> CreateAsync(
-            int categoryId,
-            string name,
-            string slug,
-            string? description,
-            string? shortDescription,
-            bool hasVariants,
-            bool isActive,
-            CancellationToken ct
-        );
-        Task<bool> UpdateAsync(int productId, int categoryId, string name, string slug,string? description, string? shortDescription, bool isActive, CancellationToken ct);
+        Task<int> CreateAsync(int categoryId, string name, string slug, string? description, string? shortDescription, bool hasVariants, bool isActive, List<int> attributeValueIds, CancellationToken ct);
+        Task<int> GetAttributeIdByNameAsync(string name); 
+        Task<int> GetAttributeValueIdAsync(int attributeId, string value); 
 
+        Task<bool> UpdateAsync(int productId, int categoryId, string name, string slug,string? description, string? shortDescription, bool isActive, CancellationToken ct);
         Task<bool> DeleteAsync(int id, CancellationToken ct);
 
         Task InsertImagesBulkAsync(int productId, IReadOnlyList<(string url, bool isPrimary, int sortOrder)> images, CancellationToken ct);
-
         Task<int?> GetProductIdByNameAsync(string productName);
     }
 }
