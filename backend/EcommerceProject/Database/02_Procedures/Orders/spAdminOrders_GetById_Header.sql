@@ -10,6 +10,7 @@ BEGIN
     SELECT TOP 1
         o.OrderId,
         o.UserId,
+        u.FullName as UserName,
         o.OrderDate,
         o.TotalAmount,
         o.Status,
@@ -22,6 +23,7 @@ BEGIN
         o.PaymentGateway,
         o.Notes
     FROM Orders o
+    INNER JOIN Users u ON u.UserId = o.UserId
     WHERE o.OrderId = @OrderId;
 END
 GO

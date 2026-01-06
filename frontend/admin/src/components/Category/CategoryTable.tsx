@@ -41,7 +41,7 @@ export const CategoryTable = () => {
     pageSize: 10,
   });
 
-  const product = useProduct(pagination.pageIndex);
+  const product = useProduct(pagination.pageIndex + 1);
   const [searchProduct, setSearchProduct] = useState("");
   // const [sortType, setSortType] = useState<"price" | "stockQuantity" | null>(null);
   const navigate = useNavigate();

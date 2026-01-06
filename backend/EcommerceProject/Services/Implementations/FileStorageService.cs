@@ -9,17 +9,21 @@ namespace EcommerceProject.Services.Implementations
 
         private readonly IWebHostEnvironment _env;
         private readonly ILogger<FileStorageService> _logger;
-        public FileStorageService(IWebHostEnvironment env, ILogger<FileStorageService> logger)
+        private readonly IConfiguration _configuration;
+        public FileStorageService(IWebHostEnvironment env, ILogger<FileStorageService> logger
+            , IConfiguration configuration)
         {
             _env = env;
             _logger = logger;
+            _configuration = configuration;
         }
 
         public async Task<IReadOnlyList<string>> SaveProductImagesAsync(IFormFileCollection files, CancellationToken ct)
         {
             if (files.Count == 0) return Array.Empty<string>();
 
-            var root = _env.WebRootPath ?? "wwwroot";
+            //var root = _env.WebRootPath ?? "wwwroot";
+            var root = _configuration["FilePath"] ?? _env.WebRootPath ?? "wwwroot";
             var folder = Path.Combine(root, "images", "products");
             Directory.CreateDirectory(folder);
 
@@ -48,6 +52,33 @@ namespace EcommerceProject.Services.Implementations
 
             return urls;
         }
+        public async Task<string> SaveCategoryImageAsync(IFormFile file, CancellationToken ct)
+        {
+            if (file == null || file.Length <= 0)
+                throw new ArgumentException("No file provided");
+
+            var ext = Path.GetExtension(file.FileName);
+            if (!Allowed.Contains(ext))
+                throw new InvalidOperationException($"Invalid image format: {ext}");
+
+            if (file.Length > 5 * 1024 * 1024)
+                throw new InvalidOperationException("File size exceeds 5MB limit");
+
+            var root = _configuration["FilePath"] ?? _env.WebRootPath ?? "wwwroot";
+            var folder = Path.Combine(root, "images", "categories");
+            Directory.CreateDirectory(folder);
+
+            var name = $"category_{Guid.NewGuid():N}{ext.ToLowerInvariant()}";
+            var path = Path.Combine(folder, name);
+
+            await using var fs = new FileStream(path, FileMode.Create);
+            await file.CopyToAsync(fs, ct);
+
+            _logger.LogInformation("Saved category image: {FileName}", name);
+
+            return $"/images/categories/{name}";
+        }
+
 
         public async Task<string> SaveProfileImageAsync(IFormFile file, int userId, CancellationToken ct)
         {
@@ -61,7 +92,8 @@ namespace EcommerceProject.Services.Implementations
             if (file.Length > 5 * 1024 * 1024)
                 throw new InvalidOperationException("File size exceeds 5MB limit");
 
-            var root = _env.WebRootPath ?? "wwwroot";
+            //var root = _env.WebRootPath ?? "wwwroot";
+            var root = _configuration["FilePath"] ?? _env.WebRootPath ?? "wwwroot";
             var folder = Path.Combine(root, "images", "profile");
             Directory.CreateDirectory(folder);
 

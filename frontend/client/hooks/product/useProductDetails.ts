@@ -1,4 +1,8 @@
 "use client";
+import {
+  Variant,
+  VariantAttributes,
+} from "@/components/Product/ProductDetails";
 import { ProductDetails } from "@/lib/product/getProductDetails";
 import { useQuery } from "@tanstack/react-query";
 
@@ -15,6 +19,8 @@ type ProductData = {
   stockQuantity: number;
   sku: string;
   images: ProductImage[];
+  variants: Variant[];
+  availableAttributes: VariantAttributes[];
 };
 
 export interface ProductImage {

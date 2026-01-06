@@ -11,10 +11,12 @@ namespace EcommerceProject.Services.Implementations
     public class ReviewService : IReviewService
     {
         private readonly IReviewRepository _repo;
+        private readonly IUrlService _urlService;
 
-        public ReviewService(IReviewRepository repo)
+        public ReviewService(IReviewRepository repo, IUrlService urlService)
         {
             _repo = repo;
+            _urlService = urlService;
         }
 
         public async Task AddProductReviewAsync(int productId, int userId, CreateReviewDto dto, CancellationToken ct)
@@ -25,7 +27,13 @@ namespace EcommerceProject.Services.Implementations
 
         public async Task<IEnumerable<ReviewDto>> GetProductReviewsAsync(int productId, CancellationToken ct)
         {
-            return await _repo.GetProductReviewsAsync(productId, ct);
+            var reviews = await _repo.GetProductReviewsAsync(productId, ct);
+            foreach (var r in reviews)
+            {
+                r.UserImageUrl = _urlService.ToAbsoluteUrl(r.UserImageUrl);
+            }
+
+            return reviews;
         }
 
         public async Task AddWebsiteReviewAsync(int userId, CreateReviewDto dto, CancellationToken ct)
@@ -36,7 +44,13 @@ namespace EcommerceProject.Services.Implementations
 
         public async Task<IEnumerable<ReviewDto>> GetWebsiteReviewsAsync(CancellationToken ct)
         {
-            return await _repo.GetWebsiteReviewsAsync(ct);
+            var reviews = await _repo.GetWebsiteReviewsAsync(ct);
+            foreach (var r in reviews)
+            {
+                r.UserImageUrl = _urlService.ToAbsoluteUrl(r.UserImageUrl);
+            }
+
+            return reviews;
         }
 
         public async Task DeleteReviewByUserAsync(int reviewId, int userId, CancellationToken ct)
@@ -57,13 +71,27 @@ namespace EcommerceProject.Services.Implementations
         {
             await _repo.DeleteWebsiteReviewByAdminAsync(websiteReviewId, ct);
         }
-        public Task<PagedResult<AdminReviewRowDto>> AdminGetProductReviewsAsync(PaginationDto pagination, CancellationToken ct)
+        public async Task<PagedResult<AdminReviewRowDto>> AdminGetProductReviewsAsync(PaginationDto pagination, CancellationToken ct)
         {
-            return _repo.AdminGetProductReviewsAsync(pagination, ct);
+            var result = await _repo.AdminGetProductReviewsAsync(pagination, ct);
+
+            foreach (var r in result.Items)
+            {
+                r.UserImageUrl = _urlService.ToAbsoluteUrl(r.UserImageUrl);
+            }
+
+            return result;
         }
-        public Task<PagedResult<AdminReviewRowDto>> AdminGetWebsiteReviewsAsync(PaginationDto pagination, CancellationToken ct)
+        public async Task<PagedResult<AdminReviewRowDto>> AdminGetWebsiteReviewsAsync(PaginationDto pagination, CancellationToken ct)
         {
-            return _repo.AdminGetWebsiteReviewsAsync(pagination, ct);
+            var result = await _repo.AdminGetWebsiteReviewsAsync(pagination, ct);
+
+            foreach (var r in result.Items)
+            {
+                r.UserImageUrl = _urlService.ToAbsoluteUrl(r.UserImageUrl);
+            }
+
+            return result;
         }
 
     }
