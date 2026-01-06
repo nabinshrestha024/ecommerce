@@ -22,20 +22,19 @@ BEGIN
     ORDER BY p.ProductId DESC
     OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
 
-    --  Products
-    SELECT p.*, c.Name as CategoryName,
-           (SELECT TOP 1 ImageUrl FROM ProductImages WHERE ProductId = p.ProductId ORDER BY IsPrimary DESC) as PrimaryImageUrl
+    SELECT p.*, c.Name as CategoryName
     FROM Products p 
     INNER JOIN Categories c ON p.CategoryId = c.CategoryId
     WHERE p.ProductId IN (SELECT ProductId FROM #PagedIds)
     ORDER BY p.ProductId DESC;
 
-    --  Variants
-    SELECT v.* FROM ProductVariants v WHERE v.ProductId IN (SELECT ProductId FROM #PagedIds);
+    SELECT v.* FROM ProductVariants v 
+    WHERE v.ProductId IN (SELECT ProductId FROM #PagedIds)
+    ORDER BY v.IsDefault DESC;
 
-    --  Attribute Values
     SELECT 
         vav.VariantId, 
+        pv.ProductId,
         pa.Name AS AttributeName, 
         pav.Value AS AttributeValue
     FROM VariantAttributeValues vav
@@ -43,6 +42,10 @@ BEGIN
     INNER JOIN ProductAttributes pa ON pav.AttributeId = pa.AttributeId
     INNER JOIN ProductVariants pv ON vav.VariantId = pv.VariantId
     WHERE pv.ProductId IN (SELECT ProductId FROM #PagedIds);
+
+    SELECT pi.* FROM ProductImages pi
+    WHERE pi.ProductId IN (SELECT ProductId FROM #PagedIds)
+    ORDER BY pi.ProductId, pi.IsPrimary DESC, pi.SortOrder ASC;
 
     SELECT COUNT(1) FROM Products 
     WHERE (@CategoryId IS NULL OR CategoryId = @CategoryId)
