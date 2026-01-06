@@ -23,7 +23,11 @@ export interface SocialLink {
   profileLinkUrl: string;
   createdAt: string;
 }
-export const SocialLinks = ({ data }: { data: SocialLink[] }) => {
+type SocialLinksResponse = {
+  message: string;
+  links: SocialLink[];
+};
+export const SocialLinks = ({ data }: { data: SocialLinksResponse }) => {
   const addSocialLinks = useAddSocialLinks();
   const updateSocialLinks = useUpdateSocialLinks();
   const deleteSocialLink = useDeleteSocialLinks();
@@ -35,18 +39,17 @@ export const SocialLinks = ({ data }: { data: SocialLink[] }) => {
     formState: { errors },
   } = useForm({ resolver: zodResolver(SocialLinksSchema), mode: "all" });
 
-  console.log(data, "data");
   const facebook =
-    data?.find((v) => v.platform === "Facebook")?.profileLinkUrl ?? "";
+    data?.links?.find((v) => v.platform === "Facebook")?.profileLinkUrl ?? "";
   const instagram =
-    data?.find((v) => v.platform === "Instagram")?.profileLinkUrl ?? "";
-  const x = data?.find((v) => v.platform === "X")?.profileLinkUrl ?? "";
+    data?.links?.find((v) => v.platform === "Instagram")?.profileLinkUrl ?? "";
+  const x = data?.links?.find((v) => v.platform === "X")?.profileLinkUrl ?? "";
 
   const facebookId =
-    data?.find((v) => v.platform === "Facebook")?.socialLinkId ?? "";
+    data?.links?.find((v) => v.platform === "Facebook")?.socialLinkId ?? "";
   const instagramId =
-    data?.find((v) => v.platform === "Instagram")?.socialLinkId ?? "";
-  const xId = data?.find((v) => v.platform === "X")?.socialLinkId ?? "";
+    data?.links?.find((v) => v.platform === "Instagram")?.socialLinkId ?? "";
+  const xId = data?.links?.find((v) => v.platform === "X")?.socialLinkId ?? "";
 
   useEffect(() => {
     reset({
