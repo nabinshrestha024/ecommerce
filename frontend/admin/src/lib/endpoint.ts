@@ -20,4 +20,5 @@ export const endpoint = {
   RESET_PASSWORD: "auth/reset-password",
   SOCIALLINKS: "profile/social-links",
   ATTRIBUTES: "admin/attributes",
+  TAGS: "admin/tags",
 };

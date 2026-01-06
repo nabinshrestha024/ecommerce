@@ -1,5 +1,5 @@
 import { IoMdHome, IoMdPerson } from "react-icons/io";
-import { FaShoppingCart } from "react-icons/fa";
+import { FaShoppingCart, FaTags } from "react-icons/fa";
 import { BsPlusCircleFill } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { BiCategory } from "react-icons/bi";
@@ -47,6 +47,12 @@ const items = [
         title: "Attribute Management",
         url: "/attribute-management",
         icon: BsPlusCircleFill,
+      },
+
+      {
+        title: "Tag Management",
+        url: "/tag-management",
+        icon: FaTags,
       },
     ],
   },
