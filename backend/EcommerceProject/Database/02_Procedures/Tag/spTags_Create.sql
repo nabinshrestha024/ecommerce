@@ -1,0 +1,17 @@
+USE EcommerceDB;
+GO
+
+CREATE OR ALTER PROCEDURE spTags_Create
+(
+    @Name VARCHAR(300)
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Tags (Name)
+    VALUES (@Name);
+
+    SELECT SCOPE_IDENTITY() AS TagId;
+END
+GO

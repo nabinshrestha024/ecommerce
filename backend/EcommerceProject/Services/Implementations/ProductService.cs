@@ -45,6 +45,8 @@ namespace EcommerceProject.Services.Implementations
                 ct
             );
         }
+
+        
         private async Task<string> GenerateUniqueSlugAsync(string name, CancellationToken ct)
         {
             var baseSlug = SlugGenerator.Generate(name);
@@ -57,9 +59,20 @@ namespace EcommerceProject.Services.Implementations
             return $"{baseSlug}-{maxSuffix + 1}";
         }
 
-        public async Task<int> CreateAsync(ProductCreateDto dto, IFormFileCollection? images, int? primaryIndex,CancellationToken ct)
+
+        public async Task<int> CreateAsync(ProductCreateDto dto, IFormFileCollection? images, int? primaryIndex, CancellationToken ct)
         {
             await new ProductCreateValidator().ValidateAndThrowAsync(dto, ct);
+
+            var attributeIds = new List<int>();
+            if (dto.RequiredAttributeNames != null && dto.RequiredAttributeNames.Any())
+            {
+                foreach (var name in dto.RequiredAttributeNames)
+                {
+                    var id = await _repo.GetAttributeIdByNameAsync(name);
+                    if (id > 0) attributeIds.Add(id);
+                }
+            }
 
             var slug = await GenerateUniqueSlugAsync(dto.Name, ct);
 
@@ -69,16 +82,15 @@ namespace EcommerceProject.Services.Implementations
                 slug,
                 dto.Description,
                 dto.ShortDescription,
-                dto.HasVariants, // added
+                dto.HasVariants,
                 dto.IsActive,
+                attributeIds,
                 ct
             );
 
-            if (images is not { Count: > 0 })
-                return productId;
+            if (images is not { Count: > 0 }) return productId;
 
             var urls = await _files.SaveProductImagesAsync(images, ct);
-
             for (int i = 0; i < urls.Count; i++)
             {
                 await _repo.InsertImageAsync(

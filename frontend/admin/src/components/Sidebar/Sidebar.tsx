@@ -42,6 +42,12 @@ const items = [
         url: "/product-management",
         icon: BsPlusCircleFill,
       },
+
+      {
+        title: "Attribute Management",
+        url: "/attribute-management",
+        icon: BsPlusCircleFill,
+      },
     ],
   },
   {

@@ -96,6 +96,9 @@ builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IProductAttributeRepository, ProductAttributeRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IAdminDiscountRepository, AdminDiscountRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
+
+builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IAdminDiscountService, AdminDiscountService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IProductVariantService, ProductVariantService>();

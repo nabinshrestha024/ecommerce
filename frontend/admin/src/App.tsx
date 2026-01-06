@@ -11,6 +11,7 @@ import { Navbar } from "./components/Navbar/Navbar";
 import { Vendor } from "./screens/vendor";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { PublicRoute } from "./routes/PublicRoute";
+import { AttributeManagement } from "./screens/attribute-management";
 
 export const App = () => {
   return (
@@ -29,6 +30,10 @@ export const App = () => {
             <Route path="/customer" element={<Customer />} />
             <Route path="/category" element={<Category />} />
             <Route path="/product-management" element={<ProductManagement />} />
+            <Route
+              path="/attribute-management"
+              element={<AttributeManagement />}
+            />
             <Route path="/profile" element={<Profile />} />
             <Route path="/vendor" element={<Vendor />} />
           </Route>

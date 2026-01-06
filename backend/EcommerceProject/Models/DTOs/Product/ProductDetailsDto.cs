@@ -1,4 +1,6 @@
-﻿namespace EcommerceProject.Models.DTOs.Product
+﻿using EcommerceProject.Models.DTOs.Tags;
+
+namespace EcommerceProject.Models.DTOs.Product
 {
     public class ProductDetailsDto
     {
@@ -11,10 +13,15 @@
         public string? ShortDescription { get; set; }
         public bool HasVariants { get; set; }
         public bool IsActive { get; set; }
-        public decimal Price { get; set; } // added
+        public decimal Price { get; set; }
         public int StockQuantity { get; set; }
 
         public List<ProductVariantDto> Variants { get; set; } = new();
         public List<ProductImageDto> Images { get; set; } = new();
+
+        public List<ProductAttributeSummaryDto> AvailableAttributes { get; set; } = new();
+
+        public List<TagDto> Tags { get; set; } = new();
+
     }
 }

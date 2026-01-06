@@ -9,7 +9,7 @@
             int stockQuantity, 
             bool isDefault, 
             bool isActive,
-            List<int>? attributeValueIds, // added
+            List<int>? attributeValueIds,
             CancellationToken ct
         );
 
