@@ -7,7 +7,9 @@ export const ContactFormSchema = z.object({
   phone: z
     .string()
     .max(10, { message: "Phone number must be exactly 10 digits" })
-    .regex(/^98\d{8}$/, { message: "Phone number must start with 98" }),
+    .regex(/^98|97\d{8}$/, {
+      message: "Phone number must start with 98 or 97.",
+    }),
   details: z.string().min(1, "Details is required"),
 });
 
