@@ -14,5 +14,7 @@
         public int Quantity { get; set; }
         public decimal TotalPrice { get; set; }
         public DateTime AddedDate { get; set; }
+
+        public List<CartItemAttributeDto> Attributes { get; set; } = new();
     }
 }
