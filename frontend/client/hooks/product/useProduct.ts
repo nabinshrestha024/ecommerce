@@ -1,4 +1,8 @@
 "use client";
+import {
+  Variant,
+  VariantAttributes,
+} from "@/components/Product/ProductDetails";
 import { Product } from "@/lib/product/getProduct";
 import { useQuery } from "@tanstack/react-query";
 
@@ -13,6 +17,8 @@ type ProductData = {
   isActive: boolean;
   categoryId: number;
   sku: string;
+  variants: Variant[];
+  availableAttributes: VariantAttributes[];
 };
 
 type ProductResponse = {
