@@ -1,4 +1,5 @@
 ﻿using EcommerceProject.Models.DTOs.Product;
+using EcommerceProject.Models.DTOs.Tags;
 
 namespace EcommerceProject.Models.DTOs
 {
@@ -20,5 +21,8 @@ namespace EcommerceProject.Models.DTOs
         public List<ProductVariantDto> Variants { get; set; } = new(); 
         public List<ProductImageDto> Images { get; set; } = new();
         public List<ProductAttributeSummaryDto> AvailableAttributes { get; set; } = new();
+
+        public List<TagDto> Tags { get; set; } = new();
+
     }
 }

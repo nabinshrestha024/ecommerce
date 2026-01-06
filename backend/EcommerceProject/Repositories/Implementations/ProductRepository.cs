@@ -12,9 +12,11 @@ namespace EcommerceProject.Repositories.Implementations
     public class ProductRepository : IProductRepository
     {
         private readonly ISqlConnectionFactory _factory;
-        public ProductRepository(ISqlConnectionFactory factory)
+        private readonly ITagRepository _tagRepository;
+        public ProductRepository(ISqlConnectionFactory factory, ITagRepository tagRepository)
         {
             _factory = factory;
+            _tagRepository = tagRepository;
         }
 
         public async Task<PagedResult<ProductListItemDto>> GetPagedAsync(
@@ -59,6 +61,9 @@ namespace EcommerceProject.Repositories.Implementations
 
                 product.Variants = allVariants.Where(v => v.ProductId == product.ProductId).ToList();
 
+                product.Tags = await _tagRepository.GetByProductIdAsync(product.ProductId, ct);
+
+
                 foreach (var variant in product.Variants)
                 {
                     variant.Attributes = allAttributes
@@ -79,6 +84,8 @@ namespace EcommerceProject.Repositories.Implementations
                     })
                     .ToList();
 
+                product.Tags = await _tagRepository.GetByProductIdAsync(product.ProductId, ct);
+
                 if (product.Variants.Any())
                 {
                     var defaultVar = product.Variants.FirstOrDefault(v => v.IsDefault) ?? product.Variants.First();
@@ -88,6 +95,7 @@ namespace EcommerceProject.Repositories.Implementations
             }
             return new PagedResult<ProductListItemDto>(products, page, pageSize, totalCount);
         }
+
 
         public async Task<int?> GetMaxSlugSuffixAsync(string baseSlug, CancellationToken ct)
         {
@@ -150,6 +158,8 @@ namespace EcommerceProject.Repositories.Implementations
 
             var attributeLinks = (await multi.ReadAsync<AttributeMapping>()).ToList();
 
+            product.Tags = await _tagRepository.GetByProductIdAsync(product.ProductId, ct);
+
             foreach (var variant in variants)
             {
                 variant.Attributes = attributeLinks
@@ -177,6 +187,7 @@ namespace EcommerceProject.Repositories.Implementations
                             .ToList()
                 })
                 .ToList();
+            product.Tags = await _tagRepository.GetByProductIdAsync(product.ProductId, ct);
 
             return product;
         }
