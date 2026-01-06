@@ -37,7 +37,7 @@ export const BasicDetails = () => {
             <Input
               type="textarea"
               placeholder="Enter short description...."
-              className="w-full border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
+              className="w-full border mt-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
               {...register("shortDescription")}
             />
             {errors.shortDescription && (
