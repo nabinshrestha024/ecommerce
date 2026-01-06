@@ -1,7 +1,7 @@
 ﻿USE [EcommerceDB]
 GO
 
-CREATE OR ALTER   PROCEDURE spCart_GetCartByUser
+CREATE OR ALTER PROCEDURE [dbo].[spCart_GetCartByUser]
     @UserId INT
 AS
 BEGIN
@@ -21,9 +21,24 @@ BEGIN
         pv.Price             AS Price,
         sc.Quantity         AS Quantity,
         (pv.Price * sc.Quantity) AS TotalPrice,
-        sc.AddedDate        AS AddedDate
+        sc.AddedDate        AS AddedDate,
+        (
+        SELECT
+        pa.Name As [Name],
+        pav.Value AS [Value]
+        From VariantAttributeValues vav
+        INNER JOIN ProductAttributeValues pav
+        ON vav.AttributeValueId = pav.AttributeValueId
+        INNER JOIN ProductAttributes pa ON pav.AttributeId = pa.AttributeId
+
+
+        WHERE vav.VariantId =sc.VariantId
+        FOR JSON PATH
+        ) AS Attributes
+
+
     FROM ShoppingCarts sc
-    INNER JOIN ProductVariants pv ON sc.VariantId = pv.VariantId
+    LEFT JOIN ProductVariants pv ON sc.VariantId = pv.VariantId
     INNER JOIN Products p ON pv.ProductId = p.ProductId
     LEFT JOIN ProductImages pp
     ON pp.ProductId = p.ProductId AND pp.IsPrimary = 1

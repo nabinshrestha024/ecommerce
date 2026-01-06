@@ -1,11 +1,9 @@
 ﻿using Dapper;
 using EcommerceProject.Database;
-using EcommerceProject.Models.DTOs.Cart;
 using EcommerceProject.Models.DTOs.ShoppingCart;
-using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
-using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Text.Json;
 
 namespace EcommerceProject.Repositories.Implementations
 {
@@ -21,10 +19,27 @@ namespace EcommerceProject.Repositories.Implementations
         public async Task<IEnumerable<CartItemDto>> GetCartAsync(int userId)
         {
             using var connection = _connectionFactory.CreateConnection();
-            return await connection.QueryAsync<CartItemDto>(
+            var cartDictionary = new Dictionary<int, CartItemDto>();
+            var result = await connection.QueryAsync<CartItemDto, string, CartItemDto>(
                 "spCart_GetCartByUser",
+                (cart, AttributeJson) =>
+                {
+                    if (!cartDictionary.TryGetValue(cart.CartId, out var existing))
+                    {
+                        if (!string.IsNullOrEmpty(AttributeJson))
+                        {
+                            cart.Attributes = JsonSerializer.Deserialize<List<CartItemAttributeDto>>(AttributeJson) ?? new();
+                        }
+                        cartDictionary.Add(cart.CartId, cart);
+                        return cart;
+                    }
+                    return existing;
+                },
                 new { UserId = userId },
+                splitOn: "Attributes",
                 commandType: CommandType.StoredProcedure);
+            return cartDictionary.Values.ToList();
+            
         }
 
         public async Task AddToCartAsync(int userId, int variantId, int quantity)
