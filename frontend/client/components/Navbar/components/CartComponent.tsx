@@ -41,7 +41,6 @@ export const CartComponent = () => {
 
   return (
     <div className="flex gap-2 shrink-0 items-center">
-      {/* Cart Trigger Icon */}
       <button
         onClick={() => setOpen(true)}
         className="relative p-2 transition-transform hover:scale-110 active:scale-95 text-2xl"
@@ -54,7 +53,6 @@ export const CartComponent = () => {
         <FaShoppingCart className="text-gray-700" />
       </button>
 
-      {/* Backdrop Overlay */}
       {open && (
         <div
           className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity"
@@ -62,14 +60,12 @@ export const CartComponent = () => {
         />
       )}
 
-      {/* Cart Drawer */}
       <aside
         className={`fixed right-0 top-0 z-50 h-screen w-full max-w-md bg-slate-50 shadow-2xl transform transition-transform duration-500 ease-out ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full bg-white">
-          {/* Header */}
           <header className="flex items-center justify-between px-6 py-5 border-b bg-white">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-gray-100 rounded-lg">
@@ -93,7 +89,6 @@ export const CartComponent = () => {
             </button>
           </header>
 
-          {/* Scrollable Content */}
           <div className="flex-1 overflow-y-auto px-6 py-4 custom-scrollbar">
             {!isAuth ? (
               <div className="h-full flex flex-col items-center justify-center text-center">
@@ -218,7 +213,6 @@ export const CartComponent = () => {
             )}
           </div>
 
-          {/* Footer Checkout Section */}
           {isAuth && data && data.length > 0 && (
             <div className="p-6 border-t bg-gray-50/50 space-y-4">
               <div className="flex items-end justify-between">
