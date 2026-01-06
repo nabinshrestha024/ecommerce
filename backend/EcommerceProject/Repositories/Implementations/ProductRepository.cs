@@ -18,21 +18,22 @@ namespace EcommerceProject.Repositories.Implementations
         }
 
         public async Task<PagedResult<ProductListItemDto>> GetPagedAsync(
-            int? categoryId, 
-            string? search, 
-            int page, 
-            int pageSize, 
-            bool onlyActive, 
+            int? categoryId,
+            string? search,
+            int page,
+            int pageSize,
+            bool onlyActive,
             CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
 
-            var p = new { 
-                CategoryId = categoryId, 
-                Search = search, 
-                Page = page, 
-                PageSize = pageSize, 
-                OnlyActive = onlyActive 
+            var p = new
+            {
+                CategoryId = categoryId,
+                Search = search,
+                Page = page,
+                PageSize = pageSize,
+                OnlyActive = onlyActive
             };
 
             using var multi = await conn.QueryMultipleAsync(
@@ -41,9 +42,16 @@ namespace EcommerceProject.Repositories.Implementations
 
             var products = (await multi.ReadAsync<ProductListItemDto>()).ToList();
             var allVariants = (await multi.ReadAsync<ProductVariantDto>()).ToList();
-            var allAttributes = (await multi.ReadAsync<AttributeMapping>()).ToList(); 
+            var allAttributes = (await multi.ReadAsync<AttributeMapping>()).ToList();
             var allImages = (await multi.ReadAsync<ProductImageDto>()).ToList();
-            var totalCount = await multi.ReadFirstAsync<int>();
+            //var totalCount = await multi.ReadFirstAsync<int>();
+
+            // safe read of final scalar
+            int totalCount = 0;
+            if (!multi.IsConsumed)
+            {
+                totalCount = await multi.ReadFirstOrDefaultAsync<int>();
+            }
 
             foreach (var product in products)
             {
@@ -55,10 +63,10 @@ namespace EcommerceProject.Repositories.Implementations
                 {
                     variant.Attributes = allAttributes
                         .Where(a => a.VariantId == variant.VariantId)
-                        .GroupBy(a => a.AttributeName) 
+                        .GroupBy(a => a.AttributeName)
                         .ToDictionary(
-                            g => g.Key, 
-                            g => g.First().AttributeValue ?? "" 
+                            g => g.Key,
+                            g => g.First().AttributeValue ?? ""
                         );
                 }
                 product.AvailableAttributes = allAttributes
@@ -70,7 +78,7 @@ namespace EcommerceProject.Repositories.Implementations
                         Values = g.Select(v => v.AttributeValue!).Distinct().OrderBy(v => v).ToList()
                     })
                     .ToList();
-                    
+
                 if (product.Variants.Any())
                 {
                     var defaultVar = product.Variants.FirstOrDefault(v => v.IsDefault) ?? product.Variants.First();
@@ -92,7 +100,7 @@ namespace EcommerceProject.Repositories.Implementations
             );
         }
 
-        public async Task InsertImageAsync(int productId, string imageUrl, bool isPrimary,int sortOrder,CancellationToken ct)
+        public async Task InsertImageAsync(int productId, string imageUrl, bool isPrimary, int sortOrder, CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
 
@@ -148,7 +156,7 @@ namespace EcommerceProject.Repositories.Implementations
                     .Where(a => a.VariantId == variant.VariantId)
                     .GroupBy(a => a.AttributeName)
                     .ToDictionary(
-                        g => g.Key, 
+                        g => g.Key,
                         g => g.First().AttributeValue ?? ""
                     );
             }
@@ -169,7 +177,7 @@ namespace EcommerceProject.Repositories.Implementations
                             .ToList()
                 })
                 .ToList();
-            
+
             return product;
         }
 
@@ -181,7 +189,7 @@ namespace EcommerceProject.Repositories.Implementations
             string? shortDescription,
             bool hasVariants,
             bool isActive,
-            List<int> attributeIds, 
+            List<int> attributeIds,
             CancellationToken ct
         )
         {
@@ -190,16 +198,16 @@ namespace EcommerceProject.Repositories.Implementations
             return await conn.ExecuteScalarAsync<int>(
                 "spProducts_Create",
                 new
-                {           
+                {
                     CategoryId = categoryId,
                     Name = name,
                     Slug = slug,
                     Description = description,
                     ShortDescription = shortDescription,
-                    HasVariants = hasVariants, 
+                    HasVariants = hasVariants,
                     IsActive = isActive,
-                    AttributeIds = (attributeIds != null && attributeIds.Any()) 
-                                    ? string.Join(",", attributeIds) 
+                    AttributeIds = (attributeIds != null && attributeIds.Any())
+                                    ? string.Join(",", attributeIds)
                                     : null
                 },
                 commandType: CommandType.StoredProcedure
@@ -210,7 +218,7 @@ namespace EcommerceProject.Repositories.Implementations
         {
             using var conn = _factory.CreateConnection();
             return await conn.QueryFirstOrDefaultAsync<int>(
-                "SELECT AttributeId FROM ProductAttributes WHERE Name = @name", 
+                "SELECT AttributeId FROM ProductAttributes WHERE Name = @name",
                 new { name });
         }
 
@@ -288,7 +296,7 @@ namespace EcommerceProject.Repositories.Implementations
 
         }
 
-        public async Task <int?>GetProductIdByNameAsync(string productName)
+        public async Task<int?> GetProductIdByNameAsync(string productName)
         {
             return await _factory.CreateConnection().QueryFirstOrDefaultAsync<int?>(
                 "spProduct_GetIdByName",
@@ -298,7 +306,7 @@ namespace EcommerceProject.Repositories.Implementations
         }
 
         // helper functions
-        private class AttributeMapping 
+        private class AttributeMapping
         {
             public int VariantId { get; set; }
             public int ProductId { get; set; }
@@ -309,8 +317,8 @@ namespace EcommerceProject.Repositories.Implementations
         {
             using var conn = _factory.CreateConnection();
             return await conn.QueryFirstOrDefaultAsync<int>(
-                "SELECT AttributeValueId FROM ProductAttributeValues WHERE AttributeId = @attributeId AND Value = @value", 
+                "SELECT AttributeValueId FROM ProductAttributeValues WHERE AttributeId = @attributeId AND Value = @value",
                 new { attributeId, value });
         }
-    } 
+    }
 }
