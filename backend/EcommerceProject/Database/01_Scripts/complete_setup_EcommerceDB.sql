@@ -388,6 +388,7 @@ CREATE TABLE PasswordResetToken
 );
 PRINT 'Table PasswordResetToken.';
 
+<<<<<<< Updated upstream
 CREATE TABLE ProductAttributeRequirements (
     ProductId INT NOT NULL,
     AttributeId INT NOT NULL,
@@ -397,6 +398,36 @@ CREATE TABLE ProductAttributeRequirements (
 );
 PRINT 'Table ProductAttributeRequirements created.';
 GO
+=======
+CREATE TABLE Tags (
+    TagId INT IDENTITY(1,1) PRIMARY KEY,
+    Name  VARCHAR(300) NOT NULL,
+    CONSTRAINT UQ_Tags_Name UNIQUE (Name)
+);
+
+CREATE TABLE ProductTags (
+    ProductTagId INT IDENTITY(1,1) PRIMARY KEY,
+    ProductId    INT NOT NULL,
+    TagId        INT NOT NULL,
+
+    CONSTRAINT FK_ProductTags_Product 
+        FOREIGN KEY (ProductId) 
+        REFERENCES Products(ProductId) 
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ProductTags_Tag 
+        FOREIGN KEY (TagId) 
+        REFERENCES Tags(TagId) 
+        ON DELETE CASCADE,
+
+    CONSTRAINT UQ_ProductTags_Product_Tag 
+        UNIQUE (ProductId, TagId)
+);
+
+
+
+PRINT 'DATABASE SETUP COMPLETED SUCCESSFULLY';
+>>>>>>> Stashed changes
 
 CREATE TABLE ProductAttributeRequirements (
     ProductId INT NOT NULL,
