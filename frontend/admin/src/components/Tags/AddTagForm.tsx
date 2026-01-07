@@ -2,36 +2,42 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../Input/Input.tsx";
 import { useForm, type Resolver } from "react-hook-form";
 import {
-  attributeNameSchema,
-  type AttributeNameFormValues,
-} from "./AddAttributeZodValidation.tsx";
-import { usePostAttribute } from "@/hooks/attribute/usePostAttribute.ts";
-
-// type Props = {
-
-// };
-
-export const AddAttributeForm = () => {
-  const postAttribute = usePostAttribute();
+  AddTagFormSchema,
+  type AddTagFormSchemaType,
+} from "./AddTagForm.zod.ts";
+import { useAddTag } from "@/hooks/tags/useAddTag.tsx";
+import type { Dispatch, SetStateAction } from "react";
+export const AddTagForm = ({
+  setOpen,
+}: {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}) => {
+  const addTag = useAddTag();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<AttributeNameFormValues>({
-    resolver: zodResolver(
-      attributeNameSchema,
-    ) as Resolver<AttributeNameFormValues>,
+  } = useForm<AddTagFormSchemaType>({
+    resolver: zodResolver(AddTagFormSchema) as Resolver<AddTagFormSchemaType>,
     mode: "onChange",
   });
-  const onSubmit = (data: AttributeNameFormValues) => {
-    postAttribute.mutate(data);
+  const onSubmit = (data: AddTagFormSchemaType) => {
+    addTag.mutate(data.name, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+      onError: () => {
+        reset();
+      },
+    });
   };
 
   return (
     <div className="flex justify-center">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         <div className="sticky top-0 text-[24px] font-bold text-[#23272E] text-center bg-white pb-2 ">
-          Add Attribute
+          Add Tag
         </div>
         <div className="flex-1 overflow-auto mt-5">
           <div className="flex gap-4 w-full items-center">

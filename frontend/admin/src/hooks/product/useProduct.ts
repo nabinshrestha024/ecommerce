@@ -1,22 +1,8 @@
 "use client";
 
+import type { ProductData } from "@/components/Category/CategoryTable";
 import { ProductTable } from "@/lib/product/getProduct";
 import { useQuery } from "@tanstack/react-query";
-
-type ProductData = {
-  productId: number;
-  name: string;
-  slug: string;
-  description: string;
-  shortDescription: string | null;
-  price: number;
-  stockQuantity: number;
-  primaryImageUrl: string;
-  isActive: boolean;
-  categoryId: number;
-  sku: string;
-  primaryIndex: number;
-};
 
 type ProductResponse = {
   items: ProductData[];

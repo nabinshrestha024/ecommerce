@@ -28,7 +28,9 @@ export const Navbar = () => {
                     ? "Transaction"
                     : pathname === "/profile"
                       ? "Profile"
-                      : "";
+                      : pathname === "/tag-management"
+                        ? "Tag Management"
+                        : "";
 
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     const stored = localStorage.getItem("darkMode");
