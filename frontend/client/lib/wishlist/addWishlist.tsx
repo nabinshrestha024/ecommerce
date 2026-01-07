@@ -1,12 +1,12 @@
 import { axiosInstance } from "../axiosInstance";
 import { endpoint } from "../endpoint";
-import { wishlistData } from "@/components/TrendingProduct/component/TrendingProductCard";
 
-export const addWishlist = async (data: wishlistData) => {
+export const addWishlist = async (variantId: number) => {
   const res = await axiosInstance.post(endpoint.ADD_WISHLIST, null, {
     params: {
-      productId: data,
+      VariantId: variantId,
     },
   });
+
   return res.data;
 };

@@ -5,6 +5,8 @@ import { ProductCard } from "@/components/Product/ProductCard";
 
 export interface WishlistItem {
   productId: number;
+  wishlistId: number;
+  variantId: number;
   primaryImageUrl: string;
   name: string;
   shortDescription: string;
@@ -12,7 +14,7 @@ export interface WishlistItem {
   id: number;
 }
 
-export type wishlistData = number;
+export type wishlistData = number | undefined;
 
 export const TrendingProductCard = () => {
   const { data, isLoading, isError } = useProduct();
@@ -31,7 +33,10 @@ export const TrendingProductCard = () => {
         ))}
 
       {data?.items?.map(
-        (product, index) => index < 3 && <ProductCard product={product} />,
+        (product, index) =>
+          index < 3 && (
+            <ProductCard key={product.productId} product={product} />
+          ),
       )}
     </div>
   );
