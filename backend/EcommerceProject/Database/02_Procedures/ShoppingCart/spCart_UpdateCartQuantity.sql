@@ -1,23 +1,28 @@
 ﻿USE [EcommerceDB]
 GO
+/****** Object:  StoredProcedure [dbo].[spCart_UpdateCartQuantity]    Script Date: 1/6/2026 10:27:18 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
-CREATE OR ALTER   PROCEDURE spCart_UpdateCartQuantity
+ALTER   PROCEDURE [dbo].[spCart_UpdateCartQuantity]
     @CartId INT,
     @Quantity INT
 AS
 BEGIN
 
     SET NOCOUNT ON;
-    DECLARE @ProductId INT;
+    DECLARE @VariantId INT;
     DECLARE @Stock INT;
 
 
-    SELECT @ProductId = ProductId
+    SELECT @VariantId = VariantId
     FROM ShoppingCarts
     WHERE CartId = @CartId;
 
 
-    if @ProductId IS NULL
+    if @VariantId IS NULL
     BEGIN 
         RAISERROR('Cart item not found ',16,1);
         RETURN;
@@ -26,12 +31,12 @@ BEGIN
     END
 
     SELECT @Stock = StockQuantity
-    FROM Products
-    WHERE productId = @ProductId;
+    FROM ProductVariants
+    WHERE VariantId = @VariantId;
 
     IF @Stock IS NULL
     BEGIN 
-        RAISERROR('product not found',16,1);
+        RAISERROR('product  variant not found',16,1);
         RETURN;
     END
 

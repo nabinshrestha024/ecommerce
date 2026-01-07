@@ -1,7 +1,10 @@
-﻿namespace EcommerceProject.Models.DTOs.Product
+﻿using System.Text.Json.Serialization;
+
+namespace EcommerceProject.Models.DTOs.Product
 {
     public class ProductVariantDto
     {
+        [JsonIgnore]
         public int ProductId { get; set; } 
         public int VariantId { get; set; }
         public string SKU { get; set; } = default!;
@@ -11,5 +14,7 @@
         public bool IsActive { get; set; }
 
         public Dictionary<string, string> Attributes { get; set; } = new();
+        
+        // public List<VariantAttributeValueDto> Attributes { get; set; } = new();
     }
 }

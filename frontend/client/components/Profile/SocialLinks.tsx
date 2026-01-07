@@ -16,25 +16,27 @@ import { useUpdateSocialLinks } from "@/hooks/socialLinks/useUpdateSocialLinks";
 import { toast } from "sonner";
 import { useDeleteSocialLinks } from "@/hooks/socialLinks/useDeleteSocialLinks";
 import { FiMinus } from "react-icons/fi";
-import { SquarePen } from "lucide-react";
+import { Edit, Save, SquarePen } from "lucide-react";
 export interface SocialLink {
   socialLinkId: number;
   platform: "Instagram" | "Facebook" | "X";
   profileLinkUrl: string;
   createdAt: string;
 }
-type SocialLinksResponse = {
+
+export interface SocialLinkType {
   message: string;
   links: SocialLink[];
-};
-export const SocialLinks = ({ data }: { data: SocialLinksResponse }) => {
+}
+export const SocialLinks = ({ data }: { data: SocialLinkType }) => {
   const addSocialLinks = useAddSocialLinks();
   const updateSocialLinks = useUpdateSocialLinks();
   const deleteSocialLink = useDeleteSocialLinks();
   const { refetch } = useFetchSocialLinks();
   const {
     register,
-    handleSubmit,
+    // handleSubmit,
+    watch,
     reset,
     formState: { errors },
   } = useForm({ resolver: zodResolver(SocialLinksSchema), mode: "all" });
@@ -59,51 +61,133 @@ export const SocialLinks = ({ data }: { data: SocialLinksResponse }) => {
     });
   }, [facebook, instagram, x, reset]);
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState("");
 
-  const onSubmit = async (data: SocialLinksSchemaType) => {
-    const instagramData: SocialLink = {
-      socialLinkId: 1,
-      platform: "Instagram",
-      profileLinkUrl: data.instagram ?? "",
-      createdAt: new Date().toISOString(),
-    };
-    const facebookData: SocialLink = {
-      socialLinkId: 2,
-      platform: "Facebook",
-      profileLinkUrl: data.facebook ?? "",
-      createdAt: new Date().toISOString(),
-    };
-    const xData: SocialLink = {
-      socialLinkId: 3,
-      platform: "X",
-      profileLinkUrl: data.x ?? "",
-      createdAt: new Date().toISOString(),
-    };
-    await Promise.all([
-      instagramId
-        ? updateSocialLinks.mutateAsync({
-            id: instagramId,
-            data: instagramData,
-          })
-        : addSocialLinks.mutateAsync({ data: instagramData }),
+  const handleSave = (link: string) => {
+    if (link === "Facebook") {
+      const fbLink = watch("facebook");
+      const facebookData: SocialLink = {
+        socialLinkId: 2,
+        platform: "Facebook",
+        profileLinkUrl: fbLink ?? "",
+        createdAt: new Date().toISOString(),
+      };
       facebookId
-        ? updateSocialLinks.mutateAsync({
-            id: facebookId,
-            data: facebookData,
-          })
-        : addSocialLinks.mutateAsync({ data: facebookData }),
+        ? updateSocialLinks.mutate(
+            {
+              id: facebookId,
+              data: facebookData,
+            },
+            {
+              onSuccess: () => {
+                toast.success("Facebook URL updated successfully");
+                setIsEditing("");
+                refetch();
+              },
+              onError: () => {
+                toast.error("Failed to update Facebook URL");
+                setIsEditing("");
+              },
+            },
+          )
+        : addSocialLinks.mutate(
+            { data: facebookData },
+            {
+              onSuccess: () => {
+                toast.success("Facebook URL updated successfully");
+                setIsEditing("");
+                refetch();
+              },
+              onError: () => {
+                toast.error("Failed to update Facebook URL");
+                setIsEditing("");
+              },
+            },
+          );
+    } else if (link === "Instagram") {
+      const instagramLink = watch("instagram");
+      const instagramData: SocialLink = {
+        socialLinkId: 2,
+        platform: "Instagram",
+        profileLinkUrl: instagramLink ?? "",
+        createdAt: new Date().toISOString(),
+      };
+      instagramId
+        ? updateSocialLinks.mutate(
+            {
+              id: instagramId,
+              data: instagramData,
+            },
+            {
+              onSuccess: () => {
+                toast.success("Instagram URL updated successfully");
+                setIsEditing("");
+                refetch();
+              },
+              onError: () => {
+                toast.error("Failed to update Instagram URL");
+                setIsEditing("");
+              },
+            },
+          )
+        : addSocialLinks.mutate(
+            { data: instagramData },
+            {
+              onSuccess: () => {
+                toast.success("Instagram URL updated successfully");
+                setIsEditing("");
+                refetch();
+              },
+              onError: () => {
+                toast.error("Failed to update Instagram URL");
+                setIsEditing("");
+              },
+            },
+          );
+    } else if (link === "X") {
+      const xLink = watch("x");
+      const xData: SocialLink = {
+        socialLinkId: 2,
+        platform: "X",
+        profileLinkUrl: xLink ?? "",
+        createdAt: new Date().toISOString(),
+      };
       xId
-        ? updateSocialLinks.mutateAsync({
-            id: xId,
-            data: xData,
-          })
-        : addSocialLinks.mutateAsync({ data: xData }),
-    ]);
-    toast.success("Social Links Updated Successfully");
-    refetch();
+        ? updateSocialLinks.mutate(
+            {
+              id: xId,
+              data: xData,
+            },
+            {
+              onSuccess: () => {
+                toast.success("X URL updated successfully");
+                setIsEditing("");
+                refetch();
+              },
+              onError: () => {
+                toast.error("Failed to update X URL");
+                setIsEditing("");
+              },
+            },
+          )
+        : addSocialLinks.mutate(
+            { data: xData },
+            {
+              onSuccess: () => {
+                toast.success("X URL updated successfully");
+                setIsEditing("");
+                refetch();
+              },
+              onError: () => {
+                toast.error("Failed to update X URL");
+                setIsEditing("");
+              },
+            },
+          );
+    }
     reset();
   };
+
   return (
     <Card
       className="flex flex-col shadow-[0px_1px_3px_0px_#00000033] w-full rounded-xl px-0 overflow-hidden"
@@ -119,33 +203,34 @@ export const SocialLinks = ({ data }: { data: SocialLinksResponse }) => {
               Manage your personal information
             </p>
           </div>
-          <button
-            className={`rounded-xl p-3 transition-all duration-200 ${
-              isEditing
-                ? "bg-white text-[#4EA674] shadow-md hover:shadow-lg"
-                : " text-white"
-            }`}
-            onClick={() => setIsEditing((val) => !val)}
-            aria-label={isEditing ? "Cancel editing" : "Edit profile"}
-          >
-            <SquarePen className="h-5 w-5" />
-          </button>
         </div>
       </div>
-      <form
-        className="mt-4 sm:mt-5 flex flex-col gap-3 sm:gap-4 py-4 px-4 sm:py-6 sm:px-6 "
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <form className="mt-4 sm:mt-5 flex flex-col gap-3 sm:gap-4 py-4 px-4 sm:py-6 sm:px-6 ">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="flex flex-col gap-1 relative">
             <label className="text-sm sm:text-base">Facebook</label>
             <Input
               type="text"
               {...register("facebook")}
-              disabled={!isEditing}
+              disabled={!(isEditing === "Facebook")}
               className="w-full mt-2 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-all"
               placeholder="Facebook Profile URL"
             />
+            {isEditing === "Facebook" ? (
+              <div
+                className="absolute right-7 top-0 flex items-center justify-center cursor-pointer"
+                onClick={() => handleSave("Facebook")}
+              >
+                <Save size={20} />
+              </div>
+            ) : (
+              <div
+                className="absolute right-7 top-0 flex items-center justify-center cursor-pointer"
+                onClick={() => setIsEditing("Facebook")}
+              >
+                <Edit size={20} />
+              </div>
+            )}
             {facebookId && facebook !== "" && (
               <div
                 className="absolute right-0 top-0 h-5 w-5 flex items-center justify-center rounded-full bg-red-500 cursor-pointer"
@@ -165,10 +250,25 @@ export const SocialLinks = ({ data }: { data: SocialLinksResponse }) => {
             <Input
               type="text"
               {...register("instagram")}
-              disabled={!isEditing}
+              disabled={!(isEditing === "Instagram")}
               className="w-full mt-2 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-all"
               placeholder="Instagram Profile URL"
             />
+            {isEditing === "Instagram" ? (
+              <div
+                className="absolute right-7 top-0 flex items-center justify-center cursor-pointer"
+                onClick={() => handleSave("Instagram")}
+              >
+                <Save size={20} />
+              </div>
+            ) : (
+              <div
+                className="absolute right-7 top-0 flex items-center justify-center cursor-pointer"
+                onClick={() => setIsEditing("Instagram")}
+              >
+                <Edit size={20} />
+              </div>
+            )}
             {instagramId && instagram !== "" && (
               <div
                 className="absolute right-0 top-0 h-5 w-5 flex items-center justify-center rounded-full bg-red-500 cursor-pointer"
@@ -188,10 +288,25 @@ export const SocialLinks = ({ data }: { data: SocialLinksResponse }) => {
             <Input
               type="text"
               {...register("x")}
-              disabled={!isEditing}
+              disabled={!(isEditing === "X")}
               className="w-full mt-2 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-all"
               placeholder="X Profile URL"
             />
+            {isEditing === "X" ? (
+              <div
+                className="absolute right-7 top-0 flex items-center justify-center cursor-pointer"
+                onClick={() => handleSave("X")}
+              >
+                <Save size={20} />
+              </div>
+            ) : (
+              <div
+                className="absolute right-7 top-0 flex items-center justify-center cursor-pointer"
+                onClick={() => setIsEditing("X")}
+              >
+                <Edit size={20} />
+              </div>
+            )}
             {xId && x !== "" && (
               <div
                 className="absolute right-0 top-0 h-5 w-5 flex items-center justify-center rounded-full bg-red-500 cursor-pointer"
@@ -205,15 +320,6 @@ export const SocialLinks = ({ data }: { data: SocialLinksResponse }) => {
             <p className="text-sm text-red-600 mt-1">{errors.x.message}</p>
           )}
         </div>
-        {isEditing && (
-          <Button
-            className="mt-3 sm:mt-4 h-10 w-full text-sm sm:text-base"
-            variant={"default"}
-            type="submit"
-          >
-            Update Social Links
-          </Button>
-        )}
       </form>
     </Card>
   );

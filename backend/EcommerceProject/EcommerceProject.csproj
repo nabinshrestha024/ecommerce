@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Database\02_Procedures\Tag\" />
     <Folder Include="Database\02_Procedures\Notification\" />
     <Folder Include="Database\02_Procedures\Shipment\" />
     <Folder Include="wwwroot\images\categories\" />

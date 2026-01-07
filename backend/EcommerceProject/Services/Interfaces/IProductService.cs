@@ -7,7 +7,7 @@ namespace EcommerceProject.Services.Interfaces
 {
     public interface IProductService
     {
-        Task<PagedResult<ProductListItemDto>> GetPagedAsync(int? categoryId, string? search, int page, int pageSize, CancellationToken ct);
+        Task<PagedResult<ProductListItemDto>> GetPagedAsync(int? categoryId, string? search, List<string>? tags, decimal? minPrice, decimal? maxPrice, int page, int pageSize, CancellationToken ct);
         Task<ProductDetailsDto?> GetDetailsAsync(string slugOrId, CancellationToken ct);
         Task<PagedResult<ProductListItemDto>> AdminGetProductsAsync(AdminProductFilterDto filter, PaginationDto pagination, CancellationToken ct);
         Task<int> CreateAsync(ProductCreateDto dto, IFormFileCollection? images, int? primaryIndex, CancellationToken ct);
