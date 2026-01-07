@@ -5,29 +5,52 @@ import {
   type AttributeFormValues,
 } from "./AttributeZodValidation.tsx";
 import { useForm, type Resolver } from "react-hook-form";
-import { usePostAttributeValue } from "@/hooks/attribute/usePostAttributeValues.ts";
+import type { AttributeValue } from "@/hooks/attribute/useFetchAttribute.ts";
+import { useEditAttributeValue } from "@/hooks/attribute/useEditAttributeValues.ts";
 
-export const EditAttributeForm = ({ attributeId }: { attributeId: number }) => {
-  const postAttributeValue = usePostAttributeValue();
+type Props = {
+  attributeValues: AttributeValue;
+  onSave: (attributeValues: AttributeValue) => void;
+};
+export const EditAttributeValueForm = ({ attributeValues, onSave }: Props) => {
+  const editAttributeValue = useEditAttributeValue();
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<AttributeFormValues>({
     resolver: zodResolver(attributeSchema) as Resolver<AttributeFormValues>,
+    defaultValues: {
+      value: attributeValues.value,
+    },
     mode: "onChange",
   });
 
   const onSubmit = (data: AttributeFormValues) => {
-    postAttributeValue.mutate({ attributeId, data });
+    const updatedAttributevalue: AttributeValue = {
+      ...attributeValues,
+      value: data.value,
+    };
+
+    editAttributeValue.mutate({
+      attributeValueId: attributeValues.attributeValueId,
+      attributeValueData: updatedAttributevalue,
+    });
+
+    onSave(updatedAttributevalue);
+
+    reset({
+      value: updatedAttributevalue.value,
+    });
   };
 
   return (
     <div className="flex justify-center">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         <div className="sticky top-0 text-[24px] font-bold text-[#23272E] text-center bg-white pb-2 ">
-          Add Attribute Values
+          Edit Attribute Values
         </div>
         <div className="flex-1 overflow-auto mt-5">
           <div className="flex gap-4 w-full">
@@ -54,7 +77,7 @@ export const EditAttributeForm = ({ attributeId }: { attributeId: number }) => {
             type="submit"
             className="bg-green-600 hover:bg-green-700 text-white px-10 py-2 rounded transition mt-5"
           >
-            Save Values
+            Save Value Changes
           </button>
         </div>
       </form>
