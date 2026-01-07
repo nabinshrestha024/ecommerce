@@ -12,8 +12,6 @@ export function useAddWishlist() {
     mutationFn: addWishlist,
 
     onSuccess: (data) => {
-      console.log("wish", data);
-
       if (data) {
         toast.success("Wishlist added successful!");
         queryClient.invalidateQueries({ queryKey: ["fetch-wishlist"] });

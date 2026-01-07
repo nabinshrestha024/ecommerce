@@ -1,10 +1,8 @@
 import { axiosInstance } from "../axiosInstance";
 import { endpoint } from "../endpoint";
-interface Social {
-  socialLinkId: number;
-  platform: "Instagram" | "Facebook" | "Twitter";
+export interface Social {
+  platform: string;
   profileLinkUrl: string;
-  createdAt: string;
 }
 
 export const editSocial = async ({
