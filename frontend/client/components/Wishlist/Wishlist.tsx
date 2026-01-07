@@ -5,7 +5,6 @@ import { Card } from "../Card/Card";
 import { useFetchWishlist } from "@/hooks/wishlist/useFetchWishlist";
 import { Star, Trash2 } from "lucide-react";
 import { useDeleteWishlist } from "@/hooks/wishlist/useDeleteWishlist";
-import { wishlistData } from "../TrendingProduct/component/TrendingProductCard";
 import { Button } from "@/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAddToCart } from "@/hooks/cart/useAddToCart";
@@ -55,9 +54,8 @@ export const Wishlist = () => {
   const addToCart = useAddToCart();
   const { token } = useAuth();
 
-  const handleDeleteWishlist = (productId: wishlistData) => {
-    console.log(productId);
-    mutate(productId);
+  const handleDeleteWishlist = (wishlistId?: number) => {
+    mutate(Number(wishlistId));
   };
 
   const handleIncrease = () => {
@@ -134,7 +132,7 @@ export const Wishlist = () => {
                   </div>
                   <Trash2
                     color="red"
-                    onClick={() => handleDeleteWishlist(wishlist.productId)}
+                    onClick={() => handleDeleteWishlist(wishlist.wishlistId)}
                   />
                 </div>
                 <Dialog
