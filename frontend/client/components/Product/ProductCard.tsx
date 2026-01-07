@@ -1,6 +1,5 @@
 import { Button } from "@/ui/button";
 import Image from "next/image";
-import { Card } from "../Card/Card";
 import { IoIosHeart, IoIosHeartEmpty } from "react-icons/io";
 import Link from "next/link";
 import { useAddToCart } from "@/hooks/cart/useAddToCart";
@@ -15,9 +14,10 @@ import {
 } from "../TrendingProduct/component/TrendingProductCard";
 import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
-import { useState } from "react";
-import { Dialog } from "../Dialog/Dialog";
+import { useEffect, useState } from "react";
+import { Dialog } from "../dialog/Dialog";
 import { Variant, VariantAttributes } from "./ProductDetails";
+import { Card } from "../Card/Card";
 
 interface Product {
   productId: number;
@@ -38,24 +38,6 @@ interface ProductCardProps {
   product: Product;
 }
 
-const sizes = [
-  {
-    id: 0,
-    value: "s",
-    isActive: true,
-  },
-  {
-    id: 1,
-    value: "m",
-    isActive: false,
-  },
-  {
-    id: 2,
-    value: "xl",
-    isActive: false,
-  },
-];
-
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const stockValue = 20;
   const [quantity, setQuantity] = useState(1);
@@ -67,6 +49,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const addMutate = useAddWishlist();
   const deleteMutate = useDeleteWishlist();
   const wishlists = useFetchWishlist();
+  const [selectedVariants, setSelectedVariants] = useState<
+    Record<string, string | undefined>
+  >({});
+
+  const activeVariant = product?.variants?.find((variant) =>
+    Object.entries(selectedVariants).every(
+      ([key, value]) => variant.attributes[key] === value,
+    ),
+  );
 
   const handleAddToCart = (
     productId: number,
@@ -75,7 +66,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   ) => {
     if (token) {
       addToCart.mutate({
-        productId: productId,
+        variantId: productId,
         quantity: quantity,
       });
       // console.log("Product: ", productId);
@@ -120,6 +111,54 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const handleDeleteWishlist = (productId: wishlistData) => {
     console.log(productId);
     deleteMutate.mutate(productId);
+  };
+
+  const isAvailable = (
+    variants: Variant[],
+    selectedAttributes: Record<string, string | undefined>,
+    attrName: string,
+    value: string,
+  ) => {
+    const tempSelection = { ...selectedAttributes, [attrName]: value };
+    return variants.some((v) =>
+      Object.entries(tempSelection).every(
+        ([key, val]) => !val || v.attributes[key] === val,
+      ),
+    );
+  };
+
+  useEffect(() => {
+    if (!product?.variants) return;
+    const defaultVariant = product.variants.find((v) => v.isDefault) ?? null;
+    setSelectedVariants(
+      (defaultVariant?.attributes ?? {}) as Record<string, string | undefined>,
+    );
+  }, [product]);
+
+  const handleVariantChange = (attributeName: string, value: string) => {
+    const variants = product?.variants ?? [];
+    let nextSelection = { ...selectedVariants, [attributeName]: value };
+
+    Object.keys(nextSelection).forEach((key) => {
+      if (key === attributeName) return;
+      const otherValue = nextSelection[key];
+      if (!otherValue) return;
+
+      const compatibleVariant = variants.find(
+        (v) =>
+          v.attributes[attributeName] === value &&
+          v.attributes[key] === otherValue,
+      );
+
+      if (!compatibleVariant) {
+        const validVariant = variants.find(
+          (v) => v.attributes[attributeName] === value,
+        );
+        nextSelection[key] = validVariant?.attributes[key];
+      }
+    });
+
+    setSelectedVariants(nextSelection);
   };
 
   return (
@@ -259,51 +298,62 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   </div>
                   <div className="text-sm italic">Stock: {stockValue} </div>
                 </div>
-                <div className="flex gap-4 items-center">
-                  <div className="font-semibold ">Sizes: </div>
-                  <div className="flex gap-2">
-                    {(() => {
-                      const defaultSizeId =
-                        sizes.find((s) => s.isActive)?.id ?? 0;
-                      const selectedSizeId =
-                        selectedSizes[product.productId] ?? defaultSizeId;
-                      return sizes.map((size) => {
-                        const isSelected = selectedSizeId === size.id;
-                        return (
-                          <div
-                            key={size.id}
-                            onClick={() =>
-                              handleSelectSize(product.productId, size.id)
-                            }
-                            className={`w-8 h-8 flex items-center justify-center border rounded text-md bg-white cursor-pointer transition-colors ${
-                              isSelected
-                                ? "border-[#4EA674] text-[#4EA674]"
-                                : "border-gray-200 text-gray-600"
-                            }`}
-                          >
-                            {size.value}
-                          </div>
-                        );
-                      });
-                    })()}
-                  </div>
+                <div className="flex flex-col gap-3">
+                  <div className="font-bold text-[18px]">Variants</div>
+
+                  {product?.availableAttributes?.map((variant, attrIndex) => (
+                    <div key={variant.name}>
+                      <div className="mb-1 font-medium">{variant.name}</div>
+
+                      <div className="flex gap-2 flex-wrap">
+                        {variant.values.map((value: string) => {
+                          const isSelected =
+                            selectedVariants[variant.name] === value;
+                          const disabled =
+                            attrIndex === 0
+                              ? false
+                              : !isAvailable(
+                                  product?.variants ?? [],
+                                  selectedVariants,
+                                  variant.name,
+                                  value,
+                                );
+
+                          return (
+                            <label
+                              key={value}
+                              className={`flex items-center justify-center px-4 py-2 border rounded-md cursor-pointer transition
+                  ${
+                    isSelected
+                      ? "border-green-500 bg-green-50 text-green-600"
+                      : "border-gray-300"
+                  }
+                  ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+                            >
+                              <input
+                                type="radio"
+                                name={variant.name}
+                                value={value}
+                                disabled={disabled}
+                                checked={isSelected}
+                                onChange={() =>
+                                  handleVariantChange(variant.name, value)
+                                }
+                                className="hidden"
+                              />
+                              {value}
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
               <DialogClose asChild>
                 <Button
                   onClick={() => {
-                    const defaultSizeId =
-                      sizes.find((s) => s.isActive)?.id ?? 0;
-                    const selectedSizeId =
-                      selectedSizes[product.productId] ?? defaultSizeId;
-                    const selectedSizeValue = sizes.find(
-                      (s) => s.id === selectedSizeId,
-                    )?.value;
-                    handleAddToCart(
-                      product.productId,
-                      quantity,
-                      selectedSizeValue,
-                    );
+                    handleAddToCart(activeVariant?.variantId || 0, quantity);
                   }}
                   className="px-4 py-2 bg-[#4EA674] text-white"
                 >

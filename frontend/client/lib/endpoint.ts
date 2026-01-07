@@ -14,7 +14,7 @@ export const endpoint = {
   FETCH_WISHLIST: "wishlist",
   DELETE_WISHLIST: "wishlist/delete",
   FETCHNOTIFICATION: "notifications",
-  ADDORDER: "orders",
+  ADDORDER: "cart/checkout-selected-items",
   ESEWAPAYMENT: "payments/esewa/initiate",
   PAYMENTSUCCESS: "payments/esewa/callback",
   NOTIFICATIONSEEN: "notifications",
