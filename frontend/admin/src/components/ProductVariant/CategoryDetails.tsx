@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import {
   useGetProductById,
@@ -46,35 +46,41 @@ export const CategoryDetails = () => {
   const [selectedValues, setSelectedValues] = useState<Record<string, number>>(
     {},
   );
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [price, setPrice] = useState<string>("");
   const [stockQuantity, setStockQuantity] = useState<string>("");
-
-  useEffect(() => {
-    if (!data || !attribute?.data) return;
-    const temp: Record<string, number> = {};
-    data.availableAttributes.forEach((attr) => {
-      const fullAttr = attribute?.data?.find((a) => a.name === attr.name);
-      if (!fullAttr || !fullAttr.values.length) return;
-      const firstValue = fullAttr.values.find((val) =>
-        attr.values.includes(val.value),
-      );
-
-      if (firstValue) {
-        temp[attr.name] = firstValue.attributeValueId;
-      }
-    });
-
-    setSelectedValues(temp);
-  }, [data, attribute?.data]);
 
   const handleSelectChange = (attributeName: string, valueId: string) => {
     setSelectedValues((prev) => ({
       ...prev,
       [attributeName]: Number(valueId),
     }));
+    setErrors((prev) => {
+      const next = { ...prev };
+      delete next[attributeName];
+      return next;
+    });
   };
 
   const handleAddVariant = () => {
+    const requiredAttrs =
+      attribute?.data
+        ?.filter((attr) =>
+          data?.availableAttributes.some((a) => a.name === attr.name),
+        )
+        .map((a) => a.name) || [];
+    const newErrors: Record<string, string> = {};
+    requiredAttrs.forEach((name) => {
+      if (selectedValues[name] == null) {
+        newErrors[name] = `Please select ${name}`;
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     const attributeValueIds = Object.values(selectedValues);
 
     const variantData = {
@@ -84,11 +90,16 @@ export const CategoryDetails = () => {
       isActive: true,
       attributeValueIds,
     };
-    console.log(variantData);
 
-    addVariant.mutate(variantData);
-    setPrice("");
-    setStockQuantity("");
+    addVariant.mutate(variantData, {
+      onSuccess: () => {
+        setPrice("");
+        setStockQuantity("");
+        setErrors({});
+        setSelectedValues({});
+        setOpen(false);
+      },
+    });
   };
 
   const columns = [
@@ -196,7 +207,10 @@ export const CategoryDetails = () => {
                         handleSelectChange(attr.name, value)
                       }
                     >
-                      <SelectTrigger id={attr.name}>
+                      <SelectTrigger
+                        id={attr.name}
+                        className={errors[attr.name] ? "border-red-500" : ""}
+                      >
                         <SelectValue placeholder={`Select ${attr.name}`} />
                       </SelectTrigger>
                       <SelectContent>
@@ -210,6 +224,11 @@ export const CategoryDetails = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                    {errors[attr.name] && (
+                      <div className="text-xs text-red-600">
+                        {errors[attr.name]}
+                      </div>
+                    )}
                   </div>
                 ))}
             </div>
@@ -218,7 +237,6 @@ export const CategoryDetails = () => {
               className="w-full mt-4"
               onClick={() => {
                 handleAddVariant();
-                setOpen(false);
               }}
             >
               Save
