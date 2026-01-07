@@ -6,6 +6,7 @@ interface OrderDataType {
   shippingAddress: string;
   shippingCity: string;
   shippingPhone: string;
+  selectedCartItemIds: number[];
 }
 
 export const addOrder = async ({
@@ -13,12 +14,14 @@ export const addOrder = async ({
   shippingAddress,
   shippingCity,
   shippingPhone,
+  selectedCartItemIds,
 }: OrderDataType) => {
   const res = await axiosInstance.post(endpoint.ADDORDER, {
     shippingName,
     shippingAddress,
     shippingCity,
     shippingPhone,
+    selectedCartItemIds,
   });
   return res.data;
 };

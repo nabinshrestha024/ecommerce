@@ -34,9 +34,11 @@ export interface EsewaPaymentPayload {
 export const CheckoutForm = ({
   data,
   totalPrice,
+  selectedCartItemIds,
 }: {
   data: CartProductType[];
   totalPrice: number;
+  selectedCartItemIds: number[];
 }) => {
   const [pay, setPay] = useState(false);
   const [signature, setSignature] = useState("");
@@ -55,20 +57,21 @@ export const CheckoutForm = ({
   const initiatePayment = useInitiatePayment();
 
   const onSubmit = (data: CheckoutFormSchemaType) => {
-    addOrder.mutate(data, {
-      onSuccess: (orderData: OrderResponse) => {
-        // console.log(orderData)
-        // setTotal(orderData.totalAmount);
-        initiatePayment.mutate(orderData.orderId, {
-          onSuccess: (paymentData: EsewaPaymentPayload) => {
-            setTotal(paymentData.fields.amount);
-            setPay(true);
-            setSignature(paymentData.fields.signature);
-            setTransactionUid(paymentData.fields.transaction_uuid);
-          },
-        });
+    addOrder.mutate(
+      { ...data, selectedCartItemIds },
+      {
+        onSuccess: (orderData: OrderResponse) => {
+          initiatePayment.mutate(orderData.orderId, {
+            onSuccess: (paymentData: EsewaPaymentPayload) => {
+              setTotal(paymentData.fields.amount);
+              setPay(true);
+              setSignature(paymentData.fields.signature);
+              setTransactionUid(paymentData.fields.transaction_uuid);
+            },
+          });
+        },
       },
-    });
+    );
     reset();
   };
   return pay ? (

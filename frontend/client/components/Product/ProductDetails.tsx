@@ -70,16 +70,10 @@ const ProductDetails = () => {
   };
 
   const { token } = useAuth();
-  const handleAddToCart = ({
-    productId,
-    quantity,
-  }: {
-    productId: number;
-    quantity: number;
-  }) => {
+  const handleAddToCart = ({ quantity }: { quantity: number }) => {
     if (token) {
       addToCart.mutate({
-        productId: productId,
+        variantId: activeVariant?.variantId || 0,
         quantity: quantity,
       });
     } else {
@@ -288,7 +282,6 @@ const ProductDetails = () => {
                   className="w-[200px]"
                   onClick={() =>
                     handleAddToCart({
-                      productId: productItems?.data?.productId || 1,
                       quantity: quantity,
                     })
                   }
