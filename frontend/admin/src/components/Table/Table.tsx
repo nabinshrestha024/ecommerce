@@ -10,7 +10,7 @@ import {
 
 interface GenericTableProps<TData> {
   table: TableType<TData>;
-  pageIndex: number;
+  pageIndex?: number;
   showPagination?: boolean;
 }
 

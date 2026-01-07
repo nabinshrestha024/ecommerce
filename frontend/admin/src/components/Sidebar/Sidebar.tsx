@@ -3,6 +3,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import { BsPlusCircleFill } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { BiCategory } from "react-icons/bi";
+import { AiOutlinePercentage } from "react-icons/ai";
 import {
   Sidebar as Root,
   SidebarContent,
@@ -47,6 +48,11 @@ const items = [
         title: "Attribute Management",
         url: "/attribute-management",
         icon: BsPlusCircleFill,
+      },
+      {
+        title: "Discount",
+        url: "/discount",
+        icon: AiOutlinePercentage,
       },
     ],
   },
