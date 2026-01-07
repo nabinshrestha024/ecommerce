@@ -19,7 +19,7 @@ namespace EcommerceProject.Controllers.v1.Tag
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateTagDto dto, CancellationToken ct)
+        public async Task<IActionResult> Create(UpsertTagDto dto, CancellationToken ct)
         {
             var id = await _service.CreateAsync(dto, ct);
             return Ok(new { tagId = id });
@@ -30,6 +30,16 @@ namespace EcommerceProject.Controllers.v1.Tag
         {
             return Ok(await _service.GetAllAsync(ct));
         }
+
+        [HttpPut("{tagId:int}")]
+        public async Task<IActionResult> Update(int tagId, UpsertTagDto dto, CancellationToken ct)
+        {
+            var updated = await _service.UpdateAsync(tagId, dto, ct);
+            if (!updated) return NotFound();
+
+            return Ok("Tag Updated.");
+        }
+
     }
 
 }

@@ -120,7 +120,7 @@ namespace EcommerceProject.Services.Implementations
                 if (string.IsNullOrEmpty(fileName))
                     return false;
 
-                var root = _env.WebRootPath ?? "wwwroot";
+                var root = _configuration["FilePath"] ?? _env.WebRootPath ?? "wwwroot";
                 var filePath = Path.Combine(root, "images", "profile", fileName);
 
                 if (File.Exists(filePath))
