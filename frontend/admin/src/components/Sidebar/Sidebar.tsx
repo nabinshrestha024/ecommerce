@@ -32,7 +32,7 @@ const items = [
         icon: FaShoppingCart,
       },
       { title: "Customer", url: "/customer", icon: IoMdPerson },
-      { title: "Categories", url: "/category", icon: BiCategory },
+      { title: "Products", url: "/category", icon: BiCategory },
     ],
   },
   {

@@ -36,7 +36,9 @@ export const TagForm = ({ id }: { id: number }) => {
     setSelectedTag(null);
   };
 
-  return (
+  return isLoading && tags.isLoading ? (
+    <div>Loading...</div>
+  ) : (
     <div className="rounded-2xl p-5 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">Product Tags</h2>
