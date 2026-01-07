@@ -1,30 +1,23 @@
-"use client";
-
-import type { ProductData } from "@/components/Category/CategoryTable";
-import { ProductTable } from "@/lib/product/getProduct";
+import { getProductById } from "@/lib/product/getProductById";
 import { useQuery } from "@tanstack/react-query";
 
-interface ProductResponse {
-  items: ProductRes[];
-}
-export interface ProductRes {
+export interface Product {
   productId: number;
   categoryId: number;
-  categoryName: string;
   name: string;
+  categoryName: string;
   slug: string;
   description: string;
   shortDescription: string;
   hasVariants: boolean;
   isActive: boolean;
-  primaryImageUrl: string | null;
   price: number;
   stockQuantity: number;
   variants: ProductVariant[];
   images: ProductImage[];
   availableAttributes: AvailableAttribute[];
-  tags: ProductTag[];
 }
+
 export interface ProductVariant {
   variantId: number;
   sku: string;
@@ -34,6 +27,7 @@ export interface ProductVariant {
   isActive: boolean;
   attributes: Record<string, string>;
 }
+
 export interface ProductImage {
   productImageId: number;
   imageUrl: string;
@@ -41,19 +35,16 @@ export interface ProductImage {
   isPrimary: boolean;
   sortOrder: number;
 }
+
 export interface AvailableAttribute {
   name: string;
   values: string[];
 }
-export interface ProductTag {
-  tagId: number;
-  name: string;
-}
 
-export const useProduct = (pageIndex: number) => {
-  const { data, isLoading, isError, refetch } = useQuery<ProductResponse>({
-    queryKey: ["productData"],
-    queryFn: () => ProductTable(pageIndex),
+export const useGetProductById = (productId: number) => {
+  const { data, isLoading, isError, refetch } = useQuery<Product>({
+    queryKey: ["productDataById"],
+    queryFn: () => getProductById(productId),
   });
   return { data, isLoading, isError, refetch };
 };

@@ -52,6 +52,9 @@ export const CategoryTable = () => {
 
   const columnHelper = createColumnHelper<ProductData>();
   const debounceSearch = useDebounce(searchProduct, 500);
+  const handleRowClick = (row: ProductData) => {
+    navigate(`/product-variant/${row.productId}`);
+  };
 
   useEffect(() => {
     if (!debounceSearch) return;
@@ -76,6 +79,14 @@ export const CategoryTable = () => {
   const columns = [
     columnHelper.accessor("productId", {
       header: "Product Id",
+      cell: (info) => (
+        <div
+          className="cursor-pointer text-center"
+          onClick={() => handleRowClick(info.row.original)}
+        >
+          {info.getValue()}
+        </div>
+      ),
     }),
 
     columnHelper.accessor("primaryImageUrl", {
@@ -84,7 +95,10 @@ export const CategoryTable = () => {
       cell: (info) => {
         const value = info.getValue();
         return (
-          <div className="w-full h-16 flex items-center border border-[#E5E7EB] rounded-md overflow-hidden">
+          <div
+            className="w-full h-16 flex items-center border border-[#E5E7EB] rounded-md overflow-hidden"
+            onClick={() => handleRowClick(info.row.original)}
+          >
             <img
               src={value}
               alt="image"
@@ -97,13 +111,14 @@ export const CategoryTable = () => {
 
     columnHelper.accessor("name", {
       header: "Product",
-    }),
-
-    columnHelper.accessor("stockQuantity", {
-      header: "Stock Quantity",
-    }),
-    columnHelper.accessor("price", {
-      header: "Price",
+      cell: (info) => (
+        <div
+          className="cursor-pointer text-center"
+          onClick={() => handleRowClick(info.row.original)}
+        >
+          {info.getValue()}
+        </div>
+      ),
     }),
 
     columnHelper.display({
@@ -157,7 +172,6 @@ export const CategoryTable = () => {
   const tableFeature = useReactTable({
     columns,
     data: product.data?.items || [],
-
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
@@ -165,7 +179,6 @@ export const CategoryTable = () => {
   const tableOnSale = useReactTable({
     columns,
     data: product.data?.items || [],
-
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
@@ -173,7 +186,6 @@ export const CategoryTable = () => {
   const tableOutOfStock = useReactTable({
     columns,
     data: product.data?.items || [],
-
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
@@ -211,7 +223,7 @@ export const CategoryTable = () => {
   ];
 
   return (
-    <div className="w-full  pt-6 pb-14 pl-6 pr-6 border border-[#E5E7EB] rounded-lg">
+    <div className="w-full  pt-6 pb-14 pl-6 pr-6 border border-[#E5E7EB] rounded-lg space-y-15">
       <div className="relative">
         <Tabs
           defaultValue="All"

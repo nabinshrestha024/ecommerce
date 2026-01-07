@@ -20,6 +20,7 @@ export const endpoint = {
   RESET_PASSWORD: "auth/reset-password",
   SOCIALLINKS: "profile/social-links",
   ATTRIBUTES: "admin/attributes",
+  ADDVARIANT: "admin/products/",
   DISCOUNT: "admin/discounts",
   TAGS: "admin/tags",
   PRODUCTTAGS: "admin/products",
