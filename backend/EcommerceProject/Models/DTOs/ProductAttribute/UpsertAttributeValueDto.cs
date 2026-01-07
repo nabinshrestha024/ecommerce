@@ -1,6 +1,6 @@
 ﻿namespace EcommerceProject.Models.DTOs.ProductAttribute
 {
-    public class CreateAttributeValueDto
+    public class UpsertAttributeValueDto
     {
         public string Value { get; set; } = default!;
     }
