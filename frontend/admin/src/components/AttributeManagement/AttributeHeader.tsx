@@ -1,33 +1,35 @@
 import { Button } from "@/ui/button";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { MdAddCircleOutline } from "react-icons/md";
 import { Dialog } from "../Dialog/Dialog";
+import { GoPlusCircle, GoTag } from "react-icons/go";
 import { AddAttributeForm } from "./AddAttributeForm";
+import { useState } from "react";
 
 export const AttributeHeader = () => {
+  const [open, setOpen] = useState(false);
   return (
-    <div className="flex justify-between p-3 lg:p-6 items-center">
-      <div className="text-[18px] leading-6 font-bold text-[#23272E]">
-        Discover
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border shadow-sm">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <GoTag className="text-[#4EA674]" />
+          Attribute Management
+        </h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Organize and label your product data using custom attributes and
+          values.
+        </p>
       </div>
-      <div className="flex gap-2 items-center">
-        <div className="w-full  flex gap-3 items-center rounded-xl ">
-          <Dialog
-            triggerContent={
-              <Button className="px-2 py-1 lg:px-5 lg:py-4 text-[15px] font-bold leading-3 bg-[#4EA674] text-white  rounded-lg hover:bg-[#4EA674]">
-                <MdAddCircleOutline className="text-white text-[24px]" />
-                Add Attribute
-              </Button>
-            }
-          >
-            <AddAttributeForm />
-          </Dialog>
-          <Button className="px-5 py-4 text-[15px] font-bold leading-3 bg-white border border-[#E5E7EB] text-[#023337] rounded-lg hover:bg-white">
-            More
-            <BsThreeDotsVertical className="text-[#023337] text-[20px] font-bold" />
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+        triggerContent={
+          <Button className="rounded-full px-6 py-5 bg-[#4EA674] hover:bg-[#2a5f41] transition-all shadow-md hover:shadow-lg gap-2">
+            <GoPlusCircle size={20} />
+            Add Attribute
           </Button>
-        </div>
-      </div>
+        }
+      >
+        <AddAttributeForm />
+      </Dialog>
     </div>
   );
 };
