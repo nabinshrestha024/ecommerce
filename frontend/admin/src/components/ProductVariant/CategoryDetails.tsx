@@ -155,9 +155,9 @@ export const CategoryDetails = () => {
           }
         >
           <div className="max-w-[455px] p-3">
-            <div className="font-medium mb-4">Add new Variant </div>
+            <div className="font-bold mb-4">Add new Variant </div>
             <div className="space-y-4 mb-4">
-              <div>
+              <div className="space-y-4">
                 <Label htmlFor="price">Price</Label>
                 <Input
                   id="price"
@@ -168,7 +168,7 @@ export const CategoryDetails = () => {
                 />
               </div>
 
-              <div>
+              <div className="space-y-4">
                 <Label htmlFor="stockQuantity">Stock Quantity</Label>
                 <Input
                   id="stockQuantity"
@@ -182,13 +182,13 @@ export const CategoryDetails = () => {
 
             <div className="font-medium mb-2">Select variant attributes:</div>
 
-            <div className="space-y-4 mt-3">
+            <div className="flex gap-5">
               {attribute?.data
                 ?.filter((attr) =>
                   data?.availableAttributes.some((a) => a.name === attr.name),
                 )
                 .map((attr) => (
-                  <div key={attr.attributeId}>
+                  <div key={attr.attributeId} className="space-y-4">
                     <Label htmlFor={attr.name}>{attr.name}</Label>
                     <Select
                       value={selectedValues[attr.name]?.toString()}
