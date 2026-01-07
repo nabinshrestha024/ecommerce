@@ -1,10 +1,9 @@
 "use client";
 
-import type { ProductData } from "@/components/Category/CategoryTable";
 import { ProductTable } from "@/lib/product/getProduct";
 import { useQuery } from "@tanstack/react-query";
 
-interface ProductResponse {
+export interface ProductResponse {
   items: ProductRes[];
 }
 export interface ProductRes {
@@ -24,6 +23,7 @@ export interface ProductRes {
   images: ProductImage[];
   availableAttributes: AvailableAttribute[];
   tags: ProductTag[];
+  primaryIndex: number;
 }
 export interface ProductVariant {
   variantId: number;

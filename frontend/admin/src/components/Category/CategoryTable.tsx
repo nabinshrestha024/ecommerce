@@ -16,25 +16,11 @@ import { IoFilter } from "react-icons/io5";
 import { Dialog } from "../Dialog/Dialog";
 import { ProductForm } from "./ProductForm";
 import { Input } from "@/ui/input";
-import { useProduct } from "@/hooks/product/useProduct";
+import { useProduct, type ProductRes } from "@/hooks/product/useProduct";
 import { useDeleteProduct } from "@/hooks/product/useDeleteProduct";
 import { useSearch } from "@/hooks/product/useSearch";
 import { useDebounce } from "@/hooks/search/useDebounce";
 import { TagForm } from "./TagForm";
-
-export type ProductData = {
-  productId: number;
-  name: string;
-  slug: string;
-  description: string;
-  shortDescription: string | null;
-  price: number;
-  stockQuantity: number;
-  primaryImageUrl: string;
-  isActive: boolean;
-  categoryId: number;
-  primaryIndex: number;
-};
 
 export const CategoryTable = () => {
   const [pagination, setPagination] = useState({
@@ -46,13 +32,13 @@ export const CategoryTable = () => {
   const [searchProduct, setSearchProduct] = useState("");
   // const [sortType, setSortType] = useState<"price" | "stockQuantity" | null>(null);
   const navigate = useNavigate();
-  const [selectedProduct, setSelectedProduct] = useState<ProductData | null>(
+  const [selectedProduct, setSelectedProduct] = useState<ProductRes | null>(
     null,
   );
 
-  const columnHelper = createColumnHelper<ProductData>();
+  const columnHelper = createColumnHelper<ProductRes>();
   const debounceSearch = useDebounce(searchProduct, 500);
-  const handleRowClick = (row: ProductData) => {
+  const handleRowClick = (row: ProductRes) => {
     navigate(`/product-variant/${row.productId}`);
   };
 
@@ -67,7 +53,7 @@ export const CategoryTable = () => {
     deleteProduct.mutate(productId);
   };
 
-  const handleEdit = (row: ProductData) => {
+  const handleEdit = (row: ProductRes) => {
     setSelectedProduct(row);
   };
 
@@ -100,7 +86,7 @@ export const CategoryTable = () => {
             onClick={() => handleRowClick(info.row.original)}
           >
             <img
-              src={value}
+              src={value ?? ""}
               alt="image"
               className="w-full h-full object-cover"
             />

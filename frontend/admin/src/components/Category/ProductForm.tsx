@@ -7,24 +7,11 @@ import {
 import { Input } from "../Input/Input.tsx";
 import { useEditProduct } from "@/hooks/product/useEditProduct.ts";
 import { useState } from "react";
-
-type ProductData = {
-  productId: number;
-  name: string;
-  slug: string;
-  description: string;
-  shortDescription: string | null;
-  price: number;
-  stockQuantity: number;
-  primaryImageUrl: string;
-  isActive: boolean;
-  categoryId: number;
-  primaryIndex: number;
-};
+import type { ProductRes } from "@/hooks/product/useProduct.ts";
 
 type Props = {
-  product: ProductData;
-  onSave: (product: ProductData) => void;
+  product: ProductRes;
+  onSave: (product: ProductRes) => void;
 };
 
 export const ProductForm = ({ product, onSave }: Props) => {
