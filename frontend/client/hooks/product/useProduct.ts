@@ -3,26 +3,12 @@ import {
   Variant,
   VariantAttributes,
 } from "@/components/Product/ProductDetails";
+import { ProductType } from "@/components/Product/ProductDisplay";
 import { Product } from "@/lib/product/getProduct";
 import { useQuery } from "@tanstack/react-query";
 
-type ProductData = {
-  productId: number;
-  name: string;
-  slug: string;
-  shortDescription: string | null;
-  price: number;
-  stockQuantity: number;
-  primaryImageUrl: string;
-  isActive: boolean;
-  categoryId: number;
-  sku: string;
-  variants: Variant[];
-  availableAttributes: VariantAttributes[];
-};
-
 type ProductResponse = {
-  items: ProductData[];
+  items: ProductType[];
   page: number;
   pageSize: number;
   totalCount: number;

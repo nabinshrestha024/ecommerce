@@ -26,6 +26,15 @@ export interface VariantAttributes {
   name: string;
   values: [];
 }
+
+interface ImageType {
+  productImageId: number;
+  imageUrl: string;
+  productId: number;
+  isPrimary: boolean;
+  sortOrder: number;
+}
+
 interface Product {
   productId: number;
   name: string;
@@ -39,6 +48,7 @@ interface Product {
   sku: string;
   variants?: Variant[];
   availableAttributes?: VariantAttributes[];
+  images: ImageType[];
 }
 
 const ProductDetails = () => {

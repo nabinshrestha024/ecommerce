@@ -8,7 +8,15 @@ import { useProduct } from "@/hooks/product/useProduct";
 import { Variant, VariantAttributes } from "./ProductDetails";
 import { ProductCardSkeleton } from "../TrendingProduct/component/ProductCardLoading";
 
-interface Product {
+interface ImageType {
+  productImageId: number;
+  imageUrl: string;
+  productId: number;
+  isPrimary: boolean;
+  sortOrder: number;
+}
+
+export interface ProductType {
   productId: number;
   name: string;
   slug: string;
@@ -21,6 +29,7 @@ interface Product {
   sku: string;
   variants?: Variant[];
   availableAttributes?: VariantAttributes[];
+  images: ImageType[];
 }
 
 export const ProductDisplay = () => {
@@ -46,10 +55,10 @@ export const ProductDisplay = () => {
           ))}
 
         {categoryId === null
-          ? (products.data?.items || []).map((product: Product) => (
+          ? (products.data?.items || []).map((product) => (
               <ProductCard key={product.productId} product={product} />
             ))
-          : (prod.data?.items || []).map((product: Product) => (
+          : (prod.data?.items || []).map((product) => (
               <ProductCard key={product.productId} product={product} />
             ))}
       </div>

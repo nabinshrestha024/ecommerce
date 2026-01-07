@@ -368,7 +368,7 @@ export const Order = () => {
       </div>
       {selectedOrder && (
         <div className="w-[350px] mt-5">
-          <OrderDetails order={selectedOrder} />
+          <OrderDetails order={selectedOrder} setOrder={setSelectedOrder} />
         </div>
       )}
     </div>
