@@ -14,8 +14,10 @@ BEGIN
         r.Rating,
         r.CreatedAt
     FROM Reviews r
-    LEFT JOIN Users u ON u.UserId =r.UserId
+    INNER JOIN Users u ON u.UserId =r.UserId
     WHERE r.ProductId = @ProductId
+      AND r.IsDeleted = 0
+      AND u.IsDeleted = 0  
     ORDER BY r.CreatedAt DESC;
 END
 GO
