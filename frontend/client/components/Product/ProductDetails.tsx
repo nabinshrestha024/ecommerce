@@ -1,8 +1,7 @@
 "use client";
 import Image from "next/image";
-import { Card } from "../Card/Card";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/ui/button";
 import { useProductDetails } from "@/hooks/product/useProductDetails";
 import { useAddToCart } from "@/hooks/cart/useAddToCart";
@@ -11,6 +10,7 @@ import { toast } from "sonner";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { ProductCard } from "./ProductCard";
 import { useProductCategory } from "@/hooks/product/useProductCategory";
+import { Card } from "../Card/Card";
 
 export interface Variant {
   variantId: number;
@@ -19,10 +19,7 @@ export interface Variant {
   stockQuantity: number;
   isDefault: boolean;
   isActive: boolean;
-  attributes: {
-    size?: string;
-    Color?: string;
-  };
+  attributes: Record<string, string | undefined>;
 }
 
 export interface VariantAttributes {
@@ -45,11 +42,8 @@ interface Product {
 }
 
 const ProductDetails = () => {
-  const sizes = ["S", "M", "L", "XL", "XXL"];
-  const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
-
   const [selectedVariants, setSelectedVariants] = useState<
-    Record<string, string>
+    Record<string, string | undefined>
   >({});
 
   const [quantity, setQuantity] = useState(1);
@@ -91,6 +85,61 @@ const ProductDetails = () => {
     } else {
       toast.message("Login to add to cart");
     }
+  };
+
+  useEffect(() => {
+    if (!productItems.data?.variants) return;
+    const defaultVariant =
+      productItems.data.variants.find((v) => v.isDefault) ?? null;
+    setSelectedVariants(
+      (defaultVariant?.attributes ?? {}) as Record<string, string | undefined>,
+    );
+  }, [productItems.data]);
+
+  const activeVariant = productItems.data?.variants?.find((variant) =>
+    Object.entries(selectedVariants).every(
+      ([key, value]) => variant.attributes[key] === value,
+    ),
+  );
+
+  const isAvailable = (
+    variants: Variant[],
+    selectedAttributes: Record<string, string | undefined>,
+    attrName: string,
+    value: string,
+  ) => {
+    const tempSelection = { ...selectedAttributes, [attrName]: value };
+    return variants.some((v) =>
+      Object.entries(tempSelection).every(
+        ([key, val]) => !val || v.attributes[key] === val,
+      ),
+    );
+  };
+
+  const handleVariantChange = (attributeName: string, value: string) => {
+    const variants = productItems.data?.variants ?? [];
+    let nextSelection = { ...selectedVariants, [attributeName]: value };
+
+    Object.keys(nextSelection).forEach((key) => {
+      if (key === attributeName) return;
+      const otherValue = nextSelection[key];
+      if (!otherValue) return;
+
+      const compatibleVariant = variants.find(
+        (v) =>
+          v.attributes[attributeName] === value &&
+          v.attributes[key] === otherValue,
+      );
+
+      if (!compatibleVariant) {
+        const validVariant = variants.find(
+          (v) => v.attributes[attributeName] === value,
+        );
+        nextSelection[key] = validVariant?.attributes[key];
+      }
+    });
+
+    setSelectedVariants(nextSelection);
   };
 
   if (productItems.isLoading) return <p>Loading product details...</p>;
@@ -144,12 +193,8 @@ const ProductDetails = () => {
             <div>
               <div>
                 <span className="text-[30px] text-[#4EA674] font-bold">
-                  Rs. {productItems.data?.price ?? selectedVariants?.price}
+                  Rs. {activeVariant?.price}
                 </span>
-                {/* &nbsp;&nbsp;&nbsp;
-                  <span className="line-through text-[25px] text-[red] font-medium">
-                    $ {product.originalPrice}
-                  </span> */}
               </div>
               <div className="flex justify-between items-center">
                 <div className="font-bold text-[18px]">
@@ -158,8 +203,7 @@ const ProductDetails = () => {
                 </div>
                 <div className="font-bold text-[18px]">
                   <span className="font-normal">Stock Quantity: </span>
-                  {selectedVariants?.stockQuantity ??
-                    productItems.data?.stockQuantity}
+                  {activeVariant?.stockQuantity}
                 </div>
               </div>
             </div>
@@ -167,45 +211,55 @@ const ProductDetails = () => {
             <div className="flex flex-col gap-3">
               <div className="font-bold text-[18px]">Variants</div>
 
-              {productItems.data?.availableAttributes.map((variant) => (
-                <div key={variant.name}>
-                  <div className="mb-1 font-medium">{variant.name}</div>
+              {productItems.data?.availableAttributes.map(
+                (variant, attrIndex) => (
+                  <div key={variant.name}>
+                    <div className="mb-1 font-medium">{variant.name}</div>
 
-                  <div className="flex gap-2 flex-wrap">
-                    {variant.values.map((value: string) => {
-                      const isSelected =
-                        selectedVariants[variant.name] === value;
+                    <div className="flex gap-2 flex-wrap">
+                      {variant.values.map((value: string) => {
+                        const isSelected =
+                          selectedVariants[variant.name] === value;
+                        const disabled =
+                          attrIndex === 0
+                            ? false
+                            : !isAvailable(
+                                productItems.data?.variants ?? [],
+                                selectedVariants,
+                                variant.name,
+                                value,
+                              );
 
-                      return (
-                        <label
-                          key={value}
-                          className={`flex items-center justify-center px-4 py-2 border rounded-md cursor-pointer transition
-                ${
-                  isSelected
-                    ? "border-green-500 bg-green-50 text-green-600"
-                    : "border-gray-300"
-                }`}
-                        >
-                          <input
-                            type="radio"
-                            name={variant.name}
-                            value={value}
-                            checked={isSelected}
-                            onChange={() =>
-                              setSelectedVariants((prev) => ({
-                                ...prev,
-                                [variant.name]: value,
-                              }))
-                            }
-                            className="hidden"
-                          />
-                          {value}
-                        </label>
-                      );
-                    })}
+                        return (
+                          <label
+                            key={value}
+                            className={`flex items-center justify-center px-4 py-2 border rounded-md cursor-pointer transition
+                  ${
+                    isSelected
+                      ? "border-green-500 bg-green-50 text-green-600"
+                      : "border-gray-300"
+                  }
+                  ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+                          >
+                            <input
+                              type="radio"
+                              name={variant.name}
+                              value={value}
+                              disabled={disabled}
+                              checked={isSelected}
+                              onChange={() =>
+                                handleVariantChange(variant.name, value)
+                              }
+                              className="hidden"
+                            />
+                            {value}
+                          </label>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ),
+              )}
             </div>
 
             <div className="flex flex-col gap-3">
