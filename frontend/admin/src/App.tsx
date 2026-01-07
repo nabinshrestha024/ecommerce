@@ -12,6 +12,7 @@ import { Vendor } from "./screens/vendor";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { PublicRoute } from "./routes/PublicRoute";
 import { AttributeManagement } from "./screens/attribute-management";
+import { ProductVariant } from "./screens/product-variant";
 
 export const App = () => {
   return (
@@ -36,6 +37,7 @@ export const App = () => {
             />
             <Route path="/profile" element={<Profile />} />
             <Route path="/vendor" element={<Vendor />} />
+            <Route path="/product-variant/:id" element={<ProductVariant />} />
           </Route>
         </Route>
       </Routes>
