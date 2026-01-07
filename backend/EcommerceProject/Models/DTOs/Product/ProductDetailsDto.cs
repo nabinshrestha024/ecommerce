@@ -23,5 +23,9 @@ namespace EcommerceProject.Models.DTOs.Product
 
         public List<TagDto> Tags { get; set; } = new();
 
+
+        public List<ProductDetailsDto> RelatedProducts { get; set; } = new();
+
+
     }
 }

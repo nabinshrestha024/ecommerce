@@ -52,6 +52,14 @@ namespace EcommerceProject.Controllers.v1.Product
                 img.ImageUrl = _urlService.ToAbsoluteUrl(img.ImageUrl);
             }
 
+            foreach (var rp in product.RelatedProducts)
+            {
+                foreach (var img in rp.Images)
+                {
+                    img.ImageUrl = _urlService.ToAbsoluteUrl(img.ImageUrl);
+                }
+            }
+
             return Ok(product);
         }
     }
