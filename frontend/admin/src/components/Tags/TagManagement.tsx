@@ -69,7 +69,7 @@ export const TagManagement = () => {
             {data?.map((val) => (
               <div
                 key={val.tagId}
-                className="group flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-200 hover:bg-blue-50/30 transition-all duration-200 shadow-sm"
+                className="group flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl hover:border-green-200 hover:bg-green-50/30 transition-all duration-200 shadow-sm"
               >
                 <div className="flex items-center gap-3 overflow-hidden">
                   <div className="w-2 h-2 rounded-full bg-[#4EA674] shrink-0" />
