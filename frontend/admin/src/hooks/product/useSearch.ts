@@ -1,16 +1,8 @@
 "use client";
 
-import type { ProductData } from "@/components/Category/CategoryTable";
 import { searchProduct } from "@/lib/product/getSearchProduct";
 import { useQuery } from "@tanstack/react-query";
-
-type ProductResponse = {
-  items: ProductData[];
-  page: number;
-  pageSize: number;
-  totalCount: number;
-  totalPages: number;
-};
+import type { ProductResponse } from "./useProduct";
 
 export const useSearch = (name: string, pageIndex: number) => {
   const { data, isLoading, isError, refetch } = useQuery<ProductResponse>({
