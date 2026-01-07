@@ -1,8 +1,12 @@
 ﻿using EcommerceProject.Models.DTOs.Cart;
+using EcommerceProject.Models.DTOs.Orders;
+using EcommerceProject.Models.DTOs.Payment;
 using EcommerceProject.Models.DTOs.ShoppingCart;
 using EcommerceProject.Repositories.Implementations;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
+using System.Data;
+using System.Data.Common;
 
 namespace EcommerceProject.Services.Implementations
 {
@@ -90,6 +94,13 @@ namespace EcommerceProject.Services.Implementations
         {
             return await _cartRepository.CheckoutAsync(userId);
         }
+
+        public async Task<CheckoutsResponseDto> CheckoutSelectedItemsAsync(int userId,CheckoutsRequestDto request)
+        {
+            return await _cartRepository.CheckoutSelectedItemsAsync(
+                userId,request);
+        }
+
 
 
     }

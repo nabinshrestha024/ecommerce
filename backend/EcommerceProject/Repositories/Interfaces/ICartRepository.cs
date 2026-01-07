@@ -1,4 +1,5 @@
 ﻿
+using EcommerceProject.Models.DTOs.Payment;
 using EcommerceProject.Models.DTOs.ShoppingCart;
 using EcommerceProject.Models.Entities;
 
@@ -12,5 +13,6 @@ namespace EcommerceProject.Repositories.Interfaces
         Task RemoveCartAsync(int cartId, CancellationToken ct = default);
 
         Task<int> CheckoutAsync(int userId);
+        Task<CheckoutsResponseDto> CheckoutSelectedItemsAsync(int userId, CheckoutsRequestDto request);
     }
 }
