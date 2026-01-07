@@ -3,6 +3,7 @@ using EcommerceProject.Database;
 using EcommerceProject.Models.DTOs.ShoppingCart;
 using EcommerceProject.Repositories.Interfaces;
 using System.Data;
+using System.Data.Common;
 using System.Text.Json;
 
 namespace EcommerceProject.Repositories.Implementations
@@ -99,6 +100,50 @@ namespace EcommerceProject.Repositories.Implementations
                 commandType: CommandType.StoredProcedure
             );
         }
+        //public async Task<(int OrderId, decimal TotalAmount)> CheckoutSelectedItemsAsync(int userId, List<int> selectedCartItemIds)
+        //{
+        //    using var connection = _connectionFactory.CreateConnection();
 
+        //    // Convert list to comma-separated string
+        //    var idsCsv = string.Join(",", selectedCartItemIds);
+
+        //    var result = await connection.QueryFirstAsync<(int OrderId, decimal TotalAmount)>(
+        //        "spCheckoutSelectedItems",
+        //        new { UserId = userId, SelectedCartItemIds = idsCsv },
+        //        commandType: CommandType.StoredProcedure
+        //    );
+
+        //    return result;
+        //}
+
+
+        public async Task<CheckoutsResponseDto> CheckoutSelectedItemsAsync(int userId, CheckoutsRequestDto request)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+            if (request.SelectedCartItemIds == null || !request.SelectedCartItemIds.Any())
+            {
+                throw new ArgumentException("No items selected for checkout.");
+
+            }
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@UserId", userId, DbType.Int32);
+            parameters.Add("@SelectedCartItemIds", string.Join(",", request.SelectedCartItemIds));
+            parameters.Add("@ShippingName", request.ShippingName);
+            parameters.Add("@ShippingAddress", request.ShippingAddress);
+            parameters.Add("@ShippingCity", request.ShippingCity);
+            parameters.Add("@ShippingPhone", request.ShippingPhone);
+
+            var result = await connection.QuerySingleAsync<CheckoutsResponseDto>(
+                "spCheckoutSelectedItems",
+                parameters,
+                commandType: CommandType.StoredProcedure
+            );
+
+            if (result == null)
+                throw new Exception("Checkout failed.");
+
+            return result;
+        }
     }
 }
