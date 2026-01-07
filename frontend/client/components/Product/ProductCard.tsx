@@ -15,7 +15,7 @@ import {
 import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { useEffect, useState } from "react";
-import { Dialog } from "../dialog/Dialog";
+import { Dialog } from "../Dialog/Dialog";
 import { Variant, VariantAttributes } from "./ProductDetails";
 import { Card } from "../Card/Card";
 
@@ -112,14 +112,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       .filter((id: number) => !Number.isNaN(id)),
   );
 
-  const handleAddWishlist = (productId: wishlistData) => {
-    console.log(productId);
-    addMutate.mutate(productId);
+  const wishlistItemForProduct = wishlistItems.find(
+    (w: WishlistItem) => Number(w.productId) === product.productId,
+  );
+  const wishlistIdForProduct = wishlistItemForProduct?.wishlistId;
+
+  const handleAddWishlist = (variantId?: number) => {
+    addMutate.mutate(Number(variantId));
   };
 
-  const handleDeleteWishlist = (productId: wishlistData) => {
-    console.log(productId);
-    deleteMutate.mutate(productId);
+  const handleDeleteWishlist = (wishlistId?: number) => {
+    deleteMutate.mutate(Number(wishlistId));
   };
 
   const isAvailable = (
@@ -146,7 +149,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const handleVariantChange = (attributeName: string, value: string) => {
     const variants = product?.variants ?? [];
-    let nextSelection = { ...selectedVariants, [attributeName]: value };
+    const nextSelection = { ...selectedVariants, [attributeName]: value };
 
     Object.keys(nextSelection).forEach((key) => {
       if (key === attributeName) return;
@@ -169,6 +172,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
     setSelectedVariants(nextSelection);
   };
+
+  const defaultVariantId =
+    product.variants?.find((v) => v.isDefault === true)?.variantId ?? null;
 
   return (
     <Card
@@ -195,13 +201,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <IoIosHeart
                 size={16}
                 className="text-red-600"
-                onClick={() => handleDeleteWishlist(product.productId)}
+                onClick={() =>
+                  handleDeleteWishlist(Number(wishlistIdForProduct))
+                }
               />
             ) : (
               <IoIosHeartEmpty
                 size={16}
                 className="text-gray-400"
-                onClick={() => handleAddWishlist(product.productId)}
+                onClick={() => handleAddWishlist(Number(defaultVariantId))}
               />
             )}
           </div>
