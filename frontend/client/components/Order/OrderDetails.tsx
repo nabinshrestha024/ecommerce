@@ -3,18 +3,27 @@ import type { OrderData } from "./Order";
 import { useGetOrderById } from "@/hooks/orders/useGetOrderById";
 import { Button } from "@/ui/button";
 import { useCancelOrder } from "@/hooks/orders/useCancelOrder";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useInitiatePayment } from "@/hooks/esewa/useInitiatePayment";
 import { EsewaPaymentPayload } from "../Navbar/components/CheckoutForm";
+import { Trash2, X } from "lucide-react";
 
-export const OrderDetails = ({ order }: { order: OrderData }) => {
-  const { data } = useGetOrderById(order.orderId);
-  const { mutate } = useCancelOrder(order.orderId);
-  console.log(data?.items);
+export const OrderDetails = ({
+  order,
+  setOrder,
+}: {
+  order: OrderData;
+  setOrder: Dispatch<SetStateAction<OrderData | null>>;
+}) => {
+  const { data, isLoading } = useGetOrderById(order.orderId);
+  const { mutate: cancelOrder, isPending: isCancelling } = useCancelOrder(
+    order.orderId,
+  );
   const [total, setTotal] = useState("");
   const [signature, setSignature] = useState("");
   const [transactionUid, setTransactionUid] = useState("");
   const esewaInitiate = useInitiatePayment();
+
   useEffect(() => {
     if (data && data?.paymentStatus !== "Paid") {
       esewaInitiate.mutate(order.orderId, {
@@ -26,62 +35,101 @@ export const OrderDetails = ({ order }: { order: OrderData }) => {
       });
     }
   }, [data]);
-  const handleCancelOrder = () => {
-    mutate(order.orderId);
-  };
+
+  if (isLoading)
+    return (
+      <div className="p-8 text-center text-gray-400">
+        Loading order details...
+      </div>
+    );
 
   return (
-    <div className="space-y-4">
-      {data?.items?.map((item) => (
-        <div
-          key={item.orderItemId}
-          className="flex items-start gap-4 max-h-[500px] overflow-auto"
-        >
-          <div className="w-20 h-20 relative shrink-0">
-            {item.productImageUrl ? (
-              <Image
-                src={item.productImageUrl}
-                alt={item.productName}
-                fill
-                className="object-cover rounded-md"
-                unoptimized
-              />
-            ) : (
-              <div className="w-full h-full bg-gray-100 rounded-md" />
-            )}
-          </div>
-
-          <div className="flex-1">
-            <div className="font-medium">{item.productName}</div>
-            <div className="text-sm text-muted-foreground line-clamp-2">
-              {item.productDescription}
-            </div>
-
-            <div className="mt-2 flex items-center gap-4 text-sm">
-              <div>
-                Qty: <span className="font-semibold">{item.quantity}</span>
-              </div>
-              <div>Unit: Rs {item.unitPrice}</div>
-              <div>Total: Rs {item.lineTotal}</div>
-            </div>
+    <div className="max-w-2xl mx-auto space-y-6">
+      <div className="space-y-3">
+        <div className="flex justify-between">
+          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider px-1">
+            Items in Order
+          </h3>
+          <div className="cursor-pointer" onClick={() => setOrder(null)}>
+            <X />
           </div>
         </div>
-      ))}
-      {order.paymentStatus !== "Paid" ? (
-        <div>
-          <div className="text-lg text-gray-700">
-            Total: <span className="font-semibold">Rs. {total}</span>
+        {data?.items?.map((val) => (
+          <div
+            key={val.orderItemId}
+            className="group flex gap-5 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300"
+          >
+            <div className="w-20 h-20 relative rounded-xl overflow-hidden bg-gray-50 border shrink-0">
+              <Image
+                src={val.productImageUrl || "/placeholder.jpg"}
+                fill
+                alt={val.productName}
+                className="object-cover group-hover:scale-110 transition-transform duration-500"
+                unoptimized
+              />
+            </div>
+
+            <div className="flex-1 flex flex-col justify-center min-w-0">
+              <div className="flex justify-between items-start">
+                <div className="space-y-1">
+                  <h4 className="text-md font-bold text-gray-900 leading-tight truncate">
+                    {val.productName}
+                  </h4>
+                  <p className="text-xs text-gray-500 line-clamp-1 italic">
+                    {val.productDescription || "No description available"}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-bold text-gray-900">
+                    Rs. {val.unitPrice.toLocaleString()}
+                  </p>
+                  <p className="text-[11px] text-gray-400 font-medium">
+                    Qty: {val.quantity}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="w-full grid grid-cols-2 gap-3">
-            <Button
-              onClick={() => handleCancelOrder()}
-              className="bg-red-500 hover:bg-red-600"
+        ))}
+      </div>
+
+      <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <p className="text-sm text-gray-500 font-medium">Order Total</p>
+            <p className="text-2xl font-black text-gray-900">
+              Rs. {total || order.totalAmount}
+            </p>
+          </div>
+          <div className="text-right">
+            <span
+              className={`text-[10px] uppercase tracking-widest px-3 py-1 rounded-full font-bold shadow-sm ${
+                order.paymentStatus === "Paid"
+                  ? "bg-green-100 text-green-700 border border-green-200"
+                  : "bg-amber-100 text-amber-700 border border-amber-200"
+              }`}
             >
+              {order.paymentStatus}
+            </span>
+          </div>
+        </div>
+
+        {order.paymentStatus !== "Paid" && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Button
+              variant="outline"
+              disabled={isCancelling}
+              onClick={() => cancelOrder(order.orderId)}
+              className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors py-6 rounded-xl flex gap-2"
+            >
+              <Trash2 size={18} />
               Cancel Order
             </Button>
+
             <form
               action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"
               method="POST"
+              className="w-full"
             >
               <input type="hidden" name="amount" value={total} />
               <input type="hidden" name="tax_amount" value="0" />
@@ -111,13 +159,23 @@ export const OrderDetails = ({ order }: { order: OrderData }) => {
               />
               <input type="hidden" name="signature" value={signature} />
 
-              <Button type="submit">Pay with eSewa</Button>
+              <Button
+                type="submit"
+                disabled={!signature}
+                className="w-full bg-[#60bb46] hover:bg-[#52a63b] text-white py-6 rounded-xl flex gap-2 shadow-lg shadow-green-100"
+              >
+                Pay with eSewa
+              </Button>
             </form>
           </div>
-        </div>
-      ) : (
-        <></>
-      )}
+        )}
+
+        {order.paymentStatus === "Paid" && (
+          <div className="flex items-center justify-center gap-2 text-green-600 font-medium bg-green-50 p-4 rounded-xl border border-green-100">
+            Payment Completed Successfully
+          </div>
+        )}
+      </div>
     </div>
   );
 };

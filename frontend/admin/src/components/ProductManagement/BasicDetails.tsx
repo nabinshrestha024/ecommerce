@@ -61,54 +61,7 @@ export const BasicDetails = () => {
             )}
           </div>
         </div>
-        <div className="flex flex-col gap-3 ">
-          <div className="font-bold text-[22px] leading-[26px] tracking-[0%]">
-            Pricing
-          </div>
-          <div className="flex flex-col mt-1 ">
-            <div className="flex flex-col ">
-              <label className="block text-sm font-medium">Product Price</label>
-              <div className="relative w-full">
-                <div className="absolute left-3 top-1/2 mt-1 transform -translate-y-1/2 font-bold">
-                  Rs
-                </div>
-                <Input
-                  type="number"
-                  placeholder="Enter product price...."
-                  className="w-full h-9 border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent p-3 pl-10 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
-                  {...register("productPrice")}
-                />
-              </div>
-              {errors.productPrice && (
-                <div className="text-sm text-red-500">
-                  {errors.productPrice?.message as string}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
         <div className="flex flex-col gap-1">
-          <div className="font-bold text-[22px] leading-[26px] tracking-[0%]">
-            Inventory
-          </div>
-          <div className="grid grid-cols-1 mt-2 ">
-            <div className="flex flex-col">
-              <label className="block text-sm font-medium ">
-                Stock Quantity
-              </label>
-              <Input
-                type="number"
-                placeholder="Stock quantity..."
-                {...register("stockQuantity")}
-                className="w-full h-9 px-3 border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
-              />
-              {errors.stockQuantity && (
-                <div className="text-sm text-red-500">
-                  {errors.stockQuantity?.message as string}
-                </div>
-              )}
-            </div>
-          </div>
           <div className="flex flex-col gap-3 mt-4">
             <div className="flex items-center gap-2">
               <input

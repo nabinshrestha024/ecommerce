@@ -19,6 +19,14 @@ import { Dialog } from "../Dialog/Dialog";
 import { Variant, VariantAttributes } from "./ProductDetails";
 import { Card } from "../Card/Card";
 
+interface ImageType {
+  productImageId: number;
+  imageUrl: string;
+  productId: number;
+  isPrimary: boolean;
+  sortOrder: number;
+}
+
 interface Product {
   productId: number;
   name: string;
@@ -31,6 +39,7 @@ interface Product {
   categoryId: number;
   sku: string;
   variants?: Variant[];
+  images: ImageType[];
   availableAttributes?: VariantAttributes[];
 }
 
@@ -176,7 +185,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="flex flex-col gap-2">
         <div className="w-full h-[185px] relative ">
           <Image
-            src={product.primaryImageUrl}
+            src={`http://192.168.80.240/${product.images[0].imageUrl}`}
             alt={product.name}
             fill
             className="w-full h-full object-cover rounded-[12px]"

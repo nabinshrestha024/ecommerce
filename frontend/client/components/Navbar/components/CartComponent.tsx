@@ -1,4 +1,3 @@
-import { Dialog } from "@/components/Dialog/Dialog";
 import { Button } from "@/ui/button";
 import { Trash2, X, ShoppingBag } from "lucide-react"; // Added ShoppingBag for empty state
 import Image from "next/image";
@@ -12,6 +11,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useUpdateCart } from "@/hooks/cart/useUpdateCart";
 import { Checkbox } from "@/ui/checkbox";
+import { Dialog } from "@/components/dialog/Dialog";
+import { CartProductType } from "./TopNav";
 
 export const CartComponent = () => {
   const [open, setOpen] = useState(false);
@@ -19,14 +20,14 @@ export const CartComponent = () => {
   const updateCart = useUpdateCart();
 
   const { data, isLoading, isError, error, refetch } = useFetchCart();
-  const totalPrice =
-    data?.reduce((sum, val) => sum + val.quantity * val.price, 0) ?? 0;
-
   const { token } = useAuth();
   const isAuth = Boolean(token);
   const router = useRouter();
 
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [selectedItems, setSelectedItems] = useState<CartProductType[]>([]);
+  const [selectedCartItemIds, setSelectedCartItemIds] = useState<number[]>([]);
+  const totalPrice =
+    selectedItems?.reduce((sum, val) => sum + val.quantity * val.price, 0) ?? 0;
   useEffect(() => {
     if (open) refetch();
   }, [open, refetch]);
@@ -41,11 +42,17 @@ export const CartComponent = () => {
     updateCart.mutate({ cartId, quantity: quantity - 1 });
   };
 
-  const handleSelect = (cartId: number) => {
-    if (selectedItems.includes(cartId)) {
-      setSelectedItems((prev) => prev.filter((val) => val !== cartId));
+  const handleSelect = (cart: CartProductType) => {
+    if (selectedItems.find((val) => val.cartId === cart.cartId)) {
+      setSelectedItems((prev) =>
+        prev.filter((val) => val.cartId !== cart.cartId),
+      );
+      setSelectedCartItemIds((prev) =>
+        prev.filter((val) => val !== cart.cartId),
+      );
     } else {
-      setSelectedItems((val) => [...val, cartId]);
+      setSelectedItems((val) => [...val, cart]);
+      setSelectedCartItemIds((val) => [...val, cart.cartId]);
     }
   };
 
@@ -146,7 +153,7 @@ export const CartComponent = () => {
                     <div className="flex items-center">
                       <Checkbox
                         className="border-[#4EA764] data-[state=checked]:bg-[#4EA764] data-[state=checked]:border-[#4EA764] data-[state=checked]:text-white"
-                        onClick={() => handleSelect(val.cartId)}
+                        onClick={() => handleSelect(val)}
                       />
                     </div>
                     <div className="w-24 h-24 relative rounded-xl overflow-hidden bg-gray-100 border shrink-0 shadow-sm">
@@ -260,9 +267,9 @@ export const CartComponent = () => {
                 }
               >
                 <CheckoutForm
-                  data={data ?? []}
+                  data={selectedItems ?? []}
                   totalPrice={totalPrice}
-                  selectedCartItemIds={selectedItems}
+                  selectedCartItemIds={selectedCartItemIds}
                 />
               </Dialog>
             </div>

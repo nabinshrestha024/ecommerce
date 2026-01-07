@@ -85,37 +85,54 @@ export const CheckoutForm = ({
       <ScrollArea className="h-[50vh] pr-5">
         <div className="space-y-4">
           {data?.map((val) => (
-            <div key={val.cartId} className="flex gap-4 items-start">
-              <div className="w-20 h-20 relative rounded-md overflow-hidden bg-gray-100 shrink-0">
+            <div
+              key={val.cartId}
+              className="group flex gap-4 p-3 rounded-xl border border-transparent hover:border-gray-100 hover:bg-gray-50 transition-all"
+            >
+              <div className="flex items-center"></div>
+              <div className="w-24 h-24 relative rounded-xl overflow-hidden bg-gray-100 border shrink-0 shadow-sm">
                 <Image
                   src={`${val.productImageUrl}` || "/a.jpg"}
                   fill
                   alt={val.productName}
-                  className="object-cover"
+                  className="object-cover group-hover:scale-105 transition-transform"
                   unoptimized
                 />
               </div>
-              <div className="flex-1 flex flex-col">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <div className="text-sm font-semibold text-gray-800">
+
+              <div className="flex-1 flex flex-col min-w-0">
+                <div className="flex justify-between items-start gap-2">
+                  <div className="min-w-0">
+                    <h4 className="text-sm font-bold text-gray-900 truncate uppercase tracking-tight">
                       {val.productName}
-                    </div>
-                    <div className="text-xs text-gray-600 line-clamp-2">
+                    </h4>
+                    <p className="text-xs text-gray-500 line-clamp-1 mt-0.5">
                       {val.description}
-                    </div>
+                    </p>
                   </div>
                 </div>
-                <div className="mt-3 flex items-center justify-between">
-                  <div className="text-sm text-gray-700">
-                    Price: <span className="font-semibold">${val.price}</span>
-                  </div>
-                  <div className="text-sm text-gray-700">
-                    Variant: <span className="font-semibold">S</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="text-sm text-gray-700">Quantity:</div>
-                    <div>{val.quantity}</div>
+
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {val.attributes.map((attr, ind) => (
+                    <span
+                      key={ind}
+                      className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded-md font-medium"
+                    >
+                      {attr.name}: {attr.value}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="mt-auto pt-3 flex items-center justify-between">
+                  <span className="text-sm font-bold text-gray-900">
+                    Rs. {val.totalPrice.toLocaleString()}
+                  </span>
+
+                  <div className="flex text-sm items-center bg-white overflow-hidden">
+                    Quantity:
+                    <span className="px-3 font-bold w-8 text-center">
+                      {val.quantity}
+                    </span>
                   </div>
                 </div>
               </div>
