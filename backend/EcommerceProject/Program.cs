@@ -1,3 +1,5 @@
+using System.Data;
+using System.Text;
 using EcommerceProject.Database;
 using EcommerceProject.Filters;
 using EcommerceProject.Hubs;
@@ -16,10 +18,9 @@ using EcommerceProject.Services.Interfaces;
 using EcommerceProject.utils;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Data;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -184,5 +185,21 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<NotificationHub>("/hubs/notifications");
+
+var fileRoot = builder.Configuration["FilePath"];
+
+if (!string.IsNullOrWhiteSpace(fileRoot))
+{
+    Directory.CreateDirectory(fileRoot);
+
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(fileRoot),
+        RequestPath = ""
+    });
+}
+
+app.UseStaticFiles();
+
 
 app.Run();

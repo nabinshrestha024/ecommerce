@@ -15,19 +15,25 @@ namespace EcommerceProject.Services.Implementations
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _repo;
+        private readonly IUrlService _urlService;
 
-        public CategoryService(ICategoryRepository repo)
+        public CategoryService(ICategoryRepository repo, IUrlService urlService)
         {
             _repo = repo;
+            _urlService = urlService;
         }
 
         public Task<PagedResult<Category>> GetCategoriesAsync(CategoryFilterDto filter, PaginationDto  pagination)
         {
-            return _repo.GetAllAsync(filter, pagination);
+           return _repo.GetAllAsync(filter, pagination);
+            
+            
         }
         public Task<PagedResult<Category>> AdminGetCategoriesAsync(AdminCategoryFilterDto filter, PaginationDto pagination)
         {
-            return _repo.AdminGetAllAsync(filter, pagination);
+             return _repo.AdminGetAllAsync(filter, pagination);
+         
+            
         }
 
         private async Task<string> GenerateUniqueCategorySlugAsync(string name, CancellationToken ct)
