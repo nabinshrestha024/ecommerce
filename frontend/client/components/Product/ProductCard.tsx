@@ -15,7 +15,7 @@ import {
 import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { useEffect, useState } from "react";
-import { Dialog } from "../Dialog/Dialog";
+import { Dialog } from "../dialog/Dialog";
 import { Variant, VariantAttributes } from "./ProductDetails";
 import { Card } from "../Card/Card";
 
