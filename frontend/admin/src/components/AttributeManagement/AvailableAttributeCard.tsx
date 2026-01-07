@@ -2,17 +2,29 @@ import { Card } from "../Card/Card";
 import { FaEdit } from "react-icons/fa";
 import { Dialog } from "../Dialog/Dialog";
 import { useState } from "react";
-import { EditAttributeForm } from "./EditAttributeForm";
-import { useFetchAttribute } from "@/hooks/attribute/useFetchAttribute";
+import {
+  useFetchAttribute,
+  type AttributeValue,
+  type ProductAttribute,
+} from "@/hooks/attribute/useFetchAttribute";
+import { AddAttributeValueForm } from "./AddAttributeValuesForm";
+import { EditAttributeValueForm } from "./EditAttributeValuesForm";
+import { MdAddCircleOutline } from "react-icons/md";
+import { EditAttributeNameForm } from "./EditAttributeNameForm";
 
 export const AvailableAttributeCard = () => {
   const { data: attributes } = useFetchAttribute();
   const [selectedAttribute, setSelectedAttribute] = useState<number | null>(
     null,
   );
+  const [selectedAttributeValue, setSelectedAttributeValue] =
+    useState<AttributeValue | null>(null);
+
+  const [selectedAttributeName, setSelectedAttributeName] =
+    useState<ProductAttribute | null>();
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       {attributes?.map((attribute) => (
         <Card
           key={attribute.attributeId}
@@ -23,35 +35,83 @@ export const AvailableAttributeCard = () => {
             <h3 className="text-sm font-bold text-gray-800 truncate">
               {attribute.name}
             </h3>
+            <div className="flex gap-1 items-center">
+              <Dialog
+                triggerContent={
+                  <button
+                    onClick={() => setSelectedAttribute(attribute.attributeId)}
+                    className="p-1.5 rounded-md text-gray-400 hover:text-[#4EA674] hover:bg-[#c2f8d9] transition-colors"
+                    title="Edit Attribute"
+                  >
+                    <MdAddCircleOutline className="text-[16px]" />
+                  </button>
+                }
+              >
+                {selectedAttribute === attribute.attributeId && (
+                  <div className="max-h-[70vh] overflow-auto scrollbar-hide">
+                    <AddAttributeValueForm attributeId={selectedAttribute} />
+                  </div>
+                )}
+              </Dialog>
 
-            <Dialog
-              triggerContent={
-                <button
-                  onClick={() => setSelectedAttribute(attribute.attributeId)}
-                  className="p-1.5 rounded-md text-gray-400 hover:text-[#4EA674] hover:bg-[#c2f8d9] transition-colors"
-                  title="Edit Attribute"
-                >
-                  <FaEdit className="text-[14px]" />
-                </button>
-              }
-            >
-              {selectedAttribute === attribute.attributeId && (
-                <div className="max-h-[70vh] overflow-auto scrollbar-hide">
-                  <EditAttributeForm attributeId={selectedAttribute} />
-                </div>
-              )}
-            </Dialog>
+              <Dialog
+                triggerContent={
+                  <button
+                    onClick={() => setSelectedAttributeName(attribute)}
+                    className="p-1.5 rounded-md text-gray-400 hover:text-[#4EA674] hover:bg-[#c2f8d9] transition-colors"
+                    title="Edit Attribute"
+                  >
+                    <FaEdit className="text-[14px]" />
+                  </button>
+                }
+              >
+                {selectedAttributeName?.attributeId ===
+                  attribute.attributeId && (
+                  <div className="max-h-[70vh] overflow-auto scrollbar-hide">
+                    <EditAttributeNameForm
+                      attributeName={selectedAttributeName}
+                      onSave={() => {
+                        setSelectedAttributeName(attribute);
+                      }}
+                    />
+                  </div>
+                )}
+              </Dialog>
+            </div>
           </div>
 
           <div className="p-4 flex flex-wrap gap-2">
             {attribute.values && attribute.values.length > 0 ? (
               attribute.values.map((val, idx) => (
-                <span
+                <div
                   key={idx}
-                  className="px-2.5 py-1 text-[12px] font-medium bg-white border border-gray-200 text-gray-600 rounded-full"
+                  className="px-2.5 py-1 flex gap-4 items-center bg-white border border-gray-200 text-gray-600 rounded-sm"
                 >
-                  {val.value}
-                </span>
+                  <div className="text-[12px] font-medium"> {val.value}</div>
+
+                  <Dialog
+                    triggerContent={
+                      <button
+                        onClick={() => setSelectedAttributeValue(val)}
+                        className="p-1.5 rounded-md text-gray-400 hover:text-[#4EA674] hover:bg-[#c2f8d9] transition-colors"
+                        title="Edit Attribute"
+                      >
+                        <FaEdit className="text-[14px]" />
+                      </button>
+                    }
+                  >
+                    {selectedAttributeValue && (
+                      <div className="max-h-[70vh] overflow-auto scrollbar-hide">
+                        <EditAttributeValueForm
+                          attributeValues={selectedAttributeValue}
+                          onSave={() => {
+                            setSelectedAttributeValue(val);
+                          }}
+                        />
+                      </div>
+                    )}
+                  </Dialog>
+                </div>
               ))
             ) : (
               <span className="text-xs italic text-gray-400">
