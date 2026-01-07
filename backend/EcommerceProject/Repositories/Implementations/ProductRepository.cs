@@ -329,5 +329,27 @@ namespace EcommerceProject.Repositories.Implementations
                 "SELECT AttributeValueId FROM ProductAttributeValues WHERE AttributeId = @attributeId AND Value = @value",
                 new { attributeId, value });
         }
+
+        public async Task<List<int>> GetRelatedProductIdsAsync(int categoryId, int excludeProductId, int take, CancellationToken ct)
+        {
+            using var conn = _factory.CreateConnection();
+
+            var ids = await conn.QueryAsync<int>(
+                new CommandDefinition(
+                    "spProducts_GetRelatedIdsByCategory",
+                    new
+                    {
+                        CategoryId = categoryId,
+                        ExcludeProductId = excludeProductId,
+                        Take = take
+                    },
+                    commandType: CommandType.StoredProcedure,
+                    cancellationToken: ct
+                )
+            );
+
+            return ids.ToList();
+        }
+
     }
 }

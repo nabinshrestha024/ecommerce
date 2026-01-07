@@ -29,9 +29,30 @@ namespace EcommerceProject.Services.Implementations
             return _repo.GetPagedAsync(categoryId, search, tagNames, minPrice, maxPrice, page, pageSize, onlyActive: true, ct);
         }
        
-        public Task<ProductDetailsDto?> GetDetailsAsync(string slugOrId, CancellationToken ct)
+        public async Task<ProductDetailsDto?> GetDetailsAsync(string slugOrId, CancellationToken ct)
         {
-            return _repo.GetBySlugOrIdAsync(slugOrId, onlyActive: true, ct);
+            var product = await _repo.GetBySlugOrIdAsync(slugOrId, onlyActive: true, ct);
+            if (product == null) return null;
+
+            var relatedIds = await _repo.GetRelatedProductIdsAsync(
+                product.CategoryId,
+                product.ProductId,
+                take: 5,
+                ct
+            );
+
+            foreach (var id in relatedIds)
+            {
+                var related = await _repo.GetBySlugOrIdAsync(id.ToString(), onlyActive: true, ct);
+                if (related != null)
+                {
+                    related.RelatedProducts.Clear();
+
+                    product.RelatedProducts.Add(related);
+                }
+            }
+
+            return product;
         }
         
         public Task<PagedResult<ProductListItemDto>> AdminGetProductsAsync(AdminProductFilterDto filter, PaginationDto pagination, CancellationToken ct)
