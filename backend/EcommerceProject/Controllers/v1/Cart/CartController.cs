@@ -1,12 +1,9 @@
-﻿using EcommerceProject.Models.DTOs.Cart;
+﻿
 using EcommerceProject.Models.DTOs.Orders;
 using EcommerceProject.Models.DTOs.ShoppingCart;
-using EcommerceProject.Models.Entities;
-using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
 using EcommerceProject.utils;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -104,6 +101,39 @@ namespace EcommerceProject.Controllers.v1.Cart
             });
         }
 
+        [HttpPost("checkout-selected-items")]
+        public async Task<IActionResult> CheckoutSelectedItems([FromBody] CheckoutsRequestDto request)
+        {
+            try
+            {
+                // Get user ID from JWT claims
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
 
+                if (userIdClaim == null)
+                {
+                    return Unauthorized(new { message = "User not found in token." });
+
+                }
+                    
+
+                int userId = int.Parse(userIdClaim.Value);
+
+                var result = await _cartService.CheckoutSelectedItemsAsync(userId, request);
+                return Ok(new
+                {
+                    message = "Order placed successfully",
+                    orderId = result.OrderId,
+                    totalAmount = result.TotalAmount
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
     }
 }

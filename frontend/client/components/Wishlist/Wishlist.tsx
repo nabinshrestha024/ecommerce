@@ -46,6 +46,7 @@ const sizes = [
 export const Wishlist = () => {
   const stockValue = 20;
   const [quantity, setQuantity] = useState(1);
+  const [open, setOpen] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState<
     Record<number, number | null>
   >({});
@@ -137,6 +138,8 @@ export const Wishlist = () => {
                   />
                 </div>
                 <Dialog
+                  open={open}
+                  onOpenChange={setOpen}
                   triggerText={
                     <Button
                       className="w-full px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px] hover:bg-[#fffcfc]"

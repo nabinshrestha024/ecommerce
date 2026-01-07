@@ -13,7 +13,7 @@ namespace EcommerceProject.Services.Implementations
             _repo = repo;
         }
 
-        public Task<int> CreateAttributeAsync(CreateAttributeDto dto, CancellationToken ct)
+        public Task<int> CreateAttributeAsync(UpsertAttributeDto dto, CancellationToken ct)
         {
             return _repo.CreateAttributeAsync(dto.Name.Trim(), dto.IsVariant, ct);
 
@@ -23,7 +23,21 @@ namespace EcommerceProject.Services.Implementations
         {
             return _repo.CreateValueAsync(attributeId, value.Trim(), ct);
         }
-            
+
+        public Task<bool> UpdateAttributeAsync( int attributeId, UpsertAttributeDto dto,CancellationToken ct)
+        {
+            return _repo.UpdateAttributeAsync(
+                attributeId,
+                dto.Name.Trim(),
+                dto.IsVariant,
+                ct
+            );
+        }
+
+        public Task<bool> UpdateValueAsync(int attributeValueId, string value,CancellationToken ct)
+        {
+            return _repo.UpdateValueAsync(attributeValueId, value.Trim(), ct);
+        }
 
         public Task<List<ProductAttributeDto>> GetAllAsync(CancellationToken ct)
         {

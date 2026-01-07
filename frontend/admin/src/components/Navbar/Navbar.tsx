@@ -22,13 +22,15 @@ export const Navbar = () => {
               ? "Product Management"
               : pathname === "/attribute-management"
                 ? "Attribute Management"
-                : pathname === "/transaction"
-                  ? "Transaction"
-                  : pathname === "/profile"
-                    ? "Profile"
-                    : pathname === "/tag-management"
-                      ? "Tag Management"
-                      : "";
+                : pathname === "/discount"
+                  ? "Discount"
+                  : pathname === "/transaction"
+                    ? "Transaction"
+                    : pathname === "/profile"
+                      ? "Profile"
+                      : pathname === "/tag-management"
+                        ? "Tag Management"
+                        : "";
 
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     const stored = localStorage.getItem("darkMode");

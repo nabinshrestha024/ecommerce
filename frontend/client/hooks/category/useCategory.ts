@@ -26,7 +26,5 @@ export const useCategory = () => {
     queryKey: ["catgeory"],
     queryFn: CategoryProduct,
   });
-
-  console.log("Catgeory: ", data);
   return { data, isLoading, isError, refetch };
 };

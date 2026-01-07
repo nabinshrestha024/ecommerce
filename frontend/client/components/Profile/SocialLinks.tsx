@@ -40,6 +40,7 @@ export const SocialLinks = ({ data }: { data: SocialLinkType }) => {
     reset,
     formState: { errors },
   } = useForm({ resolver: zodResolver(SocialLinksSchema), mode: "all" });
+
   const facebook =
     data?.links?.find((v) => v.platform === "Facebook")?.profileLinkUrl ?? "";
   const instagram =

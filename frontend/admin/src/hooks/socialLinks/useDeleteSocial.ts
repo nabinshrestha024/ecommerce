@@ -11,6 +11,7 @@ export const useDeleteSocial = () => {
     mutationFn: deleteSocial,
 
     onSuccess: () => {
+      toast.success("Social link removed successfull!");
       queryClient.invalidateQueries({ queryKey: ["socialData"] });
     },
 

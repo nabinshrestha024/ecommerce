@@ -1,4 +1,4 @@
-﻿using EcommerceProject.Models.DTOs.Cart;
+﻿
 using EcommerceProject.Models.DTOs.ShoppingCart;
 
 namespace EcommerceProject.Services.Interfaces
@@ -12,6 +12,8 @@ namespace EcommerceProject.Services.Interfaces
 
         Task AddToCartAsync(int userId, int variantId, int quantity, CancellationToken ct = default);
         Task<int> CheckoutAsync(int userId);
+
+        Task<CheckoutsResponseDto> CheckoutSelectedItemsAsync(int userId, CheckoutsRequestDto request);
 
     }
 }
