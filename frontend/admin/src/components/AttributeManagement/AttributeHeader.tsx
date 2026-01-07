@@ -6,7 +6,7 @@ import { AddAttributeForm } from "./AddAttributeForm";
 
 export const AttributeHeader = () => {
   return (
-    <div className="flex justify-between mb-8 p-3 lg:p-6 items-center">
+    <div className="flex justify-between p-3 lg:p-6 items-center">
       <div className="text-[18px] leading-6 font-bold text-[#23272E]">
         Discover
       </div>

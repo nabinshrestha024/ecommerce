@@ -1,5 +1,6 @@
 "use client";
 
+import type { ProductData } from "@/components/Category/CategoryTable";
 import { ProductTable } from "@/lib/product/getProduct";
 import { useQuery } from "@tanstack/react-query";
 

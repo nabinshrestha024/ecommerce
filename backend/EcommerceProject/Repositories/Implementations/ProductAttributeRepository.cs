@@ -42,6 +42,46 @@ namespace EcommerceProject.Repositories.Implementations
                 )
             );
         }
+        public async Task<bool> UpdateAttributeAsync(int attributeId, string name, bool isVariant, CancellationToken ct)
+        {
+            using var conn = _factory.CreateConnection();
+
+            var affected = await conn.ExecuteScalarAsync<int>(
+                new CommandDefinition(
+                    "spProductAttribute_Update",
+                    new
+                    {
+                        AttributeId = attributeId,
+                        Name = name,
+                        IsVariant = isVariant
+                    },
+                    commandType: CommandType.StoredProcedure,
+                    cancellationToken: ct
+                )
+            );
+
+            return affected > 0;
+        }
+
+        public async Task<bool> UpdateValueAsync(int attributeValueId, string value, CancellationToken ct)
+        {
+            using var conn = _factory.CreateConnection();
+
+            var affected = await conn.ExecuteScalarAsync<int>(
+                new CommandDefinition(
+                    "spProductAttributeValue_Update",
+                    new
+                    {
+                        AttributeValueId = attributeValueId,
+                        Value = value
+                    },
+                    commandType: CommandType.StoredProcedure,
+                    cancellationToken: ct
+                )
+            );
+
+            return affected > 0;
+        }
 
         public async Task<List<ProductAttributeDto>> GetAllAsync(CancellationToken ct)
         {

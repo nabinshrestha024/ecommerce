@@ -13,6 +13,8 @@ import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { PublicRoute } from "./routes/PublicRoute";
 import { AttributeManagement } from "./screens/attribute-management";
 import { ProductVariant } from "./screens/product-variant";
+import { Discount } from "./screens/discount";
+import { TagManagement } from "./components/Tags/TagManagement";
 
 export const App = () => {
   return (
@@ -35,9 +37,11 @@ export const App = () => {
               path="/attribute-management"
               element={<AttributeManagement />}
             />
+            <Route path="/discount" element={<Discount />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/vendor" element={<Vendor />} />
             <Route path="/product-variant/:id" element={<ProductVariant />} />
+            <Route path="/tag-management" element={<TagManagement />} />
           </Route>
         </Route>
       </Routes>

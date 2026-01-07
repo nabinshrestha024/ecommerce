@@ -6,7 +6,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { MdAddCircleOutline, MdDelete } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaTags } from "react-icons/fa";
 import { Table } from "../Table/Table";
 import { Tabs } from "../Tabs/Tabs";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -20,6 +20,7 @@ import { useProduct } from "@/hooks/product/useProduct";
 import { useDeleteProduct } from "@/hooks/product/useDeleteProduct";
 import { useSearch } from "@/hooks/product/useSearch";
 import { useDebounce } from "@/hooks/search/useDebounce";
+import { TagForm } from "./TagForm";
 
 export type ProductData = {
   productId: number;
@@ -125,6 +126,13 @@ export const CategoryTable = () => {
       header: "Actions",
       cell: (info) => (
         <div className="flex gap-2 justify-center items-center">
+          <Dialog
+            triggerContent={
+              <FaTags className="text-[#6A717F] text-[20px] cursor-pointer" />
+            }
+          >
+            <TagForm id={info.row.original.productId} />
+          </Dialog>
           <Dialog
             triggerContent={
               <FaEdit
