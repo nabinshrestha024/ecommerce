@@ -21,4 +21,5 @@ export const endpoint = {
   SOCIALLINKS: "profile/social-links",
   ATTRIBUTES: "admin/attributes",
   TAGS: "admin/tags",
+  PRODUCTTAGS: "admin/products",
 };
