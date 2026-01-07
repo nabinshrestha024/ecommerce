@@ -19,7 +19,7 @@ namespace EcommerceProject.Controllers.v1.ProductAttribute
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateAttributeDto dto, CancellationToken ct)
+        public async Task<IActionResult> Create(UpsertAttributeDto dto, CancellationToken ct)
         {
             var id = await _service.CreateAttributeAsync(dto, ct);
             return Ok(new { attributeId = id });
@@ -28,7 +28,7 @@ namespace EcommerceProject.Controllers.v1.ProductAttribute
         [HttpPost("{attributeId:int}/values")]
         public async Task<IActionResult> CreateValue(
             int attributeId,
-            CreateAttributeValueDto dto,
+            UpsertAttributeValueDto dto,
             CancellationToken ct)
         {
             var id = await _service.CreateValueAsync(attributeId, dto.Value, ct);
@@ -40,5 +40,27 @@ namespace EcommerceProject.Controllers.v1.ProductAttribute
         {
             return Ok(await _service.GetAllAsync(ct));
         }
+
+        [HttpPut("{attributeId:int}")]
+        public async Task<IActionResult> UpdateAttribute(int attributeId, UpsertAttributeDto dto, CancellationToken ct)
+        {
+            var updated = await _service.UpdateAttributeAsync(attributeId, dto, ct);
+            if (!updated) return NotFound();
+
+            return Ok("Attribute name updated.");
+        }
+
+        [HttpPut("values/{attributeValueId:int}")]
+        public async Task<IActionResult> UpdateAttributeValue(
+            int attributeValueId,
+            UpsertAttributeValueDto dto,
+            CancellationToken ct)
+        {
+            var updated = await _service.UpdateValueAsync(attributeValueId, dto.Value, ct);
+            if (!updated) return NotFound();
+
+            return Ok("Attribute Value Updated.");
+        }
+
     }
 }
