@@ -27,14 +27,8 @@ export const ProductManagement = () => {
     formData.append("name", data.name);
     formData.append("description", data.description || "");
     formData.append("shortDescription", data.shortDescription || "");
-    if (data.productPrice != null) {
-      formData.append("price", String(data.productPrice));
-    }
     if (data.categoryId) {
       formData.append("categoryId", String(data.categoryId));
-    }
-    if (data.stockQuantity != null) {
-      formData.append("stockQuantity", String(data.stockQuantity));
     }
     if (typeof data.isActive === "boolean") {
       formData.append("isActive", String(data.isActive ? "true" : "false"));
@@ -52,7 +46,9 @@ export const ProductManagement = () => {
     }
 
     if (data.attributes && data.attributes.length > 0) {
-      formData.append("RequiredAttributeNames", data.attributes.join(","));
+      data.attributes.forEach((attr) => {
+        formData.append("RequiredAttributeNames", attr);
+      });
     }
 
     mutate(formData, {
