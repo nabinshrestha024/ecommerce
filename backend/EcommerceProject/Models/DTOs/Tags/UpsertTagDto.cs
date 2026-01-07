@@ -1,6 +1,6 @@
 ﻿namespace EcommerceProject.Models.DTOs.Tags
 {
-    public class CreateTagDto
+    public class UpsertTagDto
     {
         public string Name { get; set; } = default!;
     }

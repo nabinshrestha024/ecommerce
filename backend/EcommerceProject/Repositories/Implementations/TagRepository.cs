@@ -59,6 +59,19 @@ namespace EcommerceProject.Repositories.Implementations
                 commandType: CommandType.StoredProcedure
             );
         }
+        public async Task<bool> UpdateAsync(int tagId, string name, CancellationToken ct)
+        {
+            using var conn = _factory.CreateConnection();
+
+            var affected = await conn.ExecuteScalarAsync<int>(
+                "spTags_Update",
+                new { TagId = tagId, Name = name.Trim() },
+                commandType: CommandType.StoredProcedure
+            );
+
+            return affected > 0;
+        }
+
 
         public async Task<List<TagDto>> GetByProductIdAsync(int productId, CancellationToken ct)
         {

@@ -13,7 +13,7 @@ namespace EcommerceProject.Services.Implementations
             _repo = repo;
         }
 
-        public Task<int> CreateAsync(CreateTagDto dto, CancellationToken ct)
+        public Task<int> CreateAsync(UpsertTagDto dto, CancellationToken ct)
         {
             return _repo.CreateAsync(dto.Name, ct);
         }
@@ -33,7 +33,11 @@ namespace EcommerceProject.Services.Implementations
         {
             return _repo.GetByProductIdAsync(productId, ct);
         }
- 
+
+        public Task<bool> UpdateAsync(int tagId, UpsertTagDto dto, CancellationToken ct)
+        {
+            return _repo.UpdateAsync(tagId, dto.Name, ct);
+        }
 
         public Task RemoveFromProductAsync(int productId, int tagId, CancellationToken ct)
         {

@@ -9,6 +9,8 @@ namespace EcommerceProject.Repositories.Interfaces
 
         Task AddToProductAsync(int productId, int tagId, CancellationToken ct);
         Task RemoveFromProductAsync(int productId, int tagId, CancellationToken ct);
+        Task<bool> UpdateAsync(int tagId, string name, CancellationToken ct);
+
 
         Task<List<TagDto>> GetByProductIdAsync(int productId, CancellationToken ct);
     }
