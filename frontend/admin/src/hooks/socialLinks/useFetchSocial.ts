@@ -3,15 +3,19 @@
 import { fetchSocial } from "@/lib/socialLinks/fetchSocial";
 import { useQuery } from "@tanstack/react-query";
 
+type SocialRespone = {
+  links: Social[];
+};
+
 interface Social {
   socialLinkId: number;
-  platform: "Instagram" | "Facebook" | "Twitter";
+  platform: string;
   profileLinkUrl: string;
   createdAt: string;
 }
 
 export const useFetchSocial = () => {
-  const { data, isLoading, isError, refetch } = useQuery<Social[]>({
+  const { data, isLoading, isError, refetch } = useQuery<SocialRespone>({
     queryKey: ["socialData"],
     queryFn: fetchSocial,
   });

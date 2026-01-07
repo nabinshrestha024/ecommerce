@@ -1,10 +1,9 @@
 import { axiosInstance } from "../axiosInstance";
 import { endpoint } from "../endpoint";
+
 interface Social {
-  socialLinkId: number;
-  platform: "Instagram" | "Facebook" | "Twitter";
+  platform: string;
   profileLinkUrl: string;
-  createdAt: string;
 }
 
 export const postSocial = async ({ socialData }: { socialData: Social }) => {

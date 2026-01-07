@@ -1,67 +1,66 @@
 import { useGetProfile } from "@/hooks/profile/useGetProfile";
 import { Card } from "../Card/Card";
-import { CirclePlus } from "lucide-react";
+import { Save, SquarePen, Trash } from "lucide-react";
 import { Copy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Input } from "../Input/Input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RxCross1 } from "react-icons/rx";
-import { FiMinusCircle } from "react-icons/fi";
 import {
   SocialLinkSchema,
   type SocialLinkType,
 } from "./schemas/SocialLink.zod";
-import { Button } from "@/ui/button";
-import { usePostSocial } from "@/hooks/socialLinks/usePostSocial";
 import { toast } from "sonner";
 import { useFetchSocial } from "@/hooks/socialLinks/useFetchSocial";
 import { useEditSocial } from "@/hooks/socialLinks/useEditSocial";
 import { useDeleteSocial } from "@/hooks/socialLinks/useDeleteSocial";
-interface SocialLink {
-  socialLinkId: number;
+import { usePostSocial } from "@/hooks/socialLinks/usePostSocial";
+import { socialIconMap } from "./socialIconMap.import";
+import type { Social } from "@/lib/socialLinks/editSocial";
+
+export interface SocialLink {
   platform: "Instagram" | "Facebook" | "Twitter";
   profileLinkUrl: string;
-  createdAt: string;
 }
 export const ShortProfile = () => {
   const {
     register,
     handleSubmit,
     reset,
+    getValues,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(SocialLinkSchema),
     mode: "onChange",
   });
-  const [remove, setRemove] = useState("");
   const profile = useGetProfile();
   const [socialLink, setSocialLink] = useState<boolean>(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   const handleSociallink = () => {
     setSocialLink(!socialLink);
   };
 
   const postSocial = usePostSocial();
-  const getSocial = useFetchSocial();
+  const { data, refetch } = useFetchSocial();
   const editSocial = useEditSocial();
   const deleteSocial = useDeleteSocial();
 
   const facebook =
-    getSocial.data?.find((v) => v.platform === "Facebook")?.profileLinkUrl ??
-    "";
+    data?.links.find((v) => v.platform === "Facebook")?.profileLinkUrl ?? "";
   const instagram =
-    getSocial.data?.find((v) => v.platform === "Instagram")?.profileLinkUrl ??
-    "";
+    data?.links.find((v) => v.platform === "Instagram")?.profileLinkUrl ?? "";
   const twitter =
-    getSocial.data?.find((v) => v.platform === "Twitter")?.profileLinkUrl ?? "";
+    data?.links.find((v) => v.platform === "Twitter")?.profileLinkUrl ?? "";
 
   const facebookId =
-    getSocial.data?.find((v) => v.platform === "Facebook")?.socialLinkId ?? "";
+    data?.links.find((v) => v.platform === "Facebook")?.socialLinkId ?? "";
   const instagramId =
-    getSocial.data?.find((v) => v.platform === "Instagram")?.socialLinkId ?? "";
+    data?.links.find((v) => v.platform === "Instagram")?.socialLinkId ?? "";
   const twitterId =
-    getSocial.data?.find((v) => v.platform === "Twitter")?.socialLinkId ?? "";
+    data?.links.find((v) => v.platform === "Twitter")?.socialLinkId ?? "";
 
   useEffect(() => {
     reset({
@@ -73,24 +72,18 @@ export const ShortProfile = () => {
 
   const onSubmit = async (data: SocialLinkType) => {
     const facebookData: SocialLink = {
-      socialLinkId: 1,
       platform: "Facebook",
       profileLinkUrl: data.facebook ?? "",
-      createdAt: new Date().toISOString(),
     };
 
     const instagramData: SocialLink = {
-      socialLinkId: 2,
       platform: "Instagram",
       profileLinkUrl: data.instagram ?? "",
-      createdAt: new Date().toISOString(),
     };
 
     const twitterData: SocialLink = {
-      socialLinkId: 3,
       platform: "Twitter",
       profileLinkUrl: data.twitter ?? "",
-      createdAt: new Date().toISOString(),
     };
 
     await Promise.all([
@@ -114,13 +107,51 @@ export const ShortProfile = () => {
         : postSocial.mutateAsync({ socialData: twitterData }),
     ]);
     toast.success("Social Links Updated Successfully");
-    getSocial.refetch();
+    refetch();
   };
 
-  const socialIconMap: Record<string, string> = {
-    Facebook: "profile/facebook.png",
-    Instagram: "profile/instagram.png",
-    Twitter: "profile/icons8-x.svg",
+  const handleEdit = (socialLinkId: number, socialData: Social) => {
+    setEditingId(socialLinkId);
+    setValue(
+      socialData.platform.toLowerCase() as "instagram" | "facebook" | "twitter",
+      socialData.profileLinkUrl ?? "",
+    );
+  };
+
+  const handleSave = async (socialLinkId: number, platform: string) => {
+    const field = platform.toLowerCase() as
+      | "instagram"
+      | "facebook"
+      | "twitter";
+    const url = (getValues(field) ?? "").trim();
+    const payload: SocialLink = {
+      platform: platform as SocialLink["platform"],
+      profileLinkUrl: url,
+    };
+
+    try {
+      if (socialLinkId) {
+        await editSocial.mutateAsync({ socialLinkId, socialData: payload });
+      } else {
+        await postSocial.mutateAsync({ socialData: payload });
+      }
+      toast.success("Social link saved");
+      setEditingId(null);
+      refetch();
+    } catch {
+      toast.error("Failed to save social link");
+    }
+  };
+
+  const handleDelete = async (socialLinkId: number, platform: string) => {
+    await deleteSocial.mutateAsync(socialLinkId);
+
+    reset((prev) => ({
+      ...prev,
+      [platform.toLowerCase()]: "",
+    }));
+
+    refetch();
   };
 
   return (
@@ -129,17 +160,10 @@ export const ShortProfile = () => {
       cardClassName="p-0 border-none shadow-none rounded-xl"
     >
       <div className="flex flex-col">
-        <div className="font-bold text-lg sm:text-[22px] leading-tight sm:leading-[26px] tracking-[0%]">
-          Profile
-        </div>
         <div className="flex flex-col items-center">
           <div className="h-20 w-20 sm:h-24 sm:w-24 flex justify-center items-center rounded-full bg-gray-200 shadow-md mt-1 mb-2">
             <img
-              src={
-                profile.data?.profileImageUrl
-                  ? `http://192.168.80.229/${profile.data.profileImageUrl}`
-                  : "profile.webp"
-              }
+              src={profile.data?.profileImageUrl}
               alt="Profile"
               className="h-full w-full rounded-full object-cover border-2 border-white"
             />
@@ -157,38 +181,33 @@ export const ShortProfile = () => {
             />
           </div>
           <div className="flex justify-center items-center flex-col gap-4 mt-4 sm:mt-5 text-xs sm:text-[14px]">
-            Linked with Social Media
-            <div className="flex justify-center gap-4">
-              {getSocial.data?.map((social, index) => {
+            <div className="flex justify-center gap-6">
+              {data?.links.map((social) => {
                 const icon = socialIconMap[social.platform];
-                if (!icon) return null;
-
+                const hasUrl = Boolean(social.profileLinkUrl);
                 return (
-                  <div
-                    key={social.socialLinkId ?? index}
-                    className="relative"
-                    onMouseOver={() => setRemove(social.platform)}
-                    onMouseLeave={() => setRemove("")}
-                  >
-                    <a
-                      href={social.profileLinkUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <div className="h-10 w-10 rounded-full">
+                  <div key={social.socialLinkId} className="relative">
+                    {hasUrl ? (
+                      <a
+                        href={social.profileLinkUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <div className="h-8 w-8 rounded-full">
+                          <img
+                            src={icon}
+                            alt={social.platform}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </a>
+                    ) : (
+                      <div className="h-8 w-8 rounded-full opacity-50 cursor-not-allowed">
                         <img
                           src={icon}
                           alt={social.platform}
                           className="w-full h-full object-cover"
                         />
-                      </div>
-                    </a>
-                    {remove === social.platform && (
-                      <div
-                        className=" absolute -top-3.5 -right-2"
-                        onClick={() => deleteSocial.mutate(social.socialLinkId)}
-                      >
-                        <FiMinusCircle className="text-[16px] text-red-500 font-bold" />
                       </div>
                     )}
                   </div>
@@ -199,9 +218,10 @@ export const ShortProfile = () => {
               className={`flex justify-center items-center rounded-md border gap-3 px-3 py-2 mt-2 border-[#E5E7EB] hover:bg-gray-50 w-full sm:w-auto ${socialLink && "hidden"}`}
               onClick={handleSociallink}
             >
-              <CirclePlus size={16} />
-              Social Media
+              <SquarePen size={16} />
+              Update social links
             </button>
+
             {socialLink && (
               <form
                 onSubmit={handleSubmit(onSubmit)}
@@ -216,64 +236,71 @@ export const ShortProfile = () => {
                 >
                   <RxCross1 className="text-[16px] font-bold" />
                 </div>
-                <div className="grid grid-cols-4 gap-4 mt-5">
-                  <label className="col-span-1 font-medium text-gray-700">
-                    Instagram
-                  </label>
-                  <div className="col-span-3">
-                    <Input
-                      type="text"
-                      placeholder=""
-                      {...register("instagram")}
-                      className="w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0"
-                    />
-                    {errors.instagram && (
-                      <p className="text-[12px] text-red-500 ">
-                        {errors.instagram.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="grid grid-cols-4 gap-4 mt-5">
-                  <label className="col-span-1 font-medium text-gray-700">
-                    Facebook
-                  </label>
-                  <div className="col-span-3">
-                    <Input
-                      type="text"
-                      placeholder=""
-                      {...register("facebook")}
-                      className="w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0"
-                    />
-                    {errors.facebook && (
-                      <p className="text-[12px] text-red-500 ">
-                        {errors.facebook.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="grid grid-cols-4 gap-4 mt-5">
-                  <label className="col-span-1 font-medium text-gray-700">
-                    Twitter
-                  </label>
-                  <div className="col-span-3">
-                    <Input
-                      type="text"
-                      placeholder=""
-                      {...register("twitter")}
-                      className="w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0"
-                    />
-                    {errors.twitter && (
-                      <p className="text-[12px] text-red-500 ">
-                        {errors.twitter.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
+                {data?.links.map((val) => (
+                  <div
+                    key={val.socialLinkId}
+                    className="flex justify-between items-start gap-4 mt-5"
+                  >
+                    <label className="font-medium text-gray-700 w-20">
+                      {val.platform}
+                    </label>
+                    <div className="">
+                      <Input
+                        type="text"
+                        disabled={editingId !== val.socialLinkId}
+                        {...register(
+                          val.platform.toLowerCase() as
+                            | "instagram"
+                            | "facebook"
+                            | "twitter",
+                        )}
+                        className={`w-full h-7 px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0 transition-all ${
+                          editingId !== val.socialLinkId
+                            ? "bg-gray-50 cursor-not-allowed"
+                            : "bg-white"
+                        }`}
+                        placeholder=""
+                      />
+                      {errors.instagram && (
+                        <p className="text-[12px] text-red-500 ">
+                          {errors.instagram.message}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex gap-3">
+                      {editingId === val.socialLinkId ? (
+                        <Save
+                          size={20}
+                          className="hover:cursor-pointer"
+                          onClick={() =>
+                            handleSave(val.socialLinkId, val.platform)
+                          }
+                        />
+                      ) : (
+                        <SquarePen
+                          size={20}
+                          onClick={() =>
+                            handleEdit(val.socialLinkId, {
+                              platform: val.platform,
+                              profileLinkUrl: val.profileLinkUrl,
+                            })
+                          }
+                          className="hover:cursor-pointer"
+                          color="grey"
+                        />
+                      )}
 
-                <Button variant="default" type="submit" className="mt-2">
-                  Update Social Link
-                </Button>
+                      <Trash
+                        size={20}
+                        onClick={() =>
+                          handleDelete(val.socialLinkId, val.platform)
+                        }
+                        className="hover:cursor-pointer"
+                        color="red"
+                      />
+                    </div>
+                  </div>
+                ))}
               </form>
             )}
           </div>
