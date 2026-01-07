@@ -24,4 +24,8 @@ export const endpoint = {
   DISCOUNT: "admin/discounts",
   TAGS: "admin/tags",
   PRODUCTTAGS: "admin/products",
+  FETCHWEBSITEREVIEW: "admin/reviews/website",
+  DELETEWEBSITEREVIEW: "admin/reviews/websitedelete",
+  FETCHPRODUCTREVIEW: "admin/reviews/product",
+  DELETEPRODUCTREVIEW: "admin/reviews/productDelete",
 };

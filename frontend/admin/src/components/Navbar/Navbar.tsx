@@ -1,4 +1,3 @@
-import { FaRegBell } from "react-icons/fa";
 import { Input } from "@/ui/input";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -30,7 +29,11 @@ export const Navbar = () => {
                       ? "Profile"
                       : pathname === "/tag-management"
                         ? "Tag Management"
-                        : "";
+                        : pathname === "/product-reviews"
+                          ? "Product Reviews"
+                          : pathname === "/website-reviews"
+                            ? "Website Reviews"
+                            : "";
 
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     const stored = localStorage.getItem("darkMode");
@@ -95,10 +98,6 @@ export const Navbar = () => {
               ))}
             </div>
           )}
-        </div>
-        <div className="p-2 hover:bg-gray-100 rounded-full relative">
-          <FaRegBell className="text-xl text-gray-600" />
-          <div className="absolute w-2 h-2 bg-red-500 rounded-full top-[9px] right-[9px]"></div>
         </div>
         <div
           className=" h-10 w-10 flex items-center justify-center text-2xl bg-(--bg) text-(--text)"
