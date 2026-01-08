@@ -102,6 +102,8 @@ namespace EcommerceProject.Repositories.Implementations
         );
             return attributes;
         }
+
+
     }
 
 }
