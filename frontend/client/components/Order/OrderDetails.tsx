@@ -79,6 +79,16 @@ export const OrderDetails = ({
                     {val.productDescription || "No description available"}
                   </p>
                 </div>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {val?.attributes?.map((attr, ind) => (
+                    <span
+                      key={ind}
+                      className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded-md font-medium"
+                    >
+                      {attr.name}: {attr.value}
+                    </span>
+                  ))}
+                </div>
                 <div className="text-right">
                   <p className="text-sm font-bold text-gray-900">
                     Rs. {val.unitPrice.toLocaleString()}

@@ -21,7 +21,13 @@ export type OrderData = {
   paymentStatus: string;
   shippingName: string | null;
   shippingPhone: string;
+  attributes: AttributeType[];
 };
+
+export interface AttributeType {
+  name: string;
+  value: string;
+}
 export type OrderResponse = {
   items: OrderData[];
   page: number;
