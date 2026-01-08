@@ -9,45 +9,14 @@ import {
 import { useState } from "react";
 import { Table } from "../Table/Table";
 import { useFetchOrder, type OrderData } from "@/hooks/order/useFetchOrder";
-
-const recentProducts = [
-  {
-    image: "/profile.webp",
-    name: "Man",
-    id: "#MAN-2025",
-    price: "$500",
-  },
-  {
-    image: "/profile.webp",
-    name: "Man",
-    id: "#MAN-2025",
-    price: "$500",
-  },
-  {
-    image: "/profile.webp",
-    name: "Man",
-    id: "#MAN-2025",
-    price: "$500",
-  },
-  {
-    image: "/profile.webp",
-    name: "Man",
-    id: "#MAN-2025",
-    price: "$500",
-  },
-  {
-    image: "/profile.webp",
-    name: "Man",
-    id: "#MAN-2025",
-    price: "$500",
-  },
-];
+import { useFetchProduct } from "@/hooks/product/useFetchProducts";
 
 export const DashboardTransaction = () => {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
+  const { data } = useFetchProduct();
   const orders = useFetchOrder(pagination.pageIndex + 1);
   const columnHelper = createColumnHelper<OrderData>();
   const columns = [
@@ -95,7 +64,7 @@ export const DashboardTransaction = () => {
     onPaginationChange: setPagination,
   });
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[80%_20%] gap-5 pr-5">
+    <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-5 pr-5">
       <Card>
         <div>
           <div className="flex justify-between">
@@ -112,21 +81,25 @@ export const DashboardTransaction = () => {
         <div className="space-y-5">
           <div className="text-xl font-semibold">Recent Products</div>
           <div className="flex flex-col gap-4">
-            {recentProducts.map((val, index) => {
+            {data?.items?.map((val, index) => {
               if (index < 5) {
                 return (
-                  <div className="grid grid-cols-[1fr_3fr_1fr] gap-2 items-center">
-                    <div className="h-10 w-10 ">
-                      <img
-                        src={val.image}
-                        className="h-full w-full object-cover"
-                      />
+                  <div className="grid grid-cols-[2fr_1fr] gap-0.5 items-start">
+                    <div className="flex gap-5">
+                      <div className="h-12 w-12 ">
+                        <img
+                          src={val.primaryImageUrl}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <div className="text-sm font-semibold">{val.name}</div>
+                        <div className="text-xs text-gray-500 line-clamp-1">
+                          {val.shortDescription}
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-sm font-semibold">{val.name}</div>
-                      <div className="text-xs text-gray-500 ">{val.id}</div>
-                    </div>
-                    <div className="text-lg font-semibold">{val.price}</div>
+                    <div className="text-md font-semibold">Rs. {val.price}</div>
                   </div>
                 );
               }

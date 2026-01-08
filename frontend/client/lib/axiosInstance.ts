@@ -3,7 +3,7 @@ export const axiosInstance = axios.create({
   // baseURL: "http://192.168.80.239/v1/",
   // baseURL: "http://192.168.80.129:5115/v1",
   // baseURL: "http://192.168.80.164:5009/v1",
-  baseURL: "http://192.168.80.240/v1/",
+  baseURL: "http://192.168.80.242/v1/",
 
   timeout: 10000,
 });
