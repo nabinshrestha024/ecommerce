@@ -9,12 +9,24 @@ export const Category = () => {
   const searchParams = useSearchParams();
   const activeCategoryId = searchParams.get("categoryId");
 
+  const buildCategoryUrl = (categoryId: number | null) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (categoryId) {
+      params.set("categoryId", categoryId.toString());
+    } else {
+      params.delete("categoryId");
+    }
+
+    return `/product?${params.toString()}`;
+  };
+
   return (
     <div>
       <div className="text-xl font-semibold underline mb-5">Categories</div>
       <div className="flex md:flex-col gap-3 justify-center py-5 border-b">
         <Link
-          href="/product"
+          href={buildCategoryUrl(null)}
           className={`font-semibold transition-colors ${
             !activeCategoryId ? "text-green-700" : ""
           }`}
@@ -30,11 +42,7 @@ export const Category = () => {
 
           return (
             <Link
-              href={
-                val.categoryId
-                  ? `/product/?categoryId=${val.categoryId}`
-                  : "/product"
-              }
+              href={buildCategoryUrl(val.categoryId)}
               key={val.name}
               className={`font-semibold relative transition-colors duration-300 ${
                 isActive ? "text-green-700" : ""
