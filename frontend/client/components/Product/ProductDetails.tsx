@@ -27,32 +27,8 @@ export interface VariantAttributes {
   values: string[];
 }
 
-interface ImageType {
-  productImageId: number;
-  imageUrl: string;
-  productId: number;
-  isPrimary: boolean;
-  sortOrder: number;
-}
-
-interface Product {
-  productId: number;
-  name: string;
-  slug: string;
-  shortDescription: string | null;
-  price: number;
-  stockQuantity: number;
-  primaryImageUrl: string;
-  isActive: boolean;
-  categoryId: number;
-  sku: string;
-  variants?: Variant[];
-  availableAttributes?: VariantAttributes[];
-  images: ImageType[];
-}
-
 const getDefaultSelectedVariants = (
-  variants?: Variant[],
+  variants?: Variant[] | undefined,
 ): Record<string, string | undefined> => {
   const defaultVariant = variants?.find((v) => v.isDefault);
   return defaultVariant?.attributes ?? {};
@@ -64,7 +40,7 @@ const ProductDetails = () => {
   const addToCart = useAddToCart();
   const { token } = useAuth();
 
-  const defaultImage = productItems.data?.images?.[0]?.imageUrl;
+  const defaultImage = productItems.data?.images[0]?.imageUrl;
   const [images, setImages] = useState<string | undefined>(defaultImage);
   const displayedImage = images ?? defaultImage;
 
@@ -72,9 +48,6 @@ const ProductDetails = () => {
   const [selectedVariants, setSelectedVariants] = useState<
     Record<string, string | undefined>
   >(() => getDefaultSelectedVariants(productItems.data?.variants));
-
-  const currentCategoryId = productItems.data?.categoryId ?? 0;
-  const prod = useProductCategory(currentCategoryId);
 
   if (
     productItems.data?.variants &&
@@ -117,13 +90,13 @@ const ProductDetails = () => {
   };
 
   const isAvailable = (
-    variants: Variant[],
+    variants: Variant[] | undefined,
     selected: Record<string, string | undefined>,
     attrName: string,
     value: string,
   ) => {
     const temp = { ...selected, [attrName]: value };
-    return variants.some((v) =>
+    return variants?.some((v) =>
       Object.entries(temp).every(
         ([key, val]) => !val || v.attributes[key] === val,
       ),
@@ -288,14 +261,12 @@ const ProductDetails = () => {
         </div>
       </Card>
 
-      <div>Related Products</div>
+      <div className="font-bold text-xl">Related Products</div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        {(prod.data?.items || [])
-          .filter((p: Product) => p.productId !== productItems.data?.productId)
-          .slice(0, 5)
-          .map((product: Product) => (
-            <ProductCard key={product.productId} product={product} />
-          ))}
+        {productItems?.data?.relatedProducts.map(
+          (val, index) =>
+            index < 5 && <ProductCard key={val.productId} product={val} />,
+        )}
       </div>
     </div>
   );

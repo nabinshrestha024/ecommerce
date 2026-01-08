@@ -1,7 +1,12 @@
+"use client";
+
 import Image from "next/image";
-import { SecondCardContent } from "../constants/SecondCardContent";
 import { Card } from "@/components/Card/Card";
+import { useProduct } from "@/hooks/product/useProduct";
+import { Skeleton } from "@/components/Skeleton/Skeleton";
 export const SecondCard = () => {
+  const { data, isLoading, isError } = useProduct();
+
   return (
     <Card
       rootClassName="p-0 shadow-none border-none"
@@ -12,21 +17,36 @@ export const SecondCard = () => {
           Gaming accessories
         </h2>
         <div className="grid grid-cols-2 gap-4 px-2">
-          {SecondCardContent.map((ad, index) => (
-            <div
-              key={ad.id}
-              className="overflow-hidden flex items-center justify-center  rounded-lg shadow-md  hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-            >
-              <div className="relative h-25 w-[81px] ">
-                <Image
-                  src={ad.src}
-                  alt={ad.alt}
-                  fill
-                  className="max-w-full  object-contain rounded-lg hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-            </div>
-          ))}
+          {isLoading || isError
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="overflow-hidden flex items-center justify-center rounded-lg shadow-md transition-shadow duration-300"
+                >
+                  <Skeleton className="w-[200px] h-[90px]" />
+                </div>
+              ))
+            : data?.items
+                ?.filter((item) => item.categoryName === "Electronics")
+                .map(
+                  (item, index) =>
+                    index < 4 && (
+                      <div
+                        key={item.productId}
+                        className="overflow-hidden flex items-center justify-center rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+                        onClick={() => console.log("accessories", item.name)}
+                      >
+                        <div className="relative h-25 w-[81px]">
+                          <Image
+                            src={item.primaryImageUrl}
+                            alt={item.name}
+                            fill
+                            className="max-w-full object-contain rounded-lg hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
+                      </div>
+                    ),
+                )}
         </div>
       </div>
     </Card>
