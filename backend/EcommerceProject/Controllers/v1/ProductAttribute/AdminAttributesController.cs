@@ -31,7 +31,7 @@ namespace EcommerceProject.Controllers.v1.ProductAttribute
             UpsertAttributeValueDto dto,
             CancellationToken ct)
         {
-            var id = await _service.CreateValueAsync(attributeId, dto.Value, ct);
+            var id = await _service.CreateValueAsync(attributeId, dto, ct);
             return Ok(new { attributeValueId = id });
         }
 
@@ -56,7 +56,7 @@ namespace EcommerceProject.Controllers.v1.ProductAttribute
             UpsertAttributeValueDto dto,
             CancellationToken ct)
         {
-            var updated = await _service.UpdateValueAsync(attributeValueId, dto.Value, ct);
+            var updated = await _service.UpdateValueAsync(attributeValueId, dto, ct);
             if (!updated) return NotFound();
 
             return Ok("Attribute Value Updated.");
