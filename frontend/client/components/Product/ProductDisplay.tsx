@@ -18,19 +18,31 @@ type FilterFormValues = {
   tags: string[];
 };
 
-interface Product {
+interface ImageType {
+  productImageId: number;
+  imageUrl: string;
+  productId: number;
+  isPrimary: boolean;
+  sortOrder: number;
+}
+
+export interface ProductType {
   productId: number;
   name: string;
   slug: string;
+  description: string;
   shortDescription: string | null;
   price: number;
   stockQuantity: number;
   primaryImageUrl: string;
   isActive: boolean;
   categoryId: number;
+  categoryName: string;
   sku: string;
-  variants?: Variant[];
+  variants: Variant[] | undefined;
   availableAttributes?: VariantAttributes[];
+  images: ImageType[];
+  relatedProducts: ProductType[];
 }
 
 export const ProductDisplay = () => {
@@ -116,7 +128,7 @@ export const ProductDisplay = () => {
             <ProductCardSkeleton key={index} />
           ))}
 
-        {displayData.map((product: Product) => (
+        {displayData.map((product: ProductType) => (
           <ProductCard key={product.productId} product={product} />
         ))}
 

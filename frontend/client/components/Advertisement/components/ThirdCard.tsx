@@ -15,33 +15,39 @@ export const ThirdCard = () => {
             key={index}
             className="flex justify-center items-center rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300"
           >
-            <div className="relative w-[188px] h-[146px] overflow-hidden rounded-xl">
+            <Link
+              href={`/product?categoryId=2`}
+              className="relative w-[188px] h-[146px] overflow-hidden rounded-xl"
+            >
               <Image
                 src={ad.src}
                 alt={ad.alt}
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
               />
-            </div>
+            </Link>
           </div>
         ))}
       </div>
       <div className="flex justify-center items-center px-3">
         <div className="flex flex-row justify-between items-center rounded-xl w-full shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-          <div className="relative w-[221px] h-[163px]">
+          <Link
+            href={`/product?categoryId=2`}
+            className="relative w-[221px] h-[163px]"
+          >
             <Image
               src="/advertisement/tb.png"
               alt="Advertisement 5"
               fill
               className="object-cover cursor-pointer"
             />
-          </div>
+          </Link>
           <div className="flex flex-col justify-center px-4 py-3">
-            <h3 className="font-semibold text-lg text-gray-800">
+            <h3 className="font-semibold text-md text-gray-800">
               Phillips 4k Smart TV
             </h3>
-            <p className="text-xl font-bold text-blue-600 mt-1">$499.99</p>
-            <Link href="/product">
+            <p className="text-xl font-bold text-blue-600 mt-1">Rs. 35,999</p>
+            <Link href={`/product?categoryId=2`}>
               <button className="mt-3 bg-[#EAF8E7] text-[#023337] px-4 py-2 rounded-2xl font-medium hover:bg-[#d4f0cf] transition-colors duration-200 cursor-pointer">
                 Buy Now
               </button>

@@ -13,6 +13,8 @@ namespace EcommerceProject.Models.DTOs.Product
         public string? ShortDescription { get; set; }
         public bool HasVariants { get; set; }
         public bool IsActive { get; set; }
+        
+        public string? PrimaryImageUrl { get; set; }
         public decimal Price { get; set; }
         public int StockQuantity { get; set; }
 
