@@ -23,15 +23,28 @@ interface AttributeType {
 }
 
 export interface CartProductType {
+  userId: number;
   cartId: number;
   productId: number;
+  variantId: number;
+
   productName: string;
+  sku: string;
+  productImageUrl: string;
+  description: string;
+
   price: number;
   quantity: number;
   totalPrice: number;
+  finalPrice: number;
+
+  discountId: number | null;
+  discountName: string | null;
+  discountType: string | null;
+  discountValue: number | null;
+  discountAmount: number;
+
   addedDate: string;
-  productImageUrl: string;
-  description: string;
   attributes: AttributeType[];
 }
 

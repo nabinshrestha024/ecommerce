@@ -11,8 +11,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useUpdateCart } from "@/hooks/cart/useUpdateCart";
 import { Checkbox } from "@/ui/checkbox";
-import { Dialog } from "@/components/dialog/Dialog";
 import { CartProductType } from "./TopNav";
+import { Dialog } from "@/components/Dialog/Dialog";
 
 export const CartComponent = () => {
   const [open, setOpen] = useState(false);
@@ -24,10 +24,14 @@ export const CartComponent = () => {
   const isAuth = Boolean(token);
   const router = useRouter();
 
-  const [selectedItems, setSelectedItems] = useState<CartProductType[]>([]);
   const [selectedCartItemIds, setSelectedCartItemIds] = useState<number[]>([]);
+  const selectedItems =
+    data?.filter((item) => selectedCartItemIds.includes(item.cartId)) ?? [];
   const totalPrice =
-    selectedItems?.reduce((sum, val) => sum + val.quantity * val.price, 0) ?? 0;
+    selectedItems?.reduce(
+      (sum, val) => sum + val.quantity * val.finalPrice,
+      0,
+    ) ?? 0;
   useEffect(() => {
     if (open) refetch();
   }, [open, refetch]);
@@ -44,14 +48,10 @@ export const CartComponent = () => {
 
   const handleSelect = (cart: CartProductType) => {
     if (selectedItems.find((val) => val.cartId === cart.cartId)) {
-      setSelectedItems((prev) =>
-        prev.filter((val) => val.cartId !== cart.cartId),
-      );
       setSelectedCartItemIds((prev) =>
         prev.filter((val) => val !== cart.cartId),
       );
     } else {
-      setSelectedItems((val) => [...val, cart]);
       setSelectedCartItemIds((val) => [...val, cart.cartId]);
     }
   };
@@ -197,7 +197,7 @@ export const CartComponent = () => {
 
                       <div className="mt-auto pt-3 flex items-center justify-between">
                         <span className="text-sm font-bold text-gray-900">
-                          Rs. {val.totalPrice.toLocaleString()}
+                          Rs. {val.finalPrice.toLocaleString()}
                         </span>
 
                         <div className="flex items-center bg-white border rounded-lg shadow-sm overflow-hidden">

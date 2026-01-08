@@ -34,7 +34,7 @@ export default function UserProfile() {
       id: 2,
       value: "socialLinks",
       triggerText: "Social Links",
-      content: <SocialLinks data={socialLinks.data?.links || []} />,
+      content: <SocialLinks />,
     },
     {
       id: 3,
