@@ -14,6 +14,7 @@ BEGIN
     SELECT
         oi.OrderItemId,
         oi.ProductId,
+        oi.VariantId,
         p.Name AS ProductName,
         pi.ImageUrl AS ProductImageUrl,
         p.Description AS ProductDescription,
@@ -27,5 +28,15 @@ BEGIN
     INNER JOIN Products p ON p.ProductId = oi.ProductId
     WHERE oi.OrderId = @OrderId
     ORDER BY oi.OrderItemId;
+
+    SELECT
+        oi.OrderItemId,
+        pa.Name AS Name,
+        pav.Value AS Value
+    FROM OrderItems oi
+    INNER JOIN VariantAttributeValues vav ON oi.VariantId = vav.VariantId
+    INNER JOIN ProductAttributeValues pav ON vav.AttributeValueId = pav.AttributeValueId
+    INNER JOIN ProductAttributes pa ON pav.AttributeId = pa.AttributeId
+    WHERE oi.OrderId = @OrderId;
 END
 GO
