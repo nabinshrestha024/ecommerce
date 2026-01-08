@@ -18,6 +18,14 @@ type FilterFormValues = {
   tags: string[];
 };
 
+type ActiveFilters = FilterFormValues | Record<string, string>;
+
+const isFilterFormValues = (v: ActiveFilters): v is FilterFormValues =>
+  typeof v === "object" &&
+  v !== null &&
+  "tags" in v &&
+  Array.isArray((v as FilterFormValues).tags);
+
 interface ImageType {
   productImageId: number;
   imageUrl: string;
@@ -53,9 +61,7 @@ export const ProductDisplay = () => {
   const tagsParam = searchParams.get("tags");
   const tagsFromUrl: string[] = tagsParam ? tagsParam.split(",") : [];
 
-  const [activeFilters, setActiveFilters] = useState<
-    FilterFormValues | Record<string, string>
-  >({
+  const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
     minPrice: "",
     maxPrice: "",
     tags: [],
@@ -63,11 +69,20 @@ export const ProductDisplay = () => {
 
   const prod = useProductCategory(categoryId || 0);
   const products = useProduct();
+  const effectiveTags: string[] =
+    isFilterFormValues(activeFilters) && activeFilters.tags.length > 0
+      ? activeFilters.tags
+      : tagsFromUrl;
+
   const filteredProducts = useGetCatalogProduct({
     categoryId: categoryId || undefined,
-    tagNames: (activeFilters?.tags as string[]) || tagsFromUrl,
-    minPrice: activeFilters?.minPrice || undefined,
-    maxPrice: activeFilters?.maxPrice || undefined,
+    tagNames: effectiveTags,
+    minPrice: isFilterFormValues(activeFilters)
+      ? activeFilters.minPrice || undefined
+      : undefined,
+    maxPrice: isFilterFormValues(activeFilters)
+      ? activeFilters.maxPrice || undefined
+      : undefined,
   });
 
   const placeholderCount = 12;
