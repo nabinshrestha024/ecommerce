@@ -8,7 +8,7 @@ export interface Product {
   categoryName: string;
   slug: string;
   description: string;
-  shortDescription: string;
+  shortDescription: string | null;
   hasVariants: boolean;
   isActive: boolean;
   price: number;

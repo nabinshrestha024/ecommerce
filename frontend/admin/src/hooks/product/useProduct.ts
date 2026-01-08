@@ -13,7 +13,7 @@ export interface ProductRes {
   name: string;
   slug: string;
   description: string;
-  shortDescription: string;
+  shortDescription: string | null;
   hasVariants: boolean;
   isActive: boolean;
   primaryImageUrl: string | null;
