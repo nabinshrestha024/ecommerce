@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { ProductCard } from "./ProductCard";
 import { Category } from "./Category";
 import { useSearchParams } from "next/navigation";
@@ -39,73 +37,13 @@ export const ProductDisplay = () => {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get("categoryId");
   const categoryId = categoryParam ? Number(categoryParam) : null;
-  const tagsParam = searchParams.get("tags");
-  const tagsFromUrl = tagsParam ? tagsParam.split(",") : [];
-
-  const [activeFilters, setActiveFilters] = useState<FilterFormValues | null>(
-    null,
-  );
-
   const prod = useProductCategory(categoryId || 0);
   const products = useProduct();
-  const filteredProducts = useGetCatalogProduct({
-    categoryId: categoryId || undefined,
-    tagNames: activeFilters?.tags || tagsFromUrl,
-    minPrice: activeFilters?.minPrice || undefined,
-    maxPrice: activeFilters?.maxPrice || undefined,
-  });
-
   const placeholderCount = 12;
-
-  const handleFilterChange = (filters: FilterFormValues) => {
-    setActiveFilters(filters);
-
-    const params = new URLSearchParams(searchParams.toString());
-    if (categoryId) params.set("categoryId", categoryId.toString());
-
-    if (filters.tags.length > 0) {
-      params.set("tags", filters.tags.join(","));
-    } else {
-      params.delete("tags");
-    }
-
-    if (filters.minPrice) {
-      params.set("minPrice", filters.minPrice);
-    } else {
-      params.delete("minPrice");
-    }
-
-    if (filters.maxPrice) {
-      params.set("maxPrice", filters.maxPrice);
-    } else {
-      params.delete("maxPrice");
-    }
-
-    router.replace(`?${params.toString()}`, { scroll: false });
-  };
-
-  const displayData =
-    activeFilters || tagsFromUrl.length > 0 || categoryId !== null
-      ? filteredProducts.data?.data?.items || []
-      : products.data?.items || [];
-
-  const isLoading =
-    activeFilters || tagsFromUrl.length > 0 || categoryId !== null
-      ? filteredProducts.isLoading
-      : prod.isLoading;
-
-  const isError =
-    activeFilters || tagsFromUrl.length > 0 || categoryId !== null
-      ? filteredProducts.isError
-      : prod.isError;
 
   return (
     <div className="min-h-screen bg-gray-50 p-8 flex flex-col md:flex-row gap-5 items-start w-full">
-      <div className="md:sticky md:top-8 md:h-[calc(100vh-4rem)] md:overflow-y-auto flex flex-col gap-5 md:w-64 shrink-0">
-        <Category />
-        <Filter onFilterChange={handleFilterChange} />
-      </div>
-
+      <Category />
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 w-full gap-6">
         {isLoading &&
           Array.from({ length: placeholderCount }).map((_, index) => (
