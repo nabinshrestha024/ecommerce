@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { IoMoonOutline, IoSunnyOutline } from "react-icons/io5";
 import { useDebounce } from "@/hooks/search/useDebounce";
 import { useSearchs } from "@/hooks/search/useSearch";
+import { useGetProfile } from "@/hooks/profile/useGetProfile";
 
 export const Navbar = () => {
   const [searchData, setSearchData] = useState("");
   const { pathname } = useLocation();
+  const { data } = useGetProfile();
   const heading =
     pathname === "/dashboard"
       ? "Dashboard"
@@ -108,7 +110,7 @@ export const Navbar = () => {
 
         <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
           <img
-            src="/profile.webp"
+            src={data?.profileImageUrl}
             alt="User"
             className="w-full h-full rounded-full"
           />

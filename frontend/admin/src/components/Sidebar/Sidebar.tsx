@@ -20,6 +20,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { TooltipContent, Tooltip, TooltipTrigger } from "@/ui/tooltip";
 import { LogoutButton } from "../Logout/LogoutButton";
+import { useGetProfile } from "@/hooks/profile/useGetProfile";
 
 const items = [
   {
@@ -80,6 +81,7 @@ const items = [
 export const Sidebar = () => {
   const { pathname } = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const { data } = useGetProfile();
 
   return (
     <Root collapsible="icon" className="w-60">
@@ -143,15 +145,18 @@ export const Sidebar = () => {
         <div className="flex justify-between items-center gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <div className="h-8 w-8 overflow-hidden rounded-full shrink-0">
-              <img src="/profile.webp" className="h-full w-full object-cover" />
+              <img
+                src={data?.profileImageUrl}
+                className="h-full w-full object-cover"
+              />
             </div>
             {!collapsed && (
               <div className="flex flex-col min-w-0">
                 <div className="text-sm font-semibold truncate">
-                  Hello Hello
+                  {data?.fullName}
                 </div>
                 <div className="text-xs text-gray-500 line-clamp-1 break-all">
-                  hello@gmail.com
+                  {data?.email}
                 </div>
               </div>
             )}

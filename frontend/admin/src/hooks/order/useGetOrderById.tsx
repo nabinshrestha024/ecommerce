@@ -1,6 +1,7 @@
 "use client";
 import { getOrderById } from "@/lib/order/getOrderById";
 import { useQuery } from "@tanstack/react-query";
+import type { AttributeType } from "./useFetchOrder";
 
 export type OrderData = {
   orderItemId: number;
@@ -11,6 +12,7 @@ export type OrderData = {
   lineTotal: number;
   productImageUrl?: string;
   productDescription?: string;
+  attributes: AttributeType[];
 };
 
 export type OrderResponse = {

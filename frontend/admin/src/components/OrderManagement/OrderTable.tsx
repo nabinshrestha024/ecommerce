@@ -13,9 +13,6 @@ import { Input } from "@/ui/input";
 import { DropDown } from "../DropDown/DropDown";
 import { IoFilter } from "react-icons/io5";
 import { useFetchOrder, type OrderData } from "@/hooks/order/useFetchOrder";
-import { Dialog } from "../Dialog/Dialog";
-import { FaEdit } from "react-icons/fa";
-import { OrderForm } from "./OrderForm";
 import { OrderDetails } from "./OrderDetails";
 
 const statusType = {
@@ -32,9 +29,6 @@ export const OrderTable = () => {
   });
   const orders = useFetchOrder(pagination.pageIndex + 1);
   const [sortType, setSortType] = useState<"date" | "price" | null>(null);
-  const [selectedProduct, setSelectedProduct] = useState<OrderData | null>(
-    null,
-  );
 
   const [selectedOrder, setSelectedOrder] = useState<OrderData | null>(null);
 
@@ -44,10 +38,6 @@ export const OrderTable = () => {
     } else {
       setSelectedOrder(row);
     }
-  };
-
-  const handleEdit = (row: OrderData) => {
-    setSelectedProduct(row);
   };
 
   const columnHelper = createColumnHelper<OrderData>();
@@ -60,7 +50,7 @@ export const OrderTable = () => {
         header: "Product Name",
         cell: (info) => (
           <div
-            className="flex flex-col w-64"
+            className="flex flex-col justify-center items-center w-full"
             onClick={() => handleRowClick(info.row.original)}
           >
             {info
@@ -75,8 +65,14 @@ export const OrderTable = () => {
         ),
       },
     ),
-    columnHelper.accessor("orderDate", { header: "Date" }),
-    columnHelper.accessor("totalAmount", { header: "Price" }),
+    columnHelper.accessor("orderDate", {
+      header: "Date",
+      cell: (info) => <div>{info.getValue().toString().split("T")[0]}</div>,
+    }),
+    columnHelper.accessor("totalAmount", {
+      header: "Price",
+      cell: (info) => <div className="text-center">Rs. {info.getValue()}</div>,
+    }),
     columnHelper.accessor("paymentStatus", {
       header: "Payment",
       cell: (info) => {
@@ -85,8 +81,9 @@ export const OrderTable = () => {
             className="flex justify-center items-center"
             onClick={() => handleRowClick(info.row.original)}
           >
-            <div className="text-green-500 flex items-center justify-start gap-3 w-18">
-              <div className="rounded-full h-2 w-2 bg-green-500"></div> Paid
+            <div className="text-green-500 flex items-center justify-start gap-3 w-20">
+              <div className="rounded-full h-2 w-2 bg-green-500"></div>{" "}
+              {info.getValue()}
             </div>
           </div>
         ) : (
@@ -94,8 +91,9 @@ export const OrderTable = () => {
             className="flex justify-center items-center"
             onClick={() => handleRowClick(info.row.original)}
           >
-            <div className="text-red-500 flex items-center justify-start gap-3 w-18">
-              <div className="rounded-full h-2 w-2 bg-red-500"></div> Unpaid
+            <div className="text-amber-500 flex items-center justify-start gap-3 w-20">
+              <div className="rounded-full h-2 w-2 bg-amber-500"></div>{" "}
+              {info.getValue()}
             </div>
           </div>
         );
@@ -149,37 +147,6 @@ export const OrderTable = () => {
           )
         );
       },
-    }),
-
-    columnHelper.display({
-      id: "actions",
-      header: "Actions",
-      cell: (info) => (
-        <div
-          className="flex gap-2 justify-center items-center"
-          onClick={() => handleRowClick(info.row.original)}
-        >
-          <Dialog
-            triggerContent={
-              <FaEdit
-                className="text-[#6A717F] text-[20px]"
-                onClick={() => handleEdit(info.row.original)}
-              />
-            }
-          >
-            {selectedProduct && (
-              <div className="max-h-[70vh] overflow-y-auto px-4 py-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                <OrderForm
-                  order={selectedProduct}
-                  onSave={() => {
-                    setSelectedProduct(null);
-                  }}
-                />
-              </div>
-            )}
-          </Dialog>
-        </div>
-      ),
     }),
   ];
 
@@ -396,7 +363,7 @@ export const OrderTable = () => {
       </div>
       {selectedOrder && (
         <div className="w-[350px] mt-5">
-          <OrderDetails order={selectedOrder} />
+          <OrderDetails order={selectedOrder} setOrder={setSelectedOrder} />
         </div>
       )}
     </div>

@@ -1,4 +1,5 @@
 "use client";
+import { AttributeType } from "@/components/Order/Order";
 import { getOrderById } from "@/lib/orders/getOrderById";
 import { useQuery } from "@tanstack/react-query";
 
@@ -11,6 +12,7 @@ export type OrderData = {
   lineTotal: number;
   productImageUrl?: string;
   productDescription?: string;
+  attributes: AttributeType[];
 };
 
 export type OrderResponse = {

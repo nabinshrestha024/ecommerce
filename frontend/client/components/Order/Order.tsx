@@ -50,7 +50,13 @@ export type OrderData = {
   paymentMethodId: string;
   paymentGateway: string;
   notes: string;
+  attributes: AttributeType[];
 };
+
+export interface AttributeType {
+  name: string;
+  value: string;
+}
 
 export const Order = () => {
   const { data } = useOrder();
