@@ -6,6 +6,7 @@ type ProductData = {
   productId: number;
   name: string;
   slug: string;
+  description: string;
   shortDescription: string | null;
   price: number;
   stockQuantity: number;
@@ -13,6 +14,7 @@ type ProductData = {
   isActive: boolean;
   categoryId: number;
   sku: string;
+  relatedProducts: ProductData[];
 };
 
 type ProductResponse = {

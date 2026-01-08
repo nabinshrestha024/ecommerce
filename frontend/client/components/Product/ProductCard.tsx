@@ -8,51 +8,22 @@ import { toast } from "sonner";
 import { useAddWishlist } from "@/hooks/wishlist/useAddWishlist";
 import { useDeleteWishlist } from "@/hooks/wishlist/useDeleteWishlist";
 import { useFetchWishlist } from "@/hooks/wishlist/useFetchWishlist";
-import {
-  wishlistData,
-  WishlistItem,
-} from "../TrendingProduct/component/TrendingProductCard";
+import { WishlistItem } from "../TrendingProduct/component/TrendingProductCard";
 import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { Dialog } from "../Dialog/Dialog";
-import { Variant, VariantAttributes } from "./ProductDetails";
+import { Variant } from "./ProductDetails";
 import { Card } from "../Card/Card";
-
-interface ImageType {
-  productImageId: number;
-  imageUrl: string;
-  productId: number;
-  isPrimary: boolean;
-  sortOrder: number;
-}
-
-interface Product {
-  productId: number;
-  name: string;
-  slug: string;
-  shortDescription: string | null;
-  price: number;
-  stockQuantity: number;
-  primaryImageUrl: string;
-  isActive: boolean;
-  categoryId: number;
-  sku: string;
-  variants?: Variant[];
-  images: ImageType[];
-  availableAttributes?: VariantAttributes[];
-}
+import { ProductType } from "./ProductDisplay";
 
 interface ProductCardProps {
-  product: Product;
+  product: ProductType;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const stockValue = 20;
   const [quantity, setQuantity] = useState(1);
-  const [selectedSizes, setSelectedSizes] = useState<
-    Record<number, number | null>
-  >({});
   const addToCart = useAddToCart();
   const { token } = useAuth();
   const addMutate = useAddWishlist();
@@ -68,11 +39,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     ),
   );
 
-  const handleAddToCart = (
-    productId: number,
-    quantity: number,
-    sizeValue?: string,
-  ) => {
+  const handleAddToCart = (productId: number, quantity: number) => {
     if (token) {
       addToCart.mutate({
         variantId: productId,
@@ -84,9 +51,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     } else {
       toast.message("Login to add to cart");
     }
-  };
-  const handleSelectSize = (productId: number, sizeId: number) => {
-    setSelectedSizes((prev) => ({ ...prev, [productId]: sizeId }));
   };
 
   const handleIncrease = () => {
@@ -126,13 +90,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   const isAvailable = (
-    variants: Variant[],
+    variants: Variant[] | undefined,
     selectedAttributes: Record<string, string | undefined>,
     attrName: string,
     value: string,
   ) => {
     const tempSelection = { ...selectedAttributes, [attrName]: value };
-    return variants.some((v) =>
+    return variants?.some((v) =>
       Object.entries(tempSelection).every(
         ([key, val]) => !val || v.attributes[key] === val,
       ),
@@ -184,18 +148,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     >
       <div className="flex flex-col gap-2">
         <div className="w-full h-[185px] relative ">
-          <Image
-            src={`http://192.168.80.240/${product.images[0]?.imageUrl}`}
-            alt={product.name}
-            fill
-            className="w-full h-full object-cover rounded-[12px]"
-            unoptimized
-          />
-          {product.stockQuantity === 0 && (
-            <div className="absolute top-3 left-3 px-1 rounded-sm text-white bg-gray-500 font-bold flex justify-center items-center cursor-pointer">
-              Out of Stock
-            </div>
-          )}
+          <Link href={`/product/id/${product.slug}`}>
+            <Image
+              src={`http://192.168.80.240/${product.images[0]?.imageUrl}`}
+              alt={product.name}
+              fill
+              className="w-full h-full object-cover rounded-[12px]"
+              unoptimized
+            />
+            {product.stockQuantity === 0 && (
+              <div className="absolute top-3 left-3 px-1 rounded-sm text-white bg-gray-500 font-bold flex justify-center items-center cursor-pointer">
+                Out of Stock
+              </div>
+            )}
+          </Link>
           <div className="absolute top-3 right-3 rounded-full w-6 h-6 shadow-md flex justify-center items-center cursor-pointer bg-white">
             {wishedIds.has(product.productId) ? (
               <IoIosHeart
@@ -216,14 +182,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <div className="text-[20px] font-medium line-clamp-1">
-            {product.name}
-          </div>
-          {product.shortDescription && (
-            <div className="text-[16px] font-normal leading-[22px] text-[#00000099]/60 line-clamp-2">
-              {product.shortDescription}
+          <Link href={`/product/id/${product.slug}`}>
+            <div className="text-[20px] font-medium line-clamp-1">
+              {product.name}
             </div>
-          )}
+            {product.shortDescription && (
+              <div className="text-[16px] font-normal leading-[22px] text-[#00000099]/60 line-clamp-2">
+                {product.shortDescription}
+              </div>
+            )}
+          </Link>
           {/* <div className="flex items-center mb-2">
             {[...Array(5)].map((_, i) => (
               <Star
@@ -240,7 +208,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               ({product.reviews})
             </span>
           </div> */}
-          <div>
+          <Link href={`/product/id/${product.slug}`}>
             <span className="text-[18px] text-[#4EA674] font-bold">
               Rs. {product.price}
             </span>
@@ -248,7 +216,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <span className="line-through text-[15px] text-[red] font-medium">
               Rs. {product.price}
             </span>
-          </div>
+          </Link>
         </div>
       </div>
       <div className="flex justify-between flex-row items-center mt-2">

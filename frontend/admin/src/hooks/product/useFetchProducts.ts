@@ -8,11 +8,13 @@ export type ProductData = {
   slug: string;
   shortDescription: string | null;
   price: number;
+  description: string;
   stockQuantity: number;
   primaryImageUrl: string;
   isActive: boolean;
   categoryId: number;
   sku: string;
+  relatedProducts: ProductData[];
 };
 
 type ProductResponse = {
