@@ -7,7 +7,8 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT o.TotalAmount
+    --SELECT o.TotalAmount
+     SELECT o.GrandTotal
     FROM Orders o
     WHERE o.OrderId = @OrderId
       AND o.PaymentStatus = 'Pending';

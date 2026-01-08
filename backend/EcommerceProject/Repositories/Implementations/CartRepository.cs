@@ -101,9 +101,8 @@ namespace EcommerceProject.Repositories.Implementations
             );
         }
 
-        public async Task<CheckoutsResponseDto> CheckoutSelectedItemsAsync(int userId, CheckoutsRequestDto request)
+        public async Task<CheckoutsResponseDto> CheckoutSelectedItemsAsync(int userId, CheckoutsRequestDto request,IDbConnection connection, IDbTransaction transaction)
         {
-            using var connection = _connectionFactory.CreateConnection();
             if (request.SelectedCartItemIds == null || !request.SelectedCartItemIds.Any())
             {
                 throw new ArgumentException("No items selected for checkout.");
@@ -121,6 +120,7 @@ namespace EcommerceProject.Repositories.Implementations
             var result = await connection.QuerySingleAsync<CheckoutsResponseDto>(
                 "spCheckoutSelectedItems",
                 parameters,
+                transaction: transaction,
                 commandType: CommandType.StoredProcedure
             );
 
