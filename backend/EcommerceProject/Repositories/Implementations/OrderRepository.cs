@@ -46,10 +46,6 @@ namespace EcommerceProject.Repositories.Implementations
         }
 
 
-
-
-
-
         public async Task<List<OrderSummaryDto>> GetMyOrdersAsync(int userId, CancellationToken ct)
         {
             using var conn = _db.CreateConnection();
@@ -75,17 +71,32 @@ namespace EcommerceProject.Repositories.Implementations
 
             if (header == null) return null;
 
-            var items = await conn.QueryAsync<OrderItemDto>(
+            using var multi = await conn.QueryMultipleAsync(
                 "spOrders_GetByIdForUser_Items",
                 new { UserId = userId, OrderId = orderId },
                 commandType: CommandType.StoredProcedure
             );
 
-            header.Items = items.ToList();
+            var items = (await multi.ReadAsync<OrderItemDto>()).ToList();
+            var allAttributes = (await multi.ReadAsync<dynamic>()).ToList();
+
+            foreach (var item in items)
+            {
+                item.Variant = allAttributes
+                    .Where(a => (int)a.OrderItemId == item.OrderItemId)
+                    .Select(a => new OrderItemVariantAttributeDto
+                    {
+                        Name = (string)a.Name,
+                        Value = (string)a.Value
+                    })
+                    .ToList();
+            }
+
+            header.Items = items;
             return header;
         }
 
-        public async Task<PagedResult<AdminOrderRowDto>> AdminGetPagedAsync(
+    public async Task<PagedResult<AdminOrderRowDto>> AdminGetPagedAsync(
     PaginationDto pagination,
     string? status,
     string? search,

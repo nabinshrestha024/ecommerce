@@ -56,8 +56,6 @@ namespace EcommerceProject.Controllers.v1.Orders
 
             var orders = await _orderService.GetMyOrdersAsync(userId, ct);
 
-            
-
             return Ok(orders);
         }
 
@@ -78,6 +76,7 @@ namespace EcommerceProject.Controllers.v1.Orders
 
             return Ok(order);
         }
+        
         [HttpPut("{orderId:int}/cancel")]
         public async Task<IActionResult> CancelOrder(
             int orderId,
