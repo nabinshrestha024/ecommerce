@@ -7,24 +7,22 @@ namespace EcommerceProject.Models.Validators.Discount
     {
         public CreateDiscountValidator()
         {
-            RuleFor(x => x.ProductId)
-                .GreaterThan(0)
-                .WithMessage("Product is required");
+            RuleFor(x => x.DiscountType)
+            .NotEmpty()
+            .Must(x => x == "Percentage" || x == "Flat")
+            .WithMessage("DiscountType must be 'Percentage' or 'Flat'");
 
-            RuleFor(x => x.Percentage)
+            RuleFor(x => x.DiscountValue)
                 .GreaterThan(0)
-                .LessThanOrEqualTo(100);
+                .WithMessage("DiscountValue must be greater than 0");
 
-            RuleFor(x => x.EndDate)
-                .GreaterThan(x => x.StartDate);
+            RuleFor(x => x.StartDate)
+                .LessThanOrEqualTo(x => x.EndDate)
+                .WithMessage("StartDate must be before EndDate");
 
-            RuleFor(x => x.MaxUsage)
-                .GreaterThan(0)
-                .When(x => x.MaxUsage.HasValue);
-
-            RuleFor(x => x.PerUserLimit)
-                .GreaterThan(0)
-                .When(x => x.PerUserLimit.HasValue);
+            RuleFor(x => x)
+                .Must(x => (x.ProductIds != null && x.ProductIds.Any()) || (x.VariantIds != null && x.VariantIds.Any()))
+                .WithMessage("At least one ProductId or VariantId must be specified");
         }
     }
 }

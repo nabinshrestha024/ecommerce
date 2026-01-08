@@ -15,6 +15,13 @@
         public decimal TotalPrice { get; set; }
         public DateTime AddedDate { get; set; }
 
+        public int? DiscountId { get; set; }
+        public string? DiscountName { get; set; }
+        public string? DiscountType { get; set; }     // Flat / Percentage
+        public decimal? DiscountValue { get; set; }
+        public decimal? DiscountAmount { get; set; }  // per unit
+        public decimal? FinalPrice { get; set; }
+
         public List<CartItemAttributeDto> Attributes { get; set; } = new();
     }
 }

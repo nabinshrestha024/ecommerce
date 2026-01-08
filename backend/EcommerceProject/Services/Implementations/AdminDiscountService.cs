@@ -31,16 +31,9 @@ namespace EcommerceProject.Services.Implementations
 
         }
 
-        public async Task UpdateAsync(int discountId, CreateDiscountDto dto)
+        public async Task UpdateAsync(UpdateDiscountDto dto)
         {
-            if(discountId <= 0)
-            {
-                throw new ArgumentException("Invalid discount date range ");
-            }
-
-            await Validate(dto);
-            await _adminRepo.UpdateAsync(discountId, dto);
-
+            await _adminRepo.UpdateAsync(dto);
         }
 
         public async Task ToggleAsync(int discountId, bool isActive)
@@ -61,7 +54,20 @@ namespace EcommerceProject.Services.Implementations
             }
 
         }
-                
+
+        public async Task<int> AddDiscountAsync(CreateDiscountDto request)
+        {
+            
+            var validationResult = await _validator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
+            
+            return await _adminRepo.AddDiscountAsync(request);
+        }
+
 
 
     }

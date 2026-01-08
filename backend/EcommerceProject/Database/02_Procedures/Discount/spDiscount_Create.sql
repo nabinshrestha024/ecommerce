@@ -1,35 +1,31 @@
-﻿USE EcommerceDB;
+﻿USE [EcommerceDB]
 GO
-
 CREATE OR ALTER PROCEDURE spDiscount_Create
-    @ProductId INT,
-    @Percentage DECIMAL(5,2),
+    @DiscountName NVARCHAR(100),
+    @DiscountType NVARCHAR(20),       -- 'Percentage' or 'Flat'
+    @DiscountValue DECIMAL(18,2),
     @StartDate DATETIME,
     @EndDate DATETIME,
-    @MaxUsage INT = NULL,
-    @PerUserLimit INT = NULL
+    @IsActive BIT
 AS
 BEGIN
     INSERT INTO Discounts
     (
-        ProductId,
-        Percentage,
+        DiscountName,
+        DiscountType,
+        DiscountValue,
         StartDate,
         EndDate,
-        MaxUsage,
-        PerUserLimit,
         IsActive
     )
     VALUES
     (
-        @ProductId,
-        @Percentage,
+        @DiscountName,
+        @DiscountType,
+        @DiscountValue,
         @StartDate,
         @EndDate,
-        @MaxUsage,
-        @PerUserLimit,
-        1
+        @IsActive
     );
+    SELECT CAST(SCOPE_IDENTITY() AS INT)AS DiscountId;
 END
-
-GO

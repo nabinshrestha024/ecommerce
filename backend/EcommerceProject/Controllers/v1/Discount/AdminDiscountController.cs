@@ -1,5 +1,7 @@
 ﻿using EcommerceProject.Models.DTOs.Discount;
+using EcommerceProject.Services.Implementations;
 using EcommerceProject.Services.Interfaces;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,19 +27,30 @@ namespace EcommerceProject.Controllers.v1.Discount
             return Ok(await _service.GetAllAsync());
         }
 
-        [HttpPost("add")]
-        public async Task<IActionResult> Create([FromBody]CreateDiscountDto dto)
-        {
-            await _service.CreateAsync(dto);
-            return Ok("Discount created");
 
+        [HttpPost("adds")]
+        public async Task<IActionResult> AddDiscount([FromBody] CreateDiscountDto request)
+        {
+            try
+            {
+                var discountId = await _service.AddDiscountAsync(request);
+                return Ok(new { DiscountId = discountId, Message = "Discount added successfully" });
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { Message = "Validation failed", Errors = ex.Errors });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
         }
-        [HttpPut("update")]
-        public async Task<IActionResult> update(int discountId, CreateDiscountDto dto)
-        {
-            await _service.UpdateAsync(discountId, dto);
-            return Ok("discount updated");
 
+        [HttpPut("update")]
+        public async Task<IActionResult> Update(UpdateDiscountDto dto)
+        {
+            await _service.UpdateAsync(dto);
+            return Ok(new { message = "Discount updated successfully" });
         }
 
         [HttpPatch("status")]
