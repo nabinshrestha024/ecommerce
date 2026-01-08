@@ -14,7 +14,6 @@ import { Table } from "../Table/Table";
 
 export const DashboardTopSelling = () => {
   const { data } = useFetchProduct();
-  console.log("prod", data);
   const columnHelper = createColumnHelper<ProductData>();
   const columns = [
     columnHelper.accessor("name", {
