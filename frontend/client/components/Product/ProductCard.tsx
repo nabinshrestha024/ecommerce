@@ -59,9 +59,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         variantId: productId,
         quantity: quantity,
       });
-      // console.log("Product: ", productId);
-      // console.log("Quantity: ", quantity);
-      // console.log("Size: ", sizeValue);
     } else {
       toast.message("Login to add to cart");
     }
@@ -198,22 +195,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               </div>
             )}
           </Link>
-          {/* <div className="flex items-center mb-2">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                size={16}
-                className={
-                  i < product.rating
-                    ? "fill-yellow-400 text-yellow-400"
-                    : "text-gray-300"
-                }
-              />
-            ))}
-            <span className="ml-2 text-sm text-gray-600">
-              ({product.reviews})
-            </span>
-          </div> */}
+
           <Link href={`/product/id/${product.slug}`}>
             <span className="text-[18px] text-[#4EA674] font-bold">
               Rs. {product.price}
