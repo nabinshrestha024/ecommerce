@@ -102,8 +102,6 @@ namespace EcommerceProject.Repositories.Implementations
                     dto.StartDate,
                     dto.EndDate,
                     dto.IsActive,
-                    ProductIds = dto.ProductIds != null ? string.Join(",", dto.ProductIds) : null,
-                    VariantIds = dto.VariantIds != null ? string.Join(",", dto.VariantIds) : null
                 },
                 commandType: CommandType.StoredProcedure
             );
