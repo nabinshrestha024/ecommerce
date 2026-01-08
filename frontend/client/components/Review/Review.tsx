@@ -11,6 +11,7 @@ import { Button } from "@/ui/button";
 import { ReviewSkeleton } from "./components/ReviewSkeleton";
 export const Review = () => {
   const router = useRouter();
+  const [clicked, setClicked] = useState(false);
   const { token } = useAuth();
   const { data, isError, isLoading } = useFetchWebsiteReview();
   const [open, setOpen] = useState(false);
@@ -91,7 +92,12 @@ export const Review = () => {
                 </div>
               </div>
 
-              <p className="leading-relaxed text-gray-700">{item.content}</p>
+              <p
+                className={`leading-relaxed text-gray-700 ${clicked ? "" : "line-clamp-3"}`}
+                onClick={() => setClicked(!clicked)}
+              >
+                {item.content}
+              </p>
             </div>
           ))}
       </div>
@@ -109,7 +115,13 @@ export const Review = () => {
               <p className="text-gray-700 text-lg mb-4">
                 Please log in to add a review.
               </p>
-              <Button variant="default" onClick={() => router.push("/login")}>
+              <Button
+                variant="default"
+                onClick={() => {
+                  router.push("/login");
+                  setClicked(true);
+                }}
+              >
                 Log In
               </Button>
             </div>
