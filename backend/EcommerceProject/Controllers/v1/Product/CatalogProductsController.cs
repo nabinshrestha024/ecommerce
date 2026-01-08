@@ -32,8 +32,17 @@ namespace EcommerceProject.Controllers.v1.Product
             var result = await _service.GetPagedAsync(categoryId, search,tagNames, minPrice, maxPrice, page, pageSize, ct);
             foreach (var item in result.Items)
             {
-                item.PrimaryImageUrl = _urlService.ToAbsoluteUrl(item.PrimaryImageUrl);
+                if (!string.IsNullOrEmpty(item.PrimaryImageUrl))
+                {
+                    item.PrimaryImageUrl = _urlService.ToAbsoluteUrl(item.PrimaryImageUrl);
+                }
+
+                foreach (var img in item.Images)
+                {
+                    img.ImageUrl = _urlService.ToAbsoluteUrl(img.ImageUrl);
+                }
             }
+
 
 
             return Ok(result);

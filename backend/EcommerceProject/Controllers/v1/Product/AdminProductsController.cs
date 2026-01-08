@@ -52,14 +52,20 @@ namespace EcommerceProject.Controllers.v1.Product
         public async Task<IActionResult> GetAll([FromQuery] AdminProductFilterDto filter, [FromQuery] PaginationDto pagination, CancellationToken ct)
         {
             var result = await _service.AdminGetProductsAsync(filter, pagination, ct);
-            
+
             foreach (var item in result.Items)
             {
                 if (!string.IsNullOrEmpty(item.PrimaryImageUrl))
                 {
                     item.PrimaryImageUrl = _urlService.ToAbsoluteUrl(item.PrimaryImageUrl);
                 }
+
+                foreach (var img in item.Images)
+                {
+                    img.ImageUrl = _urlService.ToAbsoluteUrl(img.ImageUrl);
+                }
             }
+
             return Ok(result);
         }
 
