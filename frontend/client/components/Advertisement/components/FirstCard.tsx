@@ -23,7 +23,7 @@ export const FirstCard = () => {
           </div>
 
           <Link
-            href="/product"
+            href={`/product?categoryId=3`}
             className="absolute bottom-0 translate-y-1/2 
                        bg-[#EAF8E7] text-[#023337] 
                        px-4 py-2 rounded-2xl text-sm font-medium

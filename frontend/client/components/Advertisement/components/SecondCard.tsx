@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Card } from "@/components/Card/Card";
 import { useProduct } from "@/hooks/product/useProduct";
 import { Skeleton } from "@/components/Skeleton/Skeleton";
+import Link from "next/link";
 export const SecondCard = () => {
   const { data, isLoading, isError } = useProduct();
 
@@ -31,7 +32,8 @@ export const SecondCard = () => {
                 .map(
                   (item, index) =>
                     index < 4 && (
-                      <div
+                      <Link
+                        href={`/product/id/${item.slug}`}
                         key={item.productId}
                         className="overflow-hidden flex items-center justify-center rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer"
                         onClick={() => console.log("accessories", item.name)}
@@ -44,7 +46,7 @@ export const SecondCard = () => {
                             className="max-w-full object-contain rounded-lg hover:scale-105 transition-transform duration-300"
                           />
                         </div>
-                      </div>
+                      </Link>
                     ),
                 )}
         </div>
