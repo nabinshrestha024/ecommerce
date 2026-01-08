@@ -12,7 +12,7 @@ export type OrderData = {
   lineTotal: number;
   productImageUrl?: string;
   productDescription?: string;
-  attributes: AttributeType[];
+  variant: AttributeType[];
 };
 
 export type OrderResponse = {

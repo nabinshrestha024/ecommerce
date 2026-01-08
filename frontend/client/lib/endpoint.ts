@@ -14,7 +14,7 @@ export const endpoint = {
   FETCH_WISHLIST: "wishlist",
   DELETE_WISHLIST: "wishlist/delete",
   FETCHNOTIFICATION: "notifications",
-  ADDORDER: "cart/checkout-selected-items",
+  ADDORDER: "cart/checkout",
   ESEWAPAYMENT: "payments/esewa/initiate",
   PAYMENTSUCCESS: "payments/esewa/callback",
   NOTIFICATIONSEEN: "notifications",
@@ -25,7 +25,7 @@ export const endpoint = {
   RESETPASSWORD: "auth/auth/reset-password",
   SOCIALLINKS: "profile/social-links",
   WEBSITEREVIEW: "website-reviews",
-  TAGS: "/admin/tags",
+  TAGS: "tags",
   CATALOGPRODUCTS: "catalog/products",
   REVIEW: "reviews",
 };

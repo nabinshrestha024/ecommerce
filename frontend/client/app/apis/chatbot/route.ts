@@ -1,3 +1,4 @@
+import { useProduct } from "@/hooks/product/useProduct";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
@@ -5,12 +6,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(req: Request) {
   try {
-    const { message, history } = await req.json();
-
-    const relevantProducts = [
-      { name: "Ocean Breeze Tee", price: "$25", color: "Blue" },
-      { name: "Navy Work Shirt", price: "$45", color: "Dark Blue" },
-    ];
+    const { message, history, products } = await req.json();
 
     const predefinedQuestions = [
       {
@@ -38,7 +34,7 @@ export async function POST(req: Request) {
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const chat = model.startChat({
-      history: history, // Array of { role: "user" | "model", parts: [{ text: string }] }
+      history: history,
       systemInstruction: {
         role: "system",
         parts: [
@@ -47,7 +43,7 @@ export async function POST(req: Request) {
           You are 'Tapaiko Bot', the AI assistant for Tapaiko Bazar. 
           1. Only answer questions about groceries, shoes, clothes, and electronics. 
           2. If a user asks anything apart from groceries, shoes, clothes, and electronics, say: "I'm sorry, I only specialize in groceries, shoes, clothes, and electronics."
-          3. You are an e-commerce bot. The user is currently looking at these products: ${JSON.stringify(relevantProducts)}.
+          3. You are an e-commerce bot. The user is currently looking at these products: ${JSON.stringify(products)}.
           4. Always suggest one related item when a user expresses interest in a product.
           5. Keep responses under 3 sentences unless listing product specs.
           6. Also answer accordingly in the language they asked if the user asks: ${JSON.stringify(predefinedQuestions)}

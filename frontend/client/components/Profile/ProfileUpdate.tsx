@@ -95,23 +95,11 @@ export const ProfileUpdate = () => {
   const onSubmit = (formData: ProfileFormData) => {
     const dataToSend = new FormData();
 
-    const dob = formData.dateOfBirth
-      ? new Date(formData.dateOfBirth)
-      : new Date("2000-01-01");
-
-    const day = String(dob.getDate()).padStart(2, "0");
-    const month = String(dob.getMonth() + 1).padStart(2, "0");
-    const year = dob.getFullYear();
-    const formattedDate = `${year}-${month}-${day}`;
-
     dataToSend.append("FullName", formData.fullName || "Unknown");
-    dataToSend.append("Gender", formData.gender || "Male");
     dataToSend.append("Bio", formData.biography || "N/A");
     dataToSend.append("City", formData.city || "Unknown");
-    dataToSend.append("Phone", formData.phoneNumber || "0000000000");
     dataToSend.append("Status", formData.status ?? "0");
     dataToSend.append("Address", formData.address || "N/A");
-    dataToSend.append("DateOfBirth", formattedDate ?? "N/A");
 
     if (selectedImage) {
       dataToSend.append("ProfileImageFile", selectedImage, selectedImage.name);

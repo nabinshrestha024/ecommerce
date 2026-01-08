@@ -50,7 +50,7 @@ export type OrderData = {
   paymentMethodId: string;
   paymentGateway: string;
   notes: string;
-  attributes: AttributeType[];
+  variant: AttributeType[];
 };
 
 export interface AttributeType {
@@ -211,15 +211,8 @@ export const Order = () => {
         const lowerTerm = searchTerm.toLowerCase();
         result = result.filter(
           (order) =>
-            (order.orderId &&
-              String(order.orderId).toLowerCase().includes(lowerTerm)) ||
-            (order.shippingCity &&
-              order.shippingCity.toLowerCase().includes(lowerTerm)) ||
-            (order.status && order.status.toLowerCase().includes(lowerTerm)) ||
-            (order.items &&
-              order.items.some((item) =>
-                item.productName.toLowerCase().includes(lowerTerm),
-              )),
+            order.orderId &&
+            String(order.orderId).toLowerCase().includes(lowerTerm),
         );
       }
 

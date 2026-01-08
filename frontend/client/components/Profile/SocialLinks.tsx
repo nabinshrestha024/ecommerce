@@ -28,11 +28,11 @@ export interface SocialLinkType {
   message: string;
   links: SocialLink[];
 }
-export const SocialLinks = ({ data }: { data: SocialLinkType }) => {
+export const SocialLinks = () => {
   const addSocialLinks = useAddSocialLinks();
   const updateSocialLinks = useUpdateSocialLinks();
   const deleteSocialLink = useDeleteSocialLinks();
-  const { refetch } = useFetchSocialLinks();
+  const { data, refetch } = useFetchSocialLinks();
   const {
     register,
     // handleSubmit,

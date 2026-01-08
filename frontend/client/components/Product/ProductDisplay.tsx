@@ -18,19 +18,31 @@ type FilterFormValues = {
   tags: string[];
 };
 
-interface Product {
+interface ImageType {
+  productImageId: number;
+  imageUrl: string;
+  productId: number;
+  isPrimary: boolean;
+  sortOrder: number;
+}
+
+export interface ProductType {
   productId: number;
   name: string;
   slug: string;
+  description: string;
   shortDescription: string | null;
   price: number;
   stockQuantity: number;
   primaryImageUrl: string;
   isActive: boolean;
   categoryId: number;
+  categoryName: string;
   sku: string;
-  variants?: Variant[];
+  variants: Variant[] | undefined;
   availableAttributes?: VariantAttributes[];
+  images: ImageType[];
+  relatedProducts: ProductType[];
 }
 
 export const ProductDisplay = () => {
@@ -39,17 +51,21 @@ export const ProductDisplay = () => {
   const categoryParam = searchParams.get("categoryId");
   const categoryId = categoryParam ? Number(categoryParam) : null;
   const tagsParam = searchParams.get("tags");
-  const tagsFromUrl = tagsParam ? tagsParam.split(",") : [];
+  const tagsFromUrl: string[] = tagsParam ? tagsParam.split(",") : [];
 
-  const [activeFilters, setActiveFilters] = useState<FilterFormValues | null>(
-    null,
-  );
+  const [activeFilters, setActiveFilters] = useState<
+    FilterFormValues | Record<string, string>
+  >({
+    minPrice: "",
+    maxPrice: "",
+    tags: [],
+  });
 
   const prod = useProductCategory(categoryId || 0);
   const products = useProduct();
   const filteredProducts = useGetCatalogProduct({
     categoryId: categoryId || undefined,
-    tagNames: activeFilters?.tags || tagsFromUrl,
+    tagNames: (activeFilters?.tags as string[]) || tagsFromUrl,
     minPrice: activeFilters?.minPrice || undefined,
     maxPrice: activeFilters?.maxPrice || undefined,
   });
@@ -83,18 +99,25 @@ export const ProductDisplay = () => {
     router.replace(`?${params.toString()}`, { scroll: false });
   };
 
+  const hasAnyValue = Object.values(activeFilters).some((value) => {
+    if (Array.isArray(value)) {
+      return value.length > 0;
+    }
+    return value !== "" && value !== null && value !== undefined;
+  });
+
   const displayData =
-    activeFilters || tagsFromUrl.length > 0 || categoryId !== null
+    hasAnyValue || tagsFromUrl.length > 0 || categoryId !== null
       ? filteredProducts.data?.data?.items || []
       : products.data?.items || [];
 
   const isLoading =
-    activeFilters || tagsFromUrl.length > 0 || categoryId !== null
+    hasAnyValue || tagsFromUrl.length > 0 || categoryId !== null
       ? filteredProducts.isLoading
       : prod.isLoading;
 
   const isError =
-    activeFilters || tagsFromUrl.length > 0 || categoryId !== null
+    hasAnyValue || tagsFromUrl.length > 0 || categoryId !== null
       ? filteredProducts.isError
       : prod.isError;
 
@@ -116,13 +139,15 @@ export const ProductDisplay = () => {
             <ProductCardSkeleton key={index} />
           ))}
 
-        {displayData.map((product: Product) => (
-          <ProductCard key={product.productId} product={product} />
-        ))}
+        {displayData
+          .filter((product: ProductType) => (product.stockQuantity ?? 0) > 0)
+          .map((product: ProductType) => (
+            <ProductCard key={product.productId} product={product} />
+          ))}
 
         {!isLoading && !isError && displayData.length === 0 && (
           <div className="col-span-full text-center py-8 text-gray-500">
-            No products found matching your filters.
+            No products found.
           </div>
         )}
       </div>
