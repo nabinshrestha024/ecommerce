@@ -150,7 +150,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="w-full h-[185px] relative ">
           <Link href={`/product/id/${product.slug}`}>
             <Image
-              src={`http://192.168.80.240/${product.images[0]?.imageUrl}`}
+              src={`http://192.168.80.242${product.images[0]?.imageUrl}`}
               alt={product.name}
               fill
               className="w-full h-full object-cover rounded-[12px]"

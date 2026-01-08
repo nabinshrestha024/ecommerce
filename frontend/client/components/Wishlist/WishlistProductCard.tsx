@@ -27,9 +27,6 @@ export const WishlistProductCard = ({
   const product = data;
   const stockValue = 20;
   const [quantity, setQuantity] = useState(1);
-  const [selectedSizes, setSelectedSizes] = useState<
-    Record<number, number | null>
-  >({});
   const addToCart = useAddToCart();
   const { token } = useAuth();
   const addMutate = useAddWishlist();

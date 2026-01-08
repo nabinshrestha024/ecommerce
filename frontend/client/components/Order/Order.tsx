@@ -50,7 +50,7 @@ export type OrderData = {
   paymentMethodId: string;
   paymentGateway: string;
   notes: string;
-  attributes: AttributeType[];
+  variant: AttributeType[];
 };
 
 export interface AttributeType {
