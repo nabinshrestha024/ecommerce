@@ -1,8 +1,8 @@
 import { useFetchTags } from "@/hooks/filter/useFetchTags";
-import { Input } from "../Input/Input";
 import { useForm } from "react-hook-form";
 import { Button } from "@/ui/button";
 import { useSearchParams } from "next/navigation";
+import { Input } from "../Input/Input";
 
 type FilterFormValues = {
   minPrice: string;
