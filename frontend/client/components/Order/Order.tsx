@@ -99,7 +99,7 @@ export const Order = () => {
         cell: (info) => (
           <div
             onClick={() => handleRowClick(info.row.original)}
-            className="font-bold"
+            className="font-bold cursor-pointer"
           >
             #{info.getValue()}
           </div>
@@ -108,7 +108,10 @@ export const Order = () => {
       columnHelper.accessor("shippingCity", {
         header: "Shipping City",
         cell: (info) => (
-          <div onClick={() => handleRowClick(info.row.original)}>
+          <div
+            onClick={() => handleRowClick(info.row.original)}
+            className="cursor-pointer"
+          >
             {info.getValue() || "N/A"}
           </div>
         ),
@@ -120,7 +123,10 @@ export const Order = () => {
       columnHelper.accessor("totalAmount", {
         header: "Price",
         cell: (info) => (
-          <div onClick={() => handleRowClick(info.row.original)}>
+          <div
+            onClick={() => handleRowClick(info.row.original)}
+            className="cursor-pointer"
+          >
             Rs. {info.getValue()}
           </div>
         ),
@@ -135,7 +141,7 @@ export const Order = () => {
           let bg = "bg-red-500";
 
           if (isPaid) {
-            color = "text-green-500";
+            color = "text-green-500 ";
             bg = "bg-green-500";
           }
           if (isProcessing) {
@@ -333,7 +339,7 @@ export const Order = () => {
   ];
 
   return (
-    <div className="flex p-3 rounded-lg w-full gap-3">
+    <div className="flex flex-col lg:flex-row p-3 rounded-lg w-full gap-3 ">
       <div className="flex-1 relative">
         <Tabs
           defaultValue="All"

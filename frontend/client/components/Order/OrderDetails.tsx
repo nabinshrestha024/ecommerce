@@ -7,6 +7,8 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useInitiatePayment } from "@/hooks/esewa/useInitiatePayment";
 import { EsewaPaymentPayload } from "../Navbar/components/CheckoutForm";
 import { Trash2, X } from "lucide-react";
+import { Dialog } from "../Dialog/Dialog";
+import { ProductReviewForm } from "../Product/Review/ReviewForm";
 
 export const OrderDetails = ({
   order,
@@ -57,48 +59,62 @@ export const OrderDetails = ({
         {data?.items?.map((val) => (
           <div
             key={val.orderItemId}
-            className="group flex gap-5 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300"
+            className="group flex flex-col gap-5 p-4 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300"
           >
-            <div className="w-20 h-20 relative rounded-xl overflow-hidden bg-gray-50 border shrink-0">
-              <Image
-                src={val.productImageUrl || "/placeholder.jpg"}
-                fill
-                alt={val.productName}
-                className="object-cover group-hover:scale-110 transition-transform duration-500"
-                unoptimized
-              />
-            </div>
+            <div className="flex gap-3">
+              <div className="w-20 h-20 relative rounded-xl overflow-hidden bg-gray-50 border shrink-0">
+                <Image
+                  src={val.productImageUrl || "/placeholder.jpg"}
+                  fill
+                  alt={val.productName}
+                  className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  unoptimized
+                />
+              </div>
 
-            <div className="flex-1 flex flex-col justify-center min-w-0">
-              <div className="flex justify-between items-start">
-                <div className="space-y-1">
-                  <h4 className="text-md font-bold text-gray-900 leading-tight truncate">
-                    {val.productName}
-                  </h4>
-                  <p className="text-xs text-gray-500 line-clamp-1 italic">
-                    {val.productDescription || "No description available"}
-                  </p>
-                </div>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {val?.attributes?.map((attr, ind) => (
-                    <span
-                      key={ind}
-                      className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded-md font-medium"
-                    >
-                      {attr.name}: {attr.value}
-                    </span>
-                  ))}
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-bold text-gray-900">
-                    Rs. {val.unitPrice.toLocaleString()}
-                  </p>
-                  <p className="text-[11px] text-gray-400 font-medium">
-                    Qty: {val.quantity}
-                  </p>
+              <div className="flex-1 flex flex-col justify-center min-w-0">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-1">
+                    <h4 className="text-md font-bold text-gray-900 leading-tight truncate">
+                      {val.productName}
+                    </h4>
+                    <p className="text-xs text-gray-500 line-clamp-1 italic">
+                      {val.productDescription || "No description available"}
+                    </p>
+                  </div>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {val?.attributes?.map((attr, ind) => (
+                      <span
+                        key={ind}
+                        className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded-md font-medium"
+                      >
+                        {attr.name}: {attr.value}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-gray-900">
+                      Rs. {val.unitPrice.toLocaleString()}
+                    </p>
+                    <p className="text-[11px] text-gray-400 font-medium">
+                      Qty: {val.quantity}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
+
+            {order.status === "Delivered" && (
+              <Dialog
+                triggerText={
+                  <Button className="flex rounded-sm px-6 py-5 bg-[#60bb46] hover:bg-[#52a63b] transition-all shadow-md hover:shadow-lg">
+                    Add Review
+                  </Button>
+                }
+              >
+                <ProductReviewForm productId={val.productId} />
+              </Dialog>
+            )}
           </div>
         ))}
       </div>
