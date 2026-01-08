@@ -21,7 +21,7 @@ export type OrderData = {
   paymentStatus: string;
   shippingName: string | null;
   shippingPhone: string;
-  attributes: AttributeType[];
+  variant: AttributeType[];
 };
 
 export interface AttributeType {
