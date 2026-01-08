@@ -9,7 +9,7 @@ export interface WishlistItem {
   variantId: number;
   primaryImageUrl: string;
   name: string;
-  shortDescription: string;
+  shortDescription: string | null;
   price: number;
   id: number;
 }
