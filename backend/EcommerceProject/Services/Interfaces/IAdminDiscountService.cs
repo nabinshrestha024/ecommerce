@@ -6,8 +6,9 @@ namespace EcommerceProject.Services.Interfaces
     public interface IAdminDiscountService
     {
         Task CreateAsync(CreateDiscountDto dto);
-        Task UpdateAsync(int discountId, CreateDiscountDto dto);
+        Task UpdateAsync(UpdateDiscountDto dto);
         Task ToggleAsync(int discountId, bool isActive);
         Task<IEnumerable<DiscountDto>> GetAllAsync();
+        Task<int> AddDiscountAsync(CreateDiscountDto request);
     }
 }

@@ -1,5 +1,4 @@
 ﻿
-using EcommerceProject.Models.DTOs.Orders;
 using EcommerceProject.Models.DTOs.ShoppingCart;
 using EcommerceProject.Services.Interfaces;
 using EcommerceProject.utils;
@@ -86,27 +85,11 @@ namespace EcommerceProject.Controllers.v1.Cart
         }
 
         [HttpPost("checkout")]
-        public async Task<IActionResult> Checkout([FromBody] CreateOrderRequestDto dto, CancellationToken ct)
-        {
-            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-
-
-            var (orderId, totalAmount)= await _orderService.CreateOrderFromCartAsync(userId,dto,ct);
-
-            return Ok(new
-            {
-                message = "Checkout successful. Order created.",
-                orderId,
-                totalAmount
-            });
-        }
-
-        [HttpPost("checkout-selected-items")]
         public async Task<IActionResult> CheckoutSelectedItems([FromBody] CheckoutsRequestDto request)
         {
             try
             {
-                // Get user ID from JWT claims
+               
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
 
                 if (userIdClaim == null)
@@ -123,7 +106,10 @@ namespace EcommerceProject.Controllers.v1.Cart
                 {
                     message = "Order placed successfully",
                     orderId = result.OrderId,
-                    totalAmount = result.TotalAmount
+                    DiscountAmount = result.DiscountTotal,
+                    totalAmount = result.TotalAmount,
+                    GrandTotal = result.GrandTotal,
+
                 });
             }
             catch (ArgumentException ex)

@@ -100,22 +100,6 @@ namespace EcommerceProject.Repositories.Implementations
                 commandType: CommandType.StoredProcedure
             );
         }
-        //public async Task<(int OrderId, decimal TotalAmount)> CheckoutSelectedItemsAsync(int userId, List<int> selectedCartItemIds)
-        //{
-        //    using var connection = _connectionFactory.CreateConnection();
-
-        //    // Convert list to comma-separated string
-        //    var idsCsv = string.Join(",", selectedCartItemIds);
-
-        //    var result = await connection.QueryFirstAsync<(int OrderId, decimal TotalAmount)>(
-        //        "spCheckoutSelectedItems",
-        //        new { UserId = userId, SelectedCartItemIds = idsCsv },
-        //        commandType: CommandType.StoredProcedure
-        //    );
-
-        //    return result;
-        //}
-
 
         public async Task<CheckoutsResponseDto> CheckoutSelectedItemsAsync(int userId, CheckoutsRequestDto request)
         {
