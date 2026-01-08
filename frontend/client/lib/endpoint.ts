@@ -25,4 +25,6 @@ export const endpoint = {
   RESETPASSWORD: "auth/auth/reset-password",
   SOCIALLINKS: "profile/social-links",
   WEBSITEREVIEW: "website-reviews",
+  TAGS: "/admin/tags",
+  CATALOGPRODUCTS: "catalog/products",
 };
