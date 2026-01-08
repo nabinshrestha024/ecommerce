@@ -150,23 +150,35 @@ namespace EcommerceProject.Repositories.Implementations
         {
             using var conn = _db.CreateConnection();
 
-            var header = await conn.QueryFirstOrDefaultAsync<OrderDetailDto>(
-                "spAdminOrders_GetById_Header",
+            using var multi = await conn.QueryMultipleAsync(
+                "spAdminOrders_GetById",
                 new { OrderId = orderId },
                 commandType: CommandType.StoredProcedure
             );
 
-            if (header == null) return null;
+            var order = await multi.ReadFirstOrDefaultAsync<OrderDetailDto>();
+            if (order == null) return null;
 
-            var items = await conn.QueryAsync<OrderItemDto>(
-                "spAdminOrders_GetById_Items",
-                new { OrderId = orderId },
-                commandType: CommandType.StoredProcedure
-            );
+            var items = (await multi.ReadAsync<OrderItemDto>()).ToList();
+            
+            var allAttributes = (await multi.ReadAsync<dynamic>()).ToList();
 
-            header.Items = items.ToList();
-            return header;
+            foreach (var item in items)
+            {
+                item.Variant = allAttributes
+                    .Where(a => (int)a.OrderItemId == item.OrderItemId)
+                    .Select(a => new OrderItemVariantAttributeDto
+                    {
+                        Name = (string)a.Name,
+                        Value = (string)a.Value
+                    })
+                    .ToList();
+            }
+
+            order.Items = items;
+            return order;
         }
+
 
         public async Task UpdateStatusAsync(int orderId, string newStatus, CancellationToken ct)
         {
@@ -179,7 +191,6 @@ namespace EcommerceProject.Repositories.Implementations
             );
         }
 
-        // added for payment
         public async Task<OrderPaymentInfoDto> GetOrderForPaymentAsync(int orderId)
         {
             using var conn = _db.CreateConnection();
