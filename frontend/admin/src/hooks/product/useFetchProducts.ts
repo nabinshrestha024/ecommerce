@@ -2,7 +2,7 @@
 import { Product } from "@/lib/product/FetchProductFunction";
 import { useQuery } from "@tanstack/react-query";
 
-type ProductData = {
+export type ProductData = {
   productId: number;
   name: string;
   slug: string;
