@@ -62,7 +62,7 @@ export const AddTagForm = ({
             type="submit"
             className="bg-green-600 hover:bg-green-700 text-white px-10 py-2 rounded transition mt-5"
           >
-            Save Attribute
+            Save Tag
           </button>
         </div>
       </form>
