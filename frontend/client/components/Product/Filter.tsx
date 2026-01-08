@@ -31,7 +31,6 @@ export const Filter = ({ onFilterChange }: FilterProps) => {
   });
 
   const onSubmit = (formData: FilterFormValues) => {
-    console.log(formData);
     onFilterChange(formData);
   };
 
