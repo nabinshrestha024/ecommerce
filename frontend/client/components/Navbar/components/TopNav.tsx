@@ -128,14 +128,16 @@ export const TopNav = () => {
                   <div
                     key={product.productId}
                     onClick={() => {
-                      router.push(`/product/id/${product.slug}`);
+                      setTimeout(() => {
+                        router.push(`/product/id/${product.slug}`);
+                      }, 1000);
                       setSearchData("");
                     }}
                     className="flex items-center gap-3 p-3 hover:bg-[#EAF8E7] cursor-pointer"
                   >
                     <div className="w-10 h-10 relative rounded overflow-hidden">
                       <Image
-                        src={product.primaryImageUrl}
+                        src={`http://192.168.80.242${product?.images[0]?.imageUrl}`}
                         alt={product.name}
                         fill
                         className="object-cover"

@@ -2,6 +2,14 @@
 import { searchProduct } from "@/lib/search/serachProduct";
 import { useQuery } from "@tanstack/react-query";
 
+interface ImageType {
+  productImageId: number;
+  imageUrl: string;
+  productId: number;
+  isPrimary: boolean;
+  sortOrder: number;
+}
+
 type ProductData = {
   productId: number;
   name: string;
@@ -13,6 +21,7 @@ type ProductData = {
   isActive: boolean;
   categoryId: number;
   sku: string;
+  images: ImageType[];
 };
 
 type ProductResponse = {
