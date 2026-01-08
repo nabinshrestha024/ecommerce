@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoSearch } from "react-icons/io5";
-import { Bell, User } from "lucide-react";
+import { Bell, Search, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
@@ -79,22 +79,20 @@ export const TopNav = () => {
         </div>
       </div>
       <div className="gap-4 items-center hidden lg:flex">
-        <div className="relative w-[500px]">
+        <div className="relative w-[400px]">
           <Input
             type="text"
             value={searchData}
-            placeholder="What you're looking for"
+            placeholder="What are you looking for....."
             onChange={(e) => setSearchData(e.target.value)}
             className="bg-[#EAF8E7] h-12 rounded-3xl pr-24"
           />
 
-          <Button
-            variant="ghost"
-            className="bg-white rounded-3xl absolute right-2 top-1/2 -translate-y-1/2 "
-          >
-            <IoSearch />
-            Search
-          </Button>
+          <Search
+            className="rounded-3xl absolute right-2 top-1/2 -translate-y-1/2 mr-3"
+            size={16}
+            color="gray"
+          />
 
           {debounceSearch && (
             <div className="absolute top-14 left-0 w-full bg-white shadow-lg  z-50 max-h-80 overflow-y-auto ">
@@ -108,27 +106,33 @@ export const TopNav = () => {
                 </div>
               )}
 
-              {search.data?.items.map((product) => (
-                <div
-                  key={product.productId}
-                  onClick={() => {
-                    router.push(`/product/id/${product.slug}`);
-                    setSearchData("");
-                  }}
-                  className="flex items-center gap-3 p-3 hover:bg-[#EAF8E7] cursor-pointer"
-                >
-                  <div className="w-10 h-10 relative rounded overflow-hidden">
-                    <Image
-                      src={product.primaryImageUrl}
-                      alt={product.name}
-                      fill
-                      className="object-cover"
-                      unoptimized
-                    />
-                  </div>
-                  <div className="text-sm font-medium">{product.name}</div>
+              {search.data?.items.length === 0 ? (
+                <div className="text-center text-[13px] p-3 cursor-pointer">
+                  No products found
                 </div>
-              ))}
+              ) : (
+                search.data?.items.map((product) => (
+                  <div
+                    key={product.productId}
+                    onClick={() => {
+                      router.push(`/product/id/${product.slug}`);
+                      setSearchData("");
+                    }}
+                    className="flex items-center gap-3 p-3 hover:bg-[#EAF8E7] cursor-pointer"
+                  >
+                    <div className="w-10 h-10 relative rounded overflow-hidden">
+                      <Image
+                        src={product.primaryImageUrl}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    </div>
+                    <div className="text-sm font-medium">{product.name}</div>
+                  </div>
+                ))
+              )}
             </div>
           )}
         </div>
