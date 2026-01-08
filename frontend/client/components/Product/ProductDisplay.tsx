@@ -91,6 +91,7 @@ export const ProductDisplay = () => {
     setActiveFilters(filters);
 
     const params = new URLSearchParams(searchParams.toString());
+
     if (categoryId) params.set("categoryId", categoryId.toString());
 
     if (filters.tags.length > 0) {

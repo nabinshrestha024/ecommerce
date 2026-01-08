@@ -12,7 +12,7 @@ import { WishlistItem } from "../TrendingProduct/component/TrendingProductCard";
 import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { useState } from "react";
-import { Dialog } from "../Dialog/Dialog";
+import { Dialog } from "../dialog/Dialog";
 import { Variant } from "./ProductDetails";
 import { Card } from "../Card/Card";
 import { ProductType } from "./ProductDisplay";
