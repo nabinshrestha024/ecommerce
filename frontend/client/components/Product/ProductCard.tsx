@@ -11,7 +11,7 @@ import { useFetchWishlist } from "@/hooks/wishlist/useFetchWishlist";
 import { WishlistItem } from "../TrendingProduct/component/TrendingProductCard";
 import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Dialog } from "../Dialog/Dialog";
 import { Variant } from "./ProductDetails";
 import { Card } from "../Card/Card";
@@ -20,6 +20,13 @@ import { ProductType } from "./ProductDisplay";
 interface ProductCardProps {
   product: ProductType;
 }
+
+const getDefaultSelectedVariants = (
+  variants?: Variant[] | undefined,
+): Record<string, string | undefined> => {
+  const defaultVariant = variants?.find((v) => v.isDefault);
+  return defaultVariant?.attributes ?? {};
+};
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const stockValue = 20;
@@ -31,7 +38,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const wishlists = useFetchWishlist();
   const [selectedVariants, setSelectedVariants] = useState<
     Record<string, string | undefined>
-  >({});
+  >(() => getDefaultSelectedVariants(product?.variants));
+
+  if (product?.variants && Object.keys(selectedVariants).length === 0) {
+    const defaults = getDefaultSelectedVariants(product.variants);
+    if (Object.keys(defaults).length > 0) {
+      setSelectedVariants(defaults);
+    }
+  }
 
   const activeVariant = product?.variants?.find((variant) =>
     Object.entries(selectedVariants).every(
@@ -102,14 +116,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       ),
     );
   };
-
-  useEffect(() => {
-    if (!product?.variants) return;
-    const defaultVariant = product.variants.find((v) => v.isDefault) ?? null;
-    setSelectedVariants(
-      (defaultVariant?.attributes ?? {}) as Record<string, string | undefined>,
-    );
-  }, [product]);
 
   const handleVariantChange = (attributeName: string, value: string) => {
     const variants = product?.variants ?? [];

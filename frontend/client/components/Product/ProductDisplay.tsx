@@ -137,14 +137,6 @@ export const ProductDisplay = () => {
             No products found matching your filters.
           </div>
         )}
-
-        {categoryId === null
-          ? (products.data?.items || []).map((product) => (
-              <ProductCard key={product.productId} product={product} />
-            ))
-          : (prod.data?.items || []).map((product) => (
-              <ProductCard key={product.productId} product={product} />
-            ))}
       </div>
     </div>
   );
