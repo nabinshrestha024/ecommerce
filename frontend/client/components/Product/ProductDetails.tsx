@@ -11,6 +11,7 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { ProductCard } from "./ProductCard";
 import { useProductCategory } from "@/hooks/product/useProductCategory";
 import { Card } from "../Card/Card";
+import { ProductReview } from "./Review/ProductReview";
 
 export interface Variant {
   variantId: number;
@@ -122,7 +123,7 @@ const ProductDetails = () => {
 
   const handleVariantChange = (attributeName: string, value: string) => {
     const variants = productItems.data?.variants ?? [];
-    let nextSelection = { ...selectedVariants, [attributeName]: value };
+    const nextSelection = { ...selectedVariants, [attributeName]: value };
 
     Object.keys(nextSelection).forEach((key) => {
       if (key === attributeName) return;
@@ -303,6 +304,10 @@ const ProductDetails = () => {
           </div>
         </div>
       </Card>
+
+      {productItems.data?.productId && (
+        <ProductReview productId={productItems.data?.productId} />
+      )}
 
       <div>Related Products</div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">

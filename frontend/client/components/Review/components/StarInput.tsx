@@ -5,6 +5,7 @@ interface StarInputProps {
   onChange?: (value: number) => void;
   max?: number;
 }
+
 export const StarInput = ({ value = 0, onChange, max = 5 }: StarInputProps) => {
   const [hoveredValue, setHoveredValue] = useState<number>(0);
   return (

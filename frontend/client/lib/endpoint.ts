@@ -25,4 +25,5 @@ export const endpoint = {
   RESETPASSWORD: "auth/auth/reset-password",
   SOCIALLINKS: "profile/social-links",
   WEBSITEREVIEW: "website-reviews",
+  REVIEW: "reviews",
 };
