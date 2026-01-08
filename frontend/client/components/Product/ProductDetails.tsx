@@ -9,7 +9,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { ProductCard } from "./ProductCard";
-import { useProductCategory } from "@/hooks/product/useProductCategory";
 import { Card } from "../Card/Card";
 import { ProductReview } from "./Review/ProductReview";
 

@@ -8,17 +8,13 @@ import { toast } from "sonner";
 import { useAddWishlist } from "@/hooks/wishlist/useAddWishlist";
 import { useDeleteWishlist } from "@/hooks/wishlist/useDeleteWishlist";
 import { useFetchWishlist } from "@/hooks/wishlist/useFetchWishlist";
-import {
-  wishlistData,
-  WishlistItem,
-} from "../TrendingProduct/component/TrendingProductCard";
+import { WishlistItem } from "../TrendingProduct/component/TrendingProductCard";
 import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { Dialog } from "../Dialog/Dialog";
-import { Variant, VariantAttributes } from "./ProductDetails";
+import { Variant } from "./ProductDetails";
 import { Card } from "../Card/Card";
-import { ProductData } from "@/hooks/product/useProductDetails";
 import { ProductType } from "./ProductDisplay";
 
 interface ProductCardProps {
@@ -28,9 +24,6 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const stockValue = 20;
   const [quantity, setQuantity] = useState(1);
-  const [selectedSizes, setSelectedSizes] = useState<
-    Record<number, number | null>
-  >({});
   const addToCart = useAddToCart();
   const { token } = useAuth();
   const addMutate = useAddWishlist();
@@ -46,11 +39,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     ),
   );
 
-  const handleAddToCart = (
-    productId: number,
-    quantity: number,
-    sizeValue?: string,
-  ) => {
+  const handleAddToCart = (productId: number, quantity: number) => {
     if (token) {
       addToCart.mutate({
         variantId: productId,
@@ -62,9 +51,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     } else {
       toast.message("Login to add to cart");
     }
-  };
-  const handleSelectSize = (productId: number, sizeId: number) => {
-    setSelectedSizes((prev) => ({ ...prev, [productId]: sizeId }));
   };
 
   const handleIncrease = () => {
