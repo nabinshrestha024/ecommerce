@@ -121,7 +121,7 @@ export const OrderDetails = ({
           <div>
             <p className="text-sm text-gray-500 font-medium">Order Total</p>
             <p className="text-2xl font-black text-gray-900">
-              Rs. {total || order.totalAmount}
+              Rs. {order.totalAmount}
             </p>
           </div>
           <div className="text-right">
