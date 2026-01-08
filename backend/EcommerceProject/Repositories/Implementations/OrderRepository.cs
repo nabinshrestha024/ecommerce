@@ -96,20 +96,18 @@ namespace EcommerceProject.Repositories.Implementations
             return header;
         }
 
-    public async Task<PagedResult<AdminOrderRowDto>> AdminGetPagedAsync(
-    PaginationDto pagination,
-    string? status,
-    string? search,
-    CancellationToken ct)
+        public async Task<PagedResult<AdminOrderRowDto>> AdminGetPagedAsync(
+            PaginationDto pagination,
+            string? status,
+            string? search,
+            CancellationToken ct)
         {
             using var conn = _db.CreateConnection();
-
             var orderDict = new Dictionary<int, AdminOrderRowDto>();
 
             using var multi = await conn.QueryMultipleAsync(
                 "spAdminOrders_GetPaged",
-                new
-                {
+                new {
                     Page = pagination.Page,
                     PageSize = pagination.PageSize,
                     Status = status,
@@ -119,24 +117,35 @@ namespace EcommerceProject.Repositories.Implementations
             );
 
             multi.Read<AdminOrderRowDto, OrderItemDto, AdminOrderRowDto>(
-                (order, item) =>
-                {
-                    if (!orderDict.TryGetValue(order.OrderId, out var existing))
-                    {
+                (order, item) => {
+                    if (!orderDict.TryGetValue(order.OrderId, out var existing)) {
                         existing = order;
                         existing.Items = new List<OrderItemDto>();
                         orderDict.Add(order.OrderId, existing);
                     }
-
-                    if (item != null)
-                        existing.Items.Add(item);
-
+                    if (item != null) existing.Items.Add(item);
                     return existing;
                 },
                 splitOn: "OrderItemId"
             );
 
             var totalCount = await multi.ReadFirstAsync<int>();
+
+            var allAttributes = (await multi.ReadAsync<dynamic>()).ToList();
+
+            foreach (var order in orderDict.Values)
+            {
+                foreach (var item in order.Items)
+                {
+                    item.Variant = allAttributes
+                        .Where(a => (int)a.OrderItemId == item.OrderItemId)
+                        .Select(a => new OrderItemVariantAttributeDto {
+                            Name = (string)a.Name,
+                            Value = (string)a.Value
+                        })
+                        .ToList();
+                }
+            }
 
             return new PagedResult<AdminOrderRowDto>(
                 orderDict.Values.ToList(),
@@ -179,7 +188,6 @@ namespace EcommerceProject.Repositories.Implementations
             return order;
         }
 
-
         public async Task UpdateStatusAsync(int orderId, string newStatus, CancellationToken ct)
         {
             using var conn = _db.CreateConnection();
@@ -211,5 +219,5 @@ namespace EcommerceProject.Repositories.Implementations
                 commandType: CommandType.StoredProcedure
             );
         }
-}
+    }
 }
