@@ -7,7 +7,7 @@ export const Slides = [
       title: "Big Sale",
       description: "Up to 50% off electronics",
       buttonText: "Shop Now",
-      href: "/products/electronics",
+      categoryId: 2,
     },
   },
   {
@@ -18,7 +18,7 @@ export const Slides = [
       title: "Fresh Groceries",
       description: "Get fresh groceries delivered to your door",
       buttonText: "Shop Now",
-      href: "/products/groceries",
+      categoryId: 4,
     },
   },
   {
@@ -29,7 +29,7 @@ export const Slides = [
       title: "Stylish Shoes",
       description: "Step into style with our latest collection",
       buttonText: "Shop Now",
-      href: "/products/shoes",
+      categoryId: 1,
     },
   },
   {
@@ -40,7 +40,7 @@ export const Slides = [
       title: "Cozy Sweaters",
       description: "Stay warm this winter with our cozy sweaters",
       buttonText: "Shop Now",
-      href: "/products/sweaters",
+      categoryId: 3,
     },
   },
 ];

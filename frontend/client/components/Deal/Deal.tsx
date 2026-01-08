@@ -4,8 +4,10 @@ import { Button } from "@/ui/button";
 import { useProduct } from "@/hooks/product/useProduct";
 import { ProductCardSkeleton } from "../TrendingProduct/component/ProductCardLoading";
 import { ProductCard } from "../Product/ProductCard";
+import { useRouter } from "next/navigation";
 
 export const Deal = () => {
+  const router = useRouter();
   const { data, isLoading, isError } = useProduct();
 
   const placeholderCount = 4;
@@ -17,6 +19,7 @@ export const Deal = () => {
           <Button
             variant={"outline"}
             className="rounded-2xl border border-black text-xs"
+            onClick={() => router.push("/product")}
           >
             View All
           </Button>
