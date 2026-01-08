@@ -3,7 +3,7 @@ GO
 
 CREATE OR ALTER PROCEDURE [dbo].[spCheckoutSelectedItems]
     @UserId INT,
-    @SelectedCartItemIds NVARCHAR(MAX), -- comma-separated list of CartItemIds
+    @SelectedCartItemIds NVARCHAR(MAX),
     @ShippingName NVARCHAR(100),
     @ShippingAddress NVARCHAR(200),
     @ShippingCity NVARCHAR(100),
@@ -11,15 +11,13 @@ CREATE OR ALTER PROCEDURE [dbo].[spCheckoutSelectedItems]
 AS
 BEGIN
     SET NOCOUNT ON;
-    BEGIN TRANSACTION;
-    BEGIN TRY
 
     -- Convert CSV to table
     DECLARE @Ids TABLE (CartId INT);
     INSERT INTO @Ids(CartId)
     SELECT value FROM STRING_SPLIT(@SelectedCartItemIds, ',');
 
-    -- Get cart items with discounts
+    -- Get cart items and calculate discounts
     DECLARE @ShoppingCarts TABLE (
         CartId INT,
         ProductId INT,
@@ -41,54 +39,44 @@ BEGIN
         sc.VariantId,
         sc.Quantity,
         pv.Price AS UnitPrice,
-        d.DiscountId,
-        d.DiscountName,
-        d.DiscountType,
-        d.DiscountValue,
+        COALESCE(vd.DiscountId, pd.DiscountId) AS DiscountId,
+        COALESCE(vd.DiscountName, pd.DiscountName) AS DiscountName,
+        COALESCE(vd.DiscountType, pd.DiscountType) AS DiscountType,
+        COALESCE(vd.DiscountValue, pd.DiscountValue) AS DiscountValue,
         CASE
-            WHEN d.DiscountType = 'Flat' THEN d.DiscountValue
-            WHEN d.DiscountType = 'Percentage' THEN (pv.Price * d.DiscountValue / 100)
+            WHEN COALESCE(vd.DiscountType, pd.DiscountType) = 'Flat'
+                THEN COALESCE(vd.DiscountValue, pd.DiscountValue)
+            WHEN COALESCE(vd.DiscountType, pd.DiscountType) = 'Percentage'
+                THEN pv.Price * COALESCE(vd.DiscountValue, pd.DiscountValue) / 100
             ELSE 0
         END AS DiscountAmount,
         CASE
-            WHEN d.DiscountType = 'Flat' THEN (pv.Price - d.DiscountValue)
-            WHEN d.DiscountType = 'Percentage' THEN (pv.Price - (pv.Price * d.DiscountValue / 100))
+            WHEN COALESCE(vd.DiscountType, pd.DiscountType) = 'Flat'
+                THEN pv.Price - COALESCE(vd.DiscountValue, pd.DiscountValue)
+            WHEN COALESCE(vd.DiscountType, pd.DiscountType) = 'Percentage'
+                THEN pv.Price - (pv.Price * COALESCE(vd.DiscountValue, pd.DiscountValue)/100)
             ELSE pv.Price
         END AS FinalPrice
     FROM ShoppingCarts sc
     INNER JOIN @Ids i ON sc.CartId = i.CartId
     INNER JOIN ProductVariants pv ON sc.VariantId = pv.VariantId
     INNER JOIN Products p ON pv.ProductId = p.ProductId
-
-    -- Variant discount priority
     OUTER APPLY (
         SELECT TOP 1 d.*
         FROM DiscountAssigns da
         INNER JOIN Discounts d ON d.DiscountId = da.DiscountId
-        WHERE da.VariantId = sc.VariantId
-          AND d.IsActive = 1
-          AND GETDATE() BETWEEN d.StartDate AND d.EndDate
+        WHERE da.VariantId = sc.VariantId AND d.IsActive = 1
+        AND GETDATE() BETWEEN d.StartDate AND d.EndDate
         ORDER BY d.DiscountValue DESC
     ) vd
-
-    -- Product discount fallback
     OUTER APPLY (
         SELECT TOP 1 d.*
         FROM DiscountAssigns da
         INNER JOIN Discounts d ON d.DiscountId = da.DiscountId
-        WHERE da.ProductId = p.ProductId
-          AND d.IsActive = 1
-          AND GETDATE() BETWEEN d.StartDate AND d.EndDate
+        WHERE da.ProductId = p.ProductId AND d.IsActive = 1
+        AND GETDATE() BETWEEN d.StartDate AND d.EndDate
         ORDER BY d.DiscountValue DESC
-    ) pd
-
-    CROSS APPLY (
-        SELECT
-            COALESCE(vd.DiscountId, pd.DiscountId) AS DiscountId,
-            COALESCE(vd.DiscountName, pd.DiscountName) AS DiscountName,
-            COALESCE(vd.DiscountType, pd.DiscountType) AS DiscountType,
-            COALESCE(vd.DiscountValue, pd.DiscountValue) AS DiscountValue
-    ) d;
+    ) pd;
 
     -- Calculate totals
     DECLARE @TotalAmount DECIMAL(18,2) = 0,
@@ -113,45 +101,28 @@ BEGIN
 
     SET @OrderId = SCOPE_IDENTITY();
 
-    -- Insert OrderItems with discount snapshot
+    -- Insert OrderItems
     INSERT INTO OrderItems
     (OrderId, ProductId, VariantId, Quantity, UnitPrice, DiscountId, DiscountName, DiscountType, DiscountValue, DiscountAmount, FinalPrice)
     SELECT
-        @OrderId,
-        ProductId,
-        VariantId,
-        Quantity,
-        UnitPrice,
-        DiscountId,
-        DiscountName,
-        DiscountType,
-        DiscountValue,
-        DiscountAmount,
-        FinalPrice
+        @OrderId, ProductId, VariantId, Quantity, UnitPrice, DiscountId, DiscountName, DiscountType, DiscountValue, DiscountAmount, FinalPrice
     FROM @ShoppingCarts;
 
     -- Update stock
     UPDATE pv
-    SET pv.StockQuantity = pv.StockQuantity - ci.Quantity
+    SET pv.StockQuantity = pv.StockQuantity - sc.Quantity
     FROM ProductVariants pv
-    INNER JOIN @ShoppingCarts ci ON pv.VariantId = ci.VariantId;
+    INNER JOIN @ShoppingCarts sc ON pv.VariantId = sc.VariantId;
 
     -- Remove purchased cart items
     DELETE sc
     FROM ShoppingCarts sc
     INNER JOIN @Ids i ON sc.CartId = i.CartId;
 
-    COMMIT TRANSACTION;
-
     -- Return summary
     SELECT @OrderId AS OrderId,
            @TotalAmount AS TotalAmount,
            @DiscountTotal AS DiscountTotal,
            @GrandTotal AS GrandTotal;
-
-END TRY
-BEGIN CATCH
-    ROLLBACK TRANSACTION;
-    THROW;
-END CATCH
 END
+GO

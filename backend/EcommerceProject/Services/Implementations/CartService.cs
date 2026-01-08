@@ -1,12 +1,10 @@
-﻿using EcommerceProject.Models.DTOs.Cart;
-using EcommerceProject.Models.DTOs.Orders;
-using EcommerceProject.Models.DTOs.Payment;
+﻿using Dapper;
+using EcommerceProject.Database;
 using EcommerceProject.Models.DTOs.ShoppingCart;
-using EcommerceProject.Repositories.Implementations;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
+using Microsoft.AspNetCore.Connections;
 using System.Data;
-using System.Data.Common;
 
 namespace EcommerceProject.Services.Implementations
 {
@@ -16,12 +14,17 @@ namespace EcommerceProject.Services.Implementations
         private readonly IProductRepository _productRepository;
         private readonly IUrlService _urlService;
         private readonly IProductVariantRepository _variantrepo;
-        public CartService(ICartRepository cartRepository, IProductRepository productRepository, IUrlService urlService, IProductVariantRepository variantrepo)
+        private readonly ISqlConnectionFactory _sqlConnectionFactory;
+        private readonly INotificationService _notificationservice;
+        public CartService(ICartRepository cartRepository, IProductRepository productRepository, IUrlService urlService, IProductVariantRepository variantrepo, ISqlConnectionFactory sqlConnectionFactory, INotificationService notificationservice)
         {
             _cartRepository = cartRepository;
             _productRepository = productRepository;
             _urlService = urlService;
             _variantrepo = variantrepo;
+            _sqlConnectionFactory = sqlConnectionFactory;
+            _notificationservice = notificationservice;
+
         }
 
         public async Task<IEnumerable<CartItemDto>> GetCartAsync(int userId)
@@ -47,7 +50,7 @@ namespace EcommerceProject.Services.Implementations
 
             }
 
-            
+
 
             var cartItems = await _cartRepository.GetCartAsync(userId);
 
@@ -58,8 +61,8 @@ namespace EcommerceProject.Services.Implementations
             {
 
                 var totalQuantity = cartItem.Quantity + quantity;
-                
-                
+
+
 
 
                 cartItem.Quantity = totalQuantity;
@@ -68,8 +71,8 @@ namespace EcommerceProject.Services.Implementations
             }
             else
             {
-                await _cartRepository.AddToCartAsync(userId, variantId, quantity);      
-               
+                await _cartRepository.AddToCartAsync(userId, variantId, quantity);
+
             }
 
         }
@@ -95,13 +98,59 @@ namespace EcommerceProject.Services.Implementations
             return await _cartRepository.CheckoutAsync(userId);
         }
 
-        public async Task<CheckoutsResponseDto> CheckoutSelectedItemsAsync(int userId,CheckoutsRequestDto request)
+        //public async Task<CheckoutsResponseDto> CheckoutSelectedItemsAsync(int userId,CheckoutsRequestDto request)
+        //{
+
+        //    return await _cartRepository.CheckoutSelectedItemsAsync(
+        //        userId,request);
+        //}
+
+        public async Task<CheckoutsResponseDto> CheckoutSelectedItemsAsync(int userId, CheckoutsRequestDto request)
         {
-            return await _cartRepository.CheckoutSelectedItemsAsync(
-                userId,request);
+            using var connection = _sqlConnectionFactory.CreateConnection();
+            
+            using var transaction = connection.BeginTransaction();
+
+            CheckoutsResponseDto checkoutResult;
+
+            try
+            {
+                checkoutResult = await _cartRepository.CheckoutSelectedItemsAsync(
+                    userId, request, connection, transaction);
+
+                await connection.ExecuteAsync(
+                "spNotifications_Create",
+                new
+                {
+                    UserId = userId,
+                    Title = "Order Placed Successfully",
+                    Message = $"Your order #{checkoutResult.OrderId} has been placed successfully.",
+                    OrderId = checkoutResult.OrderId
+                },
+                transaction: transaction,
+                commandType: CommandType.StoredProcedure
+                );
+
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+
+            // ✅ ONLY ONE PLACE for notification
+            await _notificationservice.NotifyUserAsync(
+                userId,
+                "Order Placed Successfully",
+                $"Your order #{checkoutResult.OrderId} has been placed successfully.",
+                checkoutResult.OrderId,
+                sendEmail: false,
+                CancellationToken.None
+            );
+
+            return checkoutResult;
         }
-
-
 
     }
 }

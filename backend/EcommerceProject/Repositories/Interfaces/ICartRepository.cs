@@ -2,6 +2,7 @@
 using EcommerceProject.Models.DTOs.Payment;
 using EcommerceProject.Models.DTOs.ShoppingCart;
 using EcommerceProject.Models.Entities;
+using System.Data;
 
 namespace EcommerceProject.Repositories.Interfaces
 {
@@ -13,6 +14,6 @@ namespace EcommerceProject.Repositories.Interfaces
         Task RemoveCartAsync(int cartId, CancellationToken ct = default);
 
         Task<int> CheckoutAsync(int userId);
-        Task<CheckoutsResponseDto> CheckoutSelectedItemsAsync(int userId, CheckoutsRequestDto request);
+        Task<CheckoutsResponseDto> CheckoutSelectedItemsAsync(int userId, CheckoutsRequestDto request, IDbConnection connection, IDbTransaction transaction);
     }
 }
