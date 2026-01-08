@@ -1,7 +1,11 @@
+"use client";
+
 import { Button } from "@/ui/button";
 import { TrendingProductCard } from "../component/TrendingProductCard";
 import { Trennd } from "../component/Trennd";
+import { useRouter } from "next/navigation";
 export const ProductCard = () => {
+  const router = useRouter();
   return (
     <div>
       <div className="w-full flex flex-col  gap-4 lg:gap-8 mx-auto max-w-[1216px]">
@@ -10,6 +14,7 @@ export const ProductCard = () => {
           <Button
             variant={"outline"}
             className="rounded-2xl border border-black text-xs"
+            onClick={() => router.push("/product")}
           >
             View All
           </Button>

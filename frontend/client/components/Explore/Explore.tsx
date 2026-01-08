@@ -6,8 +6,10 @@ import Image from "next/image";
 import { useCategory } from "@/hooks/category/useCategory";
 import Link from "next/link";
 import { CategoryCardSkeleton } from "./components/CategoryLoadingCard";
+import { useRouter } from "next/navigation";
 
 export const Explore = () => {
+  const router = useRouter();
   const { data, isError, isLoading } = useCategory();
   const placeholderCount = 4;
   return (
@@ -18,6 +20,7 @@ export const Explore = () => {
           <Button
             variant={"outline"}
             className="rounded-2xl border border-black text-xs"
+            onClick={() => router.push("/product")}
           >
             View All
           </Button>

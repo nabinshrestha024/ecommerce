@@ -8,21 +8,21 @@ export const Footer = () => {
   return (
     <div className="bg-[#EAF8E7] hidden md:block">
       <div className="w-full flex justify-around flex-col items-center lg:flex-row px-10 gap-5 border-b py-5">
-        <div className="flex items-center">
+        <div className="flex items-center ">
           <Image src={"/logo.png"} alt="Logo" height={80} width={180} />
-          <div className="relative">
-            <Input
-              type={"text"}
-              placeholder="Enter your email address"
-              className="bg-[#C1E6BA] shrink-0 w-[480px] h-12 rounded-3xl pr-25"
-            />
-            <Button
-              variant={"ghost"}
-              className="bg-white rounded-3xl absolute right-2 top-1/2 -translate-y-1/2"
-            >
-              Subscribe
-            </Button>
-          </div>
+        </div>
+        <div className="relative flex ">
+          <Input
+            type={"text"}
+            placeholder="Enter your email address"
+            className="bg-[#C1E6BA] shrink-0 w-[480px] h-12 rounded-3xl pr-25"
+          />
+          <Button
+            variant={"ghost"}
+            className="bg-white rounded-3xl absolute right-2 top-1/2 -translate-y-1/2"
+          >
+            Subscribe
+          </Button>
         </div>
 
         <div>

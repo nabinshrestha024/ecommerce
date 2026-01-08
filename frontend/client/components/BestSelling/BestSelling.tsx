@@ -3,8 +3,10 @@
 import { Button } from "@/ui/button";
 import Image from "next/image";
 import { bestSelling } from "./bestSelling.import";
+import { useRouter } from "next/navigation";
 
 export const BestSelling = () => {
+  const router = useRouter();
   return (
     <div className="w-full px-6 mx-auto flex items-center justify-center">
       <div className="w-full max-w-[1216px]">
@@ -13,6 +15,7 @@ export const BestSelling = () => {
           <Button
             variant={"outline"}
             className="rounded-2xl border border-black text-xs"
+            onClick={() => router.push("/product")}
           >
             View All
           </Button>

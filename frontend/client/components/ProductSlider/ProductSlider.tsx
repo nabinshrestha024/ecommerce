@@ -34,7 +34,7 @@ export const ProductSlider = () => {
                 <p className="mt-2">{slide.overlay.description}</p>
 
                 <Link
-                  href={slide.overlay.href}
+                  href={`/product?categoryId=${slide.overlay.categoryId}`}
                   className="inline-block mt-4 bg-white text-black px-6 py-2 rounded"
                 >
                   {slide.overlay.buttonText}

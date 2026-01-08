@@ -2,6 +2,7 @@ import { Card } from "@/components/Card/Card";
 import { TrendData } from "./TrendData.import";
 import Image from "next/image";
 import { Button } from "@/ui/button";
+import Link from "next/link";
 
 export const Trennd = () => {
   return (
@@ -23,14 +24,16 @@ export const Trennd = () => {
                   fill
                   className="rounded-[10px] border border-[#E5E7EB] object-cover"
                 />
-                <Button className="absolute bottom-2 left-5  px-8 py-1 text-[14px] font-bold leading-3 bg-[#EAF8E7] text-black  rounded-[200px] hover:bg-[#EAF8E7]">
-                  Buy Now
-                </Button>
+                <Link href={`/product?categoryId=${trendData.categoryId}`}>
+                  <Button className="absolute bottom-2 left-5  px-8 py-1 text-[14px] font-bold leading-3 bg-[#EAF8E7] text-black  rounded-[200px] hover:bg-[#EAF8E7] hover:text-black">
+                    Buy Now
+                  </Button>
+                </Link>
                 {trendData.id == 1 ? (
                   <div className="absolute top-2 right-2 text-[#4EA674] text-[12px] font-bold"></div>
                 ) : (
                   <div className="absolute top-2 right-2 text-[#4EA674] text-[12px] font-bold">
-                    $25.95
+                    Rs. 2500
                   </div>
                 )}
                 {trendData.id == 0 && (
