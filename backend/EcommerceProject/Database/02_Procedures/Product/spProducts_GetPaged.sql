@@ -55,11 +55,20 @@ BEGIN
     ORDER BY ProductId DESC
     OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
 
-    SELECT p.*, c.Name AS CategoryName
-    FROM Products p
-    INNER JOIN Categories c ON p.CategoryId = c.CategoryId
-    WHERE p.ProductId IN (SELECT ProductId FROM #PagedIds)
-    ORDER BY p.ProductId DESC;
+    SELECT
+    p.*,
+    c.Name AS CategoryName,
+    (
+        SELECT TOP 1 pi.ImageUrl
+        FROM ProductImages pi
+        WHERE pi.ProductId = p.ProductId
+        ORDER BY pi.IsPrimary DESC, pi.SortOrder ASC
+    ) AS PrimaryImageUrl
+FROM Products p
+INNER JOIN Categories c ON p.CategoryId = c.CategoryId
+WHERE p.ProductId IN (SELECT ProductId FROM #PagedIds)
+ORDER BY p.ProductId DESC;
+
 
     SELECT * FROM ProductVariants
     WHERE ProductId IN (SELECT ProductId FROM #PagedIds)
