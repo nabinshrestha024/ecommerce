@@ -11,6 +11,7 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { ProductCard } from "./ProductCard";
 import { useProductCategory } from "@/hooks/product/useProductCategory";
 import { Card } from "../Card/Card";
+import { ProductReview } from "./Review/ProductReview";
 
 export interface Variant {
   variantId: number;
@@ -260,6 +261,10 @@ const ProductDetails = () => {
           </div>
         </div>
       </Card>
+
+      {productItems.data?.productId && (
+        <ProductReview productId={productItems.data?.productId} />
+      )}
 
       <div className="font-bold text-xl">Related Products</div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">

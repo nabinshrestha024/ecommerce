@@ -27,4 +27,5 @@ export const endpoint = {
   WEBSITEREVIEW: "website-reviews",
   TAGS: "/admin/tags",
   CATALOGPRODUCTS: "catalog/products",
+  REVIEW: "reviews",
 };
