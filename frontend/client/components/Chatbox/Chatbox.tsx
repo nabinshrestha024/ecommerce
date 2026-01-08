@@ -1,6 +1,7 @@
 "use client";
 
 import { useSendPrompt } from "@/hooks/chatbot/useSendPrompt";
+import { useProduct } from "@/hooks/product/useProduct";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
 import { Send } from "lucide-react";
@@ -44,6 +45,7 @@ export default function Chatbot() {
   const [prompt, setPrompt] = useState("");
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const sendPrompt = useSendPrompt();
+  const products = useProduct();
 
   useEffect(() => {
     if (open && messages.length === 0) {
@@ -97,7 +99,7 @@ export default function Chatbot() {
       { role: "model", parts: [{ text: "Loading" }] },
     ]);
     sendPrompt.mutate(
-      { message: prompt, history: tempHistory },
+      { message: prompt, history: tempHistory, products: products.data },
       {
         onSuccess: (data) => {
           setMessages((prev) =>
