@@ -156,11 +156,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               className="w-full h-full object-cover rounded-[12px]"
               unoptimized
             />
-            {product.stockQuantity === 0 && (
-              <div className="absolute top-3 left-3 px-1 rounded-sm text-white bg-gray-500 font-bold flex justify-center items-center cursor-pointer">
-                Out of Stock
-              </div>
-            )}
           </Link>
           <div className="absolute top-3 right-3 rounded-full w-6 h-6 shadow-md flex justify-center items-center cursor-pointer bg-white">
             {wishedIds.has(product.productId) ? (
@@ -225,129 +220,120 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             View Details
           </div>
         </Link>
-        {product.stockQuantity === 0 ? (
-          <Button
-            className="px-5 py-4 text-[14px] font-bold bg-gray-500 text-white rounded-[200px]"
-            disabled
-          >
-            Out of stock
-          </Button>
-        ) : (
-          <Dialog
-            triggerText={
-              <Button
-                className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px]"
-                onPointerDownCapture={() => setQuantity(1)}
-              >
-                Add to cart
-              </Button>
-            }
-          >
-            <div className="flex flex-col gap-4">
-              <DialogTitle className="text-[18px] font-bold">
-                Cart Information
-              </DialogTitle>
+        <Dialog
+          triggerText={
+            <Button
+              className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px]"
+              onPointerDownCapture={() => setQuantity(1)}
+            >
+              Add to cart
+            </Button>
+          }
+        >
+          <div className="flex flex-col gap-4">
+            <DialogTitle className="text-[18px] font-bold">
+              Cart Information
+            </DialogTitle>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-start gap-5 w-full">
+                <div className="w-[100px] h-[100px] relative">
+                  <Image
+                    src={product.primaryImageUrl}
+                    alt={product.name}
+                    fill
+                    className="object-cover rounded-[12px]"
+                    unoptimized
+                  />
+                </div>
+                <div>
+                  <div className="text-[25px] font-bold">{product.name}</div>
+                  <div className="text-[16px] line-clamp-2">
+                    {product.shortDescription}
+                  </div>
+                </div>
+              </div>
+              <div className="w-full flex justify-between">
+                <div className="flex gap-2.5 items-center">
+                  <button
+                    className="p-1 rounded border disabled:opacity-50"
+                    onClick={() => handleDecrease()}
+                  >
+                    <MdKeyboardArrowDown />
+                  </button>
+                  <div className="px-3 py-1 border rounded">{quantity}</div>
+                  <button
+                    className="p-1 rounded border"
+                    onClick={() => handleIncrease()}
+                  >
+                    <MdKeyboardArrowUp />
+                  </button>
+                </div>
+                <div className="text-sm italic">Stock: {stockValue} </div>
+              </div>
               <div className="flex flex-col gap-3">
-                <div className="flex items-start gap-5 w-full">
-                  <div className="w-[100px] h-[100px] relative">
-                    <Image
-                      src={product.primaryImageUrl}
-                      alt={product.name}
-                      fill
-                      className="object-cover rounded-[12px]"
-                      unoptimized
-                    />
-                  </div>
-                  <div>
-                    <div className="text-[25px] font-bold">{product.name}</div>
-                    <div className="text-[16px] line-clamp-2">
-                      {product.shortDescription}
-                    </div>
-                  </div>
-                </div>
-                <div className="w-full flex justify-between">
-                  <div className="flex gap-2.5 items-center">
-                    <button
-                      className="p-1 rounded border disabled:opacity-50"
-                      onClick={() => handleDecrease()}
-                    >
-                      <MdKeyboardArrowDown />
-                    </button>
-                    <div className="px-3 py-1 border rounded">{quantity}</div>
-                    <button
-                      className="p-1 rounded border"
-                      onClick={() => handleIncrease()}
-                    >
-                      <MdKeyboardArrowUp />
-                    </button>
-                  </div>
-                  <div className="text-sm italic">Stock: {stockValue} </div>
-                </div>
-                <div className="flex flex-col gap-3">
-                  <div className="font-bold text-[18px]">Variants</div>
+                <div className="font-bold text-[18px]">Variants</div>
 
-                  {product?.availableAttributes?.map((variant, attrIndex) => (
-                    <div key={variant.name}>
-                      <div className="mb-1 font-medium">{variant.name}</div>
+                {product?.availableAttributes?.map((variant, attrIndex) => (
+                  <div key={variant.name}>
+                    <div className="mb-1 font-medium">{variant.name}</div>
 
-                      <div className="flex gap-2 flex-wrap">
-                        {variant.values.map((value: string) => {
-                          const isSelected =
-                            selectedVariants[variant.name] === value;
-                          const disabled =
-                            attrIndex === 0
-                              ? false
-                              : !isAvailable(
-                                  product?.variants ?? [],
-                                  selectedVariants,
-                                  variant.name,
-                                  value,
-                                );
+                    <div className="flex gap-2 flex-wrap">
+                      {variant.values.map((value: string) => {
+                        const isSelected =
+                          selectedVariants[variant.name] === value;
+                        const disabled =
+                          attrIndex === 0
+                            ? false
+                            : !isAvailable(
+                                product?.variants ?? [],
+                                selectedVariants,
+                                variant.name,
+                                value,
+                              );
 
-                          return (
-                            <label
-                              key={value}
-                              className={`flex items-center justify-center px-4 py-2 border rounded-md cursor-pointer transition
+                        return (
+                          <label
+                            key={value}
+                            className={`flex items-center justify-center px-4 py-2 border rounded-md cursor-pointer transition
                   ${
                     isSelected
                       ? "border-green-500 bg-green-50 text-green-600"
                       : "border-gray-300"
                   }
                   ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
-                            >
-                              <input
-                                type="radio"
-                                name={variant.name}
-                                value={value}
-                                disabled={disabled}
-                                checked={isSelected}
-                                onChange={() =>
-                                  handleVariantChange(variant.name, value)
-                                }
-                                className="hidden"
-                              />
-                              {value}
-                            </label>
-                          );
-                        })}
-                      </div>
+                          >
+                            <input
+                              type="radio"
+                              name={variant.name}
+                              value={value}
+                              disabled={disabled}
+                              checked={isSelected}
+                              onChange={() =>
+                                handleVariantChange(variant.name, value)
+                              }
+                              className="hidden"
+                            />
+                            {value}
+                          </label>
+                        );
+                      })}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
-              <DialogClose asChild>
-                <Button
-                  onClick={() => {
-                    handleAddToCart(activeVariant?.variantId || 0, quantity);
-                  }}
-                  className="px-4 py-2 bg-[#4EA674] text-white"
-                >
-                  Confirm
-                </Button>
-              </DialogClose>
             </div>
-          </Dialog>
-        )}
+            <DialogClose asChild>
+              <Button
+                onClick={() => {
+                  handleAddToCart(activeVariant?.variantId || 0, quantity);
+                }}
+                className="px-4 py-2 bg-[#4EA674] text-white"
+              >
+                Confirm
+              </Button>
+            </DialogClose>
+          </div>
+        </Dialog>
       </div>
     </Card>
   );
