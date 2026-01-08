@@ -1,8 +1,7 @@
 ﻿namespace EcommerceProject.Models.DTOs.Discount
 {
-    public class DiscountDto
+    public class UpdateDiscountDto
     {
-
         public int DiscountId { get; set; }
         public string DiscountName { get; set; }
         public string DiscountType { get; set; }
@@ -10,9 +9,8 @@
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool IsActive { get; set; }
-        public DateTime CreatedAt { get; set; }
 
-        public string ProductIds { get; set; }   
-        public string VariantIds { get; set; }  
+        public List<int>? ProductIds { get; set; }
+        public List<int>? VariantIds { get; set; }
     }
 }

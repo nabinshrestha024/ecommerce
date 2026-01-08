@@ -1,23 +1,40 @@
 ﻿USE EcommerceDB;
 GO
 
-
-CREATE OR ALTER PROCEDURE spDiscount_GetAll
+CREATE OR ALTER PROCEDURE dbo.spDiscount_GetAll
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT 
+    SELECT
         d.DiscountId,
-        d.ProductId,
-        p.Name AS ProductName,
-        d.Percentage,
+        d.DiscountName,
+        d.DiscountType,
+        d.DiscountValue,
         d.StartDate,
         d.EndDate,
-        d.MaxUsage,
-        d.PerUserLimit,
-        d.IsActive
+        d.IsActive,
+        
+
+        -- Assigned Products
+        (
+            SELECT da.ProductId
+            FROM DiscountAssigns da
+            WHERE da.DiscountId = d.DiscountId
+              AND da.ProductId IS NOT NULL
+            FOR JSON PATH
+        ) AS ProductIds,
+
+        -- Assigned Variants
+        (
+            SELECT da.VariantId
+            FROM DiscountAssigns da
+            WHERE da.DiscountId = d.DiscountId
+              AND da.VariantId IS NOT NULL
+            FOR JSON PATH
+        ) AS VariantIds
+
     FROM Discounts d
-    INNER JOIN Products p ON d.ProductId = p.ProductId;
+    ORDER BY d.DiscountId DESC;
 END
 GO
