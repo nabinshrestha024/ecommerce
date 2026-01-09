@@ -11,6 +11,7 @@ import {
 } from "@/ui/select";
 import { X } from "lucide-react";
 import { useState, type Dispatch, type SetStateAction } from "react";
+import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog";
 
 export const OrderDetails = ({
   order,
@@ -126,13 +127,14 @@ export const OrderDetails = ({
                     <SelectItem value="Delivered">Delivered</SelectItem>
                   </SelectContent>
                 </Select>
-                <Button
-                  variant="default"
-                  disabled={!status}
-                  onClick={handleEditOrder}
-                >
-                  Confirm
-                </Button>
+                <ConfirmationDialog
+                  trigger={
+                    <Button variant="default" disabled={!status}>
+                      Confirm
+                    </Button>
+                  }
+                  confirmFunc={handleEditOrder}
+                />
               </div>
             </div>
           </>
