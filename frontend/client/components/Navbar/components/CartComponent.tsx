@@ -197,7 +197,7 @@ export const CartComponent = () => {
 
                       <div className="mt-auto pt-3 flex items-center justify-between">
                         <span className="text-sm font-bold text-gray-900">
-                          Rs. {val.finalPrice.toLocaleString()}
+                          Rs. {val.finalPrice}
                         </span>
 
                         <div className="flex items-center bg-white border rounded-lg shadow-sm overflow-hidden">
@@ -249,7 +249,7 @@ export const CartComponent = () => {
                 </div>
                 <div className="text-right">
                   <p className="text-2xl font-black text-gray-900 leading-none">
-                    Rs. {totalPrice.toLocaleString()}
+                    Rs. {totalPrice}
                   </p>
                 </div>
               </div>
