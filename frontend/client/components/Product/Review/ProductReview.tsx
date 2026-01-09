@@ -28,7 +28,7 @@ export const ProductReview = ({ productId }: ReviewProps) => {
             >
               <div className="flex justify-between items-center">
                 <div className="flex gap-5">
-                  <div className="w-10 h-10 relative rounded-full">
+                  <div className="w-10 h-10 relative rounded-full overflow-hidden">
                     <Image
                       src={reviewData.userImageUrl}
                       alt={reviewData.userName}
