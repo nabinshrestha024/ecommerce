@@ -7,22 +7,14 @@ interface Person {
   userid: number;
   email: string;
   fullName: string;
-  passwordHash: string | null;
-  status: number;
   profileImageUrl: string | null;
   phone: string;
   address: string;
-  city: string;
   role: boolean;
-  refreshToken: string | null;
-  accessToken: string | null;
   isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-  userProfile: string;
-  socialLinks: string;
-  orders: string;
+  totalOrders: number;
+  completedOrders: number;
+  cancelledOrders: number;
 }
 export const CustomerProfile = ({ customer }: { customer: Person }) => {
   return (
@@ -32,7 +24,7 @@ export const CustomerProfile = ({ customer }: { customer: Person }) => {
     >
       <div className="flex items-center gap-4">
         <img
-          src={customer.profileImageUrl || ""}
+          src={customer?.profileImageUrl || ""}
           alt={customer.fullName}
           className="w-16 h-16 rounded-full object-cover"
         />
@@ -89,14 +81,10 @@ export const CustomerProfile = ({ customer }: { customer: Person }) => {
           Activity
         </div>
         <div className="w-full flex-flex-col gap-2">
-          <div className="text-[14px]  text-[#4B5563]">
-            Registration:&nbsp;
-            {customer.createdAt}
-          </div>
+          <div className="text-[14px]  text-[#4B5563]">Registration:</div>
 
           <div className="text-[14px] text-[#4B5563] font-normal">
-            Last Purchase: &nbsp;
-            {customer.updatedAt}
+            Last Purchase:
           </div>
         </div>
       </div>
@@ -112,7 +100,7 @@ export const CustomerProfile = ({ customer }: { customer: Person }) => {
           >
             <div className="flex flex-col  gap-2">
               <div className="text-center text-[18px] font-bold text-[#023337]">
-                150
+                {customer.totalOrders}
               </div>
               <div className="text-center text-[14px] font-normal text-[#6467F2]">
                 Total order
@@ -126,7 +114,7 @@ export const CustomerProfile = ({ customer }: { customer: Person }) => {
           >
             <div className="flex flex-col  gap-2">
               <div className="text-center text-[18px] font-bold text-[#023337]">
-                50
+                {customer.completedOrders}
               </div>
               <div className="text-center text-[14px] font-normal text-[#21C45D]">
                 Completed
@@ -140,10 +128,10 @@ export const CustomerProfile = ({ customer }: { customer: Person }) => {
           >
             <div className="flex flex-col  gap-2">
               <div className="text-center text-[18px] font-bold text-[#023337]">
-                10
+                {customer.cancelledOrders}
               </div>
               <div className="text-center text-[14px] font-normal text-[#EF4343]">
-                Canceled
+                Cancelled
               </div>
             </div>
           </Card>
