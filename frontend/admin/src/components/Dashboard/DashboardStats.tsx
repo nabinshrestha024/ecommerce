@@ -28,11 +28,11 @@ export const DashboardStats = () => {
         val.date.split("T")[0] === new Date().toISOString().split("T")[0],
     )?.totalSales ?? 0;
   return (
-    <div className="grid grid-cols-2 gap-2.5 w-full lg:gap-5 mt-5 ">
+    <div className="grid grid-cols-3 gap-2.5 w-full lg:gap-5 mt-5 ">
       <CardComponent title="Total Sales">
         <>
-          <div className="text-3xl font-semibold mt-5">Rs. {totalSales}</div>
-          <div className="mt-3 text-sm text-gray-500 font-medium">
+          <div className="text-3xl font-semibold mt-2">Rs. {totalSales}</div>
+          <div className="text-sm text-gray-500 font-medium mt-2">
             Today <span className="text-blue-500">(Rs. {todaysSales})</span>
           </div>
         </>
@@ -40,11 +40,23 @@ export const DashboardStats = () => {
 
       <CardComponent title="Total Orders">
         <>
-          <div className="text-3xl font-semibold mt-5">{totalOrders}</div>
-          <div className="mt-3 text-sm text-gray-500 font-medium">
+          <div className="text-3xl font-semibold mt-2">{totalOrders}</div>
+          <div className="text-sm text-gray-500 font-medium mt-2">
             Today <span className="text-blue-500">{todaysOrders}</span>
           </div>
         </>
+      </CardComponent>
+      <CardComponent title="Pending & Cancelled">
+        <div className="grid grid-cols-2 w-full items-start px-2 mt-2">
+          <div className="text-[18px] font-medium flex flex-col mt-2">
+            Pending{" "}
+            <span className="text-blue-500 text-2xl">{todaysOrders}</span>
+          </div>
+          <div className="text-[18px] font-medium flex flex-col mt-2 border-l-2 border-l-gray-200 pl-4">
+            Cancelled{" "}
+            <span className="text-red-500 text-2xl">{todaysOrders}</span>
+          </div>
+        </div>
       </CardComponent>
     </div>
   );

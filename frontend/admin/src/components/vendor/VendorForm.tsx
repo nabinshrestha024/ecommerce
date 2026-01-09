@@ -35,8 +35,6 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
       email: vendor.email,
       phone: vendor.phone,
       address: vendor.address,
-      isActive: vendor.isActive ? "true" : "false",
-      joinedOn: vendor.joinedOn,
     },
     mode: "onChange",
   });
@@ -49,10 +47,8 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
       email: data.email,
       phone: data.phone,
       address: data.address,
-      isActive: data.isActive === "true",
-      joinedOn: data.joinedOn,
     };
-    mutate({ vendorId: vendor.vendorId, vendorData: updatedVendor } as any);
+    mutate({ vendorId: vendor.vendorId, vendorData: updatedVendor });
     onSave(updatedVendor);
     reset({
       name: updatedVendor.businessName,
@@ -60,8 +56,6 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
       email: updatedVendor.email,
       phone: updatedVendor.phone,
       address: updatedVendor.address,
-      isActive: updatedVendor.isActive ? "true" : "false",
-      joinedOn: updatedVendor.joinedOn,
     });
   };
 
@@ -73,9 +67,9 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
       >
         <h2 className="text-[24px] font-bold mb-6 text-center">Edit Vendor</h2>
 
-        <div className="grid grid-cols-4 gap-4 items-center mt-5 ">
+        <div className="grid grid-cols-[1fr_3fr] gap-4 items-center mt-5 ">
           <label className="font-medium ">Business Name</label>
-          <div className="col-span-3">
+          <div className="col-span-1 w-full">
             <Input
               type="text"
               placeholder="Enter business name"
@@ -87,9 +81,9 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
             )}
           </div>
         </div>
-        <div className="grid grid-cols-4 gap-4 items-center mt-5">
+        <div className="grid grid-cols-[1fr_3fr] gap-4 items-center mt-5">
           <label className="font-medium ">Contact Person</label>
-          <div className="col-span-3">
+          <div className="col-span-1 w-full">
             <Input
               type="text"
               placeholder="Enter contact person"
@@ -104,9 +98,9 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 items-center mt-5">
+        <div className="grid grid-cols-[1fr_3fr] gap-4 items-center mt-5">
           <label className="font-medium ">Email</label>
-          <div className="col-span-3">
+          <div className="col-span-1 w-full">
             <Input
               type="email"
               placeholder="Enter email address"
@@ -119,9 +113,9 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 items-center mt-5">
+        <div className="grid grid-cols-[1fr_3fr] gap-4 items-center mt-5">
           <label className="font-medium ">Phone</label>
-          <div className="col-span-3">
+          <div className="col-span-1 w-full">
             <Input
               type="text"
               placeholder="Enter phone number"
@@ -134,9 +128,9 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 items-center mt-5">
+        <div className="grid grid-cols-[1fr_3fr] gap-4 items-center mt-5">
           <label className="font-medium ">Address</label>
-          <div className="col-span-3">
+          <div className="col-span-1 w-full">
             <Input
               type="text"
               placeholder="Enter address"
@@ -146,41 +140,6 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
             {errors.address && (
               <p className="text-[12px] text-red-500">
                 {errors.address.message}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium ">Status</label>
-          <div className="col-span-3">
-            <select
-              {...register("isActive")}
-              className="w-full px-4 flex justify-center py-1 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 bg-white"
-            >
-              <option value="true">Active</option>
-              <option value="false">Inactive</option>
-            </select>
-            {errors.isActive && (
-              <p className="text-[12px] text-red-500">
-                {errors.isActive.message}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-4 gap-4 items-center mt-5">
-          <label className="font-medium ">Joined On</label>
-          <div className="col-span-3">
-            <Input
-              type="date"
-              placeholder="Enter joined date"
-              {...register("joinedOn")}
-              className="w-full px-4  border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
-            />
-            {errors.joinedOn && (
-              <p className="text-[12px] text-red-500">
-                {errors.joinedOn.message}
               </p>
             )}
           </div>

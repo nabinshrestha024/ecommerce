@@ -24,9 +24,9 @@ export const DashboardChart = () => {
     })) ?? [];
 
   return (
-    <Card className="w-full">
-      <div className="text-xl font-semibold text-center">
-        Sales Data of Last 7 Days
+    <Card className="w-full space-y-1">
+      <div className="text-[18px] font-bold font-sans text-center">
+        Sales Data
       </div>
       <AreaChart data={data} />
     </Card>
