@@ -5,22 +5,14 @@ interface Person {
   userid: number;
   email: string;
   fullName: string;
-  passwordHash: string;
-  status: number;
   profileImageUrl: string | null;
   phone: string;
   address: string;
-  city: string;
   role: boolean;
-  refreshToken: string | null;
-  accessToken: string | null;
   isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-  userProfile: string;
-  socialLinks: string;
-  orders: string;
+  totalOrders: number;
+  completedOrders: number;
+  cancelledOrders: number;
 }
 
 export const editUser = async ({

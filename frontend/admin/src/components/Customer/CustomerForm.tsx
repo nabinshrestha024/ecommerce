@@ -11,22 +11,14 @@ interface Person {
   userid: number;
   email: string;
   fullName: string;
-  passwordHash: string;
-  status: number;
   profileImageUrl: string | null;
   phone: string;
   address: string;
-  city: string;
   role: boolean;
-  refreshToken: string | null;
-  accessToken: string | null;
   isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-  userProfile: string;
-  socialLinks: string;
-  orders: string;
+  totalOrders: number;
+  completedOrders: number;
+  cancelledOrders: number;
 }
 type Props = {
   customer: Person;
@@ -43,10 +35,8 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
     resolver: zodResolver(customerSchema) as Resolver<CustomerFormValues>,
     defaultValues: {
       name: customer.fullName,
-      password: customer.passwordHash,
       address: customer.address,
       phone: customer.phone,
-      city: customer.city,
       isActive: customer.isActive ? "true" : "false",
     },
     mode: "onChange",
@@ -58,9 +48,7 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
       ...customer,
       fullName: data.name,
       phone: data.phone,
-      passwordHash: data.password,
       address: data.address,
-      city: data.city,
       isActive: data.isActive === "true",
     };
 
@@ -74,9 +62,7 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
     reset({
       name: updatedUser.fullName,
       phone: updatedUser.phone,
-      password: data.password,
       address: updatedUser.address,
-      city: updatedUser.city,
       isActive: updatedUser.isActive ? "true" : "false",
     });
   };
@@ -99,26 +85,6 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
             />
             {errors.name && (
               <p className="text-[12px] text-red-500 ">{errors.name.message}</p>
-            )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-4 gap-4 mt-5">
-          <label className="col-span-1 font-medium text-gray-700">
-            Password
-          </label>
-          <div className="col-span-3">
-            <Input
-              type="text"
-              placeholder=""
-              {...register("password")}
-              maxLength={10}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0"
-            />
-            {errors.password && (
-              <p className="text-[12px] text-red-500 ">
-                {errors.password.message}
-              </p>
             )}
           </div>
         </div>
@@ -153,21 +119,6 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
               <p className="text-[12px] text-red-500 ">
                 {errors.address.message}
               </p>
-            )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-4 gap-4 mt-5">
-          <label className="font-medium text-gray-700 mt-2">City</label>
-          <div className="col-span-3">
-            <Input
-              type="text"
-              placeholder=""
-              {...register("city")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded resize-none focus-visible:border-[#DFE0E1] focus-visible:ring-0"
-            />
-            {errors.city && (
-              <p className="text-[12px] text-red-500 ">{errors.city.message}</p>
             )}
           </div>
         </div>
