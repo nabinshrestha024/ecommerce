@@ -6,8 +6,8 @@ import {
 } from "../Category/ProductZodVAlidation.tsx";
 import { Input } from "../Input/Input.tsx";
 import { useEditProduct } from "@/hooks/product/useEditProduct.ts";
-import { useState } from "react";
 import type { ProductRes } from "@/hooks/product/useProduct.ts";
+import { useState } from "react";
 
 type Props = {
   product: ProductRes;
@@ -26,13 +26,9 @@ export const ProductForm = ({ product, onSave }: Props) => {
     resolver: zodResolver(productSchema) as Resolver<ProductFormValues>,
     defaultValues: {
       name: product.name,
-      productId: product.productId,
       categoryId: product.categoryId,
-      stockQuantity: product.stockQuantity,
       description: product.description || "",
       shortDescription: product.shortDescription || "",
-      slug: product.slug,
-      price: product.price,
       isActive: true,
       primaryIndex: product.primaryIndex || 0,
     },
@@ -41,15 +37,11 @@ export const ProductForm = ({ product, onSave }: Props) => {
   const onSubmit = (data: ProductFormValues) => {
     const formData = new FormData();
 
-    formData.append("productId", String(product.productId));
     formData.append("categoryId", String(data.categoryId));
     formData.append("name", data.name);
-    formData.append("slug", data.slug);
     formData.append("description", data.description);
     formData.append("shortDescription", data.shortDescription || "");
-    formData.append("price", String(data.price));
-    formData.append("stockQuantity", String(data.stockQuantity));
-    formData.append("isActive", String(data.isActive));
+    formData.append("isActive", String(true));
     formData.append("primaryIndex", String(data.primaryIndex));
 
     if (data.image) {
@@ -70,7 +62,7 @@ export const ProductForm = ({ product, onSave }: Props) => {
       },
     );
   };
-  const [imagePreview, setImagePreview] = useState<string>("");
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   return (
     <div className="flex justify-center">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
@@ -78,23 +70,6 @@ export const ProductForm = ({ product, onSave }: Props) => {
           Edit Product
         </div>
         <div className="flex-1 overflow-auto mt-5">
-          <div className="grid grid-cols-4 gap-4 ">
-            <label className=" font-medium text-gray-700">Product ID</label>
-            <div className="col-span-3">
-              <Input
-                type="number"
-                placeholder=""
-                {...register("productId")}
-                className="w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0"
-              />
-              {errors.productId && (
-                <p className="text-[12px] text-red-500 ">
-                  {errors.productId.message}
-                </p>
-              )}
-            </div>
-          </div>
-
           <div className="grid grid-cols-4 gap-4  mt-5">
             <label className="font-medium text-gray-700">Category ID</label>
             <div className="col-span-3">
@@ -124,23 +99,6 @@ export const ProductForm = ({ product, onSave }: Props) => {
               {errors.name && (
                 <p className="text-[12px] text-red-500 ">
                   {errors.name.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-4 gap-4 mt-5">
-            <label className="font-medium text-gray-700">Slug</label>
-            <div className="col-span-3">
-              <Input
-                type="text"
-                placeholder=""
-                {...register("slug")}
-                className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
-              />
-              {errors.slug && (
-                <p className="text-[12px] text-red-500 ">
-                  {errors.slug.message}
                 </p>
               )}
             </div>
@@ -177,48 +135,6 @@ export const ProductForm = ({ product, onSave }: Props) => {
                   {errors.shortDescription.message}
                 </p>
               )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-4 gap-4  mt-5">
-            <label className="font-medium text-gray-700">Price</label>
-            <div className="col-span-3">
-              <Input
-                type="number"
-                placeholder=""
-                {...register("price")}
-                className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
-              />
-              {errors.price && (
-                <p className="text-[12px] text-red-500">
-                  {errors.price.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-4 gap-4 mt-5">
-            <label className="font-medium text-gray-700">Stock Qty</label>
-            <div className="col-span-3">
-              <Input
-                type="text"
-                placeholder=""
-                {...register("stockQuantity")}
-                className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
-              />
-              {errors.stockQuantity && (
-                <p className="text-[12px] text-red-500 ">
-                  {errors.stockQuantity.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-4 gap-4 items-center mt-5">
-            <label className="font-medium text-gray-700">Is Active</label>
-            <div className="col-span-2 flex items-center gap-2">
-              <Input type="checkbox" placeholder="" {...register("isActive")} />
-              <span className="text-sm text-gray-600">Product is active</span>
             </div>
           </div>
 

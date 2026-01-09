@@ -6,12 +6,13 @@ import {
   type AttributeNameFormValues,
 } from "./AddAttributeZodValidation.tsx";
 import { usePostAttribute } from "@/hooks/attribute/usePostAttribute.ts";
+import type { Dispatch, SetStateAction } from "react";
 
-// type Props = {
-
-// };
-
-export const AddAttributeForm = () => {
+export const AddAttributeForm = ({
+  setOpen,
+}: {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}) => {
   const postAttribute = usePostAttribute();
   const {
     register,
@@ -24,9 +25,12 @@ export const AddAttributeForm = () => {
     mode: "onChange",
   });
   const onSubmit = (data: AttributeNameFormValues) => {
-    postAttribute.mutate(data);
+    postAttribute.mutate(data, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
   };
-
   return (
     <div className="flex justify-center">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">

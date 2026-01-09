@@ -41,7 +41,7 @@ export const AvailableAttributeCard = () => {
                   <button
                     onClick={() => setSelectedAttribute(attribute.attributeId)}
                     className="p-1.5 rounded-md text-gray-400 hover:text-[#4EA674] hover:bg-[#c2f8d9] transition-colors"
-                    title="Edit Attribute"
+                    title="Add Attribute"
                   >
                     <MdAddCircleOutline className="text-[16px]" />
                   </button>

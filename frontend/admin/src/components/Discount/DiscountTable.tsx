@@ -5,14 +5,9 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { MdAddCircleOutline } from "react-icons/md";
 import { BsPatchPlus } from "react-icons/bs";
 import { FaEdit } from "react-icons/fa";
 import { Table } from "../Table/Table";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
-import { DropDown } from "../DropDown/DropDown";
-import { IoFilter } from "react-icons/io5";
 import { Dialog } from "../Dialog/Dialog";
 import {
   useFetchDiscountProduct,
@@ -23,8 +18,6 @@ import { usePatchDicount } from "@/hooks/discount/usePatchDiscount";
 
 export const DiscountTable = () => {
   const discountProduct = useFetchDiscountProduct();
-  console.log(discountProduct);
-  const navigate = useNavigate();
   const [selectedDiscount, setSelectedDiscount] = useState<DiscountData | null>(
     null,
   );
@@ -46,21 +39,21 @@ export const DiscountTable = () => {
   };
 
   const columns = [
-    columnHelper.accessor("productId", {
-      header: "Product Id",
-    }),
-
     columnHelper.accessor("discountId", {
       header: "Discount ID",
     }),
 
-    columnHelper.accessor("productName", {
-      header: "Product Name",
+    columnHelper.accessor("discountName", {
+      header: "Discount Name",
     }),
 
-    columnHelper.accessor("percentage", {
-      header: "Discount Percentage",
+    columnHelper.accessor("discountType", {
+      header: "Discount Type",
     }),
+    columnHelper.accessor("discountValue", {
+      header: "Discount Value",
+    }),
+
     columnHelper.accessor("isActive", {
       header: "Status",
       cell: (info) => {
@@ -123,43 +116,6 @@ export const DiscountTable = () => {
     <div className="w-full p-4 border border-[#E5E7EB] rounded-lg">
       <div className="flex flex-col-reverse gap-3">
         <Table table={table} />
-
-        <div className="flex gap-2 justify-end items-center">
-          <div className="p-2 rounded-sm border shadow-2xl">
-            <DropDown
-              trigger={
-                <div>
-                  <IoFilter className="text-[#4B5563] text-[20px]" />
-                </div>
-              }
-              className="p-2 flex flex-col gap-2"
-            >
-              <div
-                className="cursor-pointer hover:text-green-600"
-                // onClick={() => setSortType("price")}
-              >
-                Sort by Price
-              </div>
-
-              <div
-                className="cursor-pointer hover:text-green-600"
-                // onClick={() => setSortType("stockQuantity")}
-              >
-                Sort by Stock Quantity
-              </div>
-            </DropDown>
-          </div>
-
-          <div
-            className="p-2 rounded-sm border shadow-2xl "
-            onClick={() => navigate("/product-management")}
-          >
-            <MdAddCircleOutline className="text-[#4B5563] text-[24px]" />
-          </div>
-          <div className="p-2 rounded-sm border shadow-2xl">
-            <BsThreeDotsVertical className="text-[#4B5563] text-[20px]" />
-          </div>
-        </div>
       </div>
     </div>
   );
