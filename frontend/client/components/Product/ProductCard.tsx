@@ -195,10 +195,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <span className="text-[18px] text-[#4EA674] font-bold">
               Rs. {product.price}
             </span>
-            &nbsp;&nbsp;&nbsp;
+            {/* &nbsp;&nbsp;&nbsp;
             <span className="line-through text-[15px] text-[red] font-medium">
               Rs. {product.price}
-            </span>
+            </span> */}
           </Link>
         </div>
       </div>
