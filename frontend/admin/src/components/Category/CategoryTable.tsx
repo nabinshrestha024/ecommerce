@@ -27,7 +27,6 @@ export const CategoryTable = () => {
     pageIndex: 0,
     pageSize: 10,
   });
-
   const product = useProduct(pagination.pageIndex + 1);
   const [searchProduct, setSearchProduct] = useState("");
   // const [sortType, setSortType] = useState<"price" | "stockQuantity" | null>(null);
@@ -119,6 +118,7 @@ export const CategoryTable = () => {
           >
             <TagForm id={info.row.original.productId} />
           </Dialog>
+
           <Dialog
             triggerContent={
               <FaEdit

@@ -7,6 +7,7 @@ import {
 } from "./DiscountZodValidation.ts";
 import { useEditDicount } from "@/hooks/discount/useEditDiscount.ts";
 import type { DiscountData } from "@/hooks/discount/useFetchDiscount.ts";
+import { Select } from "../Select/Select.tsx";
 
 type Props = {
   discount: DiscountData;
@@ -15,33 +16,63 @@ type Props = {
 
 export const DiscountForm = ({ discount, onSave }: Props) => {
   const {
+    discountId,
+    discountType,
+    endDate,
+    discountName,
+    discountValue,
+    startDate,
+  } = discount;
+  const selectData = [
+    {
+      id: 1,
+      value: "Percentage",
+      content: "Percentage",
+    },
+    {
+      id: 2,
+      value: "Flat",
+      content: "Flat",
+    },
+  ];
+  const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<DiscountFormValues>({
     resolver: zodResolver(DiscountSchema) as Resolver<DiscountFormValues>,
     defaultValues: {
-      productId: discount.productId,
-      percentage: discount.percentage,
-      startDate: discount.startDate,
-      endDate: discount.endDate,
-      maxUsage: discount.maxUsage,
-      perUserLimit: discount.perUserLimit,
+      discountId,
+      discountValue,
+      startDate,
+      endDate,
+      discountType,
+      discountName,
     },
     mode: "onChange",
   });
 
   const editDiscount = useEditDicount();
   const onSubmit = (data: DiscountFormValues) => {
+    const {
+      discountId,
+      discountType,
+      endDate,
+      discountName,
+      discountValue,
+      startDate,
+    } = data;
+
     const updatedDiscount: DiscountData = {
-      ...discount,
-      productId: data.productId,
-      percentage: data.percentage,
-      startDate: data.startDate,
-      endDate: data.endDate,
-      maxUsage: data.maxUsage,
-      perUserLimit: data.perUserLimit,
+      discountId,
+      discountValue,
+      startDate,
+      endDate,
+      discountType,
+      discountName,
+      isActive: true,
     };
 
     editDiscount.mutate({
@@ -52,12 +83,12 @@ export const DiscountForm = ({ discount, onSave }: Props) => {
     onSave(updatedDiscount);
 
     reset({
-      productId: updatedDiscount.productId,
-      percentage: updatedDiscount.percentage,
+      discountId: updatedDiscount.discountId,
+      discountValue: updatedDiscount.discountValue,
+      discountName: updatedDiscount.discountName,
+      discountType: updatedDiscount.discountType,
       startDate: updatedDiscount.startDate,
       endDate: updatedDiscount.endDate,
-      maxUsage: updatedDiscount.maxUsage,
-      perUserLimit: updatedDiscount.perUserLimit,
     });
   };
 
@@ -69,17 +100,17 @@ export const DiscountForm = ({ discount, onSave }: Props) => {
         </h2>
 
         <div className="grid grid-cols-4 gap-4  mt-5">
-          <label className="font-medium text-gray-700">Product Id</label>
+          <label className="font-medium text-gray-700">Discount Id</label>
           <div className="col-span-3">
             <Input
               type="text"
               placeholder=""
-              {...register("productId")}
+              {...register("discountId")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
-            {errors.productId && (
+            {errors.discountId && (
               <p className="text-[12px] text-red-500 ">
-                {errors.productId.message}
+                {errors.discountId.message}
               </p>
             )}
           </div>
@@ -87,53 +118,49 @@ export const DiscountForm = ({ discount, onSave }: Props) => {
 
         <div className="grid grid-cols-4 gap-4 mt-5">
           <label className="col-span-1 font-medium text-gray-700">
-            Percentage
+            Discount Name
           </label>
           <div className="col-span-3">
             <Input
               type="text"
               placeholder=""
-              {...register("percentage")}
+              {...register("discountName")}
               maxLength={10}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
-            {errors.percentage && (
+            {errors.discountName && (
               <p className="text-[12px] text-red-500 ">
-                {errors.percentage.message}
+                {errors.discountName.message}
               </p>
             )}
           </div>
         </div>
 
         <div className="grid grid-cols-4 gap-4  mt-5">
-          <label className="font-medium text-gray-700">Max Usages</label>
+          <label className="font-medium text-gray-700">Discount Type</label>
           <div className="col-span-3">
-            <Input
-              type="text"
-              placeholder=""
-              {...register("maxUsage")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+            <Select
+              defaultValue={discountType}
+              selectData={selectData}
+              triggerClassName="w-full border rounded-md px-3 py-2"
+              itemClassName="cursor-pointer"
+              onValueChange={(d) => setValue("discountType", d)}
             />
-            {errors.maxUsage && (
-              <p className="text-[12px] text-red-500 ">
-                {errors.maxUsage.message}
-              </p>
-            )}
           </div>
         </div>
 
         <div className="grid grid-cols-4 gap-4 mt-5">
-          <label className="font-medium text-gray-700">User Limit</label>
+          <label className="font-medium text-gray-700">Discount Value</label>
           <div className="col-span-3">
             <Input
               type="text"
               placeholder=""
-              {...register("perUserLimit")}
+              {...register("discountValue")}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
-            {errors.perUserLimit && (
+            {errors.discountValue && (
               <p className="text-[12px] text-red-500 ">
-                {errors.perUserLimit.message}
+                {errors.discountValue.message}
               </p>
             )}
           </div>

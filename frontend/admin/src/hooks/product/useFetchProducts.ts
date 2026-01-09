@@ -1,6 +1,12 @@
 "use client";
 import { Product } from "@/lib/product/FetchProductFunction";
 import { useQuery } from "@tanstack/react-query";
+export type VariantData = {
+  variantId: number;
+  stockQuantity: number;
+  price: number;
+  sku: string;
+};
 
 export type ProductData = {
   productId: number;
@@ -14,6 +20,7 @@ export type ProductData = {
   isActive: boolean;
   categoryId: number;
   sku: string;
+  variants: VariantData[];
   relatedProducts: ProductData[];
 };
 

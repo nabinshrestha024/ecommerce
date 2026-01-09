@@ -5,14 +5,14 @@ import { useQuery } from "@tanstack/react-query";
 
 export type DiscountData = {
   discountId: number;
-  productId: number;
-  productName: string;
-  percentage: number;
+  discountType: string;
+  discountName: string;
+  discountValue: number;
   isActive: boolean;
   startDate: string;
   endDate: string;
-  maxUsage: number;
-  perUserLimit: number;
+  productIds?: number[];
+  variantIds?: number[];
 };
 
 export const useFetchDiscountProduct = () => {
