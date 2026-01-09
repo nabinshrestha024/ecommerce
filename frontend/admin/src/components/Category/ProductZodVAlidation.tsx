@@ -13,10 +13,13 @@ export const productSchema = z.object({
 
   primaryIndex: z.coerce.number(),
 
-  image: z.custom<File>(
-    (file) => file instanceof File,
-    "Please upload an image",
-  ),
+  image: z
+    .any()
+    .optional()
+    .refine(
+      (file) => file === undefined || file instanceof File,
+      "Invalid image file",
+    ),
 });
 
 export type ProductFormValues = z.infer<typeof productSchema>;
