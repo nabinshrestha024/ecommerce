@@ -51,7 +51,7 @@ export const OrderTable = () => {
         cell: (info) => (
           <div className="flex justify-center">
             <div
-              className="flex flex-col justify-center items-center w-[300px] overflow-hidden"
+              className="flex flex-col items-start w-[250px] overflow-hidden "
               onClick={() => handleRowClick(info.row.original)}
             >
               {info
@@ -60,7 +60,7 @@ export const OrderTable = () => {
                 .map((name, i) => (
                   <span
                     key={i}
-                    className="block w-full line-clamp-2 break-all md:break-words text-center"
+                    className="block w-full line-clamp-2 break-all truncate "
                   >
                     {name}
                   </span>
@@ -76,7 +76,7 @@ export const OrderTable = () => {
     }),
     columnHelper.accessor("totalAmount", {
       header: "Price",
-      cell: (info) => <div className="text-center">Rs. {info.getValue()}</div>,
+      cell: (info) => <div className="text-center">{info.getValue()}</div>,
     }),
     columnHelper.accessor("paymentStatus", {
       header: "Payment",
@@ -87,7 +87,7 @@ export const OrderTable = () => {
             onClick={() => handleRowClick(info.row.original)}
           >
             <div className="text-green-500 flex items-center justify-start gap-3 w-20">
-              <div className="rounded-full h-2 w-2 bg-green-500"></div>{" "}
+              <div className="rounded-full h-2 w-2 bg-green-500"></div>
               {info.getValue()}
             </div>
           </div>
@@ -97,7 +97,7 @@ export const OrderTable = () => {
             onClick={() => handleRowClick(info.row.original)}
           >
             <div className="text-amber-500 flex items-center justify-start gap-3 w-20">
-              <div className="rounded-full h-2 w-2 bg-amber-500"></div>{" "}
+              <div className="rounded-full h-2 w-2 bg-amber-500"></div>
               {info.getValue()}
             </div>
           </div>

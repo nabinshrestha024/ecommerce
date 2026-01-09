@@ -3,7 +3,7 @@ import { OrderTable } from "@/components/OrderManagement/OrderTable";
 
 export const OrderManagement = () => {
   return (
-    <div className="p-3 space-y-4 w-full">
+    <div className="w-full flex flex-col gap-5 p-5">
       <OrderDashboard />
       <OrderTable />
     </div>
