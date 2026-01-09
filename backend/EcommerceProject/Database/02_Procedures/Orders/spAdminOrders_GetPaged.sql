@@ -38,6 +38,7 @@ BEGIN
         op.*,
         oi.OrderItemId,
         oi.ProductId,
+        oi.VariantId,
         p.Name AS ProductName,
         pi.ImageUrl AS ProductImageUrl,
         p.Description AS ProductDescription,
@@ -61,5 +62,22 @@ BEGIN
             OR o.ShippingName LIKE '%' + @Search + '%'
             OR o.ShippingPhone LIKE '%' + @Search + '%'
         );
+    
+    SELECT
+        oi.OrderItemId,
+        pa.Name AS Name,
+        pav.Value AS Value
+    FROM OrderItems oi
+    INNER JOIN Orders o ON oi.OrderId = o.OrderId
+    INNER JOIN VariantAttributeValues vav ON oi.VariantId = vav.VariantId
+    INNER JOIN ProductAttributeValues pav ON vav.AttributeValueId = pav.AttributeValueId
+    INNER JOIN ProductAttributes pa ON pav.AttributeId = pa.AttributeId
+    WHERE oi.OrderId IN (
+        SELECT o2.OrderId FROM Orders o2
+        WHERE (@Status IS NULL OR o2.Status = @Status)
+        AND (@Search IS NULL OR o2.ShippingName LIKE '%' + @Search + '%' OR o2.ShippingPhone LIKE '%' + @Search + '%')
+        ORDER BY o2.OrderDate DESC
+        OFFSET (@Page - 1) * @PageSize ROWS FETCH NEXT @PageSize ROWS ONLY
+    );
 END
 GO
