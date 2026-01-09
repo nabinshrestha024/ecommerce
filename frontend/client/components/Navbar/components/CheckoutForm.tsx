@@ -87,7 +87,7 @@ export const CheckoutForm = ({
           {data?.map((val) => (
             <div
               key={val.cartId}
-              className="group flex gap-4 p-3 rounded-xl border border-transparent hover:border-gray-100 hover:bg-gray-50 transition-all"
+              className="group flex gap-4 p-3 rounded-xl border border-transparent hover:border-gray-100 hover:bg-gray-50 transition-all w-[420px]"
             >
               <div className="flex items-center"></div>
               <div className="w-24 h-24 relative rounded-xl overflow-hidden bg-gray-100 border shrink-0 shadow-sm">
