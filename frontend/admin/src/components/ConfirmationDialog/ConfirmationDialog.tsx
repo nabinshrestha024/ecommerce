@@ -19,6 +19,10 @@ export const ConfirmationDialog = ({
   variant?: "destructive" | "default";
 }) => {
   const [open, setOpen] = useState(false);
+  const confirmFunction = () => {
+    confirmFunc();
+    setOpen(false);
+  };
   return (
     <Dialog
       triggerContent={trigger}
@@ -34,7 +38,7 @@ export const ConfirmationDialog = ({
             <Button variant={"outline"} onClick={() => setOpen(false)}>
               {cancelText}
             </Button>
-            <Button variant={"default"} onClick={confirmFunc}>
+            <Button variant={"default"} onClick={confirmFunction}>
               {confirmText}
             </Button>
           </div>
