@@ -44,7 +44,7 @@ export const Table = <TData,>({
               {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
-                  className="p-2 border-b text-center whitespace-nowrap"
+                  className="p-2 border-b text-left whitespace-nowrap"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
