@@ -50,7 +50,7 @@ export const DashboardTransaction = () => {
     columnHelper.accessor("totalAmount", {
       header: "Amount",
       cell: (info) => {
-        return <div>Rs. {info.getValue()}</div>;
+        return <div className="text-right w-[90px]">{info.getValue()}</div>;
       },
     }),
   ];
