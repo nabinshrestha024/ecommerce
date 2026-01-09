@@ -44,6 +44,7 @@ export const SecondCard = () => {
                             alt={item.name}
                             fill
                             className="max-w-full object-contain rounded-lg hover:scale-105 transition-transform duration-300"
+                            unoptimized
                           />
                         </div>
                       </Link>

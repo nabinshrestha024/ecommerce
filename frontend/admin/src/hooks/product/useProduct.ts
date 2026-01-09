@@ -52,7 +52,7 @@ export interface ProductTag {
 
 export const useProduct = (pageIndex: number) => {
   const { data, isLoading, isError, refetch } = useQuery<ProductResponse>({
-    queryKey: ["productData"],
+    queryKey: ["productData", pageIndex],
     queryFn: () => ProductTable(pageIndex),
   });
   return { data, isLoading, isError, refetch };
