@@ -16,7 +16,7 @@ export const ThirdCard = () => {
             className="flex justify-center items-center rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300"
           >
             <Link
-              href={`/product?categoryId=2`}
+              href={`/product?categoryId=1`}
               className="relative w-[188px] h-[146px] overflow-hidden rounded-xl"
             >
               <Image
@@ -32,7 +32,7 @@ export const ThirdCard = () => {
       <div className="flex justify-center items-center px-3">
         <div className="flex flex-row justify-between items-center rounded-xl w-full shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
           <Link
-            href={`/product?categoryId=2`}
+            href={`/product?categoryId=1`}
             className="relative w-[221px] h-[163px]"
           >
             <Image
@@ -47,7 +47,7 @@ export const ThirdCard = () => {
               Phillips 4k Smart TV
             </h3>
             <p className="text-xl font-bold text-blue-600 mt-1">Rs. 35,999</p>
-            <Link href={`/product?categoryId=2`}>
+            <Link href={`/product?categoryId=1`}>
               <button className="mt-3 bg-[#EAF8E7] text-[#023337] px-4 py-2 rounded-2xl font-medium hover:bg-[#d4f0cf] transition-colors duration-200 cursor-pointer">
                 Buy Now
               </button>
