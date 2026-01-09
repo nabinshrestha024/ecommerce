@@ -6,9 +6,11 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { Table } from "../Table/Table";
-import { Star, Trash } from "lucide-react";
+import { Star } from "lucide-react";
 import { useRemoveProductReview } from "@/hooks/productReview/useRemoveProductReview";
 import { useFetchProductReview } from "@/hooks/productReview/useFetchProductReview";
+import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog";
+import { MdDelete } from "react-icons/md";
 
 export interface ReviewType {
   reviewId: number;
@@ -101,12 +103,14 @@ export const ProductReviews = () => {
         const row = info.row.original;
         return (
           <div className="flex justify-center">
-            <div
-              className="hover:bg-red-100 transition-all duration-250 p-1 rounded-lg cursor-pointer"
-              onClick={() => removeReviews.mutate(row.reviewId)}
-            >
-              <Trash color="red" />
-            </div>
+            <ConfirmationDialog
+              trigger={
+                <div className="p-1 rounded-lg cursor-pointer">
+                  <MdDelete className="text-[#6A717F] text-[20px]" />
+                </div>
+              }
+              confirmFunc={() => removeReviews.mutate(row.reviewId)}
+            />
           </div>
         );
       },

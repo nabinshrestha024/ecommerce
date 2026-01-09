@@ -7,33 +7,12 @@ import {
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import { Table } from "../Table/Table";
-import { CustomerProfile } from "../Customer/CustomerProfile.tsx";
+import { type Person } from "../Customer/CustomerProfile.tsx";
 import { Dialog } from "../Dialog/Dialog.tsx";
 import { CustomerForm } from "./CustomerForm.tsx";
 import { useUser } from "@/hooks/user/useUser.ts";
 import { useDeleteUser } from "@/hooks/user/useDelete.ts";
-
-export type Person = {
-  userid: number;
-  email: string;
-  fullName: string;
-  passwordHash: string;
-  status: number;
-  profileImageUrl: string | null;
-  phone: string;
-  address: string;
-  city: string;
-  role: boolean;
-  refreshToken: string | null;
-  accessToken: string | null;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-  userProfile: string;
-  socialLinks: string;
-  orders: string;
-};
+import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog.tsx";
 
 export const CustomerTable = () => {
   const [pagination, setPagination] = useState({
@@ -45,14 +24,6 @@ export const CustomerTable = () => {
   const [loading, setLoading] = useState(false);
 
   const [selectedCustomer, setSelectedCustomer] = useState<Person | null>(null);
-
-  const handleRowClick = (row: Person) => {
-    if (selectedCustomer?.userid === row.userid) {
-      setSelectedCustomer(null);
-    } else {
-      setSelectedCustomer(row);
-    }
-  };
 
   const handleEdit = (row: Person) => {
     setSelectedCustomer(row);
@@ -71,59 +42,30 @@ export const CustomerTable = () => {
   const columns = [
     columnHelper.accessor("userid", {
       header: "Customer Id",
-      cell: (info) => (
-        <div
-          onClick={() => handleRowClick(info.row.original)}
-          className="cursor-pointer"
-        >
-          {info.getValue()}
-        </div>
-      ),
+      cell: (info) => <div className="cursor-pointer">{info.getValue()}</div>,
     }),
 
     columnHelper.accessor("fullName", {
       header: "Name",
-      cell: (info) => (
-        <div
-          onClick={() => handleRowClick(info.row.original)}
-          className="cursor-pointer"
-        >
-          {info.getValue()}
-        </div>
-      ),
+      cell: (info) => <div className="cursor-pointer">{info.getValue()}</div>,
     }),
 
     columnHelper.accessor("phone", {
       header: "Phone",
-      cell: (info) => (
-        <div
-          onClick={() => handleRowClick(info.row.original)}
-          className="cursor-pointer"
-        >
-          {info.getValue()}
-        </div>
-      ),
+      cell: (info) => <div className="cursor-pointer">{info.getValue()}</div>,
     }),
 
     columnHelper.accessor("address", {
       header: "Address",
       cell: (info) => (
-        <div
-          onClick={() => handleRowClick(info.row.original)}
-          className="cursor-pointer"
-        >
-          {info.getValue() ?? "-"}
-        </div>
+        <div className="cursor-pointer">{info.getValue() ?? "-"}</div>
       ),
     }),
 
     columnHelper.accessor("role", {
       header: "Role",
       cell: (info) => (
-        <div
-          onClick={() => handleRowClick(info.row.original)}
-          className="cursor-pointer"
-        >
+        <div className="cursor-pointer">
           {info.getValue() ? "Admin" : "User"}
         </div>
       ),
@@ -135,10 +77,7 @@ export const CustomerTable = () => {
         const value = info.getValue();
 
         return (
-          <div
-            onClick={() => handleRowClick(info.row.original)}
-            className="flex gap-3 justify-center  items-center cursor-pointer"
-          >
+          <div className="flex gap-3 justify-center  items-center cursor-pointer">
             <div
               className={`w-2 h-2 rounded-full ${
                 value ? "bg-[#21C45D]" : "bg-[#EF4343]"
@@ -177,18 +116,18 @@ export const CustomerTable = () => {
               />
             )}
           </Dialog>
-          <button
-            type="button"
-            onClick={() => handleDelete(info.row.original.userid)}
-            disabled={loading}
-            className="p-1 disabled:cursor-not-allowed"
-          >
-            <MdDelete
-              className={`text-[20px] ${
-                loading ? "text-gray-400" : "text-[#6A717F] hover:text-red-600"
-              }`}
-            />
-          </button>
+          <ConfirmationDialog
+            trigger={
+              <button
+                type="button"
+                disabled={loading}
+                className="p-1 disabled:cursor-not-allowed"
+              >
+                <MdDelete className={`text-[20px] text-gray-500`} />
+              </button>
+            }
+            confirmFunc={() => handleDelete(info.row.original.userid)}
+          />
         </div>
       ),
     }),
@@ -209,14 +148,6 @@ export const CustomerTable = () => {
       <div className="flex-1">
         <Table table={table} pageIndex={pagination.pageIndex} />
       </div>
-
-      {selectedCustomer && (
-        <div className="w-[350px] mt-5">
-          <CustomerProfile
-            customer={{ ...selectedCustomer, userid: selectedCustomer.userid }}
-          />
-        </div>
-      )}
     </div>
   );
 };

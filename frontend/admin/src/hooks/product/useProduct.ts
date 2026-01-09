@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export interface ProductResponse {
   items: ProductRes[];
+  totalCount: number;
 }
 export interface ProductRes {
   productId: number;

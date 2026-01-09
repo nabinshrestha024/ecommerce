@@ -1,13 +1,11 @@
-import { Input } from "@/ui/input";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { IoMoonOutline, IoSunnyOutline } from "react-icons/io5";
 import { useDebounce } from "@/hooks/search/useDebounce";
-import { useSearchs } from "@/hooks/search/useSearch";
 import { useGetProfile } from "@/hooks/profile/useGetProfile";
 
 export const Navbar = () => {
-  const [searchData, setSearchData] = useState("");
+  const [searchData] = useState("");
   const { pathname } = useLocation();
   const { data } = useGetProfile();
   const heading =
@@ -51,9 +49,6 @@ export const Navbar = () => {
   useEffect(() => {
     if (!debounceSearch) return;
   }, [debounceSearch]);
-
-  const search = useSearchs(debounceSearch);
-  const navigate = useNavigate();
   return (
     <nav className=" border-b h-16 flex items-center justify-between px-2 w-full">
       <h1 className="font-bold text-2xl">{heading}</h1>
