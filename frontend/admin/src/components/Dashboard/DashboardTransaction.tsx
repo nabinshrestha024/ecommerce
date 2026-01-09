@@ -50,14 +50,14 @@ export const DashboardTransaction = () => {
     columnHelper.accessor("totalAmount", {
       header: "Amount",
       cell: (info) => {
-        return <div>Rs. {info.getValue()}</div>;
+        return <div className="text-right w-[90px]">{info.getValue()}</div>;
       },
     }),
   ];
 
   const table = useReactTable({
     columns,
-    data: orders.data?.items.slice(0, 5) || [],
+    data: orders.data?.items.slice(0, 7) || [],
     state: { pagination },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -81,12 +81,13 @@ export const DashboardTransaction = () => {
         <div className="space-y-5">
           <div className="text-xl font-semibold">Recent Products</div>
           <div className="flex flex-col gap-4">
-            {data?.items?.map((val, index) => {
-              if (index < 5) {
-                return (
-                  <div className="grid grid-cols-[2fr_1fr] gap-0.5 items-start">
-                    <div className="flex gap-5">
-                      <div className="h-12 w-12 ">
+            {data?.items
+              ?.filter((item) => item.stockQuantity ?? 0 > 0)
+              .map((val, index) => {
+                if (index < 4) {
+                  return (
+                    <div className="grid grid-cols-[1fr_2fr_1fr] gap-1.5 items-start border-b border-b-gray-200 pb-2">
+                      <div className="h-15 w-15 ">
                         <img
                           src={val.primaryImageUrl}
                           className="h-full w-full object-cover"
@@ -98,12 +99,13 @@ export const DashboardTransaction = () => {
                           {val.shortDescription}
                         </div>
                       </div>
+                      <div className="text-md font-semibold">
+                        Rs. {val.price}
+                      </div>
                     </div>
-                    <div className="text-md font-semibold">Rs. {val.price}</div>
-                  </div>
-                );
-              }
-            })}
+                  );
+                }
+              })}
           </div>
         </div>
       </Card>
