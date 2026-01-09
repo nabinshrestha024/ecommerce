@@ -8,6 +8,7 @@ import { Input } from "@/ui/input";
 import { Button } from "@/ui/button";
 import { useRegister } from "@/hooks/auth/useRegister";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export type RegisterPayload = Omit<RegisterFormSchemaType, "repassword">;
 
@@ -26,12 +27,17 @@ export const RegisterForm = ({}: {
       gender: "",
     },
   });
+  const router = useRouter();
 
   const { mutate } = useRegister();
 
   const onSubmit = (data: RegisterFormSchemaType) => {
     const { repassword, ...payload } = data;
-    mutate(payload as RegisterPayload);
+    mutate(payload as RegisterPayload, {
+      onSuccess: () => {
+        router.push("/login");
+      },
+    });
     reset();
   };
 
