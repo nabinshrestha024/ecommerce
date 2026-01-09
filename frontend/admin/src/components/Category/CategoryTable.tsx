@@ -149,10 +149,14 @@ export const CategoryTable = () => {
 
   const table = useReactTable({
     data: tableData || [],
+
     columns,
     state: { pagination },
+    pageCount: Math.ceil(
+      (product?.data?.totalCount ?? 0) / pagination.pageSize,
+    ),
+    manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
   });
   const tableFeature = useReactTable({
