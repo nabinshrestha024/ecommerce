@@ -120,7 +120,7 @@ export const Notification = () => {
                 <div key={val.notificationId}>
                   <DropdownMenuItem
                     onClick={() => {
-                      router.push("/order");
+                      router.push("/profile?page=myOrders");
                     }}
                     className={`px-4 hide-scrollbar py-3 cursor-pointer transition-colors focus:bg-gray-50 dark:focus:bg-gray-800 ${
                       val.isRead === false

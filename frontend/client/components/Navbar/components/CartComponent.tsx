@@ -29,7 +29,7 @@ export const CartComponent = () => {
     data?.filter((item) => selectedCartItemIds.includes(item.cartId)) ?? [];
   const totalPrice =
     selectedItems?.reduce(
-      (sum, val) => sum + val.quantity * val.finalPrice,
+      (sum, val) => sum + val.quantity * val.totalPrice,
       0,
     ) ?? 0;
   useEffect(() => {
@@ -197,7 +197,7 @@ export const CartComponent = () => {
 
                       <div className="mt-auto pt-3 flex items-center justify-between">
                         <span className="text-sm font-bold text-gray-900">
-                          Rs. {val.finalPrice}
+                          Rs. {val.totalPrice}
                         </span>
 
                         <div className="flex items-center bg-white border rounded-lg shadow-sm overflow-hidden">
