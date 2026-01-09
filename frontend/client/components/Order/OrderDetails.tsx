@@ -75,7 +75,7 @@ export const OrderDetails = ({
               <div className="flex-1 flex flex-col justify-center min-w-0">
                 <div className="flex justify-between items-start">
                   <div className="space-y-1">
-                    <h4 className="text-md font-bold text-gray-900 leading-tight truncate">
+                    <h4 className="text-md font-bold w-40 text-gray-900 leading-tight truncate">
                       {val.productName}
                     </h4>
                     <div className="mt-2 flex flex-wrap gap-2">
