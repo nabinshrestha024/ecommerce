@@ -21,7 +21,7 @@ BEGIN
             r.CreatedAt
         FROM Reviews r
         LEFT JOIN Users u ON u.UserId = r.UserId
-        ORDER BY r.CreatedAt DESC
+        ORDER BY r.CreatedAt ASC
         OFFSET (@Page - 1) * @PageSize ROWS
         FETCH NEXT @PageSize ROWS ONLY
     )

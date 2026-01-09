@@ -24,7 +24,8 @@ BEGIN
         o.Notes
     FROM Orders o
     LEFT JOIN Users u ON o.UserId = u.UserId
-    WHERE o.OrderId = @OrderId;
+    WHERE o.OrderId = @OrderId
+    ORDER BY o.OrderDate ASC;
 
     SELECT
         oi.OrderItemId,
@@ -40,7 +41,7 @@ BEGIN
     INNER JOIN Products p ON p.ProductId = oi.ProductId
     LEFT JOIN ProductImages pi ON pi.ProductId = oi.ProductId AND pi.IsPrimary = 1
     WHERE oi.OrderId = @OrderId
-    ORDER BY oi.OrderItemId;
+    ORDER BY oi.OrderItemId ASC;
 
     SELECT
         oi.OrderItemId,

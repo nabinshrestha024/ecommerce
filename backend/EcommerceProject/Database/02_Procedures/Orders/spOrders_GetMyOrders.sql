@@ -18,6 +18,6 @@ BEGIN
     FROM Orders o
     INNER JOIN USers u ON o.UserId = u.UserId
     WHERE o.UserId = @UserId
-    ORDER BY o.OrderDate DESC;
+    ORDER BY o.OrderDate ASC;
 END
 GO

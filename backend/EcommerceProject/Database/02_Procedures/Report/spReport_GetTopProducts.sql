@@ -18,6 +18,6 @@ BEGIN
     WHERE (@FromDate IS NULL OR o.OrderDate >= @FromDate)
       AND (@ToDate IS NULL OR o.OrderDate <= @ToDate)
     GROUP BY p.ProductId, p.Name
-    ORDER BY QuantitySold DESC;
+    ORDER BY QuantitySold ASC;
 END
 GO

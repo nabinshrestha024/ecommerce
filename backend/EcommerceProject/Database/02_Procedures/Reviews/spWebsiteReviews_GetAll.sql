@@ -16,6 +16,6 @@ BEGIN
     LEFT JOIN Users u ON u.UserId = wr.UserId
         WHERE wr.IsDeleted = 0
         AND u.IsDeleted = 0 
-    ORDER BY CreatedAt DESC;
+    ORDER BY CreatedAt ASC;
 END
 GO

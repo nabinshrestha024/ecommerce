@@ -23,7 +23,7 @@ BEGIN
     FROM Products p
     LEFT JOIN Categories c ON p.CategoryId = c.CategoryId
     WHERE p.IsActive = 1
-    ORDER BY p.Name
+    ORDER BY p.Name 
 END
 GO
 

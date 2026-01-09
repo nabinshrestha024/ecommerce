@@ -1,5 +1,6 @@
 USE EcommerceDB;
 GO
+
 CREATE OR ALTER PROCEDURE spCategories_Create
 (
     @Name VARCHAR(300),

@@ -52,7 +52,7 @@ BEGIN
     )
     SELECT ProductId INTO #PagedIds
     FROM FilteredProducts
-    ORDER BY ProductId DESC
+    ORDER BY ProductId ASC
     OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
 
     SELECT
@@ -62,17 +62,17 @@ BEGIN
         SELECT TOP 1 pi.ImageUrl
         FROM ProductImages pi
         WHERE pi.ProductId = p.ProductId
-        ORDER BY pi.IsPrimary DESC, pi.SortOrder ASC
+        ORDER BY pi.IsPrimary ASC, pi.SortOrder ASC
     ) AS PrimaryImageUrl
 FROM Products p
 INNER JOIN Categories c ON p.CategoryId = c.CategoryId
 WHERE p.ProductId IN (SELECT ProductId FROM #PagedIds)
-ORDER BY p.ProductId DESC;
+ORDER BY p.ProductId ASC;
 
 
     SELECT * FROM ProductVariants
     WHERE ProductId IN (SELECT ProductId FROM #PagedIds)
-    ORDER BY IsDefault DESC;
+    ORDER BY IsDefault ASC;
 
     SELECT
         vav.VariantId,

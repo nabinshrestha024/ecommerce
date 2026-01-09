@@ -35,7 +35,7 @@ BEGIN
         ON pi.ProductId = p.ProductId 
         AND pi.IsPrimary = 1
     WHERE w.UserId = @UserId
-    ORDER BY w.AddedDate DESC
+    ORDER BY w.AddedDate ASC
     OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
 
     SELECT COUNT(*)
