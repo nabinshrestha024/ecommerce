@@ -58,7 +58,7 @@ export const Navbar = () => {
     <nav className=" border-b h-16 flex items-center justify-between px-2 w-full">
       <h1 className="font-bold text-2xl">{heading}</h1>
       <div className="flex items-center gap-2">
-        <div className="relative w-80">
+        {/* <div className="relative w-80">
           <Input
             type="text"
             value={searchData}
@@ -100,7 +100,7 @@ export const Navbar = () => {
               ))}
             </div>
           )}
-        </div>
+        </div> */}
         <div
           className=" h-10 w-10 flex items-center justify-center text-2xl bg-(--bg) text-(--text)"
           onClick={() => setDarkMode((prev) => !prev)}

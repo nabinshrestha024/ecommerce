@@ -49,18 +49,23 @@ export const OrderTable = () => {
         id: "productName",
         header: "Product Name",
         cell: (info) => (
-          <div
-            className="flex flex-col justify-center items-center w-full"
-            onClick={() => handleRowClick(info.row.original)}
-          >
-            {info
-              .getValue()
-              ?.split(", ")
-              .map((name, i) => (
-                <span key={i} className="truncate">
-                  {name}
-                </span>
-              ))}
+          <div className="flex justify-center">
+            <div
+              className="flex flex-col justify-center items-center w-[300px] overflow-hidden"
+              onClick={() => handleRowClick(info.row.original)}
+            >
+              {info
+                .getValue()
+                ?.split(", ")
+                .map((name, i) => (
+                  <span
+                    key={i}
+                    className="block w-full line-clamp-2 break-all md:break-words text-center"
+                  >
+                    {name}
+                  </span>
+                ))}
+            </div>
           </div>
         ),
       },
