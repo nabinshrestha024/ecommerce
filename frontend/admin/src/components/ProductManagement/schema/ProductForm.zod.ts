@@ -20,8 +20,7 @@ export const ProductFormSchema = z.object({
     },
     z
       .array(z.instanceof(File))
-      .min(1, "At least one product image is required")
-      .max(4, "You can upload up to 4 images only"),
+      .min(1, "At least one product image is required"),
   ),
 
   primaryIndex: z
