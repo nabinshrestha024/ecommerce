@@ -14,6 +14,7 @@
 
         public bool IsActive { get; set; }
 
+        public bool IsDeleted { get; set; }
 
         public int TotalOrders {  get; set; }
 
