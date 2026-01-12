@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { Star } from "lucide-react";
-import { Dialog } from "../dialog/Dialog";
+import { Dialog } from "../Dialog/Dialog";
 import { useMemo, useState } from "react";
 import { ReviewForm } from "./components/ReviewForm";
 import { useFetchWebsiteReview } from "@/hooks/websiteReview/useFetchWebsiteReview";

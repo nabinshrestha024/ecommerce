@@ -40,7 +40,7 @@ export const Filter = ({ onFilterChange }: FilterProps) => {
     setValue("maxPrice", priceRange[1].toString());
   }, [priceRange, setValue]);
   return (
-    <div>
+    <div className="hidden md:block">
       <div className="text-xl font-semibold underline mb-4">Filter</div>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
         <div className="mb-4">

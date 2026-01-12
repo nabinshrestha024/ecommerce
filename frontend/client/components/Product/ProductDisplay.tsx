@@ -162,7 +162,9 @@ export const ProductDisplay = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-8 flex flex-col md:flex-row gap-5 items-start w-full">
       <div className="flex flex-col gap-5 w-full md:w-40 md:min-w-40 md:sticky md:top-8 shrink-0">
-        <Category />
+        <div className="w-full">
+          <Category />
+        </div>
         <Filter onFilterChange={handleFilterChange} />
       </div>
 
