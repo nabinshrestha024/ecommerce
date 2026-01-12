@@ -30,7 +30,7 @@ BEGIN
                 OR o.ShippingName LIKE '%' + @Search + '%'
                 OR o.ShippingPhone LIKE '%' + @Search + '%'
             )
-        ORDER BY o.OrderDate DESC
+        ORDER BY o.OrderDate ASC 
         OFFSET (@Page - 1) * @PageSize ROWS
         FETCH NEXT @PageSize ROWS ONLY
     )
@@ -51,7 +51,7 @@ BEGIN
     LEFT JOIN ProductImages pi
     ON pi.ProductId = P.ProductId
     AND pi.IsPrimary = 1
-    ORDER BY op.OrderDate DESC;
+    ORDER BY op.OrderDate ASC;
 
     SELECT COUNT(1)
     FROM Orders o
@@ -76,7 +76,7 @@ BEGIN
         SELECT o2.OrderId FROM Orders o2
         WHERE (@Status IS NULL OR o2.Status = @Status)
         AND (@Search IS NULL OR o2.ShippingName LIKE '%' + @Search + '%' OR o2.ShippingPhone LIKE '%' + @Search + '%')
-        ORDER BY o2.OrderDate DESC
+        ORDER BY o2.OrderDate ASC 
         OFFSET (@Page - 1) * @PageSize ROWS FETCH NEXT @PageSize ROWS ONLY
     );
 END

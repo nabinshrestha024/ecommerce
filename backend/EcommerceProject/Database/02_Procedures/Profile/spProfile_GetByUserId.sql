@@ -32,6 +32,6 @@ BEGIN
         CreatedAt
     FROM UserSocialLinks
     WHERE UserId = @UserId
-    ORDER BY CreatedAt;
+    ORDER BY CreatedAt ASC;
 END
 GO

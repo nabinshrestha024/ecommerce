@@ -1,5 +1,6 @@
 USE EcommerceDB;
 GO
+
 CREATE OR ALTER PROCEDURE spCategories_Delete
 (
     @CategoryId INT

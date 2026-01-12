@@ -45,7 +45,7 @@ BEGIN
         v.IsActive
     FROM ProductVariants v
     WHERE v.ProductId = @ProductId
-    ORDER BY v.IsDefault DESC, v.VariantId ASC;
+    ORDER BY v.IsDefault ASC, v.VariantId ASC;
 
     SELECT
         vav.VariantId,
@@ -76,7 +76,7 @@ BEGIN
         pi.SortOrder
     FROM ProductImages pi
     WHERE pi.ProductId = @ProductId
-    ORDER BY pi.IsPrimary DESC, pi.SortOrder ASC;
+    ORDER BY pi.IsPrimary ASC, pi.SortOrder ASC;
 END
 GO
 

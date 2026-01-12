@@ -27,7 +27,7 @@ BEGIN
     LEFT JOIN Orders o ON o.UserId = u.UserId
     GROUP BY 
         u.UserId, u.FullName, u.Email,u.Address,u.Role,u.Phone, u.IsActive,u.CreatedAt
-    ORDER BY userId DESC
+    ORDER BY userId ASC
     OFFSET @Offset ROWS
     FETCH NEXT @PageSize ROWS ONLY;
 

@@ -23,7 +23,7 @@ BEGIN
     WHERE
         (@IsActive IS NULL OR IsActive = @IsActive)
         AND (@Search IS NULL OR Name LIKE '%' + @Search + '%')
-    ORDER BY SortOrder, CreatedAt DESC
+    ORDER BY SortOrder, CreatedAt ASC
     OFFSET
         CASE WHEN @Page IS NULL OR @PageSize IS NULL THEN 0
              ELSE (@Page - 1) * @PageSize

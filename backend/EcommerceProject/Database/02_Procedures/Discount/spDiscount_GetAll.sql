@@ -35,6 +35,6 @@ BEGIN
         ) AS VariantIds
 
     FROM Discounts d
-    ORDER BY d.DiscountId DESC;
+    ORDER BY d.DiscountId ASC;
 END
 GO
