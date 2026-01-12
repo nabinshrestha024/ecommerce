@@ -171,6 +171,10 @@ export const CategoryDetails = () => {
             <div className="text-sm text-gray-600">Product ID</div>
             <div className="font-medium">{data?.productId}</div>
           </div>
+          <div className="max-w-[180px]">
+            <div className="text-sm text-gray-600 ">Product Name</div>
+            <div className="font-medium">{data?.name}</div>
+          </div>
           <div>
             <div className="text-sm text-gray-600">Category</div>
             <div className="font-medium">{data?.categoryName}</div>

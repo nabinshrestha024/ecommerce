@@ -73,7 +73,7 @@ export const ProductTable = () => {
       header: () => <div className="flex justify-start">Name</div>,
       cell: (info) => (
         <div
-          className="cursor-pointer text-left"
+          className="cursor-pointer text-left w-[200px] "
           onClick={() => handleRowClick(info.row.original)}
         >
           <div className="font-semibold truncate">{info.getValue()}</div>
@@ -111,10 +111,10 @@ export const ProductTable = () => {
       header: () => <div className="flex justify-start">Category Name</div>,
       cell: (info) => (
         <div
-          className="text-left w-[100px] truncate cursor-pointer"
+          className="text-left cursor-pointer"
           onClick={() => handleRowClick(info.row.original)}
         >
-          <div className="font-semibold truncate">{info.getValue()}</div>
+          <div className="font-semibold">{info.getValue()}</div>
         </div>
       ),
     }),
