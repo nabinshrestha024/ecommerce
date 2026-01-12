@@ -40,7 +40,7 @@ export const WebsiteReviews = () => {
       cell: ({ row }) => {
         const original = row.original;
         return (
-          <div className="flex gap-3 items-center">
+          <div className="flex gap-5 items-center">
             <div className="h-15 w-15 rounded-full overflow-hidden">
               <img
                 src={original.userImageUrl}
@@ -73,9 +73,9 @@ export const WebsiteReviews = () => {
       ),
     }),
     columnHelper.accessor("content", {
-      header: () => <div className="flex justify-start w-[300px]">Content</div>,
+      header: () => <div className="flex justify-start w-[250px]">Content</div>,
       cell: (info) => (
-        <div className="flex justify-start w-[300px]">
+        <div className="flex justify-start w-[250px]">
           <div className="whitespace-normal line-clamp-2 text-left truncate">
             {info.getValue()}
           </div>

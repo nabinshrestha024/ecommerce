@@ -74,7 +74,13 @@ export const Table = <TData,>({
                 return (
                   <td
                     key={cell.id}
-                    className={`${["name", "content"].includes(cellName) ? "w-[300px]" : ""} p-2 border-b text-center whitespace-nowrap`}
+                    className={`${
+                      cellName === "name"
+                        ? "w-[300px]"
+                        : cellName === "content"
+                          ? "w-[250px]"
+                          : ""
+                    } p-2 border-b text-center whitespace-nowrap`}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
