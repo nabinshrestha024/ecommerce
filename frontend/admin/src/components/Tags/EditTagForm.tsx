@@ -27,7 +27,6 @@ export const EditTagForm = ({ tag, setOpen }: EditTagFormProps) => {
     reset({ tagname: tag.name });
   }, [tag.tagId, tag.name, reset]);
   const onSubmit = (data: EditTagFormSchemaType) => {
-    console.log("Submitting data:", data.tagname);
     editTag.mutate(
       { tagId: tag.tagId, tagData: { name: data.tagname } },
       {
