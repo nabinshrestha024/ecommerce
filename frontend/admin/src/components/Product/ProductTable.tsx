@@ -16,6 +16,7 @@ import { useDeleteProduct } from "@/hooks/product/useDeleteProduct";
 import { useSearch } from "@/hooks/product/useSearch";
 import { useDebounce } from "@/hooks/search/useDebounce";
 import { TagForm } from "./TagForm";
+import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog";
 
 export const ProductTable = () => {
   const [pagination, setPagination] = useState({
@@ -151,9 +152,9 @@ export const ProductTable = () => {
               </div>
             )}
           </Dialog>
-          <MdDelete
-            className="text-[#6A717F] text-[20px]"
-            onClick={() => handleDelete(info.row.original.productId)}
+          <ConfirmationDialog
+            trigger={<MdDelete className="text-[#6A717F] text-[20px]" />}
+            confirmFunc={() => handleDelete(info.row.original.productId)}
           />
         </div>
       ),

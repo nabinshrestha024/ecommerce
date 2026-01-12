@@ -4,12 +4,9 @@ GO
 CREATE OR ALTER PROCEDURE spProfile_PutUpdate
     @UserId             INT,
     @FullName           VARCHAR(100),
-    --@Phone              VARCHAR(20),    -- remove it
     @Address            VARCHAR(500),
     @City               VARCHAR(100),
     @ProfileImageUrl    VARCHAR(1024),
-    --@DateOfBirth        DATE,           -- remove it   
-    --@Gender             VARCHAR(20),    -- remove it
     @Bio                VARCHAR(500)
 AS
 BEGIN
@@ -18,7 +15,6 @@ BEGIN
     UPDATE Users
     SET
         FullName = @FullName,
-        --Phone = @Phone, -- remove it
         Address = @Address,
         City = @City,
         ProfileImageUrl = @ProfileImageUrl,
@@ -30,10 +26,8 @@ BEGIN
     ON t.UserId = s.UserId
     WHEN MATCHED THEN
         UPDATE SET
-            --DateOfBirth = @DateOfBirth,     -- remove it
-            --Gender = @Gender,               -- remove it
             Bio = @Bio
     WHEN NOT MATCHED THEN
-        INSERT (UserId, Bio)        --(UserId, DateOfBirth, Gender, Bio) 
-        VALUES  (@UserId, @Bio);    --(@UserId, @DateOfBirth, @Gender, @Bio);
+        INSERT (UserId, Bio)      
+        VALUES  (@UserId, @Bio);    
 END;

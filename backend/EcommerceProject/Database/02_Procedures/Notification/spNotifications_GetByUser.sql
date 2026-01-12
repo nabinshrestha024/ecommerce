@@ -16,6 +16,6 @@ BEGIN
         OrderId
     FROM Notifications
     WHERE UserId = @UserId
-    ORDER BY CreatedAt DESC;
+    ORDER BY CreatedAt ASC;
 END
 GO

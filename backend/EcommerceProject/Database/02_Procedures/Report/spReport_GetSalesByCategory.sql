@@ -18,6 +18,6 @@ BEGIN
     WHERE (@FromDate IS NULL OR o.OrderDate >= @FromDate)
       AND (@ToDate IS NULL OR o.OrderDate <= @ToDate)
     GROUP BY c.Name
-    ORDER BY TotalRevenue DESC;
+    ORDER BY TotalRevenue ASC;
 END
 GO

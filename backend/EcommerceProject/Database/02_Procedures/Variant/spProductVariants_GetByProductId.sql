@@ -25,7 +25,7 @@ BEGIN
         v.ProductId = @ProductId
         AND (@OnlyActive = 0 OR v.IsActive = 1)
     ORDER BY
-        v.IsDefault DESC,
+        v.IsDefault ASC,
         v.VariantId ASC;
 END
 GO

@@ -33,7 +33,7 @@ BEGIN
     LEFT JOIN Users u ON po.CreatedBy = u.UserId
     WHERE (@Status IS NULL OR po.Status = @Status)
         AND (@VendorId IS NULL OR po.VendorId = @VendorId)
-    ORDER BY po.OrderDate DESC
+    ORDER BY po.OrderDate ASC
     OFFSET @Offset ROWS
     FETCH NEXT @PageSize ROWS ONLY;
 END

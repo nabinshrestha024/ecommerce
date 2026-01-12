@@ -14,6 +14,7 @@ import { Dialog } from "../Dialog/Dialog";
 import { VendorForm } from "./VendorForm";
 import { mapTableToVendor } from "./types";
 import type { VendorTableProps } from "./types";
+import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog";
 
 interface Props {
   data: VendorTableProps[];
@@ -121,9 +122,9 @@ export const VendorTableInternal = ({
               )}
             </Dialog>
 
-            <MdDelete
-              className="cursor-pointer"
-              onClick={() => onDelete(row.original.vendorId)}
+            <ConfirmationDialog
+              trigger={<MdDelete className="cursor-pointer" />}
+              confirmFunc={() => onDelete(row.original.vendorId)}
             />
           </div>
         ),

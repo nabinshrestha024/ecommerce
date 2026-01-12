@@ -7,8 +7,10 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { Table } from "../Table/Table";
-import { Star, Trash } from "lucide-react";
+import { Star } from "lucide-react";
 import { useRemoveWebsiteReview } from "@/hooks/websiteReview/useRemoveWebsiteReview";
+import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog";
+import { MdDelete } from "react-icons/md";
 
 export interface ReviewType {
   reviewId: number;
@@ -73,7 +75,7 @@ export const WebsiteReviews = () => {
       ),
     }),
     columnHelper.accessor("isDeleted", {
-      header: "Deleted",
+      header: "Status",
       cell: (info) => (
         <div className="flex items-center justify-center">
           <div className="flex items-center justify-start gap-2 w-19">
@@ -100,12 +102,14 @@ export const WebsiteReviews = () => {
         const row = info.row.original;
         return (
           <div className="flex justify-center">
-            <div
-              className="hover:bg-red-100 transition-all duration-250 p-1 rounded-lg cursor-pointer"
-              onClick={() => removeReviews.mutate(row.reviewId)}
-            >
-              <Trash color="red" />
-            </div>
+            <ConfirmationDialog
+              trigger={
+                <div className="p-1 rounded-lg cursor-pointer">
+                  <MdDelete className="text-[#6A717F] text-[20px]" />
+                </div>
+              }
+              confirmFunc={() => removeReviews.mutate(row.reviewId)}
+            />
           </div>
         );
       },

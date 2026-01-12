@@ -18,6 +18,6 @@ BEGIN
     WHERE r.ProductId = @ProductId
       AND r.IsDeleted = 0
       AND u.IsDeleted = 0  
-    ORDER BY r.CreatedAt DESC;
+    ORDER BY r.CreatedAt ASC;
 END
 GO

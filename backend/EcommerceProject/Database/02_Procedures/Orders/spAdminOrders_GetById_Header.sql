@@ -24,6 +24,6 @@ BEGIN
         o.Notes
     FROM Orders o
     INNER JOIN Users u ON u.UserId = o.UserId
-    WHERE o.OrderId = @OrderId;
+    WHERE o.OrderId = @OrderId ORDER BY o.OrderDate ASC;
 END
 GO

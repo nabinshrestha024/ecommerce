@@ -21,14 +21,11 @@ export const BasicDetails = () => {
             <Input
               type="text"
               placeholder="Enter product name...."
-              className="w-full h-9 px-3 border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
+              className={`w-full h-9 px-3 border mt-2 border-gray-300  rounded-md outline-none !focus-visible:ring-0 !focus-visible:border-gray-300 ${
+                errors.name ? "border-red-500" : ""
+              }`}
               {...register("name")}
             />
-            {errors.name && (
-              <div className="text-sm text-red-500">
-                {errors.name?.message as string}
-              </div>
-            )}
           </div>
           <div className="flex flex-col">
             <label className="block text-sm font-medium ">
@@ -37,28 +34,22 @@ export const BasicDetails = () => {
             <Input
               type="textarea"
               placeholder="Enter short description...."
-              className="w-full border mt-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
+              className={`w-full border mt-2 border-gray-300 rounded-md outline-none !focus-visible:ring-0 !focus-visible:border-gray-300 ${
+                errors.shortDescription ? "border-red-500" : ""
+              }`}
               {...register("shortDescription")}
             />
-            {errors.shortDescription && (
-              <div className="text-sm text-red-500">
-                {errors.shortDescription?.message as string}
-              </div>
-            )}
           </div>
           <div className="flex flex-col ">
             <label className="block text-sm font-medium ">Description</label>
             <Input
               type="textarea"
               placeholder="Enter product description...."
-              className="w-full border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
+              className={`w-full border mt-2 border-gray-300 bg-foreground-black rounded-md outline-none !focus-visible:ring-0 !focus-visible:border-gray-300 ${
+                errors.description ? "border-red-500" : ""
+              }`}
               {...register("description")}
             />
-            {errors.description && (
-              <div className="text-sm text-red-500">
-                {errors.description?.message as string}
-              </div>
-            )}
           </div>
         </div>
         <div className="flex flex-col gap-1">
@@ -67,7 +58,7 @@ export const BasicDetails = () => {
               <input
                 type="checkbox"
                 {...register("highlightFeatured")}
-                className="h-4 w-4"
+                className="h-4 w-4 accent-[#4fa675] "
               />
               <label className="text-sm font-medium ">
                 Highlight this product in featured section

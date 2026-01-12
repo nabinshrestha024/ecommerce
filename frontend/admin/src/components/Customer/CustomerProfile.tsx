@@ -3,7 +3,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { RxCopy } from "react-icons/rx";
 import { MdLocationOn } from "react-icons/md";
 import { socialIcons } from "../Customer/SocialMediaIcons.import.ts";
-interface Person {
+export interface Person {
   userid: number;
   email: string;
   fullName: string;

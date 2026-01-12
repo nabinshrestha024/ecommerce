@@ -27,7 +27,7 @@ BEGIN
     AND pi.IsPrimary = 1
     INNER JOIN Products p ON p.ProductId = oi.ProductId
     WHERE oi.OrderId = @OrderId
-    ORDER BY oi.OrderItemId;
+    ORDER BY oi.OrderItemId ASC;
 
     SELECT
         oi.OrderItemId,

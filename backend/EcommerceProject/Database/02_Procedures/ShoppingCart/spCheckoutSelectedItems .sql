@@ -67,7 +67,7 @@ BEGIN
         INNER JOIN Discounts d ON d.DiscountId = da.DiscountId
         WHERE da.VariantId = sc.VariantId AND d.IsActive = 1
         AND GETDATE() BETWEEN d.StartDate AND d.EndDate
-        ORDER BY d.DiscountValue DESC
+        ORDER BY d.DiscountValue ASC
     ) vd
     OUTER APPLY (
         SELECT TOP 1 d.*
@@ -75,7 +75,7 @@ BEGIN
         INNER JOIN Discounts d ON d.DiscountId = da.DiscountId
         WHERE da.ProductId = p.ProductId AND d.IsActive = 1
         AND GETDATE() BETWEEN d.StartDate AND d.EndDate
-        ORDER BY d.DiscountValue DESC
+        ORDER BY d.DiscountValue ASC
     ) pd;
 
     -- Calculate totals
