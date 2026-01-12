@@ -11,8 +11,5 @@
         public DateTime EndDate { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
-
-        public string ProductIds { get; set; }   
-        public string VariantIds { get; set; }  
     }
 }

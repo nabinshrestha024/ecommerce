@@ -24,13 +24,28 @@ namespace EcommerceProject.Services.Implementations
             return await _adminRepo.GetAllAsync();
         }
 
-        public async Task CreateAsync(CreateDiscountDto dto)
+        public async Task<int> CreateAsync(CreateDiscountDto dto)
         {
-            await Validate(dto);
-            await _adminRepo.CreateAsync(dto);
+            if (dto.StartDate >= dto.EndDate)
+                throw new Exception("Start date must be earlier than end date.");
 
+            return await _adminRepo.CreateAsync(dto);
         }
 
+        public async Task AddDiscountToProductsAsync(int discountId, DiscountProductDto dto)
+        {
+            if (!dto.ProductIds.Any())
+                throw new Exception("ProductIds cannot be empty.");
+
+            await _adminRepo.AddDiscountToProductsAsync(discountId, dto.ProductIds);
+        }
+        public async Task AddDiscountToVariantsAsync(int discountId, DiscountVariantsDto dto)
+        {
+            if (!dto.VariantIds.Any())
+                throw new Exception("VariantIds cannot be empty.");
+
+            await _adminRepo.AddDiscountToVariantsAsync(discountId, dto.VariantIds);
+        }
         public async Task UpdateAsync(UpdateDiscountDto dto)
         {
             await _adminRepo.UpdateAsync(dto);
@@ -55,18 +70,18 @@ namespace EcommerceProject.Services.Implementations
 
         }
 
-        public async Task<int> AddDiscountAsync(CreateDiscountDto request)
-        {
+        //public async Task<int> AddDiscountAsync(CreateDiscountDto request)
+        //{
             
-            var validationResult = await _validator.ValidateAsync(request);
-            if (!validationResult.IsValid)
-            {
-                throw new ValidationException(validationResult.Errors);
-            }
+        //    var validationResult = await _validator.ValidateAsync(request);
+        //    if (!validationResult.IsValid)
+        //    {
+        //        throw new ValidationException(validationResult.Errors);
+        //    }
 
             
-            return await _adminRepo.AddDiscountAsync(request);
-        }
+        //    return await _adminRepo.AddDiscountAsync(request);
+        //}
 
 
 

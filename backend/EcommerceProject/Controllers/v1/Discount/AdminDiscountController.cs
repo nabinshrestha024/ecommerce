@@ -33,7 +33,7 @@ namespace EcommerceProject.Controllers.v1.Discount
         {
             try
             {
-                var discountId = await _service.AddDiscountAsync(request);
+                var discountId = await _service.CreateAsync(request);
                 return Ok(new { DiscountId = discountId, Message = "Discount added successfully" });
             }
             catch (ValidationException ex)
@@ -44,6 +44,46 @@ namespace EcommerceProject.Controllers.v1.Discount
             {
                 return BadRequest(new { Message = ex.Message });
             }
+        }
+
+        [HttpPost("{discountId}/products")]
+        public async Task<IActionResult> AddToProducts(int discountId, DiscountProductDto dto)
+        {
+            try
+            {
+                await _service.AddDiscountToProductsAsync(discountId, dto);
+                return Ok(new {Message = "Discount Add to products sucessfully"});
+
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { Message = "Validation failed", Errors = ex.Errors });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+
+        }
+
+        [HttpPost("{discountId}/variants")]
+        public async Task<IActionResult> AddToVariants(int discountId, DiscountVariantsDto dto)
+        {
+            try
+            {
+                await _service.AddDiscountToVariantsAsync(discountId, dto);
+                return Ok(new {Message ="Discount add to Variant successfully"});
+
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { Message = "Validation failed", Errors = ex.Errors });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+
         }
 
         [HttpPut("update")]

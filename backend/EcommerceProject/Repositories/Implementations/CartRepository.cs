@@ -40,8 +40,9 @@ namespace EcommerceProject.Repositories.Implementations
                 splitOn: "Attributes",
                 commandType: CommandType.StoredProcedure);
             return cartDictionary.Values.ToList();
-            
+
         }
+
 
         public async Task AddToCartAsync(int userId, int variantId, int quantity)
         {
