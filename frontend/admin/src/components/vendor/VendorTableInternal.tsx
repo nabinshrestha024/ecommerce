@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, type Dispatch, type SetStateAction } from "react";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -23,6 +23,16 @@ interface Props {
   isDialogOpen: boolean;
   setIsDialogOpen: (v: boolean) => void;
   onDelete: (id: number) => void;
+  pagination: {
+    pageIndex: number;
+    pageSize: number;
+  };
+  setPagination: Dispatch<
+    SetStateAction<{
+      pageIndex: number;
+      pageSize: number;
+    }>
+  >;
 }
 
 const formatDateOnly = (raw: string) =>
@@ -35,12 +45,9 @@ export const VendorTableInternal = ({
   isDialogOpen,
   setIsDialogOpen,
   onDelete,
+  pagination,
+  setPagination,
 }: Props) => {
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-
   const columnHelper = createColumnHelper<VendorTableProps>();
 
   const columns = useMemo(
@@ -149,5 +156,11 @@ export const VendorTableInternal = ({
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  return <Table table={table} />;
+  return (
+    <Table
+      table={table}
+      pageIndex={pagination.pageIndex}
+      pageSize={pagination.pageSize}
+    />
+  );
 };

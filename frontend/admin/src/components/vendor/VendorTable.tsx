@@ -8,17 +8,24 @@ import { VendorTableInternal } from "./VendorTableInternal";
 import type { VendorTableProps } from "./types";
 
 export const VendorTable = () => {
-  const { data, isError } = useGetVendor();
   const { mutate: deleteVendor } = useDeleteVendor();
 
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const { data, isError } = useGetVendor(
+    pagination.pageIndex + 1,
+    pagination.pageSize,
+  );
   const [editingVendor, setEditingVendor] = useState<VendorTableProps | null>(
     null,
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const vendors = useMemo(() => {
-    if (!Array.isArray(data?.data)) return [];
-    return [...data.data].sort((a, b) => a.vendorId - b.vendorId);
+    if (!Array.isArray(data?.data?.items)) return [];
+    return [...data.data.items].sort((a, b) => a.vendorId - b.vendorId);
   }, [data]);
 
   return (
@@ -32,6 +39,8 @@ export const VendorTable = () => {
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
         onDelete={deleteVendor}
+        pagination={pagination}
+        setPagination={setPagination}
       />
 
       {isError && (
