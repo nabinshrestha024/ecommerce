@@ -70,20 +70,6 @@ namespace EcommerceProject.Services.Implementations
 
         }
 
-        //public async Task<int> AddDiscountAsync(CreateDiscountDto request)
-        //{
-            
-        //    var validationResult = await _validator.ValidateAsync(request);
-        //    if (!validationResult.IsValid)
-        //    {
-        //        throw new ValidationException(validationResult.Errors);
-        //    }
-
-            
-        //    return await _adminRepo.AddDiscountAsync(request);
-        //}
-
-
 
     }
 }

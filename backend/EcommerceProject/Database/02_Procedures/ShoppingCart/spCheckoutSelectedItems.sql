@@ -67,7 +67,7 @@ BEGIN
     WHERE dv.VariantId = sc.VariantId
       AND d.IsActive = 1
       AND GETDATE() BETWEEN d.StartDate AND d.EndDate
-    ORDER BY d.DiscountValue DESC
+    ORDER BY d.DiscountValue ASC
 ) vd
 
     OUTER APPLY (
@@ -77,7 +77,7 @@ BEGIN
     WHERE dp.ProductId = p.ProductId
       AND d.IsActive = 1
       AND GETDATE() BETWEEN d.StartDate AND d.EndDate
-    ORDER BY d.DiscountValue DESC
+    ORDER BY d.DiscountValue ASC
 ) pd
 
     -- Totals
