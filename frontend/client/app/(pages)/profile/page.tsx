@@ -16,6 +16,10 @@ import { LogOut } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { SocialLinks } from "@/components/Profile/SocialLinks";
 import { useFetchSocialLinks } from "@/hooks/socialLinks/useFetchSocialLinks";
+import Image from "next/image";
+import Link from "next/link";
+import { ConfirmationDialog } from "@/components/ConfirmationDialog/ConfirmationDialog";
+import { Spinner } from "@/ui/spinner";
 
 export default function UserProfile() {
   const { data, isLoading } = useFetchProfile();
@@ -56,14 +60,6 @@ export default function UserProfile() {
     },
   ];
 
-  const getInitials = (name: string) => {
-    return name
-      .trim()
-      .split(" ")
-      .map((word) => word[0])
-      .join("")
-      .toUpperCase();
-  };
   const router = useRouter();
   const { logout } = useAuth();
 
@@ -78,7 +74,9 @@ export default function UserProfile() {
 
   return isLoading || orders.isLoading || socialLinks.isLoading ? (
     // || wishlist.isLoading
-    <div>Loading....</div>
+    <div className="fixed top-0 left-0 h-screen w-screen flex items-center justify-center">
+      <Spinner className="size-8" />
+    </div>
   ) : (
     <div className="w-full">
       <div className="min-h-screen bg-gray-50">
@@ -86,8 +84,13 @@ export default function UserProfile() {
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-20 h-20 bg-linear-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                  {getInitials(data.fullName)}
+                <div className="w-20 h-20 bg-linear-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center text-white text-2xl font-bold relative overflow-hidden">
+                  <Image
+                    src={data.profileImageUrl}
+                    alt="Profile Picture"
+                    fill
+                    unoptimized
+                  />
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">
@@ -99,23 +102,26 @@ export default function UserProfile() {
                   </p>
                 </div>
               </div>
-              <button
-                onClick={handleLogout}
-                className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-red-500 flex gap-2"
-              >
-                <LogOut className="p-0.5" />{" "}
-                <p className="hidden md:block">Log Out</p>
-              </button>
+              <ConfirmationDialog
+                trigger={
+                  <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-red-500 flex gap-2">
+                    <LogOut className="p-0.5" />{" "}
+                    <p className="hidden md:block">Log Out</p>
+                  </button>
+                }
+                confirmFunc={handleLogout}
+                description="Are you sure you want to logout?"
+              />
             </div>
 
             <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t">
-              <div className="text-center">
+              <div className="text-center" onClick={() => setPage("myOrders")}>
                 <div className="text-2xl font-bold text-gray-900">
                   {Array.isArray(orders?.data) ? orders.data.length : 0}
                 </div>
                 <div className="text-sm text-gray-600">Orders</div>
               </div>
-              <div className="text-center">
+              <div onClick={() => setPage("wishlist")} className="text-center">
                 <div className="text-2xl font-bold text-gray-900">
                   {Array.isArray(wishlist?.data?.items)
                     ? wishlist.data.items.length
@@ -123,9 +129,14 @@ export default function UserProfile() {
                 </div>
                 <div className="text-sm text-gray-600">Wishlist</div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">10</div>
-                <div className="text-sm text-gray-600">Reviews</div>
+              <div
+                onClick={() => setPage("socialLinks")}
+                className="text-center"
+              >
+                <div className="text-2xl font-bold text-gray-900">
+                  {socialLinks.data?.links.length}
+                </div>
+                <div className="text-sm text-gray-600">Social Links</div>
               </div>
             </div>
           </div>

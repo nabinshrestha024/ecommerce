@@ -102,5 +102,11 @@ ORDER BY p.ProductId ASC;
             @TagNames IS NULL
             OR t.Name IN (SELECT value FROM STRING_SPLIT(@TagNames, ','))
         );
+
+    SELECT ISNULL(MAX(Price), 0)
+    FROM ProductVariants v
+    INNER JOIN Products p ON v.ProductId = p.ProductId
+    WHERE p.IsActive = 1;
+    
 END
 GO

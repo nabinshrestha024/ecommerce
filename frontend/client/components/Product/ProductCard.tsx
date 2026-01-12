@@ -12,7 +12,7 @@ import { WishlistItem } from "../TrendingProduct/component/TrendingProductCard";
 import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { useState } from "react";
-import { Dialog } from "../dialog/Dialog";
+import { Dialog } from "../Dialog/Dialog";
 import { Variant } from "./ProductDetails";
 import { Card } from "../Card/Card";
 import { ProductType } from "./ProductDisplay";
@@ -145,9 +145,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <Card
-      className="p-3 w-full max-w-[285px] border-0 shadow-none flex flex-col justify-between h-[400px] md:h-[380px] "
+      className="p-3 w-full lg:max-w-[285px] border-0 shadow-none flex flex-col justify-between h-[400px] md:h-[380px] "
       key={product.productId}
-      rootClassName="py-0 border shadow-xl max-w-[285px]"
+      rootClassName="py-0 border shadow-xl lg:max-w-[285px]"
     >
       <div className="flex flex-col gap-2">
         <div className="w-full h-[185px] relative ">

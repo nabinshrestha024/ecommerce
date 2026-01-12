@@ -1,7 +1,9 @@
 import { endpoint } from "@/lib/endpoint";
 import { axiosInstance } from "@/lib/axiosInstance";
-export const getVendors = async () => {
-  const response = await axiosInstance.get(endpoint.VENDOR);
+export const getVendors = async (pageIndex: number, pageSize: number) => {
+  const response = await axiosInstance.get(
+    `${endpoint.VENDOR}?Page=${pageIndex}&PageSize=${pageSize}`,
+  );
   return response.data;
 };
 export const postVendor = async (vendorData: Record<string, unknown>) => {

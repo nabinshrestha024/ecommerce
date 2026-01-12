@@ -87,8 +87,8 @@ namespace EcommerceProject.Repositories.Implementations
                     dto.FullName,
                     dto.Role,
                     dto.Phone,
-                    dto.Address,
-                    dto.IsActive
+                    dto.Address
+                    
                 },
                 commandType: CommandType.StoredProcedure
             );

@@ -73,7 +73,10 @@ export const ProductDisplay = () => {
   const categoryParam = searchParams.get("categoryId");
   const categoryId = categoryParam ? Number(categoryParam) : null;
   const tagsParam = searchParams.get("tags");
-  const tagsFromUrl: string[] = tagsParam ? tagsParam.split(",") : [];
+  const tagsFromUrl = useMemo(
+    () => (tagsParam ? tagsParam.split(",") : []),
+    [tagsParam],
+  );
 
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
     minPrice: "",
@@ -83,7 +86,7 @@ export const ProductDisplay = () => {
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 11,
+    pageSize: 20,
   });
 
   const hasAnyFilter = useMemo(() => {
@@ -158,8 +161,10 @@ export const ProductDisplay = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8 flex flex-col md:flex-row gap-5 items-start w-full">
-      <div className="flex flex-col gap-5">
-        <Category />
+      <div className="flex flex-col gap-5 w-full md:w-40 md:min-w-40 md:sticky md:top-8 shrink-0">
+        <div className="w-full">
+          <Category />
+        </div>
         <Filter onFilterChange={handleFilterChange} />
       </div>
 
@@ -294,9 +299,9 @@ export const ProductDisplay = () => {
                       <SelectValue placeholder="Rows" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="11">10</SelectItem>
-                      <SelectItem value="21">20</SelectItem>
-                      <SelectItem value="51">50</SelectItem>
+                      <SelectItem value="10">10</SelectItem>
+                      <SelectItem value="20">20</SelectItem>
+                      <SelectItem value="50">50</SelectItem>
                     </SelectContent>
                   </Select>
                 </PaginationItem>
