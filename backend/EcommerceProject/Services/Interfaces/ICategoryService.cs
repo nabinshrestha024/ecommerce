@@ -13,5 +13,7 @@ namespace EcommerceProject.Services.Interfaces
         Task<int> CreateAsync(CategoryUpsertDto body, CancellationToken ct);
         Task UpdateAsync(int id, CategoryUpsertDto body, CancellationToken ct);
         Task<bool> DeleteAsync(int id);
+
+        Task<Category?> GetByIdAsync(int id, CancellationToken ct);
     }
 }

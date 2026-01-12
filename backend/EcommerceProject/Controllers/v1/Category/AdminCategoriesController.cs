@@ -37,32 +37,63 @@ namespace EcommerceProject.Controllers.v1.Category
             }
             return Ok(result);
         }
-        [HttpPost("upload-image")]
-        public async Task<IActionResult> UploadImage(IFormFile file, CancellationToken ct)
-        {
-            if (file == null)
-                return BadRequest("No file uploaded");
 
-            var imageUrl = await _fileStorage.SaveCategoryImageAsync(file, ct);
-
-            return Ok(new { imageUrl });
-        }
 
 
         [HttpPost]
-        public async Task<IActionResult> Create(CategoryUpsertDto dto, CancellationToken ct)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Create([FromForm] CategoryUpsertRequest request, CancellationToken ct)
         {
+            var dto = new CategoryUpsertDto
+            {
+                Name = request.Name,
+                Description = request.Description,
+                IsFeatured = request.IsFeatured,
+                SortOrder = request.SortOrder,
+                IsActive = request.IsActive
+            };
+
+            if (request.Image != null)
+            {
+                dto.CategoryImageURL =
+                    await _fileStorage.SaveCategoryImageAsync(request.Image, ct);
+            }
+
             var id = await _service.CreateAsync(dto, ct);
-            
-            return CreatedAtAction("message: ", nameof(Create), new { id }, null);
+            return Ok(new { categoryId = id });
         }
 
+
+
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, CategoryUpsertDto dto, CancellationToken ct)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Update(int id, [FromForm] CategoryUpsertRequest request, CancellationToken ct)
         {
+            var existing = await _service.GetByIdAsync(id, ct);
+            if (existing == null)
+                return NotFound(new { message = "Category not found." });
+
+            var dto = new CategoryUpsertDto
+            {
+                Name = request.Name,
+                Description = request.Description,
+                IsFeatured = request.IsFeatured,
+                SortOrder = request.SortOrder,
+                IsActive = request.IsActive,
+                CategoryImageURL = existing.CategoryImageURL  
+            };
+
+            if (request.Image != null)
+            {
+                dto.CategoryImageURL =
+                    await _fileStorage.SaveCategoryImageAsync(request.Image, ct);
+            }
+
             await _service.UpdateAsync(id, dto, ct);
-            return Ok("Update Successful");
+
+            return Ok(new { message = "Update successful." });
         }
+
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
