@@ -20,9 +20,6 @@ namespace EcommerceProject.Models.Validators.Discount
                 .LessThanOrEqualTo(x => x.EndDate)
                 .WithMessage("StartDate must be before EndDate");
 
-            RuleFor(x => x)
-                .Must(x => (x.ProductIds != null && x.ProductIds.Any()) || (x.VariantIds != null && x.VariantIds.Any()))
-                .WithMessage("At least one ProductId or VariantId must be specified");
         }
     }
 }
