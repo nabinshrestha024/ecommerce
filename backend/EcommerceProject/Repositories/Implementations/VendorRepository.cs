@@ -41,7 +41,7 @@ namespace EcommerceProject.Repositories.Implementations
             }
         }
 
-        public async Task<List<VendorDto>> GetAllVendorsAsync(bool? isActive = null, int pageNumber = 1, int pageSize = 10)
+        public async Task<List<VendorDto>> GetAllVendorsAsync(bool? isActive = null, int page = 1, int pageSize = 10)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace EcommerceProject.Repositories.Implementations
                     new 
                     { 
                         IsActive = isActive,
-                        PageNumber = pageNumber,
+                        Page = page,
                         PageSize = pageSize
                     },
                     commandType: CommandType.StoredProcedure

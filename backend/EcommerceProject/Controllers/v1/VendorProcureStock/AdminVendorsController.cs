@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using EcommerceProject.Models.DTOs.Vendor;
+using EcommerceProject.Models.DTOs.Common;
 using EcommerceProject.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -21,32 +22,26 @@ namespace EcommerceProject.Controllers.v1.Admin
             _logger = logger;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllVendors(
-            [FromQuery] bool? isActive = null, 
-            [FromQuery] int pageNumber = 1, 
-            [FromQuery] int pageSize = 10)
-        {
-            try
-            {
-                var vendors = await _vendorService.GetAllVendorsAsync(isActive, pageNumber, pageSize);
-                var totalRecords = vendors.FirstOrDefault()?.TotalCount ?? 0;
-
-                return Ok(new PagedResponse<List<VendorDto>>
-                {
-                    Success = true,
-                    Data = vendors,
-                    TotalRecords = totalRecords,
-                    PageNumber = pageNumber,
-                    PageSize = pageSize
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting paged vendors");
-                return StatusCode(500, new { Success = false, Message = "Internal server error" });
-            }
-        }
+[HttpGet]
+public async Task<IActionResult> GetAllVendors(
+    [FromQuery] bool? isActive, 
+    [FromQuery] PaginationDto pagination)
+{
+    try
+    {
+        var result = await _vendorService.GetAllVendorsAsync(isActive, pagination);
+        
+        return Ok(new { 
+            Success = true, 
+            Data = result 
+        });
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Error getting vendors");
+        return StatusCode(500, new { Success = false, Message = "Internal server error" });
+    }
+}
 
         [HttpPost]
         public async Task<IActionResult> CreateVendor([FromBody] CreateVendorRequestDto request)

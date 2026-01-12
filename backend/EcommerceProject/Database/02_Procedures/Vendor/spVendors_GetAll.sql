@@ -3,7 +3,7 @@ GO
 
 CREATE OR ALTER PROCEDURE spVendors_GetAll
     @IsActive BIT = NULL,
-    @PageNumber INT = 1,
+    @Page INT = 1,
     @PageSize INT = 10
 AS
 BEGIN
@@ -26,7 +26,7 @@ BEGIN
     FROM Vendors
     WHERE (@IsActive IS NULL OR IsActive = @IsActive)
     ORDER BY Name
-    OFFSET (@PageNumber -1) * @PageSize ROWS
+    OFFSET (@Page -1) * @PageSize ROWS
     FETCH NEXT @PageSize ROWS ONLY;
 END
 GO
