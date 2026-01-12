@@ -10,6 +10,8 @@ export const getCatalogProducts = async (filterData: {
   tagNames?: string[];
   minPrice?: string;
   maxPrice?: string;
+  page?: number;
+  pageSize?: number;
 }) => {
   const params = new URLSearchParams();
   if (filterData.categoryId) {
@@ -23,6 +25,12 @@ export const getCatalogProducts = async (filterData: {
   }
   if (filterData.maxPrice) {
     params.append("maxPrice", filterData.maxPrice);
+  }
+  if (filterData.page) {
+    params.append("page", String(filterData.page));
+  }
+  if (filterData.pageSize) {
+    params.append("pageSize", String(filterData.pageSize));
   }
   const url = `${endpoint.CATALOGPRODUCTS}?${params.toString()}`;
 

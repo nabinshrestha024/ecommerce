@@ -12,10 +12,10 @@ export type ProductResponse = {
   totalPages: number;
 };
 
-export const useProduct = () => {
+export const useProduct = (pageIndex: number, pageSize: number) => {
   const { data, isLoading, isError, refetch } = useQuery<ProductResponse>({
-    queryKey: ["product"],
-    queryFn: Product,
+    queryKey: ["product", pageIndex, pageSize],
+    queryFn: () => Product(pageIndex, pageSize),
   });
   return { data, isLoading, isError, refetch };
 };
