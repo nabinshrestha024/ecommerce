@@ -66,7 +66,7 @@ export const TopNav = () => {
   const search = useSearch(debounceSearch);
   return (
     <div className="flex justify-between px-5 lg:px-10 items-center py-5 border-b">
-      <div className="flex gap-2 lg:divide-x-2">
+      <div className="flex gap-2 md:divide-x-2">
         <Image
           src={"/logo.png"}
           alt="Logo"
@@ -81,7 +81,7 @@ export const TopNav = () => {
           width={120}
           className="lg:hidden"
         />
-        <div className="items-center gap-2 hidden lg:flex">
+        <div className="items-center gap-2 hidden md:flex">
           <FaLocationDot className="text-2xl" />
           <div>
             <div className="text-xs">Deliver to</div>
@@ -93,8 +93,8 @@ export const TopNav = () => {
           </div>
         </div>
       </div>
-      <div className="gap-4 items-center hidden lg:flex">
-        <div className="relative w-[400px]">
+      <div className="gap-4 items-center hidden md:flex">
+        <div className="relative w-[400px] hidden lg:flex">
           <Input
             type="text"
             value={searchData}

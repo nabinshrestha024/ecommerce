@@ -9,7 +9,7 @@ export const FourthCard = () => {
   ];
 
   return (
-    <div className="grid grid-cols-2 max-w-[440px] lg:max-w-full lg:grid-cols-4 gap-2 pr-2">
+    <div className="grid grid-cols-2 lg:max-w-full lg:grid-cols-4 gap-2 pr-2">
       {advertisements.map((ad, index) => (
         <div
           key={index}
