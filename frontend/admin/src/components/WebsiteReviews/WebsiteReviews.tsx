@@ -73,10 +73,10 @@ export const WebsiteReviews = () => {
       ),
     }),
     columnHelper.accessor("content", {
-      header: () => <div className="flex justify-start">Content</div>,
+      header: () => <div className="flex justify-start w-[300px]">Content</div>,
       cell: (info) => (
-        <div className="flex justify-start">
-          <div className="w-60 whitespace-normal line-clamp-2 text-left">
+        <div className="flex justify-start w-[300px]">
+          <div className="whitespace-normal line-clamp-2 text-left truncate">
             {info.getValue()}
           </div>
         </div>

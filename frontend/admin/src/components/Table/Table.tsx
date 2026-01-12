@@ -68,14 +68,18 @@ export const Table = <TData,>({
         <tbody>
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  key={cell.id}
-                  className="p-2 border-b text-center whitespace-nowrap"
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
+              {row.getVisibleCells().map((cell) => {
+                console.log(cell.column.id, "cell");
+                const cellName = cell.column.id;
+                return (
+                  <td
+                    key={cell.id}
+                    className={`${["name", "content"].includes(cellName) ? "w-[300px]" : ""} p-2 border-b text-center whitespace-nowrap`}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>
