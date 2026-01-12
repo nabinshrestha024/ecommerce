@@ -86,7 +86,7 @@ export const ProductDisplay = () => {
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 11,
+    pageSize: 20,
   });
 
   const hasAnyFilter = useMemo(() => {
@@ -297,9 +297,9 @@ export const ProductDisplay = () => {
                       <SelectValue placeholder="Rows" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="11">10</SelectItem>
-                      <SelectItem value="21">20</SelectItem>
-                      <SelectItem value="51">50</SelectItem>
+                      <SelectItem value="10">10</SelectItem>
+                      <SelectItem value="20">20</SelectItem>
+                      <SelectItem value="50">50</SelectItem>
                     </SelectContent>
                   </Select>
                 </PaginationItem>

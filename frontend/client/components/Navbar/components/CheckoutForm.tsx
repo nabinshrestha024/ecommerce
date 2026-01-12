@@ -8,10 +8,11 @@ import { Input } from "@/ui/input";
 import { Button } from "@/ui/button";
 import { useAddOrder } from "@/hooks/orders/useAddOrder";
 import { useInitiatePayment } from "@/hooks/esewa/useInitiatePayment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CartProductType } from "./TopNav";
 import Image from "next/image";
 import { ScrollArea } from "@/ui/scroll-area";
+import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
 
 interface OrderResponse {
   orderId: number;
@@ -44,6 +45,7 @@ export const CheckoutForm = ({
   const [signature, setSignature] = useState("");
   const [transactionUid, setTransactionUid] = useState("");
   const [total, setTotal] = useState<string>();
+  const userProfile = useFetchProfile();
   const {
     register,
     handleSubmit,
@@ -74,6 +76,18 @@ export const CheckoutForm = ({
     );
     reset();
   };
+
+  useEffect(() => {
+    if (userProfile) {
+      reset({
+        shippingName: userProfile.data.fullName,
+        shippingAddress: userProfile.data.address,
+        shippingCity: userProfile.data.city,
+        shippingPhone: userProfile.data.phone,
+      });
+    }
+  }, [userProfile]);
+
   return pay ? (
     <form
       action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"

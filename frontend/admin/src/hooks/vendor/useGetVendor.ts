@@ -1,9 +1,9 @@
 import { getVendors } from "@/services/vendor.services";
 import { useQuery } from "@tanstack/react-query";
-export const useGetVendor = () => {
+export const useGetVendor = (pageIndex: number, pageSize: number) => {
   const data = useQuery({
-    queryKey: ["vendor"],
-    queryFn: getVendors,
+    queryKey: ["vendor", pageIndex, pageSize],
+    queryFn: () => getVendors(pageIndex, pageSize),
   });
   return data;
 };

@@ -19,6 +19,7 @@ import { useFetchSocialLinks } from "@/hooks/socialLinks/useFetchSocialLinks";
 import Image from "next/image";
 import Link from "next/link";
 import { ConfirmationDialog } from "@/components/ConfirmationDialog/ConfirmationDialog";
+import { Spinner } from "@/ui/spinner";
 
 export default function UserProfile() {
   const { data, isLoading } = useFetchProfile();
@@ -73,7 +74,9 @@ export default function UserProfile() {
 
   return isLoading || orders.isLoading || socialLinks.isLoading ? (
     // || wishlist.isLoading
-    <div>Loading....</div>
+    <div className="fixed top-0 left-0 h-screen w-screen flex items-center justify-center">
+      <Spinner className="size-8" />
+    </div>
   ) : (
     <div className="w-full">
       <div className="min-h-screen bg-gray-50">
