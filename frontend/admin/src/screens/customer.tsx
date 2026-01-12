@@ -5,7 +5,7 @@ import { CustomerTable } from "@/components/Customer/CustomerTable";
 
 export const Customer = () => {
   return (
-    <div className=" p-5 pr-11 pl-5 flex flex-col gap-5 w-full">
+    <div className=" p-5 flex flex-col gap-5 w-full">
       <CustomerHeader />
       <div className="flex gap-5">
         <CustomerDetails />

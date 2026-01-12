@@ -24,7 +24,7 @@ export const useDeleteProduct = () => {
     mutationFn: DeleteProduct,
 
     onSuccess: () => {
-      toast.success("Delete product ");
+      toast.success("Product deleted successfully!");
       queryClient.invalidateQueries({ queryKey: ["productData"] });
     },
 
