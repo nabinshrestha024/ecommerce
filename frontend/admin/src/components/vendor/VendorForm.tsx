@@ -48,7 +48,16 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
       phone: data.phone,
       address: data.address,
     };
-    mutate({ vendorId: vendor.vendorId, vendorData: updatedVendor });
+    mutate({
+      vendorId: vendor.vendorId,
+      vendorData: {
+        businessName: data.name,
+        contactPerson: data.contactPerson,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+      },
+    });
     onSave(updatedVendor);
     reset({
       name: updatedVendor.businessName,

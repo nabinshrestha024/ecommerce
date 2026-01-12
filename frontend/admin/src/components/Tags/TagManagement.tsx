@@ -4,10 +4,12 @@ import { GoPlusCircle, GoTag } from "react-icons/go";
 import { Dialog } from "../Dialog/Dialog";
 import { AddTagForm } from "./AddTagForm";
 import { useState } from "react";
-
+import { SquarePen } from "lucide-react";
+import { EditTagForm } from "./EditTagForm";
 export const TagManagement = () => {
   const { data, isLoading, isError, error } = useFetchTag();
-  const [open, setOpen] = useState(false);
+  const [addTagOpen, setAddTagOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState<{ [key: string]: boolean }>({});
 
   return (
     <div className="p-6 space-y-8">
@@ -22,8 +24,8 @@ export const TagManagement = () => {
           </p>
         </div>
         <Dialog
-          open={open}
-          onOpenChange={setOpen}
+          open={addTagOpen}
+          onOpenChange={setAddTagOpen}
           triggerContent={
             <Button className="rounded-full px-6 py-5 bg-[#4EA674] hover:bg-[#2a5f41] transition-all shadow-md hover:shadow-lg gap-2">
               <GoPlusCircle size={20} />
@@ -31,7 +33,7 @@ export const TagManagement = () => {
             </Button>
           }
         >
-          <AddTagForm setOpen={setOpen} />
+          <AddTagForm setOpen={setAddTagOpen} />
         </Dialog>
       </div>
 
@@ -71,11 +73,30 @@ export const TagManagement = () => {
                 key={val.tagId}
                 className="group flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl hover:border-green-200 hover:bg-green-50/30 transition-all duration-200 shadow-sm"
               >
-                <div className="flex items-center gap-3 overflow-hidden">
-                  <div className="w-2 h-2 rounded-full bg-[#4EA674] shrink-0" />
-                  <span className="font-medium text-gray-700 truncate">
-                    {val.name}
-                  </span>
+                <div className="flex items-center gap-3 w-full overflow-hidden justify-between">
+                  <div className="flex flex-row items-center gap-2 ">
+                    <div className="flex flex-row w-2 h-2  rounded-full bg-[#4EA674] shrink-0" />
+                    <span className="font-medium text-gray-700 truncate ">
+                      {val.name}
+                    </span>
+                  </div>
+                  <Dialog
+                    key={val.tagId}
+                    open={editOpen[val.tagId] || false}
+                    onOpenChange={(open) =>
+                      setEditOpen((prev) => ({ ...prev, [val.tagId]: open }))
+                    }
+                    triggerContent={
+                      <SquarePen className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    }
+                  >
+                    <EditTagForm
+                      tag={{ tagId: val.tagId, name: val.name }}
+                      setOpen={(open) =>
+                        setEditOpen((prev) => ({ ...prev, [val.tagId]: open }))
+                      }
+                    />
+                  </Dialog>
                 </div>
               </div>
             ))}
