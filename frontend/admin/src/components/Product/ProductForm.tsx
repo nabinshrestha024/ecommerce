@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   productSchema,
   type ProductFormValues,
-} from "../Category/ProductZodVAlidation.tsx";
+} from "./ProductZodVAlidation.tsx";
 import { Input } from "../Input/Input.tsx";
 import { useEditProduct } from "@/hooks/product/useEditProduct.ts";
 import type { ProductRes } from "@/hooks/product/useProduct.ts";
