@@ -18,6 +18,7 @@ BEGIN
         u.Role,
         u.Phone,
         u.IsActive,
+        u.IsDeleted,
 
         COUNT(o.OrderId) AS TotalOrders,
         SUM(CASE WHEN o.Status = 'Completed' THEN 1 ELSE 0 END) AS CompletedOrders,
@@ -26,7 +27,7 @@ BEGIN
     FROM Users u
     LEFT JOIN Orders o ON o.UserId = u.UserId
     GROUP BY 
-        u.UserId, u.FullName, u.Email,u.Address,u.Role,u.Phone, u.IsActive,u.CreatedAt
+        u.UserId, u.FullName, u.Email,u.Address,u.Role,u.Phone, u.IsActive,u.IsDeleted,u.CreatedAt
     ORDER BY userId ASC
     OFFSET @Offset ROWS
     FETCH NEXT @PageSize ROWS ONLY;
