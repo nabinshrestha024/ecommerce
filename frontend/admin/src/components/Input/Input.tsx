@@ -42,7 +42,6 @@ export const Input = forwardRef<HTMLElement, Props>(
       error,
       disabled,
       name,
-      onChange,
       ...props
     },
     ref,

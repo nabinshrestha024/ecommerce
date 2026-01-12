@@ -9,8 +9,8 @@ import { Link } from "react-router-dom";
 
 export const Dashboard = () => {
   return (
-    <div className="w-full space-y-5 px-5">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border shadow-sm mt-4">
+    <div className="w-full space-y-5 p-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border shadow-sm">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <GoTag className="text-[#4EA674]" />

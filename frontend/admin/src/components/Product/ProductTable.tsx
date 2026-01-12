@@ -71,10 +71,10 @@ export const ProductTable = () => {
     }),
 
     columnHelper.accessor("name", {
-      header: () => <div className="flex justify-start">Name</div>,
+      header: () => <div className="flex justify-start w-[300px]">Name</div>,
       cell: (info) => (
         <div
-          className="cursor-pointer text-left w-[200px] "
+          className="cursor-pointer text-left w-[300px] "
           onClick={() => handleRowClick(info.row.original)}
         >
           <div className="font-semibold truncate">{info.getValue()}</div>
@@ -175,7 +175,7 @@ export const ProductTable = () => {
   });
 
   return (
-    <div className="w-full pt-6 pb-14 pl-6 pr-6 border border-[#E5E7EB] rounded-lg">
+    <div className="w-full pt-6 pb-14 ">
       <div className="w-full justify-between flex mb-4">
         <div className="text-2xl font-bold text-gray-900 ">
           View all products

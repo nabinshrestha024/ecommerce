@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using EcommerceProject.Models.DTOs.Vendor;
+using EcommerceProject.Models.DTOs.Common;
 using EcommerceProject.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -21,20 +22,26 @@ namespace EcommerceProject.Controllers.v1.Admin
             _logger = logger;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllVendors([FromQuery] bool? isActive = null)
-        {
-            try
-            {
-                var vendors = await _vendorService.GetAllVendorsAsync(isActive);
-                return Ok(new { Success = true, Data = vendors });
-            }
-            catch (System.Exception ex)
-            {
-                _logger.LogError(ex, "Error getting all vendors");
-                return StatusCode(500, new { Success = false, Message = "Internal server error" });
-            }
-        }
+[HttpGet]
+public async Task<IActionResult> GetAllVendors(
+    [FromQuery] bool? isActive, 
+    [FromQuery] PaginationDto pagination)
+{
+    try
+    {
+        var result = await _vendorService.GetAllVendorsAsync(isActive, pagination);
+        
+        return Ok(new { 
+            Success = true, 
+            Data = result 
+        });
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Error getting vendors");
+        return StatusCode(500, new { Success = false, Message = "Internal server error" });
+    }
+}
 
         [HttpPost]
         public async Task<IActionResult> CreateVendor([FromBody] CreateVendorRequestDto request)

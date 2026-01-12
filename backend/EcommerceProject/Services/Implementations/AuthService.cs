@@ -2,14 +2,10 @@
 using EcommerceProject.Database;
 using EcommerceProject.Middlewares.Interface;
 using EcommerceProject.Models.DTOs.User;
-using EcommerceProject.Repositories.Implementations;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
 using EcommerceProject.utils;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Security.Cryptography;
 
 namespace EcommerceProject.Services.Implementations
 {

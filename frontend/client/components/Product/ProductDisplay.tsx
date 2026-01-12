@@ -1,16 +1,30 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ProductCard } from "./ProductCard";
 import { Category } from "./Category";
-import { useSearchParams } from "next/navigation";
 import { useProductCategory } from "@/hooks/product/useProductCategory";
 import { useProduct } from "@/hooks/product/useProduct";
 import { useGetCatalogProduct } from "@/hooks/filter/useGetCatalogProduct";
 import { Variant, VariantAttributes } from "./ProductDetails";
 import { ProductCardSkeleton } from "../TrendingProduct/component/ProductCardLoading";
 import { Filter } from "./Filter";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/ui/select";
 
 type FilterFormValues = {
   minPrice: string;
@@ -67,9 +81,23 @@ export const ProductDisplay = () => {
     tags: [],
   });
 
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 11,
+  });
+
+  const hasAnyFilter = useMemo(() => {
+    const hasActiveValues = Object.values(activeFilters).some((value) => {
+      if (Array.isArray(value)) return value.length > 0;
+      return value !== "" && value !== null && value !== undefined;
+    });
+    return hasActiveValues || tagsFromUrl.length > 0 || categoryId !== null;
+  }, [activeFilters, tagsFromUrl, categoryId]);
+
   const prod = useProductCategory(categoryId || 0);
-  const products = useProduct();
-  const effectiveTags: string[] =
+  const products = useProduct(pagination.pageIndex + 1, pagination.pageSize);
+
+  const effectiveTags =
     isFilterFormValues(activeFilters) && activeFilters.tags.length > 0
       ? activeFilters.tags
       : tagsFromUrl;
@@ -85,57 +113,48 @@ export const ProductDisplay = () => {
       : undefined,
   });
 
+  const dataSource = hasAnyFilter ? filteredProducts.data?.data : products.data;
+  const displayItems = dataSource?.items || [];
+  const totalCount = dataSource?.totalCount || 0;
+
+  const isLoading = hasAnyFilter ? filteredProducts.isLoading : prod.isLoading;
+  const isError = hasAnyFilter ? filteredProducts.isError : prod.isError;
+
   const placeholderCount = 12;
+  const totalPages = Math.ceil(totalCount / pagination.pageSize);
+  const maxVisiblePages = 5;
+  const currentPage = pagination.pageIndex;
+
+  let startPage = Math.max(0, currentPage - Math.floor(maxVisiblePages / 2));
+  let endPage = startPage + maxVisiblePages;
+
+  if (endPage > totalPages) {
+    endPage = totalPages;
+    startPage = Math.max(0, endPage - maxVisiblePages);
+  }
+
+  const visiblePages = Array.from(
+    { length: endPage - startPage },
+    (_, i) => startPage + i,
+  );
 
   const handleFilterChange = (filters: FilterFormValues) => {
     setActiveFilters(filters);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
 
     const params = new URLSearchParams(searchParams.toString());
-
     if (categoryId) params.set("categoryId", categoryId.toString());
+    if (filters.tags.length > 0) params.set("tags", filters.tags.join(","));
+    else params.delete("tags");
 
-    if (filters.tags.length > 0) {
-      params.set("tags", filters.tags.join(","));
-    } else {
-      params.delete("tags");
-    }
+    if (filters.minPrice) params.set("minPrice", filters.minPrice);
+    else params.delete("minPrice");
 
-    if (filters.minPrice) {
-      params.set("minPrice", filters.minPrice);
-    } else {
-      params.delete("minPrice");
-    }
-
-    if (filters.maxPrice) {
-      params.set("maxPrice", filters.maxPrice);
-    } else {
-      params.delete("maxPrice");
-    }
+    if (filters.maxPrice) params.set("maxPrice", filters.maxPrice);
+    else params.delete("maxPrice");
 
     router.replace(`?${params.toString()}`, { scroll: false });
   };
-
-  const hasAnyValue = Object.values(activeFilters).some((value) => {
-    if (Array.isArray(value)) {
-      return value.length > 0;
-    }
-    return value !== "" && value !== null && value !== undefined;
-  });
-
-  const displayData =
-    hasAnyValue || tagsFromUrl.length > 0 || categoryId !== null
-      ? filteredProducts.data?.data?.items || []
-      : products.data?.items || [];
-
-  const isLoading =
-    hasAnyValue || tagsFromUrl.length > 0 || categoryId !== null
-      ? filteredProducts.isLoading
-      : prod.isLoading;
-
-  const isError =
-    hasAnyValue || tagsFromUrl.length > 0 || categoryId !== null
-      ? filteredProducts.isError
-      : prod.isError;
 
   return (
     <div className="min-h-screen bg-gray-50 p-8 flex flex-col md:flex-row gap-5 items-start w-full">
@@ -144,26 +163,145 @@ export const ProductDisplay = () => {
         <Filter onFilterChange={handleFilterChange} />
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 w-full gap-6">
-        {isLoading &&
-          Array.from({ length: placeholderCount }).map((_, index) => (
-            <ProductCardSkeleton key={index} />
-          ))}
+      <div className="space-y-5 w-full">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 w-full gap-6">
+          {(isLoading || isError) &&
+            Array.from({ length: placeholderCount }).map((_, index) => (
+              <ProductCardSkeleton key={index} />
+            ))}
 
-        {isError &&
-          Array.from({ length: placeholderCount }).map((_, index) => (
-            <ProductCardSkeleton key={index} />
-          ))}
+          {!isLoading && !isError && displayItems.length === 0 && (
+            <div className="col-span-full text-center py-8 text-gray-500">
+              No products found.
+            </div>
+          )}
 
-        {displayData
-          .filter((product: ProductType) => (product.stockQuantity ?? 0) > 0)
-          .map((product: ProductType) => (
-            <ProductCard key={product.productId} product={product} />
-          ))}
+          {!isLoading &&
+            !isError &&
+            displayItems
+              .filter(
+                (product: ProductType) => (product.stockQuantity ?? 0) > 0,
+              )
+              .map((product: ProductType) => (
+                <ProductCard key={product.productId} product={product} />
+              ))}
+        </div>
 
-        {!isLoading && !isError && displayData.length === 0 && (
-          <div className="col-span-full text-center py-8 text-gray-500">
-            No products found.
+        {totalPages > 0 && (
+          <div className="flex items-center justify-between mt-8">
+            <Pagination>
+              <PaginationContent className="flex justify-around w-full">
+                <PaginationItem className="flex gap-2">
+                  <PaginationPrevious
+                    onClick={() => {
+                      if (currentPage > 0) {
+                        setPagination({
+                          ...pagination,
+                          pageIndex: currentPage - 1,
+                        });
+                      }
+                    }}
+                    className={
+                      currentPage === 0
+                        ? "pointer-events-none opacity-50"
+                        : "cursor-pointer"
+                    }
+                  />
+
+                  {startPage > 0 && (
+                    <>
+                      <PaginationItem>
+                        <PaginationLink
+                          onClick={() =>
+                            setPagination({ ...pagination, pageIndex: 0 })
+                          }
+                          isActive={currentPage === 0}
+                          className="cursor-pointer"
+                        >
+                          1
+                        </PaginationLink>
+                      </PaginationItem>
+                      <PaginationItem>
+                        <span className="px-2">...</span>
+                      </PaginationItem>
+                    </>
+                  )}
+
+                  {visiblePages.map((page) => (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        onClick={() =>
+                          setPagination({ ...pagination, pageIndex: page })
+                        }
+                        isActive={currentPage === page}
+                        className={
+                          currentPage === page
+                            ? "bg-[#C1E6BA] hover:bg-[#C1E6BA]"
+                            : "cursor-pointer"
+                        }
+                      >
+                        {page + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+
+                  {endPage < totalPages && (
+                    <>
+                      <PaginationItem>
+                        <span className="px-2">...</span>
+                      </PaginationItem>
+                      <PaginationItem>
+                        <PaginationLink
+                          onClick={() =>
+                            setPagination({
+                              ...pagination,
+                              pageIndex: totalPages - 1,
+                            })
+                          }
+                          className="cursor-pointer"
+                        >
+                          {totalPages}
+                        </PaginationLink>
+                      </PaginationItem>
+                    </>
+                  )}
+
+                  <PaginationNext
+                    onClick={() => {
+                      if (currentPage < totalPages - 1) {
+                        setPagination({
+                          ...pagination,
+                          pageIndex: currentPage + 1,
+                        });
+                      }
+                    }}
+                    className={
+                      currentPage >= totalPages - 1
+                        ? "pointer-events-none opacity-50"
+                        : "cursor-pointer"
+                    }
+                  />
+                </PaginationItem>
+
+                <PaginationItem>
+                  <Select
+                    defaultValue={String(pagination.pageSize)}
+                    onValueChange={(value) =>
+                      setPagination({ pageIndex: 0, pageSize: Number(value) })
+                    }
+                  >
+                    <SelectTrigger className="w-20">
+                      <SelectValue placeholder="Rows" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="11">10</SelectItem>
+                      <SelectItem value="21">20</SelectItem>
+                      <SelectItem value="51">50</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
         )}
       </div>
