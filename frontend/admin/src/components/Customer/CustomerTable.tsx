@@ -19,7 +19,7 @@ export const CustomerTable = () => {
     pageIndex: 0,
     pageSize: 10,
   });
-  const user = useUser(pagination.pageIndex + 1);
+  const user = useUser(pagination.pageIndex + 1, pagination.pageSize);
   const columnHelper = createColumnHelper<Person>();
   const [loading, setLoading] = useState(false);
 
@@ -146,7 +146,11 @@ export const CustomerTable = () => {
   return (
     <div className="flex gap-4 max-lg:flex-col">
       <div className="flex-1">
-        <Table table={table} pageIndex={pagination.pageIndex} />
+        <Table
+          table={table}
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+        />
       </div>
     </div>
   );
