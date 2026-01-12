@@ -7,8 +7,9 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useInitiatePayment } from "@/hooks/esewa/useInitiatePayment";
 import { EsewaPaymentPayload } from "../Navbar/components/CheckoutForm";
 import { Trash2, X } from "lucide-react";
-import { Dialog } from "../Dialog/Dialog";
+import { Dialog } from "../dialog/Dialog";
 import { ProductReviewForm } from "../Product/Review/ReviewForm";
+import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog";
 
 export const OrderDetails = ({
   order,
@@ -139,15 +140,19 @@ export const OrderDetails = ({
 
         {order.paymentStatus !== "Paid" && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Button
-              variant="outline"
-              disabled={isCancelling}
-              onClick={() => cancelOrder(order.orderId)}
-              className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors py-6 rounded-xl flex gap-2"
-            >
-              <Trash2 size={18} />
-              Cancel Order
-            </Button>
+            <ConfirmationDialog
+              trigger={
+                <Button
+                  variant="outline"
+                  disabled={isCancelling}
+                  className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors py-6 rounded-xl flex gap-2"
+                >
+                  <Trash2 size={18} />
+                  Cancel Order
+                </Button>
+              }
+              confirmFunc={() => cancelOrder(order.orderId)}
+            />
 
             <form
               action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"

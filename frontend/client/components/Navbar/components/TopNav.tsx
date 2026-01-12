@@ -5,7 +5,6 @@ import { Input } from "@/ui/input";
 import Image from "next/image";
 import Link from "next/link";
 import { FaLocationDot } from "react-icons/fa6";
-import { IoSearch } from "react-icons/io5";
 import { Bell, Search, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,6 +15,9 @@ import { useDebounce } from "@/hooks/search/useDebounce";
 import { Notification } from "@/components/Notification/Notification";
 import { CartComponent } from "./CartComponent";
 import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
+import { IoMdExit } from "react-icons/io";
+import { ConfirmationDialog } from "@/components/ConfirmationDialog/ConfirmationDialog";
+import { Sidebar } from "./Sidebar";
 
 interface AttributeType {
   name: string;
@@ -52,7 +54,7 @@ export const TopNav = () => {
   const router = useRouter();
   const [searchData, setSearchData] = useState("");
   const { data } = useFetchProfile();
-  const { token } = useAuth();
+  const { token, logout } = useAuth();
   const isAuth = Boolean(token);
 
   const debounceSearch = useDebounce(searchData, 500);
@@ -64,7 +66,7 @@ export const TopNav = () => {
   const search = useSearch(debounceSearch);
   return (
     <div className="flex justify-between px-5 lg:px-10 items-center py-5 border-b">
-      <div className="flex gap-2 divide-x-2">
+      <div className="flex gap-2 lg:divide-x-2">
         <Image
           src={"/logo.png"}
           alt="Logo"
@@ -79,7 +81,7 @@ export const TopNav = () => {
           width={120}
           className="lg:hidden"
         />
-        <div className="flex items-center gap-2">
+        <div className="items-center gap-2 hidden lg:flex">
           <FaLocationDot className="text-2xl" />
           <div>
             <div className="text-xs">Deliver to</div>
@@ -167,17 +169,26 @@ export const TopNav = () => {
             onClick={() =>
               toast.error("Please log in to see your notifications")
             }
+            className="cursor-pointer"
           />
         ) : (
           <Notification />
         )}
 
         <CartComponent />
+
+        {isAuth && (
+          <ConfirmationDialog
+            trigger={<IoMdExit className="text-xl text-black cursor-pointer" />}
+            confirmFunc={logout}
+            description="Are you sure you want to logout?"
+          />
+        )}
       </div>
 
-      {/* <div className="md:hidden">
+      <div className="md:hidden">
         <Sidebar />
-      </div> */}
+      </div>
     </div>
   );
 };

@@ -1,8 +1,11 @@
 import { Button } from "@/ui/button";
-import { Trash2, X, ShoppingBag } from "lucide-react"; // Added ShoppingBag for empty state
+import { Trash2, X, ShoppingBag } from "lucide-react";
 import Image from "next/image";
-import { FaShoppingCart } from "react-icons/fa";
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import {
+  MdKeyboardArrowDown,
+  MdKeyboardArrowUp,
+  MdOutlineShoppingCart,
+} from "react-icons/md";
 import { CheckoutForm } from "./CheckoutForm";
 import { useEffect, useState } from "react";
 import { useDeleteCart } from "@/hooks/cart/useDeleteCart";
@@ -12,7 +15,7 @@ import { useRouter } from "next/navigation";
 import { useUpdateCart } from "@/hooks/cart/useUpdateCart";
 import { Checkbox } from "@/ui/checkbox";
 import { CartProductType } from "./TopNav";
-import { Dialog } from "@/components/Dialog/Dialog";
+import { Dialog } from "@/components/dialog/Dialog";
 
 export const CartComponent = () => {
   const [open, setOpen] = useState(false);
@@ -60,14 +63,14 @@ export const CartComponent = () => {
     <div className="flex gap-2 shrink-0 items-center">
       <button
         onClick={() => setOpen(true)}
-        className="relative p-2 transition-transform hover:scale-110 active:scale-95 text-2xl"
+        className="relative transition-transform active:scale-95 text-2xl"
       >
         {isAuth && (data?.length ?? 0) > 0 && (
-          <span className="absolute top-0 right-0 h-5 w-5 bg-red-600 rounded-full flex items-center justify-center text-[10px] text-white font-bold ring-2 ring-white animate-in zoom-in">
+          <span className="absolute -top-2 -right-2 h-4 w-4 bg-red-600 rounded-full flex items-center justify-center text-[10px] text-white font-bold ring-2 ring-white animate-in zoom-in">
             {data?.length}
           </span>
         )}
-        <FaShoppingCart className="text-gray-700" />
+        <MdOutlineShoppingCart className="text-gray-700 cursor-pointer" />
       </button>
 
       {open && (
@@ -86,7 +89,7 @@ export const CartComponent = () => {
           <header className="flex items-center justify-between px-6 py-5 border-b bg-white">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-gray-100 rounded-lg">
-                <FaShoppingCart className="text-xl text-gray-800" />
+                <MdOutlineShoppingCart className="text-xl text-gray-800" />
               </div>
               <div>
                 <h2 className="text-lg font-bold text-gray-900">Your Cart</h2>

@@ -36,7 +36,7 @@ export const Explore = () => {
             Array.from({ length: placeholderCount }).map((_, index) => (
               <CategoryCardSkeleton key={index} />
             ))}
-          {data?.items.map((val) => {
+          {data?.items?.map((val) => {
             const href = `/product/?categoryId=${val.categoryId}`;
 
             return (
