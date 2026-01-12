@@ -7,7 +7,7 @@ namespace EcommerceProject.Services.Interfaces
     public interface IVendorService
     {
         Task<VendorDto> GetVendorByIdAsync(int vendorId);
-        Task<List<VendorDto>> GetAllVendorsAsync(bool? isActive = null);
+        Task<List<VendorDto>> GetAllVendorsAsync(bool? isActive = null, int pageNumber = 1, int pageSize = 10);
         Task<VendorDto> CreateVendorAsync(CreateVendorRequestDto request, int createdBy);
         Task<VendorDto> UpdateVendorAsync(int vendorId, UpdateVendorRequestDto request, int updatedBy);
         Task<bool> DeleteVendorAsync(int vendorId, int deletedBy);

@@ -22,16 +22,28 @@ namespace EcommerceProject.Controllers.v1.Admin
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllVendors([FromQuery] bool? isActive = null)
+        public async Task<IActionResult> GetAllVendors(
+            [FromQuery] bool? isActive = null, 
+            [FromQuery] int pageNumber = 1, 
+            [FromQuery] int pageSize = 10)
         {
             try
             {
-                var vendors = await _vendorService.GetAllVendorsAsync(isActive);
-                return Ok(new { Success = true, Data = vendors });
+                var vendors = await _vendorService.GetAllVendorsAsync(isActive, pageNumber, pageSize);
+                var totalRecords = vendors.FirstOrDefault()?.TotalCount ?? 0;
+
+                return Ok(new PagedResponse<List<VendorDto>>
+                {
+                    Success = true,
+                    Data = vendors,
+                    TotalRecords = totalRecords,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                });
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting all vendors");
+                _logger.LogError(ex, "Error getting paged vendors");
                 return StatusCode(500, new { Success = false, Message = "Internal server error" });
             }
         }

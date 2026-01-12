@@ -33,12 +33,12 @@ namespace EcommerceProject.Services.Implementations
             }
         }
 
-        public async Task<List<VendorDto>> GetAllVendorsAsync(bool? isActive = null)
+        public async Task<List<VendorDto>> GetAllVendorsAsync(bool? isActive = null, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                _logger.LogInformation("Getting all vendors with filter IsActive={IsActive}", isActive);
-                return await _vendorRepository.GetAllVendorsAsync(isActive);
+                _logger.LogInformation("Getting vendors Page:{PageNumber}", pageNumber);;
+                return await _vendorRepository.GetAllVendorsAsync(isActive, pageNumber, pageSize);
             }
             catch (Exception ex)
             {

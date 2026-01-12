@@ -41,14 +41,19 @@ namespace EcommerceProject.Repositories.Implementations
             }
         }
 
-        public async Task<List<VendorDto>> GetAllVendorsAsync(bool? isActive = null)
+        public async Task<List<VendorDto>> GetAllVendorsAsync(bool? isActive = null, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
                 using var connection = _connectionFactory.CreateConnection();
                 var vendors = await connection.QueryAsync<VendorDto>(
                     "spVendors_GetAll",
-                    new { IsActive = isActive },
+                    new 
+                    { 
+                        IsActive = isActive,
+                        PageNumber = pageNumber,
+                        PageSize = pageSize
+                    },
                     commandType: CommandType.StoredProcedure
                 );
                 return vendors.AsList();
