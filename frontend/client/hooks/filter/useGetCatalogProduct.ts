@@ -6,6 +6,8 @@ export const useGetCatalogProduct = (filterData: {
   tagNames?: string[];
   minPrice?: string;
   maxPrice?: string;
+  page?: number;
+  pageSize?: number;
 }) => {
   return useQuery({
     queryKey: ["catalogProducts", filterData],
