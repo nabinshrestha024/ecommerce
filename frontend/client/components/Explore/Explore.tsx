@@ -26,7 +26,7 @@ export const Explore = () => {
           </Button>
         </div>
 
-        <div className="flex gap-5 justify-start text-center mt-8 flex-wrap">
+        <div className="flex gap-5 justify-center md:justify-start text-center mt-8 flex-wrap">
           {isLoading &&
             Array.from({ length: placeholderCount }).map((_, index) => (
               <CategoryCardSkeleton key={index} />
@@ -36,7 +36,7 @@ export const Explore = () => {
             Array.from({ length: placeholderCount }).map((_, index) => (
               <CategoryCardSkeleton key={index} />
             ))}
-          {data?.items.map((val) => {
+          {data?.items?.map((val) => {
             const href = `/product/?categoryId=${val.categoryId}`;
 
             return (

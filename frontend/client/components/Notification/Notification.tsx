@@ -61,12 +61,12 @@ export const Notification = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="relative rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
           onPointerDownCapture={handleNotification}
         >
-          <Bell className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+          <Bell className="w-5 h-5 text-gray-700 dark:text-gray-300 cursor-pointer" />
           {!read && (
-            <span className="absolute top-1 right-1 flex items-center justify-center h-3 w-3 px-1 text-[10px] font-semibold text-white bg-red-500 rounded-full"></span>
+            <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center h-3 w-3 px-1 text-[10px] font-semibold text-white bg-red-500 rounded-full"></span>
           )}
         </button>
       </DropdownMenuTrigger>

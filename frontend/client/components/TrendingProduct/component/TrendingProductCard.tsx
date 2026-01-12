@@ -21,7 +21,7 @@ export const TrendingProductCard = () => {
   const placeholderCount = 3;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 w-full gap-4">
       {isLoading &&
         Array.from({ length: placeholderCount }).map((_, index) => (
           <ProductCardSkeleton key={index} />

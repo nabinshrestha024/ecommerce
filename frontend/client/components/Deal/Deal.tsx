@@ -24,7 +24,7 @@ export const Deal = () => {
             View All
           </Button>
         </div>
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
+        <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mt-8">
           {isLoading &&
             Array.from({ length: placeholderCount }).map((_, index) => (
               <ProductCardSkeleton key={index} />
