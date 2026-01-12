@@ -88,7 +88,19 @@ namespace EcommerceProject.Services.Implementations
                 : existing.Slug;
             await _repo.UpdateAsync(id, dto);
         }
-           
+        public async Task<Category?> GetByIdAsync(int id, CancellationToken ct)
+        {
+            var category = await _repo.GetByIdAsync(id, ct);
+
+            if (category != null)
+            {
+                category.CategoryImageURL =
+                    _urlService.ToAbsoluteUrl(category.CategoryImageURL);
+            }
+
+            return category;
+        }
+
 
         public Task<bool> DeleteAsync(int id)
         {
