@@ -14,7 +14,6 @@ namespace EcommerceProject.Repositories.Implementations
         {
             _factory = factory;
         }
-
         public async Task<int> CreateAttributeAsync(string name, bool isVariant, CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
@@ -28,7 +27,6 @@ namespace EcommerceProject.Repositories.Implementations
                 )
             );
         }
-
         public async Task<int> CreateValueAsync(int attributeId, string value, CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
@@ -62,7 +60,6 @@ namespace EcommerceProject.Repositories.Implementations
 
             return affected > 0;
         }
-
         public async Task<bool> UpdateValueAsync(int attributeValueId, string value, CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
@@ -82,7 +79,6 @@ namespace EcommerceProject.Repositories.Implementations
 
             return affected > 0;
         }
-
         public async Task<List<ProductAttributeDto>> GetAllAsync(CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
@@ -94,7 +90,6 @@ namespace EcommerceProject.Repositories.Implementations
                     cancellationToken: ct
                 )
             );
-
             var attributes = (await multi.ReadAsync<ProductAttributeDto>()).ToList();
             var values = (await multi.ReadAsync<ProductAttributeValueDto>()).ToList();
 
@@ -102,8 +97,5 @@ namespace EcommerceProject.Repositories.Implementations
         );
             return attributes;
         }
-
-
     }
-
 }

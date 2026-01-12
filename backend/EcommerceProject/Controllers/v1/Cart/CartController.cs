@@ -10,7 +10,7 @@ namespace EcommerceProject.Controllers.v1.Cart
 {
     [ApiController]
     [Route("v1/cart/")]
-    [Authorize(Roles = "Customer, Admin")]
+    [Authorize(Roles = "Customer")]
 
     public class CartController : ControllerBase
     {

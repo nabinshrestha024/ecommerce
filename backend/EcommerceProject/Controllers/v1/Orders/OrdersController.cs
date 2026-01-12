@@ -11,7 +11,7 @@ namespace EcommerceProject.Controllers.v1.Orders
 {
     [Route("v1/orders")]
     [ApiController]
-    [Authorize(Roles = "Admin, Customer")]
+    [Authorize(Roles = "Customer")]
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;

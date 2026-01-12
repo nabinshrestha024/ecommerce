@@ -7,7 +7,6 @@ CREATE OR ALTER PROCEDURE [dbo].[spUser_UpdateUser]
     @Role BIT = NULL,
     @Phone NVARCHAR(20) = NULL,
     @Address NVARCHAR(500) = NULL,
-    @City NVARCHAR(100) = NULL,
     @ProfileImageUrl NVARCHAR(MAX) = NULL,
     @IsActive BIT = NULL
     AS
@@ -21,7 +20,6 @@ BEGIN
         Phone = ISNULL(@Phone, Phone),
         Address = ISNULL(@Address, Address),
         Role = ISNULL(@Role, Role),
-        City = ISNULL(@City, City),
         ProfileImageUrl = ISNULL(@ProfileImageUrl, ProfileImageUrl),
         IsActive = IsNull(@IsActive, IsActive),
         UpdatedAt = GETDATE()
