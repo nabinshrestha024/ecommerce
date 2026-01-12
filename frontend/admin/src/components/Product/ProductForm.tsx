@@ -77,7 +77,7 @@ export const ProductForm = ({ product, onSave }: Props) => {
                 type="number"
                 placeholder=""
                 {...register("categoryId")}
-                className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+                className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 no-spinner"
               />
               {errors.categoryId && (
                 <p className="text-[12px] text-red-500 ">
