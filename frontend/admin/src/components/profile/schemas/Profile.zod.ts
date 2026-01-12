@@ -12,11 +12,9 @@ export const ProfileUpdateSchema = z.object({
 
   address: z.string().min(1, "Address is required").optional(),
 
-  bio: z
-    .string()
-    .max(500, "Biography must be at most 500 characters")
-    .min(1, "Biography is required")
-    .optional(),
+  bio: z.string().optional(),
+  // .max(500, "Biography must be at most 500 characters")
+  // .min(1, "Biography is required"),
   city: z.string().min(1, "City is required").optional(),
   status: z.enum(["0", "1"]).optional(),
 });
