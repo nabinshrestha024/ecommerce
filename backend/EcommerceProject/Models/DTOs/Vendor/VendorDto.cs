@@ -1,3 +1,4 @@
+using EcommerceProject.Models.DTOs.Common;
 
 namespace EcommerceProject.Models.DTOs.Vendor
 {
@@ -11,5 +12,6 @@ namespace EcommerceProject.Models.DTOs.Vendor
         public string? Address { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
+        public int TotalCount { get; set; }
     }
 }

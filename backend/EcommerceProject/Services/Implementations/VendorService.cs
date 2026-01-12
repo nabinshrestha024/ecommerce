@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EcommerceProject.Models.DTOs.Common;
+using EcommerceProject.Models.DTOs.EcommerceProject.Models.DTOs;
 using EcommerceProject.Models.DTOs.Vendor;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
@@ -33,19 +35,29 @@ namespace EcommerceProject.Services.Implementations
             }
         }
 
-        public async Task<List<VendorDto>> GetAllVendorsAsync(bool? isActive = null)
-        {
-            try
-            {
-                _logger.LogInformation("Getting all vendors with filter IsActive={IsActive}", isActive);
-                return await _vendorRepository.GetAllVendorsAsync(isActive);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting all vendors");
-                throw;
-            }
-        }
+public async Task<PagedResult<VendorDto>> GetAllVendorsAsync(bool? isActive, PaginationDto pagination)
+{
+    try
+    {
+        _logger.LogInformation("Getting vendors Page:{PageNumber}, Size:{PageSize}", pagination.Page, pagination.PageSize);
+
+        var vendors = await _vendorRepository.GetAllVendorsAsync(isActive, pagination.Page, pagination.PageSize);
+        
+        int totalCount = vendors.FirstOrDefault()?.TotalCount ?? 0;
+
+        return new PagedResult<VendorDto>(
+            vendors, 
+            pagination.Page, 
+            pagination.PageSize, 
+            totalCount
+        );
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Error getting paged vendors in service");
+        throw;
+    }
+}
 
         public async Task<VendorDto> CreateVendorAsync(CreateVendorRequestDto request, int createdBy)
         {
