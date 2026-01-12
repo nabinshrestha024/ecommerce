@@ -24,7 +24,7 @@ namespace EcommerceProject.Services.Implementations
             _variantRepo = variantRepo;
         }
 
-        public Task<PagedResult<ProductListItemDto>> GetPagedAsync(int? categoryId, string? search, List<string>? tagNames, decimal? minPrice, decimal? maxPrice, int page, int pageSize, CancellationToken ct)
+        public Task<ProductCatalogResponse> GetPagedAsync(int? categoryId, string? search, List<string>? tagNames, decimal? minPrice, decimal? maxPrice, int page, int pageSize, CancellationToken ct)
         {
             return _repo.GetPagedAsync(categoryId, search, tagNames, minPrice, maxPrice, page, pageSize, onlyActive: true, ct);
         }
@@ -55,7 +55,7 @@ namespace EcommerceProject.Services.Implementations
             return product;
         }
         
-        public Task<PagedResult<ProductListItemDto>> AdminGetProductsAsync(AdminProductFilterDto filter, PaginationDto pagination, CancellationToken ct)
+        public Task<ProductCatalogResponse> AdminGetProductsAsync(AdminProductFilterDto filter, PaginationDto pagination, CancellationToken ct)
         {
             return _repo.GetPagedAsync(
                 filter.CategoryId,
