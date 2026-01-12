@@ -23,7 +23,7 @@ const statusType = {
 };
 
 export const OrderTable = () => {
-  const [pagination, setPagination] = useState<PaginationState>({
+  const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   });
@@ -42,26 +42,28 @@ export const OrderTable = () => {
 
   const columnHelper = createColumnHelper<OrderData>();
   const columns = [
-    columnHelper.accessor("orderId", { header: "Order Id" }),
+    columnHelper.accessor("orderId", {
+      header: () => <div className="flex justify-start">Order Id</div>,
+      cell: (info) => (
+        <div className="cursor-pointer text-start">{info.getValue()}</div>
+      ),
+    }),
     columnHelper.accessor(
       (row) => row.items?.map((item) => item.productName).join(", "),
       {
         id: "productName",
-        header: "Product Name",
+        header: () => <div className="flex justify-start">Product Name</div>,
         cell: (info) => (
-          <div className="flex justify-center">
+          <div className="flex items-center">
             <div
-              className="flex flex-col items-start w-[250px] overflow-hidden "
+              className="flex flex-col items-start  overflow-hidden "
               onClick={() => handleRowClick(info.row.original)}
             >
               {info
                 .getValue()
                 ?.split(", ")
                 .map((name, i) => (
-                  <span
-                    key={i}
-                    className="block w-full line-clamp-2 break-all truncate "
-                  >
+                  <span key={i} className="block  truncate ">
                     {name}
                   </span>
                 ))}
@@ -71,12 +73,16 @@ export const OrderTable = () => {
       },
     ),
     columnHelper.accessor("orderDate", {
-      header: "Date",
-      cell: (info) => <div>{info.getValue().toString().split("T")[0]}</div>,
+      header: () => <div className="flex justify-start">Date</div>,
+      cell: (info) => (
+        <div className="text-start">
+          {info.getValue().toString().split("T")[0]}
+        </div>
+      ),
     }),
     columnHelper.accessor("totalAmount", {
-      header: "Price",
-      cell: (info) => <div className="text-center">{info.getValue()}</div>,
+      header: () => <div className="flex justify-end">Price</div>,
+      cell: (info) => <div className="text-end">{info.getValue()}</div>,
     }),
     columnHelper.accessor("paymentStatus", {
       header: "Payment",
@@ -141,7 +147,7 @@ export const OrderTable = () => {
         ) : (
           original.status === statusType.CANCELLED && (
             <div
-              className="flex justify-center items-center"
+              className="flex justify-center items-center "
               onClick={() => handleRowClick(row.original)}
             >
               <div className="text-red-500 flex items-center justify-start gap-3 w-24">
@@ -232,7 +238,6 @@ export const OrderTable = () => {
     pageCount: Math.ceil((orders.data?.totalCount ?? 0) / pagination.pageSize),
     manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
   });
 
