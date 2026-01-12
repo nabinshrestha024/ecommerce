@@ -1,5 +1,5 @@
 import { IoMdHome, IoMdPerson } from "react-icons/io";
-import { FaShoppingCart, FaStar, FaTags } from "react-icons/fa";
+import { FaProductHunt, FaShoppingCart, FaStar, FaTags } from "react-icons/fa";
 import { BsPlusCircleFill } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { BiCategory } from "react-icons/bi";
@@ -33,8 +33,9 @@ const items = [
         icon: FaShoppingCart,
       },
       { title: "Customer", url: "/customer", icon: IoMdPerson },
-      { title: "Products", url: "/category", icon: BiCategory },
-      { title: "Website Reviews", url: "/website-reviews", icon: FaStar },
+      { title: "Product", url: "/product", icon: FaProductHunt },
+      { title: "Category", url: "/category", icon: BiCategory },
+      { title: "Website Review", url: "/website-reviews", icon: FaStar },
     ],
   },
   {
@@ -62,7 +63,7 @@ const items = [
         icon: FaTags,
       },
       {
-        title: "Product Reviews",
+        title: "Product Review",
         url: "/product-reviews",
         icon: FaStar,
       },
@@ -117,7 +118,7 @@ export const Sidebar = () => {
                       >
                         <Link
                           to={value.url}
-                          className="flex items-center gap-3"
+                          className="flex items-center gap-3 w-full"
                         >
                           <Tooltip>
                             <TooltipTrigger>

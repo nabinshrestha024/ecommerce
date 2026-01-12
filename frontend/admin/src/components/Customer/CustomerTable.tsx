@@ -19,7 +19,7 @@ export const CustomerTable = () => {
     pageIndex: 0,
     pageSize: 10,
   });
-  const user = useUser(pagination.pageIndex + 1);
+  const user = useUser(pagination.pageIndex + 1, pagination.pageSize);
   const columnHelper = createColumnHelper<Person>();
   const [loading, setLoading] = useState(false);
 
@@ -41,43 +41,49 @@ export const CustomerTable = () => {
 
   const columns = [
     columnHelper.accessor("userid", {
-      header: "Customer Id",
-      cell: (info) => <div className="cursor-pointer">{info.getValue()}</div>,
+      header: () => <div className="flex justify-start">User Id</div>,
+      cell: (info) => (
+        <div className="cursor-pointer text-start">{info.getValue()}</div>
+      ),
     }),
 
     columnHelper.accessor("fullName", {
-      header: "Name",
-      cell: (info) => <div className="cursor-pointer">{info.getValue()}</div>,
+      header: () => <div className="flex justify-start">Name</div>,
+      cell: (info) => (
+        <div className="cursor-pointer text-left">{info.getValue()}</div>
+      ),
     }),
 
     columnHelper.accessor("phone", {
-      header: "Phone",
-      cell: (info) => <div className="cursor-pointer">{info.getValue()}</div>,
+      header: () => <div className="flex justify-start">Phone Number</div>,
+      cell: (info) => (
+        <div className="cursor-pointer text-left">{info.getValue()}</div>
+      ),
     }),
 
     columnHelper.accessor("address", {
-      header: "Address",
+      header: () => <div className="flex justify-start">Address</div>,
       cell: (info) => (
-        <div className="cursor-pointer">{info.getValue() ?? "-"}</div>
+        <div className="cursor-pointer text-left">{info.getValue() ?? "-"}</div>
       ),
     }),
 
     columnHelper.accessor("role", {
-      header: "Role",
+      header: () => <div className="flex justify-start">Role</div>,
       cell: (info) => (
-        <div className="cursor-pointer">
+        <div className="cursor-pointer text-left">
           {info.getValue() ? "Admin" : "User"}
         </div>
       ),
     }),
 
     columnHelper.accessor("isActive", {
-      header: "Status",
+      header: () => <div className="flex justify-start">Status</div>,
       cell: (info) => {
         const value = info.getValue();
 
         return (
-          <div className="flex gap-3 justify-center  items-center cursor-pointer">
+          <div className="flex gap-3 items-center cursor-pointer">
             <div
               className={`w-2 h-2 rounded-full ${
                 value ? "bg-[#21C45D]" : "bg-[#EF4343]"
@@ -93,13 +99,13 @@ export const CustomerTable = () => {
 
     columnHelper.display({
       id: "actions",
-      header: "Actions",
+      header: () => <div className="flex justify-start">Action</div>,
       cell: (info) => (
-        <div className="flex gap-2 justify-center items-center">
+        <div className="flex gap-2  items-center">
           <Dialog
             triggerContent={
               <FaEdit
-                className="text-[#6A717F] text-[20px]"
+                className="text-[#6A717F] text-[20px] cursor-pointer"
                 onClick={() => handleEdit(info.row.original)}
               />
             }
@@ -123,7 +129,9 @@ export const CustomerTable = () => {
                 disabled={loading}
                 className="p-1 disabled:cursor-not-allowed"
               >
-                <MdDelete className={`text-[20px] text-gray-500`} />
+                <MdDelete
+                  className={`text-[20px] text-gray-500 cursor-pointer`}
+                />
               </button>
             }
             confirmFunc={() => handleDelete(info.row.original.userid)}
@@ -146,7 +154,11 @@ export const CustomerTable = () => {
   return (
     <div className="flex gap-4 max-lg:flex-col">
       <div className="flex-1">
-        <Table table={table} pageIndex={pagination.pageIndex} />
+        <Table
+          table={table}
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+        />
       </div>
     </div>
   );

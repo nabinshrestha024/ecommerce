@@ -51,10 +51,10 @@ export interface ProductTag {
   name: string;
 }
 
-export const useProduct = (pageIndex: number) => {
+export const useProduct = (pageIndex: number, pageSize: number) => {
   const { data, isLoading, isError, refetch } = useQuery<ProductResponse>({
-    queryKey: ["productData", pageIndex],
-    queryFn: () => ProductTable(pageIndex),
+    queryKey: ["productData", pageIndex, pageSize],
+    queryFn: () => ProductTable(pageIndex, pageSize),
   });
   return { data, isLoading, isError, refetch };
 };

@@ -1,27 +1,27 @@
 import { Button } from "@/ui/button";
 import { Link } from "react-router-dom";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdAddCircleOutline } from "react-icons/md";
+import { GoTag } from "react-icons/go";
 
 export const CategoryHeader = () => {
   return (
-    <div className="flex justify-between mb-8">
-      <div className="text-[18px] leading-6 font-bold text-[#23272E]">
-        Discover
-      </div>
-      <div className="flex gap-2 items-center">
-        <div className="w-full  flex gap-3 items-center rounded-xl ">
-          <Link to="/product-management">
-            <Button className="px-5 py-4 text-[15px] font-bold leading-3 bg-[#4EA674] text-white  rounded-lg hover:bg-[#4EA674]">
-              <MdAddCircleOutline className="text-white text-[24px]" />
-              Add Product
-            </Button>
-          </Link>
-          <Button className="px-5 py-4 text-[15px] font-bold leading-3 bg-white border border-[#E5E7EB] text-[#023337] rounded-lg hover:bg-white">
-            More
-            <BsThreeDotsVertical className="text-[#023337] text-[20px] font-bold" />
-          </Button>
+    <div className="space-y-5 w-full">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border shadow-sm mt-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <GoTag className="text-[#4EA674]" />
+            Category
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Create, edit, and organize product categories efficiently.
+          </p>
         </div>
+        <Link to="/product-management">
+          <Button className="px-5 py-4 text-[15px] font-bold leading-3 bg-[#4EA674] text-white  rounded-lg hover:bg-[#4EA674]">
+            <MdAddCircleOutline className="text-white text-[24px]" />
+            Add Category
+          </Button>
+        </Link>
       </div>
     </div>
   );

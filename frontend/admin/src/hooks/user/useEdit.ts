@@ -16,8 +16,8 @@ export const useEditUser = () => {
       queryClient.invalidateQueries({ queryKey: ["userData"] });
     },
 
-    onError: (error: Error) => {
-      toast.error(error.message);
+    onError: () => {
+      toast.error("Failed to update customer");
     },
   });
 };

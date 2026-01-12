@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   productSchema,
   type ProductFormValues,
-} from "../Category/ProductZodVAlidation.tsx";
+} from "./ProductZodVAlidation.tsx";
 import { Input } from "../Input/Input.tsx";
 import { useEditProduct } from "@/hooks/product/useEditProduct.ts";
 import type { ProductRes } from "@/hooks/product/useProduct.ts";
@@ -77,7 +77,7 @@ export const ProductForm = ({ product, onSave }: Props) => {
                 type="number"
                 placeholder=""
                 {...register("categoryId")}
-                className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+                className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 no-spinner"
               />
               {errors.categoryId && (
                 <p className="text-[12px] text-red-500 ">

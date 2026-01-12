@@ -104,11 +104,13 @@ export const CategoryDetails = () => {
 
   const columns = [
     columnHelper.accessor("variantId", {
-      header: "Variant Id",
+      header: () => <div className="flex justify-start">Variant ID</div>,
     }),
 
     columnHelper.accessor("attributes", {
-      header: "Variant Attributes",
+      header: () => (
+        <div className="flex justify-start">Variant Attributes</div>
+      ),
       cell: (info) => {
         const attrs = info.getValue() as Record<string, string> | undefined;
         if (!attrs || typeof attrs !== "object") return null;
@@ -124,12 +126,32 @@ export const CategoryDetails = () => {
       },
     }),
 
+    columnHelper.accessor("isActive", {
+      header: () => <div className="flex justify-start">Status</div>,
+      cell: (info) => {
+        const value = info.getValue();
+
+        return (
+          <div className="flex gap-3 justify-start items-center cursor-pointer">
+            <div
+              className={`w-2 h-2 rounded-full ${
+                value ? "bg-[#21C45D]" : "bg-[#EF4343]"
+              }`}
+            ></div>
+            <div className={`${value ? "text-[#21C45D]" : "text-[#EF4343]"}`}>
+              {value ? "Active" : "Inactive"}
+            </div>
+          </div>
+        );
+      },
+    }),
+
     columnHelper.accessor("price", {
-      header: "Price",
+      header: () => <div className="flex justify-start">Price</div>,
     }),
 
     columnHelper.accessor("stockQuantity", {
-      header: "Stock Quantity",
+      header: () => <div className="flex justify-start">Stock Quantity</div>,
     }),
   ];
 
@@ -148,6 +170,10 @@ export const CategoryDetails = () => {
           <div>
             <div className="text-sm text-gray-600">Product ID</div>
             <div className="font-medium">{data?.productId}</div>
+          </div>
+          <div className="max-w-[180px]">
+            <div className="text-sm text-gray-600 ">Product Name</div>
+            <div className="font-medium">{data?.name}</div>
           </div>
           <div>
             <div className="text-sm text-gray-600">Category</div>
@@ -244,7 +270,11 @@ export const CategoryDetails = () => {
           </div>
         </Dialog>
       </div>
-      <Table table={table} pageIndex={pagination.pageIndex} />
+      <Table
+        table={table}
+        pageIndex={pagination.pageIndex}
+        showPagination={false}
+      />
     </div>
   );
 };

@@ -116,10 +116,10 @@ export const UploadProductDetails = forwardRef((_, ref) => {
                   <img
                     src={img.preview}
                     onClick={() => handleSetPrimaryImage(index)}
-                    className={`h-40 w-full object-cover rounded-lg  cursor-pointer ${index === primaryImage ? "ring-2 ring-blue-500" : ""}`}
+                    className={`h-35 w-full object-cover rounded-lg  cursor-pointer ${index === primaryImage ? "ring-2 ring-green-600" : ""}`}
                   />
                   {index === primaryImage && (
-                    <span className="absolute top-0 left-0 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+                    <span className="absolute -top-0.5 -left-0.5 bg-green-600 text-white text-xs px-2 py-1 rounded-tl rounded-br">
                       Primary
                     </span>
                   )}
@@ -170,7 +170,7 @@ export const UploadProductDetails = forwardRef((_, ref) => {
           <div className="font-bold text-[22px] leading-[26px] tracking-[0%]">
             Attributes
           </div>
-          <div className="grid grid-cols-4">
+          <div className="grid grid-cols-3">
             {attributesData.data?.map((item) => {
               return (
                 <div className="flex items-center gap-2 p-2 pb-0 ">

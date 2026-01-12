@@ -14,7 +14,12 @@ export const DashboardTopSelling = () => {
   const { data } = useFetchProduct();
   const columnHelper = createColumnHelper<ProductData>();
   const columns = [
-    columnHelper.accessor("productId", { header: "Product Id" }),
+    columnHelper.accessor("productId", {
+      header: () => <div className="flex justify-start">Product ID</div>,
+      cell: (info) => {
+        return <div className="text-left">{info.getValue()}</div>;
+      },
+    }),
     columnHelper.accessor("name", {
       header: "Product",
       cell: ({ row }) => {
@@ -27,7 +32,7 @@ export const DashboardTopSelling = () => {
                 className="h-full w-full object-cover"
               />
             </div>
-            <div className="text-left w-[480px]">
+            <div className="text-left w-[120px]">
               <div className="font-semibold truncate">{original.name}</div>
               <div className="truncate text-sm text-gray-600">
                 {original.shortDescription}
@@ -37,8 +42,43 @@ export const DashboardTopSelling = () => {
         );
       },
     }),
-    columnHelper.accessor("stockQuantity", { header: "Stock Quantity" }),
-    columnHelper.accessor("price", { header: "Price" }),
+    columnHelper.accessor("categoryName", {
+      header: () => <div className="flex justify-start">Category Name</div>,
+      cell: (info) => {
+        return <div className="text-left">{info.getValue()}</div>;
+      },
+    }),
+    columnHelper.accessor("isActive", {
+      header: () => <div className="flex justify-start">Status</div>,
+      cell: (info) => {
+        const value = info.getValue();
+
+        return (
+          <div className="flex gap-3 justify-start items-center cursor-pointer">
+            <div
+              className={`w-2 h-2 rounded-full ${
+                value ? "bg-[#21C45D]" : "bg-[#EF4343]"
+              }`}
+            ></div>
+            <div className={`${value ? "text-[#21C45D]" : "text-[#EF4343]"}`}>
+              {value ? "Active" : "Inactive"}
+            </div>
+          </div>
+        );
+      },
+    }),
+    columnHelper.accessor("stockQuantity", {
+      header: () => <div className="flex justify-start">Stock Quantity</div>,
+      cell: (info) => {
+        return <div className="text-left">{info.getValue()}</div>;
+      },
+    }),
+    columnHelper.accessor("price", {
+      header: () => <div className="flex justify-end">Price</div>,
+      cell: (info) => {
+        return <div className="text-right">{info.getValue()}</div>;
+      },
+    }),
   ];
 
   const table = useReactTable({

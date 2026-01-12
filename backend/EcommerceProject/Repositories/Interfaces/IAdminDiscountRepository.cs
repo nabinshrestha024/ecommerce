@@ -11,7 +11,8 @@ namespace EcommerceProject.Repositories.Interfaces
         Task ToggleAsync(int discountId, bool isActive);
         Task<IEnumerable<DiscountDto>> GetAllAsync();
 
+        Task AddDiscountToProductsAsync(int discountId, List<int> productIds);
+        Task AddDiscountToVariantsAsync(int discountId, List<int> variantIds);
 
-        Task<int> AddDiscountAsync(CreateDiscountDto request);
     }
 }

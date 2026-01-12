@@ -2,10 +2,10 @@ import axios from "axios";
 import { axiosInstance } from "../axiosInstance";
 import { endpoint } from "../endpoint";
 
-export const Product = async () => {
+export const Product = async (pageIndex: number, pageSize: number) => {
   try {
     const res = await axiosInstance.get(endpoint.PRODUCT, {
-      params: { OnlyActive: true, Page: 1, PageSize: 20 },
+      params: { OnlyActive: true, Page: pageIndex, PageSize: pageSize },
     });
     return res.data;
   } catch (e) {

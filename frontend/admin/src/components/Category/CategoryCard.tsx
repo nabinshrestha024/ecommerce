@@ -9,7 +9,7 @@ export const CategoryCard = () => {
         <Card
           key={category.categoryId}
           className="w-full p-0 rounded-md "
-          cardClassName="p-3 border border-[#E5E7EB] shadow-sm"
+          cardClassName="p-3 border border-[#E5E7EB] shadow-sm hover:cursor-pointer"
         >
           <div className="w-ull flex gap-3 items-center ">
             <div className="w-16 h-16 border border-[#E5E7EB] rounded-md overflow-hidden">

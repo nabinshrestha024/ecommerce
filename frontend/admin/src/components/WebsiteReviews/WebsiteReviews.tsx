@@ -29,21 +29,29 @@ export const WebsiteReviews = () => {
   const removeReviews = useRemoveWebsiteReview();
   const columns = [
     columnHelper.accessor("reviewId", {
-      header: "Review Id",
-      cell: (info) => <div className="font-bold">#{info.getValue()}</div>,
-    }),
-    columnHelper.accessor("userImageUrl", {
-      header: "User Image",
+      header: () => <div className="flex justify-start">Review Id</div>,
       cell: (info) => (
-        <div className="flex justify-center items-center">
-          <div className="h-10 w-10 rounded-full overflow-hidden">
-            <img src={info.getValue()} className="h-full w-full object-cover" />
-          </div>
-        </div>
+        <div className="font-bold text-start">#{info.getValue()}</div>
       ),
     }),
-    columnHelper.accessor("userId", { header: "User ID" }),
-    columnHelper.accessor("userName", { header: "Name" }),
+
+    columnHelper.accessor("userName", {
+      header: () => <div className="flex justify-start">Name</div>,
+      cell: ({ row }) => {
+        const original = row.original;
+        return (
+          <div className="flex gap-3 items-center">
+            <div className="h-15 w-15 rounded-full overflow-hidden">
+              <img
+                src={original.userImageUrl}
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div className="cursor-pointer text-start">{original.userName}</div>
+          </div>
+        );
+      },
+    }),
     columnHelper.accessor("rating", {
       header: "Rating",
       cell: (info) => (
@@ -65,19 +73,20 @@ export const WebsiteReviews = () => {
       ),
     }),
     columnHelper.accessor("content", {
-      header: "Content",
+      header: () => <div className="flex justify-start w-[300px]">Content</div>,
       cell: (info) => (
-        <div className="flex justify-center">
-          <div className="w-50 whitespace-normal wrap-break-word">
+        <div className="flex justify-start w-[300px]">
+          <div className="whitespace-normal line-clamp-2 text-left truncate">
             {info.getValue()}
           </div>
         </div>
       ),
     }),
     columnHelper.accessor("isDeleted", {
-      header: "Status",
+      header: () => <div className="flex justify-start">Status</div>,
+
       cell: (info) => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-start">
           <div className="flex items-center justify-start gap-2 w-19">
             <div
               className={`h-2 w-2 rounded-full ${info.getValue() ? "bg-red-500" : "bg-green-500"}`}
@@ -92,8 +101,12 @@ export const WebsiteReviews = () => {
       ),
     }),
     columnHelper.accessor("createdAt", {
-      header: "Posted At",
-      cell: (info) => <div>{info.getValue().split("T")[0]}</div>,
+      header: () => <div className="flex justify-start">Posted At</div>,
+      cell: (info) => (
+        <div className="flex justify-start">
+          {info.getValue().split("T")[0]}
+        </div>
+      ),
     }),
     columnHelper.display({
       id: "actions",
@@ -123,6 +136,7 @@ export const WebsiteReviews = () => {
 
   const { data, isLoading, isError, error } = useFetchWebsiteReview(
     pagination.pageIndex + 1,
+    pagination.pageSize,
   );
 
   const table = useReactTable({
@@ -142,6 +156,10 @@ export const WebsiteReviews = () => {
   ) : data.length === 0 ? (
     <div>No data</div>
   ) : (
-    <Table table={table} />
+    <Table
+      table={table}
+      pageIndex={pagination.pageIndex}
+      pageSize={pagination.pageSize}
+    />
   );
 };

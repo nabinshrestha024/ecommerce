@@ -105,17 +105,28 @@ export const DiscountTable = () => {
     }),
   ];
 
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
   const table = useReactTable({
     data: discountProduct.data || [],
     columns,
+    state: { pagination },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
   });
 
   return (
     <div className="w-full p-4 border border-[#E5E7EB] rounded-lg">
       <div className="flex flex-col-reverse gap-3">
-        <Table table={table} />
+        <Table
+          table={table}
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+        />
       </div>
     </div>
   );

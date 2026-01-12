@@ -124,6 +124,7 @@ export const ProductReviews = () => {
 
   const { data, isLoading, isError, error } = useFetchProductReview(
     pagination.pageIndex + 1,
+    pagination.pageSize,
   );
 
   const table = useReactTable({
@@ -143,6 +144,10 @@ export const ProductReviews = () => {
   ) : data.length === 0 ? (
     <div>No data</div>
   ) : (
-    <Table table={table} />
+    <Table
+      table={table}
+      pageIndex={pagination.pageIndex}
+      pageSize={pagination.pageSize}
+    />
   );
 };

@@ -1,6 +1,7 @@
 ﻿USE [EcommerceDB]
 GO
-CREATE OR ALTER PROCEDURE spDiscount_Create
+
+CREATE OR ALTER   PROCEDURE spDiscount_Create
     @DiscountName NVARCHAR(100),
     @DiscountType NVARCHAR(20),       -- 'Percentage' or 'Flat'
     @DiscountValue DECIMAL(18,2),
@@ -27,5 +28,5 @@ BEGIN
         @EndDate,
         @IsActive
     );
-    SELECT CAST(SCOPE_IDENTITY() AS INT)AS DiscountId;
+    SELECT SCOPE_IDENTITY();
 END
