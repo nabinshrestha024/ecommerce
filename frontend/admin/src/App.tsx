@@ -15,9 +15,9 @@ import { AttributeManagement } from "./screens/attribute-management";
 import { ProductVariant } from "./screens/product-variant";
 import { Discount } from "./screens/discount";
 import { TagManagement } from "./components/Tags/TagManagement";
-import { WebsiteReviews } from "./components/WebsiteReviews/WebsiteReviews";
 import { ProductReviews } from "./components/ProductReviews/ProductReviews";
 import { Product } from "./screens/product";
+import { WebsiteReview } from "./screens/website-review";
 
 export const App = () => {
   return (
@@ -46,7 +46,7 @@ export const App = () => {
             <Route path="/vendor" element={<Vendor />} />
             <Route path="/product-variant/:id" element={<ProductVariant />} />
             <Route path="/tag-management" element={<TagManagement />} />
-            <Route path="/website-reviews" element={<WebsiteReviews />} />
+            <Route path="/website-reviews" element={<WebsiteReview />} />
             <Route path="/product-reviews" element={<ProductReviews />} />
           </Route>
         </Route>
