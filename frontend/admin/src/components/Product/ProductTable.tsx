@@ -16,7 +16,6 @@ import { useDeleteProduct } from "@/hooks/product/useDeleteProduct";
 import { useSearch } from "@/hooks/product/useSearch";
 import { useDebounce } from "@/hooks/search/useDebounce";
 import { TagForm } from "./TagForm";
-import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog";
 
 export const ProductTable = () => {
   const [pagination, setPagination] = useState({
@@ -152,9 +151,9 @@ export const ProductTable = () => {
               </div>
             )}
           </Dialog>
-          <ConfirmationDialog
-            trigger={<MdDelete className="text-[#6A717F] text-[20px]" />}
-            confirmFunc={() => handleDelete(info.row.original.productId)}
+          <MdDelete
+            className="text-[#6A717F] text-[20px]"
+            onClick={() => handleDelete(info.row.original.productId)}
           />
         </div>
       ),
@@ -173,80 +172,6 @@ export const ProductTable = () => {
     getCoreRowModel: getCoreRowModel(),
     onPaginationChange: setPagination,
   });
-  const tableFeature = useReactTable({
-    columns,
-    data: product.data?.items || [],
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-  });
-
-  const tableOnSale = useReactTable({
-    columns,
-    data: product.data?.items || [],
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-  });
-
-  const tableOutOfStock = useReactTable({
-    columns,
-    data: product.data?.items || [],
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-  });
-
-  const tabDatas = [
-    {
-      id: 1,
-      value: "All",
-      triggerText: "All Products",
-      content: (
-        <Table
-          table={table}
-          pageIndex={pagination.pageIndex}
-          pageSize={pagination.pageSize}
-        />
-      ),
-    },
-
-    {
-      id: 2,
-      value: "Featured Product",
-      triggerText: "Featured Product",
-      content: (
-        <Table
-          table={tableFeature}
-          pageIndex={pagination.pageIndex}
-          pageSize={pagination.pageSize}
-        />
-      ),
-    },
-
-    {
-      id: 3,
-      value: "On Sale",
-      triggerText: "On Sale",
-      content: (
-        <Table
-          table={tableOnSale}
-          pageIndex={pagination.pageIndex}
-          pageSize={pagination.pageSize}
-        />
-      ),
-    },
-
-    {
-      id: 4,
-      value: "Out of Stock",
-      triggerText: "Out of Stock",
-      content: (
-        <Table
-          table={tableOutOfStock}
-          pageIndex={pagination.pageIndex}
-          pageSize={pagination.pageSize}
-        />
-      ),
-    },
-  ];
 
   return (
     <div className="w-full pt-6 pb-14 pl-6 pr-6 border border-[#E5E7EB] rounded-lg">
@@ -262,7 +187,11 @@ export const ProductTable = () => {
           className="w-64 pt-2.5 pb-2.5 pl-3 pr-2 border focus-visible:ring-0"
         />
       </div>
-      <Table table={table} pageIndex={pagination.pageIndex} />
+      <Table
+        table={table}
+        pageIndex={pagination.pageIndex}
+        pageSize={pagination.pageSize}
+      />
     </div>
   );
 };
