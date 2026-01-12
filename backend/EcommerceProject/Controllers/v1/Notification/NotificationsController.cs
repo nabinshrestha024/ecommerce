@@ -1,10 +1,12 @@
 ﻿using System.Security.Claims;
 using EcommerceProject.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceProject.Controllers.v1.Notification
 {
+    [Authorize(Roles = "Admin")]
     [Route("v1/notifications")]
     [ApiController]
     public class NotificationsController : ControllerBase

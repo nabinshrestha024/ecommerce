@@ -118,7 +118,7 @@ export const Sidebar = () => {
                       >
                         <Link
                           to={value.url}
-                          className="flex items-center gap-3"
+                          className="flex items-center gap-3 w-full"
                         >
                           <Tooltip>
                             <TooltipTrigger>

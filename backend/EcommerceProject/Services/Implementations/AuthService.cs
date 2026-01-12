@@ -198,7 +198,7 @@ namespace EcommerceProject.Services.Implementations
             using var connection = _connectionFactory.CreateConnection();
 
             await connection.ExecuteAsync(
-                "spUSer_UpdateUser",
+                "spUser_UpdatePassword",
                 new
                 {
                     userId = userId,

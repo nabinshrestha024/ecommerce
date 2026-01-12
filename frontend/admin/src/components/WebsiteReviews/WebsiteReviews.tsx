@@ -123,6 +123,7 @@ export const WebsiteReviews = () => {
 
   const { data, isLoading, isError, error } = useFetchWebsiteReview(
     pagination.pageIndex + 1,
+    pagination.pageSize,
   );
 
   const table = useReactTable({
@@ -142,6 +143,10 @@ export const WebsiteReviews = () => {
   ) : data.length === 0 ? (
     <div>No data</div>
   ) : (
-    <Table table={table} />
+    <Table
+      table={table}
+      pageIndex={pagination.pageIndex}
+      pageSize={pagination.pageSize}
+    />
   );
 };

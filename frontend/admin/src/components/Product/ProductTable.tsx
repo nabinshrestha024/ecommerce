@@ -23,7 +23,7 @@ export const ProductTable = () => {
     pageIndex: 0,
     pageSize: 10,
   });
-  const product = useProduct(pagination.pageIndex + 1);
+  const product = useProduct(pagination.pageIndex + 1, pagination.pageSize);
   const [searchProduct, setSearchProduct] = useState("");
   // const [sortType, setSortType] = useState<"price" | "stockQuantity" | null>(null);
   const navigate = useNavigate();
@@ -173,6 +173,80 @@ export const ProductTable = () => {
     getCoreRowModel: getCoreRowModel(),
     onPaginationChange: setPagination,
   });
+  const tableFeature = useReactTable({
+    columns,
+    data: product.data?.items || [],
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+
+  const tableOnSale = useReactTable({
+    columns,
+    data: product.data?.items || [],
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+
+  const tableOutOfStock = useReactTable({
+    columns,
+    data: product.data?.items || [],
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+
+  const tabDatas = [
+    {
+      id: 1,
+      value: "All",
+      triggerText: "All Products",
+      content: (
+        <Table
+          table={table}
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+        />
+      ),
+    },
+
+    {
+      id: 2,
+      value: "Featured Product",
+      triggerText: "Featured Product",
+      content: (
+        <Table
+          table={tableFeature}
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+        />
+      ),
+    },
+
+    {
+      id: 3,
+      value: "On Sale",
+      triggerText: "On Sale",
+      content: (
+        <Table
+          table={tableOnSale}
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+        />
+      ),
+    },
+
+    {
+      id: 4,
+      value: "Out of Stock",
+      triggerText: "Out of Stock",
+      content: (
+        <Table
+          table={tableOutOfStock}
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+        />
+      ),
+    },
+  ];
 
   return (
     <div className="w-full pt-6 pb-14 pl-6 pr-6 border border-[#E5E7EB] rounded-lg">

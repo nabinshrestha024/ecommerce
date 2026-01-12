@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Card } from "../Card/Card";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import { CustomerChart } from "./CustomerChart";
 import { CustomerLastWeekChart } from "./CustomerlastWeekChart";
 export const CustomerOverviewChart = () => {
@@ -11,7 +10,7 @@ export const CustomerOverviewChart = () => {
       cardClassName="p-0 w-full border border-[#E5E7EB]"
     >
       <div className="flex flex-col gap-6">
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <div className="text-[18px] leading-6 font-bold ">
             Customer Overview
           </div>
@@ -19,7 +18,7 @@ export const CustomerOverviewChart = () => {
             <div className="w-full max-w-[178px] flex justify-around items-center rounded-xl p-1 bg-[#EAF8E7] ">
               <button
                 onClick={() => setWeeklyDetails("This week")}
-                className={` px-2 py-3 text-[14px] leading-3 bg-[#EAF8E7] ${
+                className={` px-2 py-3 text-[14px] leading-3 bg-[#EAF8E7] cursor-pointer ${
                   weeklyDetails === "This week"
                     ? "bg-white text-[#4EA674] font-medium rounded-lg "
                     : "bg-transparent text-[#6A717F]"
@@ -29,16 +28,15 @@ export const CustomerOverviewChart = () => {
               </button>
               <button
                 onClick={() => setWeeklyDetails("Last week")}
-                className={` px-2 py-3 text-[14px] leading-3 bg-[#EAF8E7] ${
+                className={` px-2 py-3 text-[14px] leading-3 bg-[#EAF8E7] cursor-pointer ${
                   weeklyDetails === "Last week"
                     ? "bg-white text-[#4EA674] font-medium rounded-lg "
-                    : "bg-transparent text-[#6A717F]"
+                    : "bg-transparent text-[#6A717F] "
                 }`}
               >
                 Last week
               </button>
             </div>
-            <BsThreeDotsVertical className="text-[#6A717F] text-[20px]" />
           </div>
         </div>
         {weeklyDetails === "This week" ? (
