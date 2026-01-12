@@ -36,10 +36,10 @@ export type OrderResponse = {
   totalPages: number;
 };
 
-export const useFetchOrder = (pageIndex: number) => {
+export const useFetchOrder = (pageIndex: number, pageSize: number) => {
   const { data, isLoading, isError, refetch } = useQuery<OrderResponse>({
-    queryKey: ["orderData", pageIndex],
-    queryFn: () => getOrder(pageIndex),
+    queryKey: ["orderData", pageIndex, pageSize],
+    queryFn: () => getOrder(pageIndex, pageSize),
   });
   return { data, isLoading, isError, refetch };
 };

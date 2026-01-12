@@ -27,7 +27,7 @@ export const OrderTable = () => {
     pageIndex: 0,
     pageSize: 10,
   });
-  const orders = useFetchOrder(pagination.pageIndex + 1);
+  const orders = useFetchOrder(pagination.pageIndex + 1, pagination.pageSize);
   const [sortType, setSortType] = useState<"date" | "price" | null>(null);
 
   const [selectedOrder, setSelectedOrder] = useState<OrderData | null>(null);
@@ -277,7 +277,13 @@ export const OrderTable = () => {
       id: 1,
       value: "All",
       triggerText: "All Orders",
-      content: <Table table={tableAll} pageIndex={pagination.pageIndex} />,
+      content: (
+        <Table
+          table={tableAll}
+          pageIndex={pagination.pageIndex}
+          pageSize={pagination.pageSize}
+        />
+      ),
     },
     {
       id: 2,
@@ -287,6 +293,7 @@ export const OrderTable = () => {
         <Table
           table={tableDelivered}
           pageIndex={paginationDelivered.pageIndex}
+          pageSize={paginationDelivered.pageSize}
         />
       ),
     },
@@ -295,7 +302,11 @@ export const OrderTable = () => {
       value: "Pending",
       triggerText: "Pending",
       content: (
-        <Table table={tablePending} pageIndex={paginationPending.pageIndex} />
+        <Table
+          table={tablePending}
+          pageIndex={paginationPending.pageIndex}
+          pageSize={paginationPending.pageIndex}
+        />
       ),
     },
     {
@@ -303,7 +314,11 @@ export const OrderTable = () => {
       value: "Shipped",
       triggerText: "Shipped",
       content: (
-        <Table table={tableShipped} pageIndex={paginationShipped.pageIndex} />
+        <Table
+          table={tableShipped}
+          pageIndex={paginationShipped.pageIndex}
+          pageSize={paginationShipped.pageSize}
+        />
       ),
     },
     {
@@ -314,6 +329,7 @@ export const OrderTable = () => {
         <Table
           table={tableCancelled}
           pageIndex={paginationCancelled.pageIndex}
+          pageSize={paginationCancelled.pageSize}
         />
       ),
     },
