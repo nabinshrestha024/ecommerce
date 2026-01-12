@@ -16,3 +16,9 @@ export const updateProfile = async (profileData: ProfileResponse) => {
   const response = await axiosInstance.put(endpoint.FETCH_PROFILE, profileData);
   return response.data;
 };
+export const uploadProfile = async (formData: FormData) => {
+  const response = await axiosInstance.post(endpoint.CHANGEPROFILE, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return response.data;
+};

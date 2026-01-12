@@ -1,6 +1,6 @@
 import { useGetProfile } from "@/hooks/profile/useGetProfile";
 import { Card } from "../Card/Card";
-import { Save, SquarePen, Trash } from "lucide-react";
+import { Save, Settings, SquarePen, Trash } from "lucide-react";
 import { Copy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Input } from "../Input/Input";
@@ -18,6 +18,10 @@ import { useDeleteSocial } from "@/hooks/socialLinks/useDeleteSocial";
 import { usePostSocial } from "@/hooks/socialLinks/usePostSocial";
 import { socialIconMap } from "./socialIconMap.import";
 import type { Social } from "@/lib/socialLinks/editSocial";
+import { ProfileUpdate } from "./ProfileUpdate";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/ui/hover-card";
+import { ChangePassword } from "./ChangePassword";
+import { Dialog, DialogContent } from "@/ui/dialog";
 
 export interface SocialLink {
   platform: "Instagram" | "Facebook" | "Twitter";
@@ -154,12 +158,13 @@ export const ShortProfile = () => {
     refetch();
   };
 
+  const [open, setOpen] = useState(false);
   return (
     <Card
       className="flex flex-col shadow-[0px_1px_3px_0px_#00000033] w-full py-4 sm:py-6 px-4 sm:px-6 rounded-xl"
-      cardClassName="p-0 border-none shadow-none rounded-xl"
+      cardClassName="p-0 border-none shadow-none rounded-xl relative"
     >
-      <div className="flex flex-col">
+      <div className="flex flex-col mb-10">
         <div className="flex flex-col items-center">
           <div className="h-20 w-20 sm:h-24 sm:w-24 flex justify-center items-center rounded-full bg-gray-200 shadow-md mt-1 mb-2">
             <img
@@ -306,6 +311,23 @@ export const ShortProfile = () => {
           </div>
         </div>
       </div>
+      <ProfileUpdate />
+      <HoverCard>
+        <HoverCardTrigger className="absolute right-12">
+          <Settings className="h-5 w-5" />
+        </HoverCardTrigger>
+        <HoverCardContent
+          className="cursor-pointer"
+          onClick={() => setOpen(true)}
+        >
+          Change password
+        </HoverCardContent>
+      </HoverCard>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="p-0 max-w-lg">
+          <ChangePassword />
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };

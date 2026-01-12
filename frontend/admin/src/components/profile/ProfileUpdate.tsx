@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "../Card/Card";
 import {
   SquarePen,
@@ -32,10 +32,7 @@ export const ProfileUpdate = () => {
     mode: "all",
   });
 
-  const [preview, setPreview] = useState<string>("");
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const imageInputRef = useRef<HTMLInputElement>(null);
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
@@ -52,37 +49,12 @@ export const ProfileUpdate = () => {
     });
   }, [data, reset]);
 
-  const defaultImage = data?.profileImageUrl;
-
-  const handleImageInput = () => {
-    imageInputRef.current?.click();
-  };
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    setSelectedImage(file);
-    const imgUrl = URL.createObjectURL(file);
-    setPreview(imgUrl);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (preview) URL.revokeObjectURL(preview);
-    };
-  }, [preview]);
-
   const onSubmit = (formData: ProfileResponse) => {
     const dataToSend = new FormData();
     dataToSend.append("FullName", formData.fullName || "Unknown");
     dataToSend.append("Bio", formData.bio || "N/A");
     dataToSend.append("City", formData.city || "Unknown");
     dataToSend.append("Address", formData.address || "N/A");
-    if (selectedImage) {
-      dataToSend.append("ProfileImageFile", selectedImage, selectedImage.name);
-    }
-    console.log(dataToSend);
     mutate(dataToSend as ProfileResponse);
   };
 
@@ -93,68 +65,11 @@ export const ProfileUpdate = () => {
 
   return (
     <Card
-      className="p-0 shadow-lg border-0 bg-white"
+      className="px-5 shadow-lg border-0 justify-between items-start relative"
       cardClassName="p-0 border-none shadow-none rounded-2xl overflow-hidden"
     >
-      <div className="bg-[#4EA674] px-6 py-8 sm:px-8">
-        <div className="flex flex-row justify-between items-center">
-          <div>
-            <h2 className="font-bold text-2xl sm:text-3xl text-white mb-1">
-              Profile Settings
-            </h2>
-            <p className="text-blue-100 text-sm">
-              Manage your personal information
-            </p>
-          </div>
-          <button
-            className={`rounded-xl p-3 transition-all duration-200 ${
-              isEditing
-                ? "bg-white text-[#4EA674] shadow-md hover:shadow-lg"
-                : " text-white"
-            }`}
-            onClick={handleEditToggle}
-            aria-label={isEditing ? "Cancel editing" : "Edit profile"}
-          >
-            <SquarePen className="h-5 w-5" />
-          </button>
-        </div>
-      </div>
-
-      <div className="px-6 py-8 sm:px-8">
+      <div className="">
         <div className="space-y-8">
-          <div className="flex flex-col items-center gap-6 pb-8 border-b border-gray-100">
-            <div className="relative group">
-              <div className="absolute inset-0 rounded-full blur opacity-25 group-hover:opacity-40 transition-opacity duration-300"></div>
-              <div className="relative">
-                <img
-                  src={preview || defaultImage || "/default.jpg"}
-                  alt="Profile"
-                  className="h-28 w-28 sm:h-32 sm:w-32 rounded-full object-cover border-4 border-white shadow-xl relative"
-                />
-              </div>
-            </div>
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              {...register("profileImageFile")}
-              ref={imageInputRef}
-              onChange={handleImageChange}
-            />
-            <Button
-              type="button"
-              disabled={!isEditing}
-              onClick={handleImageInput}
-              className={`px-6 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 ${
-                !isEditing
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : " text-white hover:shadow-lg hover:scale-105 active:scale-95"
-              }`}
-            >
-              Upload New Picture
-            </Button>
-          </div>
-
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
               <User className="h-5 w-5 text-[#4EA674]" />
@@ -320,6 +235,18 @@ export const ProfileUpdate = () => {
           )}
         </div>
       </div>
+
+      <button
+        className={`rounded-xl p-3 transition-all duration-200 absolute top-2 right-3 ${
+          isEditing
+            ? "bg-white text-[#4EA674] shadow-md hover:shadow-lg"
+            : " text-white"
+        }`}
+        onClick={handleEditToggle}
+        aria-label={isEditing ? "Cancel editing" : "Edit profile"}
+      >
+        <SquarePen className="h-5 w-5" color="black" />
+      </button>
     </Card>
   );
 };

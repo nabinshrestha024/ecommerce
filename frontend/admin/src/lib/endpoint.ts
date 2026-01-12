@@ -8,6 +8,7 @@ export const endpoint = {
   CHANGEPASSWORD: "auth/change_password",
   FETCH_CATEGORY: "admin/categories",
   FETCH_PROFILE: "profile/me",
+  CHANGEPROFILE: "profile/me/upload-image",
   products: "admin/products",
   CATEGORIES: "admin/categories",
   REPORT: "admin/reports",
