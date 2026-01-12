@@ -266,7 +266,11 @@ export const CategoryDetails = () => {
           </div>
         </Dialog>
       </div>
-      <Table table={table} pageIndex={pagination.pageIndex} />
+      <Table
+        table={table}
+        pageIndex={pagination.pageIndex}
+        showPagination={false}
+      />
     </div>
   );
 };
