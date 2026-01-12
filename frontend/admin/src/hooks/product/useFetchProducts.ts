@@ -19,6 +19,7 @@ export type ProductData = {
   primaryImageUrl: string;
   isActive: boolean;
   categoryId: number;
+  categoryName: string;
   sku: string;
   variants: VariantData[];
   relatedProducts: ProductData[];

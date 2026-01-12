@@ -20,10 +20,20 @@ export const DashboardTransaction = () => {
   const orders = useFetchOrder(pagination.pageIndex + 1);
   const columnHelper = createColumnHelper<OrderData>();
   const columns = [
-    columnHelper.accessor("orderId", { header: "Order ID" }),
-    columnHelper.accessor("userId", { header: "Customer ID" }),
+    columnHelper.accessor("orderId", {
+      header: () => <div className="flex justify-start">Order ID</div>,
+      cell: (info) => {
+        return <div className="text-left">{info.getValue()}</div>;
+      },
+    }),
+    columnHelper.accessor("userId", {
+      header: () => <div className="flex justify-start">Customer ID</div>,
+      cell: (info) => {
+        return <div className="text-left">{info.getValue()}</div>;
+      },
+    }),
     columnHelper.accessor("orderDate", {
-      header: "Order Date",
+      header: () => <div className="flex justify-start">Order Date</div>,
       cell: (info) => {
         return <div>{String(info.getValue()).split("T")[0]}</div>;
       },
@@ -48,9 +58,9 @@ export const DashboardTransaction = () => {
       },
     }),
     columnHelper.accessor("totalAmount", {
-      header: "Amount",
+      header: () => <div className="flex justify-end">Amount</div>,
       cell: (info) => {
-        return <div className="text-right w-[90px]">{info.getValue()}</div>;
+        return <div className="text-right">{info.getValue()}</div>;
       },
     }),
   ];
@@ -99,8 +109,8 @@ export const DashboardTransaction = () => {
                           {val.shortDescription}
                         </div>
                       </div>
-                      <div className="text-md font-semibold">
-                        Rs. {val.price}
+                      <div className="text-md font-semibold text-right">
+                        {val.price}
                       </div>
                     </div>
                   );
