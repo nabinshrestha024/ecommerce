@@ -94,7 +94,9 @@ export const UploadProductDetails = forwardRef((_, ref) => {
       <div className="flex flex-col mt-6 gap-8">
         <div className="flex flex-col ">
           <label htmlFor="productImage" className="block cursor-pointer">
-            <div className="relative border border-gray-300 rounded-md p-2 flex text-left items-center justify-center">
+            <div
+              className={`relative border border-gray-300 rounded-md p-2 flex text-left items-center justify-center ${errors.images ? "border-red-500" : ""}`}
+            >
               <span className="text-sm text-left">Upload Image</span>
             </div>
           </label>
@@ -106,11 +108,7 @@ export const UploadProductDetails = forwardRef((_, ref) => {
             {...register("images", { onChange: handleFileChange })}
             className="hidden"
           />
-          {errors.images && (
-            <p className="text-sm text-red-500">
-              {errors.images?.message as string}
-            </p>
-          )}
+
           {images.length > 0 && (
             <div className="grid grid-cols-3 mt-3 gap-3">
               {images.map((img, index) => (
@@ -150,7 +148,9 @@ export const UploadProductDetails = forwardRef((_, ref) => {
             <select
               {...register("categoryId")}
               defaultValue=""
-              className="w-full h-9 px-3 border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
+              className={`w-full h-9 px-3 border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${
+                errors.categoryId ? "border-red-500" : ""
+              }`}
             >
               <option value="" disabled>
                 Select product categories...
@@ -163,11 +163,6 @@ export const UploadProductDetails = forwardRef((_, ref) => {
                 ),
               )}
             </select>
-            {errors.categoryId && (
-              <p className="text-sm text-red-500">
-                {errors.categoryId?.message as string}
-              </p>
-            )}
           </div>
         </div>
 
