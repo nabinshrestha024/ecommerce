@@ -19,7 +19,7 @@ namespace EcommerceProject.Repositories.Implementations
             _tagRepository = tagRepository;
         }
 
-        public async Task<PagedResult<ProductListItemDto>> GetPagedAsync(int? categoryId, string? search, List<string>? tags, decimal? minPrice, decimal? maxPrice, int page, int pageSize, bool onlyActive, CancellationToken ct)
+        public async Task<ProductCatalogResponse> GetPagedAsync(int? categoryId, string? search, List<string>? tags, decimal? minPrice, decimal? maxPrice, int page, int pageSize, bool onlyActive, CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
 
@@ -35,7 +35,6 @@ namespace EcommerceProject.Repositories.Implementations
                 OnlyActive = onlyActive
             };
 
-
             using var multi = await conn.QueryMultipleAsync(
                 "spProducts_GetPaged", p, commandType: CommandType.StoredProcedure
             );
@@ -44,13 +43,17 @@ namespace EcommerceProject.Repositories.Implementations
             var allVariants = (await multi.ReadAsync<ProductVariantDto>()).ToList();
             var allAttributes = (await multi.ReadAsync<AttributeMapping>()).ToList();
             var allImages = (await multi.ReadAsync<ProductImageDto>()).ToList();
-            //var totalCount = await multi.ReadFirstAsync<int>();
 
-            // safe read of final scalar
             int totalCount = 0;
             if (!multi.IsConsumed)
             {
                 totalCount = await multi.ReadFirstOrDefaultAsync<int>();
+            }
+
+            decimal highestPrice = 0;
+            if (!multi.IsConsumed)
+            {
+                highestPrice = await multi.ReadFirstOrDefaultAsync<decimal>();
             }
 
             foreach (var product in products)
@@ -91,9 +94,8 @@ namespace EcommerceProject.Repositories.Implementations
                     product.StockQuantity = defaultVar.StockQuantity;
                 }
             }
-            return new PagedResult<ProductListItemDto>(products, page, pageSize, totalCount);
+            return new ProductCatalogResponse(products, page, pageSize, totalCount, highestPrice);
         }
-
 
         public async Task<int?> GetMaxSlugSuffixAsync(string baseSlug, CancellationToken ct)
         {
