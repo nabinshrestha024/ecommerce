@@ -30,17 +30,19 @@ import {
 } from "@/ui/select";
 
 export const CategoryCard = () => {
-  const categories = useFetchCategory();
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 8,
+  });
+  const categories = useFetchCategory(
+    pagination.pageIndex + 1,
+    pagination.pageSize,
+  );
   const deleteCategory = useDeleteCategory();
 
   const [selectedCategory, setSelectedCategory] = useState<CategoryData | null>(
     null,
   );
-
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 8,
-  });
 
   const allCategories = categories.data ?? [];
   const totalCount = allCategories.length;
@@ -75,7 +77,7 @@ export const CategoryCard = () => {
   return (
     <div className="flex flex-col gap-4">
       <div className="w-full grid grid-cols-4 gap-5">
-        {paginatedCategories.map((category) => (
+        {paginatedCategories.map((category: CategoryData) => (
           <Card
             key={category.categoryId}
             className="w-full p-0 rounded-md"

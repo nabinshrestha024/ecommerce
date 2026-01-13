@@ -12,10 +12,10 @@ export type CategoryData = {
   isActive: boolean;
 };
 
-export const useFetchCategory = () => {
+export const useFetchCategory = (pageIndex: number, pageSize: number) => {
   const { data, isLoading, isError, refetch } = useQuery<CategoryData[]>({
-    queryKey: ["categoryData"],
-    queryFn: fetchCategory,
+    queryKey: ["categoryData", pageIndex, pageSize],
+    queryFn: () => fetchCategory(pageIndex, pageSize),
   });
   return { data, isLoading, isError, refetch };
 };
