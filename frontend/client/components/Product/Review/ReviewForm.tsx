@@ -1,4 +1,3 @@
-import { Input } from "@/components/Input/Input";
 import {
   ReviewFormSchema,
   ReviewFormValues,
@@ -55,6 +54,7 @@ export const ProductReviewForm = ({ productId }: ReviewFormProps) => {
             <div className="">
               <TextArea
                 {...register("content")}
+                maxLength={250}
                 placeholder="Write a review..."
                 className="w-[250px] text-sm text-gray-800 border border-gray-300 rounded-lg 
                        focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent

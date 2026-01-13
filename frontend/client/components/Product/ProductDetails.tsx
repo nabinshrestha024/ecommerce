@@ -11,6 +11,7 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { ProductCard } from "./ProductCard";
 import { Card } from "../Card/Card";
 import { ProductReview } from "./Review/ProductReview";
+import { currencyFormatter } from "./ProductDisplay";
 
 export interface Variant {
   variantId: number;
@@ -121,11 +122,11 @@ const ProductDetails = () => {
   const imageUrls = productItems.data?.images?.map((img) => img.imageUrl);
 
   return (
-    <div className="w-full px-20 py-10 flex flex-col gap-5">
+    <div className="w-full px-4 sm:px-6 md:px-10 lg:px-20 py-6 md:py-10 flex flex-col gap-5">
       <Card className="p-0">
-        <div className="grid grid-cols-2 gap-3 py-5">
-          <div className="flex flex-col gap-5 px-5 py-8">
-            <div className="max-w-[600px] h-[400px] relative">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 py-5">
+          <div className="flex flex-col gap-5 px-3 sm:px-5 py-4 md:py-8">
+            <div className="w-full max-w-[600px] h-[300px] sm:h-[350px] md:h-[400px] relative mx-auto">
               <Image
                 src={displayedImage || ""}
                 alt="Product"
@@ -135,11 +136,11 @@ const ProductDetails = () => {
               />
             </div>
 
-            <div className="flex justify-center gap-3 border-t-2 pt-2">
+            <div className="flex justify-start lg:justify-center gap-2 sm:gap-3 border-t-2 pt-2 overflow-x-auto">
               {imageUrls?.map((image, index) => (
                 <div
                   key={index}
-                  className="w-[100px] h-[100px] relative cursor-pointer"
+                  className="w-[70px] h-[70px] sm:w-20 sm:h-20 md:w-[100px] md:h-[100px] relative cursor-pointer shrink-0"
                   onClick={() => setImages(image)}
                 >
                   <Image
@@ -154,17 +155,21 @@ const ProductDetails = () => {
             </div>
           </div>
 
-          <div className="p-4 flex flex-col gap-4">
+          <div className="p-3 sm:p-4 flex flex-col gap-3 md:gap-4">
             <div>
-              <h1 className="text-3xl font-bold">{productItems.data?.name}</h1>
-              <p className="text-lg">{productItems.data?.description}</p>
+              <h1 className="text-2xl sm:text-3xl font-bold">
+                {productItems.data?.name}
+              </h1>
+              <p className="text-base sm:text-lg">
+                {productItems.data?.description}
+              </p>
             </div>
 
             <div>
-              <span className="text-3xl font-bold text-[#4EA674]">
-                Rs. {activeVariant?.price}
+              <span className="text-2xl sm:text-3xl font-bold text-[#4EA674]">
+                {currencyFormatter.format(activeVariant?.price ?? 0)}
               </span>
-              <div className="flex justify-between text-lg font-bold">
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-2 text-base sm:text-lg font-bold">
                 <span>
                   <span className="font-normal">Category: </span>
                   {productItems.data?.categoryName}
@@ -177,12 +182,14 @@ const ProductDetails = () => {
             </div>
 
             <div className="flex flex-col gap-3">
-              <div className="font-bold text-lg">Variants</div>
+              <div className="font-bold text-base sm:text-lg">Variants</div>
 
               {productItems.data?.availableAttributes?.map(
                 (variant, attrIndex) => (
                   <div key={variant.name}>
-                    <div className="mb-1 font-medium">{variant.name}</div>
+                    <div className="mb-1 font-medium text-sm sm:text-base">
+                      {variant.name}
+                    </div>
                     <div className="flex gap-2 flex-wrap">
                       {variant.values.map((value) => {
                         const isSelected =
@@ -200,7 +207,7 @@ const ProductDetails = () => {
                         return (
                           <label
                             key={value}
-                            className={`px-4 py-2 border rounded-md cursor-pointer transition
+                            className={`px-3 py-1.5 sm:px-4 sm:py-2 border rounded-md cursor-pointer transition text-sm sm:text-base
                               ${
                                 isSelected
                                   ? "border-green-500 bg-green-50 text-green-600"
@@ -248,11 +255,14 @@ const ProductDetails = () => {
               </div>
 
               {activeVariant?.stockQuantity === 0 ? (
-                <Button disabled className="w-[200px] bg-gray-500">
+                <Button disabled className="w-full sm:w-[200px] bg-gray-500">
                   Out of Stock
                 </Button>
               ) : (
-                <Button className="w-[200px]" onClick={handleAddToCart}>
+                <Button
+                  className="w-full sm:w-[200px]"
+                  onClick={handleAddToCart}
+                >
                   Add to cart
                 </Button>
               )}
@@ -265,8 +275,8 @@ const ProductDetails = () => {
         <ProductReview productId={productItems.data?.productId} />
       )}
 
-      <div className="font-bold text-xl">Related Products</div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      <div className="font-bold text-lg sm:text-xl">Related Products</div>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
         {productItems?.data?.relatedProducts.map(
           (val, index) =>
             index < 5 && <ProductCard key={val.productId} product={val} />,

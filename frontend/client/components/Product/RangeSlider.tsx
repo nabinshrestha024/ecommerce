@@ -1,5 +1,6 @@
 "use client";
 import * as Slider from "@radix-ui/react-slider";
+import { currencyFormatter } from "./ProductDisplay";
 type PriceSliderProps = {
   priceRange: [number, number];
   onChangeAction: (priceRange: [number, number]) => void;
@@ -16,7 +17,7 @@ export const RangeSlider = ({
       <div>
         <div className="font-bold">Price Range:</div>
         {`
-      Rs.${priceRange[0]} - Rs.${priceRange[1]}`}
+      ${currencyFormatter.format(priceRange[0])} - ${currencyFormatter.format(priceRange[1])}`}
       </div>
       <Slider.Root
         value={priceRange}
