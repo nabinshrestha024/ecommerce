@@ -79,8 +79,10 @@ export const Table = <TData,>({
                         ? "w-[300px]"
                         : cellName === "content"
                           ? "w-[250px]"
-                          : ""
-                    } p-2 border-b text-center whitespace-nowrap`}
+                          : cellName === "userName"
+                            ? "w-[260px]"
+                            : ""
+                    } p-3 border-b align-middle whitespace-nowrap`}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>

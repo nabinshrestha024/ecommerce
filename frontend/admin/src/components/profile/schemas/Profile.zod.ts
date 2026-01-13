@@ -3,7 +3,8 @@ import { z } from "zod";
 export const ProfileUpdateSchema = z.object({
   profileImageFile: z.instanceof(File).optional(),
 
-  fullName: z.string().min(1, "Full name is required").optional(),
+  firstName: z.string().min(1, "First name is required").optional(),
+  lastName: z.string().min(1, "Last name is required").optional(),
 
   password: z
     .string()

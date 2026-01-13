@@ -55,7 +55,7 @@ export const WebsiteReviews = () => {
     columnHelper.accessor("rating", {
       header: "Rating",
       cell: (info) => (
-        <div className="flex justify-center">
+        <div className="flex items-center">
           <div className="flex items-center mb-2">
             {[...Array(5)].map((_, i) => (
               <Star
