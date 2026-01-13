@@ -12,7 +12,7 @@ import { WishlistItem } from "../TrendingProduct/component/TrendingProductCard";
 import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { useState } from "react";
-import { Dialog } from "../Dialog/Dialog";
+import { Dialog } from "../dialog/Dialog";
 import { Variant } from "./ProductDetails";
 import { Card } from "../Card/Card";
 import { ProductType } from "./ProductDisplay";
@@ -145,7 +145,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <Card
-      className="p-3 w-full lg:max-w-[285px] border-0 shadow-none flex flex-col justify-between h-[400px] md:h-[380px] "
+      className="p-3 w-full lg:max-w-[285px] border-0 shadow-none flex flex-col justify-between h-[370px] md:h-[380px] "
       key={product.productId}
       rootClassName="py-0 border shadow-xl lg:max-w-[285px]"
     >
@@ -202,16 +202,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </Link>
         </div>
       </div>
-      <div className="flex justify-between flex-row items-center mt-2">
+      <div className="flex justify-start lg:justify-between flex-row items-center md:mt-2">
         <Link href={`/product/id/${product.slug}`}>
-          <div className="text-[14px] text-[#6467F2] font-normal">
+          <div className="text-[14px] text-[#6467F2] font-normal hidden lg:block">
             View Details
           </div>
         </Link>
         <Dialog
           triggerText={
             <Button
-              className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] rounded-[200px]"
+              className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] hover:bg-[#4EA674] hover:text-white rounded-[200px]"
               onPointerDownCapture={() => setQuantity(1)}
             >
               Add to cart
@@ -222,7 +222,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <DialogTitle className="text-[18px] font-bold">
               Cart Information
             </DialogTitle>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col  gap-3">
               <div className="flex items-start gap-5 w-full">
                 <div className="w-[100px] h-[100px] relative">
                   <Image
