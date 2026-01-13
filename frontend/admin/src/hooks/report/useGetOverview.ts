@@ -7,10 +7,12 @@ export interface SalesDataType {
   totalOrders: number;
 }
 
-export const useGetOverview = (startDate: string, endDate: string) => {
-  const { data, isLoading, isError, error } = useQuery<SalesDataType[]>({
-    queryKey: ["report-overview", startDate, endDate],
-    queryFn: () => getSalesOverview(startDate, endDate),
+export const useGetOverview = (period: string) => {
+  const { data, isLoading, isError, error, refetch } = useQuery<
+    SalesDataType[]
+  >({
+    queryKey: ["report-overview"],
+    queryFn: () => getSalesOverview(period),
   });
-  return { data, isLoading, isError, error };
+  return { data, isLoading, isError, error, refetch };
 };
