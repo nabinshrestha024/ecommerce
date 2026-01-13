@@ -1,10 +1,12 @@
-﻿namespace EcommerceProject.Filters
+﻿using EcommerceProject.Models.DTOs.Report;
+
+namespace EcommerceProject.Filters
 {
     public class ReportFilter
     {
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
 
-        public string? Period { get; set; }
+        public ReportPeriod? Period { get; set; }
     }
 }
