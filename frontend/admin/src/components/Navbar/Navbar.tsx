@@ -31,7 +31,9 @@ export const Navbar = () => {
                             ? "Product Reviews"
                             : pathname === "/website-reviews"
                               ? "Website Reviews"
-                              : "";
+                              : pathname === "/vendor"
+                                ? "Vendor"
+                                : "";
 
   return (
     <nav className=" border-b h-16 flex items-center justify-between px-2 w-full">

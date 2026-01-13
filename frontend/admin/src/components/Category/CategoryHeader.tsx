@@ -9,7 +9,7 @@ export const CategoryHeader = () => {
   const [open, setOpen] = useState(false);
   return (
     <div className="space-y-5 w-full">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border shadow-sm mt-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border shadow-sm">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
             <GoTag className="text-[#4EA674]" />

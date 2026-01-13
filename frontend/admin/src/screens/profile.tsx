@@ -30,10 +30,10 @@ export const Profile = () => {
             <img
               src={profile.data?.profileImageUrl}
               alt="Profile"
-              className="h-full w-full rounded-full object-cover border-2 border-white"
+              className="h-full w-full rounded-full object-cover"
             />
             <div
-              className="absolute bottom-0.5 -right-1 bg-white p-1 py-2 rounded-full hover:cursor-pointer"
+              className="absolute bottom-0.5 -right-1 bg-gray-50 p-1 py-2 rounded-full hover:cursor-pointer shadow-2xl"
               onClick={() => fileRef.current?.click()}
             >
               <Camera className="h-4" />

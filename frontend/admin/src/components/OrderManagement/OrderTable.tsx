@@ -351,7 +351,7 @@ export const OrderTable = () => {
   };
 
   return (
-    <div className="flex p-2 rounded-lg w-full gap-5">
+    <div className="flex rounded-lg w-full gap-5">
       <div className="flex-1 relative hover:cursor-pointer">
         <Tabs
           defaultValue="All"
