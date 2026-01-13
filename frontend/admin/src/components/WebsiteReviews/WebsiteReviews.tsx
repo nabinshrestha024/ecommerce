@@ -40,7 +40,7 @@ export const WebsiteReviews = () => {
       cell: ({ row }) => {
         const original = row.original;
         return (
-          <div className="flex gap-5 items-center">
+          <div className="flex gap-5 items-start">
             <div className="h-15 w-15 rounded-full overflow-hidden">
               <img
                 src={original.userImageUrl}
@@ -53,7 +53,7 @@ export const WebsiteReviews = () => {
       },
     }),
     columnHelper.accessor("rating", {
-      header: "Rating",
+      header: () => <div className="flex justify-start">Rating</div>,
       cell: (info) => (
         <div className="flex items-center">
           <div className="flex items-center mb-2">
@@ -73,33 +73,49 @@ export const WebsiteReviews = () => {
       ),
     }),
     columnHelper.accessor("content", {
-      header: () => <div className="flex justify-start w-[250px]">Content</div>,
-      cell: (info) => (
-        <div className="flex justify-start w-[250px]">
-          <div className="whitespace-normal line-clamp-2 text-left truncate">
-            {info.getValue()}
-          </div>
-        </div>
-      ),
-    }),
-    columnHelper.accessor("isDeleted", {
-      header: () => <div className="flex justify-start">Status</div>,
+      header: () => <div className="flex justify-start w-[210px]">Content</div>,
+      cell: (info) => {
+        const [expanded, setExpanded] = useState(false);
+        const content = info.getValue();
 
-      cell: (info) => (
-        <div className="flex items-center justify-start">
-          <div className="flex items-center justify-start gap-2 w-19">
+        return (
+          <div className="flex flex-col w-[210px] text-left gap-0">
             <div
-              className={`h-2 w-2 rounded-full ${info.getValue() ? "bg-red-500" : "bg-green-500"}`}
-            ></div>
-            <div
-              className={`${info.getValue() ? "text-red-500" : "text-green-500"}`}
+              className={`whitespace-normal ${expanded ? "" : "line-clamp-2"}`}
             >
-              {info.getValue() ? "Inactive" : "Active"}
+              {content}
             </div>
+
+            {content?.length > 60 && (
+              <button
+                onClick={() => setExpanded(!expanded)}
+                className="text-xs text-blue-500 hover:underline hover:cursor-pointer self-start mt-1"
+              >
+                {expanded ? "See less" : "See more"}
+              </button>
+            )}
           </div>
-        </div>
-      ),
+        );
+      },
     }),
+    // columnHelper.accessor("isDeleted", {
+    //   header: () => <div className="flex justify-start">Status</div>,
+
+    //   cell: (info) => (
+    //     <div className="flex items-center justify-start">
+    //       <div className="flex items-center justify-start gap-2 w-19">
+    //         <div
+    //           className={`h-2 w-2 rounded-full ${info.getValue() ? "bg-red-500" : "bg-green-500"}`}
+    //         ></div>
+    //         <div
+    //           className={`${info.getValue() ? "text-red-500" : "text-green-500"}`}
+    //         >
+    //           {info.getValue() ? "Inactive" : "Active"}
+    //         </div>
+    //       </div>
+    //     </div>
+    //   ),
+    // }),
     columnHelper.accessor("createdAt", {
       header: () => <div className="flex justify-start">Posted At</div>,
       cell: (info) => (
@@ -113,12 +129,16 @@ export const WebsiteReviews = () => {
       header: "Actions",
       cell: (info) => {
         const row = info.row.original;
+        const isDisabled = row.isDeleted === true;
+
         return (
           <div className="flex justify-center">
             <ConfirmationDialog
               trigger={
-                <div className="p-1 rounded-lg cursor-pointer">
-                  <MdDelete className="text-[#6A717F] text-[20px]" />
+                <div className="p-1 rounded-lg">
+                  <MdDelete
+                    className={`${isDisabled ? "cursor-not-allowed text-[#aaadb5]" : "cursor-pointer text-[#6A717F]"}  text-[20px]`}
+                  />
                 </div>
               }
               confirmFunc={() => removeReviews.mutate(row.reviewId)}

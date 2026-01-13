@@ -12,18 +12,27 @@ type FilterFormValues = {
 
 interface FilterProps {
   onFilterChange: (filters: FilterFormValues) => void;
+  onClose?: () => void;
+  highestPrice?: number;
 }
 
-export const Filter = ({ onFilterChange }: FilterProps) => {
+export const Filter = ({
+  onFilterChange,
+  onClose,
+  highestPrice,
+}: FilterProps) => {
   const { data } = useFetchTags();
   const searchParams = useSearchParams();
   const filterdata = data?.data;
-  const selectTags = filterdata?.slice(0, 5);
+  const selectTags = filterdata?.slice(0, 4);
   const tagsFromUrl = searchParams.get("tags");
   const minPriceFromUrl = searchParams.get("minPrice");
   const maxPriceFromUrl = searchParams.get("maxPrice");
   const [showMore, setShowMore] = useState(false);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    0,
+    highestPrice || 1000,
+  ]);
   const { handleSubmit, register, setValue } = useForm<FilterFormValues>({
     defaultValues: {
       minPrice: minPriceFromUrl || "",
@@ -34,16 +43,17 @@ export const Filter = ({ onFilterChange }: FilterProps) => {
 
   const onSubmit = (formData: FilterFormValues) => {
     onFilterChange(formData);
+    onClose?.();
   };
   useEffect(() => {
     setValue("minPrice", priceRange[0].toString());
     setValue("maxPrice", priceRange[1].toString());
   }, [priceRange, setValue]);
   return (
-    <div className="hidden md:block">
+    <div className="w-full">
       <div className="text-xl font-semibold underline mb-4">Filter</div>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-        <div className="mb-4">
+        <div className="max-h-[30vh] overflow-y-auto md:max-h-none md:mb-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-500">
           <h3 className="font-medium mb-2">Tags</h3>
           {(showMore ? data?.data : selectTags)?.map(
             (tag: { tagId: number; name: string }) => (
@@ -71,7 +81,11 @@ export const Filter = ({ onFilterChange }: FilterProps) => {
         </div>
 
         <div className="flex flex-col gap-3 mt-2">
-          <RangeSlider priceRange={priceRange} onChangeAction={setPriceRange} />
+          <RangeSlider
+            priceRange={priceRange}
+            onChangeAction={setPriceRange}
+            maxPrice={highestPrice}
+          />
           <input
             type="hidden"
             value={priceRange[0]}

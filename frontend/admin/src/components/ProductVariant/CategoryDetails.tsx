@@ -105,6 +105,9 @@ export const CategoryDetails = () => {
   const columns = [
     columnHelper.accessor("variantId", {
       header: () => <div className="flex justify-start">Variant ID</div>,
+      cell: (info) => {
+        return <div className="text-left">{info.getValue()}</div>;
+      },
     }),
 
     columnHelper.accessor("attributes", {
@@ -148,10 +151,16 @@ export const CategoryDetails = () => {
 
     columnHelper.accessor("price", {
       header: () => <div className="flex justify-start">Price</div>,
+      cell: (info) => {
+        return <div className="text-left">{info.getValue()}</div>;
+      },
     }),
 
     columnHelper.accessor("stockQuantity", {
       header: () => <div className="flex justify-start">Stock Quantity</div>,
+      cell: (info) => {
+        return <div className="text-left">{info.getValue()}</div>;
+      },
     }),
   ];
 
@@ -166,12 +175,12 @@ export const CategoryDetails = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg">
-        <div className="flex gap-5">
+        <div className="flex gap-10">
           <div>
             <div className="text-sm text-gray-600">Product ID</div>
             <div className="font-medium">{data?.productId}</div>
           </div>
-          <div className="max-w-[180px]">
+          <div className="max-w-[200px]">
             <div className="text-sm text-gray-600 ">Product Name</div>
             <div className="font-medium">{data?.name}</div>
           </div>
@@ -192,7 +201,7 @@ export const CategoryDetails = () => {
           }
         >
           <div className="max-w-[455px] p-3">
-            <div className="font-bold mb-4">Add new Variant </div>
+            <div className="font-bold text-2xl mb-4">Add new Variant </div>
             <div className="space-y-4 mb-4">
               <div className="space-y-4">
                 <Label htmlFor="price">Price</Label>
@@ -202,6 +211,7 @@ export const CategoryDetails = () => {
                   placeholder="Enter price"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
+                  className="no-spinner"
                 />
               </div>
 
@@ -213,11 +223,12 @@ export const CategoryDetails = () => {
                   placeholder="Enter stock quantity"
                   value={stockQuantity}
                   onChange={(e) => setStockQuantity(e.target.value)}
+                  className="no-spinner"
                 />
               </div>
             </div>
 
-            <div className="font-medium mb-2">Select variant attributes:</div>
+            <div className="font-medium mb-2">Variant attributes:</div>
 
             <div className="flex gap-5">
               {attribute?.data
@@ -225,36 +236,38 @@ export const CategoryDetails = () => {
                   data?.availableAttributes.some((a) => a.name === attr.name),
                 )
                 .map((attr) => (
-                  <div key={attr.attributeId} className="space-y-4">
-                    <Label htmlFor={attr.name}>{attr.name}</Label>
-                    <Select
-                      value={selectedValues[attr.name]?.toString()}
-                      onValueChange={(value) =>
-                        handleSelectChange(attr.name, value)
-                      }
-                    >
-                      <SelectTrigger
-                        id={attr.name}
-                        className={errors[attr.name] ? "border-red-500" : ""}
+                  <div key={attr.attributeId} className="grid grid-cols-2">
+                    <div className="space-y-4">
+                      <Label htmlFor={attr.name}>{attr.name}</Label>
+                      <Select
+                        value={selectedValues[attr.name]?.toString()}
+                        onValueChange={(value) =>
+                          handleSelectChange(attr.name, value)
+                        }
                       >
-                        <SelectValue placeholder={`Select ${attr.name}`} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {attr.values.map((val) => (
-                          <SelectItem
-                            key={val.attributeValueId}
-                            value={val.attributeValueId.toString()}
-                          >
-                            {val.value}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {errors[attr.name] && (
-                      <div className="text-xs text-red-600">
-                        {errors[attr.name]}
-                      </div>
-                    )}
+                        <SelectTrigger
+                          id={attr.name}
+                          className={errors[attr.name] ? "border-red-500" : ""}
+                        >
+                          <SelectValue placeholder={`Select ${attr.name}`} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {attr.values.map((val) => (
+                            <SelectItem
+                              key={val.attributeValueId}
+                              value={val.attributeValueId.toString()}
+                            >
+                              {val.value}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {errors[attr.name] && (
+                        <div className="text-xs text-red-600">
+                          {errors[attr.name]}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
             </div>

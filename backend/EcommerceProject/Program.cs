@@ -1,5 +1,6 @@
 using System.Data;
 using System.Text;
+using System.Text.Json.Serialization;
 using EcommerceProject.Database;
 using EcommerceProject.Filters;
 using EcommerceProject.Hubs;
@@ -31,7 +32,14 @@ builder.Services.AddScoped<IDbConnection>(sp =>
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<GlobalExceptionFilter>();
-});
+})
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter()
+            );
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(x =>

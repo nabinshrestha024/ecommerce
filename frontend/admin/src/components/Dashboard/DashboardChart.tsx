@@ -1,6 +1,7 @@
 import { useGetOverview } from "@/hooks/report/useGetOverview";
 import { Card } from "../Card/Card";
 import { AreaChart } from "../Charts/AreaChart";
+import { useEffect, useState } from "react";
 
 export interface ChartType {
   xAxis: string;
@@ -8,25 +9,50 @@ export interface ChartType {
 }
 
 export const DashboardChart = () => {
-  const last7Days: string[] = Array.from({ length: 7 }, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-    return date.toISOString().split("T")[0];
-  }).reverse();
-  const sales = useGetOverview(last7Days[0], last7Days[6]);
+  const [weeklyDetails, setWeeklyDetails] = useState("lastweek");
+  const sales = useGetOverview(weeklyDetails);
+  useEffect(() => {
+    sales.refetch();
+  }, [weeklyDetails]);
   const data: ChartType[] =
-    last7Days.map((val) => ({
-      xAxis: val,
-      yAxis: sales.data
-        ? (sales?.data.find((value) => value.date.split("T")[0] === val)
-            ?.totalSales ?? 0)
-        : 0,
+    sales?.data?.map((val) => ({
+      xAxis: new Date(val.date).toLocaleDateString("en-US", {
+        month: "numeric",
+        day: "numeric",
+      }),
+      yAxis: val.totalSales,
     })) ?? [];
 
   return (
     <Card className="w-full space-y-1">
-      <div className="text-[18px] font-bold font-sans text-center">
-        Sales Data
+      <div className="flex items-center justify-between">
+        <div className="text-[18px] font-bold font-sans text-center">
+          Sales Data
+        </div>
+        <div className="flex gap-2 items-center">
+          <div className="w-full max-w-[178px] flex justify-around items-center rounded-xl p-1 bg-[#EAF8E7] ">
+            <button
+              onClick={() => setWeeklyDetails("lastweek")}
+              className={` px-2 py-3 text-[14px] leading-3 bg-[#EAF8E7] cursor-pointer ${
+                weeklyDetails === "lastweek"
+                  ? "bg-white text-[#4EA674] font-medium rounded-lg "
+                  : "bg-transparent text-[#6A717F]"
+              }`}
+            >
+              Last Week
+            </button>
+            <button
+              onClick={() => setWeeklyDetails("lastmonth")}
+              className={` px-2 py-3 text-[14px] leading-3 bg-[#EAF8E7] cursor-pointer ${
+                weeklyDetails === "lastmonth"
+                  ? "bg-white text-[#4EA674] font-medium rounded-lg "
+                  : "bg-transparent text-[#6A717F] "
+              }`}
+            >
+              Last Month
+            </button>
+          </div>
+        </div>
       </div>
       <AreaChart data={data} />
     </Card>

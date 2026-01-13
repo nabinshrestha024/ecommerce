@@ -40,7 +40,7 @@ export const ProductTable = () => {
   useEffect(() => {
     if (!debounceSearch) return;
   }, [debounceSearch]);
-  const search = useSearch(debounceSearch, pagination.pageIndex);
+  const search = useSearch(debounceSearch, pagination.pageIndex + 1);
 
   const deleteProduct = useDeleteProduct();
 
@@ -71,10 +71,10 @@ export const ProductTable = () => {
     }),
 
     columnHelper.accessor("name", {
-      header: () => <div className="flex justify-start w-[300px]">Name</div>,
+      header: () => <div className="flex justify-start w-[260px]">Name</div>,
       cell: (info) => (
         <div
-          className="cursor-pointer text-left w-[300px] "
+          className="cursor-pointer text-left w-[260px] "
           onClick={() => handleRowClick(info.row.original)}
         >
           <div className="font-semibold truncate">{info.getValue()}</div>

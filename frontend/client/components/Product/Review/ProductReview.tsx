@@ -2,12 +2,15 @@ import { useFetchReview } from "@/hooks/productReview/useFetchProductReview";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { Card } from "@/components/Card/Card";
+import { useState } from "react";
 interface ReviewProps {
   productId: number;
 }
 
 export const ProductReview = ({ productId }: ReviewProps) => {
   const fetchProductReview = useFetchReview(productId);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
   return (
     <Card className="flex flex-col gap-4">
       <div className="text-[24px] font-semibold p-4">Product Review</div>
@@ -60,7 +63,10 @@ export const ProductReview = ({ productId }: ReviewProps) => {
                   {reviewData.createdAt.split("T")[0]}
                 </div>
               </div>
-              <div className="text-[16px] font-medium ">
+              <div
+                className={`text-[16px] font-medium line-clamp-4 ${openIndex === index ? "line-clamp-none" : "line-clamp-4"}`}
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+              >
                 {reviewData.content}
               </div>
             </div>
