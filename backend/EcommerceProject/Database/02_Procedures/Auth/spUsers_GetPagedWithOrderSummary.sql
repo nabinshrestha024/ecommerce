@@ -1,4 +1,4 @@
-﻿USE [EcommerceDB];
+﻿USE EcommerceDB;
 GO
 
 CREATE OR ALTER PROCEDURE spUsers_GetPagedWithOrderSummary
