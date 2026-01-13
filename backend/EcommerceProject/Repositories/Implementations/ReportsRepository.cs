@@ -23,7 +23,7 @@ namespace EcommerceProject.Repositories.Implementations
             var parameters = new DynamicParameters();
             parameters.Add("@FromDate", filter.FromDate);
             parameters.Add("@ToDate", filter.ToDate);
-            parameters.Add("@Period", filter.Period);
+            parameters.Add("@Period", filter.Period?.ToString().ToLower());
 
             return await connection.QueryAsync<SalesOverviewDto>
                 ("spReport_GetTotalSales", 
@@ -38,7 +38,7 @@ namespace EcommerceProject.Repositories.Implementations
             var parameters = new DynamicParameters();
             parameters.Add("@FromDate", filter.FromDate);
             parameters.Add("@ToDate", filter.ToDate);
-            parameters.Add("@Period", filter.Period);
+            parameters.Add("@Period", filter.Period?.ToString().ToLower());
 
             return await connection.QueryAsync<TopProductDto>
                 ("spReport_GetTopProducts",
@@ -53,7 +53,7 @@ namespace EcommerceProject.Repositories.Implementations
             var parameters = new DynamicParameters();
             parameters.Add("@FromDate", filter.FromDate);
             parameters.Add("@ToDate", filter.ToDate);
-            parameters.Add("@Period", filter.Period);
+            parameters.Add("@Period", filter.Period?.ToString().ToLower());
 
             return await connection.QueryAsync<CategorySalesDto>
                 ("spReport_GetSalesByCategory",
@@ -67,7 +67,7 @@ namespace EcommerceProject.Repositories.Implementations
             var parameters = new DynamicParameters();
             parameters.Add("@FromDate", filter.FromDate);
             parameters.Add("@ToDate", filter.ToDate);
-            parameters.Add("@Period", filter.Period);
+            parameters.Add("@Period", filter.Period?.ToString().ToLower());
 
             return await connection.QueryAsync<LowStockProductDto>
                 ("spReport_GetLowStockProducts",
