@@ -21,7 +21,7 @@ export const DashboardTopSelling = () => {
       },
     }),
     columnHelper.accessor("name", {
-      header: "Product",
+      header: () => <div className="flex justify-start">Product</div>,
       cell: ({ row }) => {
         const original = row.original;
         return (
