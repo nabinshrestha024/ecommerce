@@ -1,23 +1,21 @@
 "use client";
-import { Category } from "@/lib/category/FetchCategoryFunction";
+import { fetchCategory } from "@/lib/category/fetchCategory";
 import { useQuery } from "@tanstack/react-query";
 
 export type CategoryData = {
   categoryId: number;
   name: string;
-  slug: string;
-  categoryImageURL: null;
+  categoryImageURL: File;
   description: string;
   isFeatured: boolean;
   sortOrder: number;
   isActive: boolean;
-  createdAt: string;
 };
 
-export const useFetchCategory = () => {
+export const useFetchCategory = (pageIndex: number, pageSize: number) => {
   const { data, isLoading, isError, refetch } = useQuery<CategoryData[]>({
-    queryKey: ["categoryData"],
-    queryFn: Category,
+    queryKey: ["categoryData", pageIndex, pageSize],
+    queryFn: () => fetchCategory(pageIndex, pageSize),
   });
   return { data, isLoading, isError, refetch };
 };

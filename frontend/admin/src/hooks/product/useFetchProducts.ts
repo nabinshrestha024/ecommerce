@@ -1,5 +1,5 @@
 "use client";
-import { Product } from "@/lib/product/FetchProductFunction";
+import { fetchProduct } from "@/lib/product/fetchProduct";
 import { useQuery } from "@tanstack/react-query";
 export type VariantData = {
   variantId: number;
@@ -36,7 +36,7 @@ type ProductResponse = {
 export const useFetchProduct = () => {
   const { data, isLoading, isError, refetch } = useQuery<ProductResponse>({
     queryKey: ["productData"],
-    queryFn: Product,
+    queryFn: fetchProduct,
   });
   return { data, isLoading, isError, refetch };
 };

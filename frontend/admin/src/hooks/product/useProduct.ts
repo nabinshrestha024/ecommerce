@@ -1,6 +1,6 @@
 "use client";
 
-import { ProductTable } from "@/lib/product/getProduct";
+import { getProduct } from "@/lib/product/getProduct";
 import { useQuery } from "@tanstack/react-query";
 
 export interface ProductResponse {
@@ -54,7 +54,7 @@ export interface ProductTag {
 export const useProduct = (pageIndex: number, pageSize: number) => {
   const { data, isLoading, isError, refetch } = useQuery<ProductResponse>({
     queryKey: ["productData", pageIndex, pageSize],
-    queryFn: () => ProductTable(pageIndex, pageSize),
+    queryFn: () => getProduct(pageIndex, pageSize),
   });
   return { data, isLoading, isError, refetch };
 };

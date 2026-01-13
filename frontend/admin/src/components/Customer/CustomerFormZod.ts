@@ -3,7 +3,7 @@ import { z } from "zod";
 export const customerSchema = z.object({
   name: z.string().min(1, "Customer name is required"),
   address: z.string().min(1, "Address is required"),
-  role: z.enum(["true", "false"], "Invalid status"),
+  role: z.enum(["true", "false"], "Invalid feature"),
   phone: z.coerce
     .string()
     .min(10, { message: "Phone number must be atleast 10 digit" })

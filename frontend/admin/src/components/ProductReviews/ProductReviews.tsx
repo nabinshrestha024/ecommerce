@@ -51,11 +51,16 @@ export const ProductReviews = () => {
         );
       },
     }),
-    columnHelper.accessor("productId", { header: "Product ID" }),
-    columnHelper.accessor("rating", {
-      header: "Rating",
+    columnHelper.accessor("productId", {
+      header: () => <div className="flex justify-start">Product ID</div>,
       cell: (info) => (
-        <div className="flex justify-center">
+        <div className="font-bold text-start">#{info.getValue()}</div>
+      ),
+    }),
+    columnHelper.accessor("rating", {
+      header: () => <div className="flex justify-start">Rating</div>,
+      cell: (info) => (
+        <div className="flex justify-start">
           <div className="flex items-center mb-2">
             {[...Array(5)].map((_, i) => (
               <Star
@@ -73,33 +78,49 @@ export const ProductReviews = () => {
       ),
     }),
     columnHelper.accessor("content", {
-      header: () => <div className="flex justify-start w-[300px]">Content</div>,
-      cell: (info) => (
-        <div className="flex justify-start w-[300px]">
-          <div className="whitespace-normal line-clamp-2 text-left truncate">
-            {info.getValue()}
-          </div>
-        </div>
-      ),
-    }),
-    columnHelper.accessor("isDeleted", {
-      header: () => <div className="flex justify-start">Status</div>,
+      header: () => <div className="flex justify-start w-[250px]">Content</div>,
+      cell: (info) => {
+        const [expanded, setExpanded] = useState(false);
+        const content = info.getValue();
 
-      cell: (info) => (
-        <div className="flex items-center justify-start">
-          <div className="flex items-center justify-start gap-2 w-19">
+        return (
+          <div className="flex flex-col w-[250px] text-left gap-0">
             <div
-              className={`h-2 w-2 rounded-full ${info.getValue() ? "bg-red-500" : "bg-green-500"}`}
-            ></div>
-            <div
-              className={`${info.getValue() ? "text-red-500" : "text-green-500"}`}
+              className={`whitespace-normal ${expanded ? "" : "line-clamp-2"}`}
             >
-              {info.getValue() ? "Inactive" : "Active"}
+              {content}
             </div>
+
+            {content?.length > 60 && (
+              <button
+                onClick={() => setExpanded(!expanded)}
+                className="text-xs text-blue-500 hover:underline hover:cursor-pointer self-start mt-1"
+              >
+                {expanded ? "See less" : "See more"}
+              </button>
+            )}
           </div>
-        </div>
-      ),
+        );
+      },
     }),
+    // columnHelper.accessor("isDeleted", {
+    //   header: () => <div className="flex justify-start">Status</div>,
+
+    //   cell: (info) => (
+    //     <div className="flex items-center justify-start">
+    //       <div className="flex items-center justify-start gap-2 w-19">
+    //         <div
+    //           className={`h-2 w-2 rounded-full ${info.getValue() ? "bg-red-500" : "bg-green-500"}`}
+    //         ></div>
+    //         <div
+    //           className={`${info.getValue() ? "text-red-500" : "text-green-500"}`}
+    //         >
+    //           {info.getValue() ? "Inactive" : "Active"}
+    //         </div>
+    //       </div>
+    //     </div>
+    //   ),
+    // }),
     columnHelper.accessor("createdAt", {
       header: () => <div className="flex justify-start">Posted At</div>,
       cell: (info) => (

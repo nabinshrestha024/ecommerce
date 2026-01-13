@@ -361,7 +361,7 @@ export const Profile = () => {
         />
       )}
       <HoverCard>
-        <HoverCardTrigger className="absolute right-17">
+        <HoverCardTrigger className="absolute right-17 cursor-pointer">
           <Settings className="h-5 w-5" />
         </HoverCardTrigger>
         <HoverCardContent

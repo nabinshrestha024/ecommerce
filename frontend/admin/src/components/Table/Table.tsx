@@ -54,7 +54,7 @@ export const Table = <TData,>({
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className="p-2 border-b">
+                <th key={header.id} className="p-3 border-b">
                   {flexRender(
                     header.column.columnDef.header,
                     header.getContext(),
@@ -69,18 +69,19 @@ export const Table = <TData,>({
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => {
-                console.log(cell.column.id, "cell");
                 const cellName = cell.column.id;
                 return (
                   <td
                     key={cell.id}
                     className={`${
                       cellName === "name"
-                        ? "w-[300px]"
+                        ? "w-[260px]"
                         : cellName === "content"
                           ? "w-[250px]"
-                          : ""
-                    } p-2 border-b text-center whitespace-nowrap`}
+                          : cellName === "userName"
+                            ? "w-[260px]"
+                            : ""
+                    } p-3 border-b align-top whitespace-nowrap`}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
