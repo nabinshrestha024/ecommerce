@@ -17,7 +17,7 @@ export const DashboardTransaction = () => {
     pageSize: 10,
   });
   const { data } = useFetchProduct();
-  const orders = useFetchOrder(pagination.pageIndex + 1);
+  const orders = useFetchOrder(pagination.pageIndex + 1, pagination.pageSize);
   const columnHelper = createColumnHelper<OrderData>();
   const columns = [
     columnHelper.accessor("orderId", {
@@ -35,7 +35,11 @@ export const DashboardTransaction = () => {
     columnHelper.accessor("orderDate", {
       header: () => <div className="flex justify-start">Order Date</div>,
       cell: (info) => {
-        return <div>{String(info.getValue()).split("T")[0]}</div>;
+        return (
+          <div className="text-left">
+            {String(info.getValue()).split("T")[0]}
+          </div>
+        );
       },
     }),
     columnHelper.accessor("paymentStatus", {
