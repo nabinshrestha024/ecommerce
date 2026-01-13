@@ -2,7 +2,7 @@ import axios from "axios";
 import { axiosInstance } from "../axiosInstance";
 import { endpoint } from "../endpoint";
 
-export const Product = async () => {
+export const fetchProduct = async () => {
   try {
     const res = await axiosInstance.get(endpoint.FETCH_PRODUCT, {
       params: {
