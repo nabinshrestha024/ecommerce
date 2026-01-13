@@ -94,7 +94,7 @@ export const ProductReviews = () => {
             {content?.length > 60 && (
               <button
                 onClick={() => setExpanded(!expanded)}
-                className="text-xs text-blue-500 hover:underline hover:cursor-pointer self-start mt-1"
+                className="text-xs text-green-600 hover:underline hover:cursor-pointer self-start mt-1"
               >
                 {expanded ? "See less" : "See more"}
               </button>

@@ -117,7 +117,7 @@ export const AddCategoryForm = ({
           <div className="col-span-3">
             <Select
               selectData={selectData}
-              triggerClassName="w-full border rounded-md px-3 py-2"
+              triggerClassName={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.isFeatured ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
               itemClassName="cursor-pointer"
               onValueChange={(v) => setValue("isFeatured", v === "true")}
             />
@@ -133,7 +133,7 @@ export const AddCategoryForm = ({
               defaultValue="true"
               selectData={selectData}
               triggerClassName="w-full border rounded-md px-3 py-2"
-              itemClassName="cursor-pointer"
+              itemClassName={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.isActive ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
               onValueChange={(v) => setValue("isActive", v === "true")}
             />
           </div>

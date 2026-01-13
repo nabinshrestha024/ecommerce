@@ -4,14 +4,23 @@ import {
   productSchema,
   type ProductFormValues,
 } from "./ProductZodVAlidation.tsx";
-import { Input } from "../Input/Input.tsx";
 import { useEditProduct } from "@/hooks/product/useEditProduct.ts";
 import type { ProductRes } from "@/hooks/product/useProduct.ts";
 import { useState } from "react";
+import { Input } from "@/ui/input.tsx";
+import { Input as Inp } from "@/components/Input/Input.tsx";
+import { useFetchCategory } from "@/hooks/category/useFetchCategory.tsx";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/ui/select.tsx";
 
 type Props = {
   product: ProductRes;
-  onSave: (product: ProductRes) => void;
+  onSave: () => void;
 };
 
 export const ProductForm = ({ product, onSave }: Props) => {
@@ -21,7 +30,6 @@ export const ProductForm = ({ product, onSave }: Props) => {
     handleSubmit,
     control,
     formState: { errors },
-    reset,
   } = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema) as Resolver<ProductFormValues>,
     defaultValues: {
@@ -55,13 +63,15 @@ export const ProductForm = ({ product, onSave }: Props) => {
       },
       {
         onSuccess: () => {
-          onSave({ ...product, ...data });
-          reset(data);
+          onSave();
           setImagePreview("");
         },
       },
     );
   };
+
+  const categories = useFetchCategory(1, 50);
+
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   return (
     <div className="flex justify-center">
@@ -69,72 +79,71 @@ export const ProductForm = ({ product, onSave }: Props) => {
         <div className="sticky top-0 text-[24px] font-bold text-[#23272E] text-center bg-white pb-2 ">
           Edit Product
         </div>
-        <div className="flex-1 overflow-auto mt-5">
-          <div className="grid grid-cols-4 gap-4  mt-5">
-            <label className="font-medium text-gray-700">Category ID</label>
+        <div className="flex-1 overflow-auto ">
+          <div className="grid grid-cols-4 gap-4 items-center  mt-5">
+            <label className="font-medium text-gray-700">Category</label>
             <div className="col-span-3">
-              <Input
-                type="number"
-                placeholder=""
-                {...register("categoryId")}
-                className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 no-spinner"
+              <Controller
+                name="categoryId"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value?.toString()}
+                    onValueChange={(value) => field.onChange(Number(value))}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      {categories.data?.map((val) => (
+                        <SelectItem
+                          key={val.categoryId}
+                          value={String(val.categoryId)}
+                        >
+                          {val.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
               />
-              {errors.categoryId && (
-                <p className="text-[12px] text-red-500 ">
-                  {errors.categoryId.message}
-                </p>
-              )}
             </div>
           </div>
 
-          <div className="grid grid-cols-4 gap-4 mt-5">
+          <div className="grid grid-cols-4 items-center gap-4 mt-5">
             <label className="font-medium text-gray-700">Name</label>
             <div className="col-span-3">
-              <Input
+              <Inp
                 type="text"
                 placeholder=""
                 {...register("name")}
-                className="w-full  border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+                className={`w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 ${errors.name ? "border-red-500 focus-visible:border-red-500" : ""}`}
               />
-              {errors.name && (
-                <p className="text-[12px] text-red-500 ">
-                  {errors.name.message}
-                </p>
-              )}
             </div>
           </div>
 
-          <div className="grid grid-cols-4 gap-4 mt-5">
+          <div className="grid grid-cols-4 items-center gap-4 mt-5">
             <label className="font-medium text-gray-700 ">Description</label>
             <div className="col-span-3">
-              <Input
+              <Inp
                 type="textarea"
                 placeholder=""
                 {...register("description")}
-                className="w-full px-4 py-2 border border-[#DFE0E1] rounded resize-none focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+                className={`w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 ${errors.description ? "border-red-500 focus-visible:border-red-500" : ""}`}
               />
-              {errors.description && (
-                <p className="text-[12px] text-red-500 ">
-                  {errors.description.message}
-                </p>
-              )}
             </div>
           </div>
 
-          <div className="grid grid-cols-4 gap-4 mt-5">
+          <div className="grid grid-cols-4 items-center gap-4 mt-5">
             <label className="font-medium text-gray-700 mt-2">Short Desc</label>
             <div className="col-span-3">
-              <Input
+              <Inp
                 type="textarea"
                 placeholder=""
                 {...register("shortDescription")}
-                className="w-full px-4 py-2 border border-[#DFE0E1] rounded resize-none focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+                className={`w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 ${errors.shortDescription ? "border-red-500 focus-visible:border-red-500" : ""}`}
               />
-              {errors.shortDescription && (
-                <p className="text-[12px] text-red-500 ">
-                  {errors.shortDescription.message}
-                </p>
-              )}
             </div>
           </div>
 
@@ -142,20 +151,9 @@ export const ProductForm = ({ product, onSave }: Props) => {
             control={control}
             name="image"
             render={({ field }) => (
-              <div className="grid grid-cols-4 gap-4  mt-5">
+              <div className="grid grid-cols-4 items-center gap-4  mt-5">
                 <label className="font-medium text-gray-700">Image</label>
 
-                {imagePreview && (
-                  <div className="w-48 h-48 border overflow-hidden rounded">
-                    <img
-                      src={imagePreview}
-                      alt="Preview"
-                      width={200}
-                      height={200}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                )}
                 <div className="col-span-3">
                   <Input
                     autoComplete="off"
@@ -170,11 +168,16 @@ export const ProductForm = ({ product, onSave }: Props) => {
                       }
                     }}
                   />
-
-                  {errors.image && (
-                    <p className="text-[12px] text-red-500">
-                      {errors.image.message as string}
-                    </p>
+                  {imagePreview && (
+                    <div className="w-48 h-48 border overflow-hidden rounded">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        width={200}
+                        height={200}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
                   )}
                 </div>
               </div>

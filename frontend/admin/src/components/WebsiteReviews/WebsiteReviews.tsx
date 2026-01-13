@@ -40,7 +40,7 @@ export const WebsiteReviews = () => {
       cell: ({ row }) => {
         const original = row.original;
         return (
-          <div className="flex gap-5 items-start">
+          <div className="flex gap-5 items-center">
             <div className="h-15 w-15 rounded-full overflow-hidden">
               <img
                 src={original.userImageUrl}
@@ -89,7 +89,7 @@ export const WebsiteReviews = () => {
             {content?.length > 60 && (
               <button
                 onClick={() => setExpanded(!expanded)}
-                className="text-xs text-blue-500 hover:underline hover:cursor-pointer self-start mt-1"
+                className="text-xs text-green-600 hover:underline hover:cursor-pointer self-start mt-1"
               >
                 {expanded ? "See less" : "See more"}
               </button>
