@@ -26,25 +26,25 @@ namespace EcommerceProject.Services.Implementations
 
         public async Task<IEnumerable<SalesOverviewDto>> GetSalesOverviewAsync(ReportFilter filter)
         {
-            await ValidateAsync(filter);
+            
             return await _repository.GetSalesOverviewAsync(filter);
         }
 
         public async Task<IEnumerable<TopProductDto>> GetTopProductsAsync(ReportFilter filter)
         {
-            await ValidateAsync(filter);
+            
             return await _repository.GetTopProductsAsync(filter);
         }
 
         public async Task<IEnumerable<CategorySalesDto>> GetCategorySalesAsync(ReportFilter filter)
         {
-            await ValidateAsync(filter);
+            
             return await _repository.GetCategorySalesAsync(filter);
         }
 
         public async Task<IEnumerable<LowStockProductDto>> GetLowStockAsync(ReportFilter filter)
         {
-            await ValidateAsync(filter);
+            
             return await _repository.GetLowStockAsync(filter);
         }
 

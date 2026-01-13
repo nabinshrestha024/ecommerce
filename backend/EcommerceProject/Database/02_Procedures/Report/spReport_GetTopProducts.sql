@@ -1,12 +1,44 @@
 ﻿USE [EcommerceDB]
 GO
+/****** Object:  StoredProcedure [dbo].[spReport_GetTopProducts]    Script Date: 1/13/2026 10:11:25 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
-CREATE OR ALTER   PROCEDURE spReport_GetTopProducts
+CREATE OR ALTER PROCEDURE spReport_GetTopProducts
+(
     @FromDate DATETIME = NULL,
-    @ToDate DATETIME = NULL
+    @ToDate DATETIME = NULL,
+    @Period VARCHAR(20) = NULL
+    )
 AS
 BEGIN
     SET NOCOUNT ON;
+
+    IF @Period IS NOT NULL
+    BEGIN 
+
+    IF @Period = 'day'
+    BEGIN 
+        SET @FromDate =CAST(GETDATE() AS DATE);
+        SET @ToDate = DATEADD(DAY, 1 , @FromDate);
+
+        END
+
+
+         ELSE IF @Period = 'lastweek'
+        BEGIN
+            SET @ToDate   = GETDATE();
+            SET @FromDate = DATEADD(DAY, -7, @ToDate);
+        END
+
+        ELSE IF @Period = 'lastmonth'
+        BEGIN
+            SET @ToDate   = GETDATE();
+            SET @FromDate = DATEADD(MONTH, -3, @ToDate);
+        END
+        END
 
     SELECT p.ProductId,
            p.Name,
@@ -20,4 +52,3 @@ BEGIN
     GROUP BY p.ProductId, p.Name
     ORDER BY QuantitySold ASC;
 END
-GO
