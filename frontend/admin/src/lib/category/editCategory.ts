@@ -24,5 +24,7 @@ export const editCategory = async ({
     `${endpoint.FETCH_CATEGORY}/${categoryId}`,
     formData,
   );
+
+  console.log(res);
   return res.data;
 };

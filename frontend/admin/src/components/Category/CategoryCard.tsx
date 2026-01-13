@@ -29,6 +29,11 @@ import {
   SelectValue,
 } from "@/ui/select";
 
+type SelectedCategory = {
+  categoryId: number;
+  categoryData: CategoryData;
+};
+
 export const CategoryCard = () => {
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -40,9 +45,8 @@ export const CategoryCard = () => {
   );
   const deleteCategory = useDeleteCategory();
 
-  const [selectedCategory, setSelectedCategory] = useState<CategoryData | null>(
-    null,
-  );
+  const [selectedCategory, setSelectedCategory] =
+    useState<SelectedCategory | null>(null);
 
   const allCategories = categories.data ?? [];
   const totalCount = allCategories.length;
@@ -74,6 +78,8 @@ export const CategoryCard = () => {
     deleteCategory.mutate(categoryId);
   };
 
+  const [open, setOpen] = useState<number | null>(null);
+
   return (
     <div className="flex flex-col gap-4">
       <div className="w-full grid grid-cols-4 gap-5">
@@ -101,9 +107,22 @@ export const CategoryCard = () => {
 
                 <div className="flex gap-2 items-center">
                   <Dialog
+                    open={open === category.categoryId}
+                    onOpenChange={(isOpen) => {
+                      if (!isOpen) {
+                        setOpen(null);
+                        setSelectedCategory(null);
+                      }
+                    }}
                     triggerContent={
                       <button
-                        onClick={() => setSelectedCategory(category)}
+                        onClick={() => {
+                          setSelectedCategory({
+                            categoryId: category.categoryId,
+                            categoryData: category,
+                          });
+                          setOpen(category.categoryId);
+                        }}
                         className="p-1.5 rounded-md hover:bg-gray-100"
                       >
                         <FaEdit className="text-[18px]" />
@@ -112,8 +131,9 @@ export const CategoryCard = () => {
                   >
                     {selectedCategory?.categoryId === category.categoryId && (
                       <EditCategoryForm
-                        categoryData={selectedCategory}
+                        categoryData={selectedCategory.categoryData}
                         onSave={() => setSelectedCategory(null)}
+                        setOpen={setOpen}
                       />
                     )}
                   </Dialog>
@@ -195,9 +215,9 @@ export const CategoryCard = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="4">4</SelectItem>
                   <SelectItem value="8">8</SelectItem>
-                  <SelectItem value="12">12</SelectItem>
+                  <SelectItem value="16">16</SelectItem>
+                  <SelectItem value="24">24</SelectItem>
                 </SelectContent>
               </Select>
             </PaginationContent>

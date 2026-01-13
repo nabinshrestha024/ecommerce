@@ -8,20 +8,24 @@ import { Select } from "../Select/Select.tsx";
 import { Input } from "@/ui/input.tsx";
 import { useEditCategory } from "@/hooks/category/useEditCategory.ts";
 import type { CategoryData } from "@/hooks/category/useFetchCategory.tsx";
-import { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 
 type CategoryProps = {
   categoryData: CategoryData;
-  onSave: (categoryData: CategoryFormValues) => void;
+  onSave: () => void;
+  setOpen: Dispatch<SetStateAction<number | null>>;
 };
 
-export const EditCategoryForm = ({ categoryData, onSave }: CategoryProps) => {
+export const EditCategoryForm = ({
+  categoryData,
+  onSave,
+  setOpen,
+}: CategoryProps) => {
   const editCategory = useEditCategory();
   const {
     register,
     handleSubmit,
     setValue,
-    reset,
     control,
     formState: { errors },
   } = useForm<CategoryFormValues>({
@@ -49,7 +53,6 @@ export const EditCategoryForm = ({ categoryData, onSave }: CategoryProps) => {
       content: "false",
     },
   ];
-
   const onSubmit = (data: CategoryFormValues) => {
     const updateCategory: CategoryData = {
       ...categoryData,
@@ -61,28 +64,25 @@ export const EditCategoryForm = ({ categoryData, onSave }: CategoryProps) => {
       categoryImageURL: data.categoryImageURL || categoryData.categoryImageURL,
     };
 
-    editCategory.mutate({
-      categoryId: categoryData.categoryId,
-      categoryData: updateCategory,
-    });
-
-    onSave(updateCategory);
-
-    reset({
-      name: updateCategory.name,
-      description: updateCategory.description,
-      sortOrder: updateCategory.sortOrder,
-      isFeatured: updateCategory.isFeatured,
-      isActive: updateCategory.isActive,
-      categoryImageURL: updateCategory.categoryImageURL,
-    });
+    editCategory.mutate(
+      {
+        categoryId: categoryData.categoryId,
+        categoryData: updateCategory,
+      },
+      {
+        onSuccess: () => {
+          onSave();
+          setOpen(null);
+        },
+      },
+    );
   };
 
   return (
     <div className="flex justify-center overflow-hidden">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         <div className="sticky top-0 text-[24px] font-bold text-[#23272E] text-center bg-white pb-2 ">
-          Add Catgegory
+          Edit Catgegory
         </div>
         <div className="flex-1 overflow-auto mt-5">
           <div className="grid grid-cols-4 gap-4 items-center">

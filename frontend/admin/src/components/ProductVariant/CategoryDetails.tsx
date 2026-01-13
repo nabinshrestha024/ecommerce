@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Plus } from "lucide-react";
 import {
   useGetProductById,
   type ProductVariant,
@@ -27,6 +26,8 @@ import {
 } from "@tanstack/react-table";
 import { Table } from "../Table/Table";
 import { useParams } from "react-router-dom";
+import { currencyFormatter } from "../Dashboard/DashboardStats";
+import { MdAddCircleOutline } from "react-icons/md";
 
 export const CategoryDetails = () => {
   const [pagination, setPagination] = useState({
@@ -150,9 +151,13 @@ export const CategoryDetails = () => {
     }),
 
     columnHelper.accessor("price", {
-      header: () => <div className="flex justify-start">Price</div>,
+      header: () => <div className="flex justify-end">Price</div>,
       cell: (info) => {
-        return <div className="text-left">{info.getValue()}</div>;
+        return (
+          <div className="text-right">
+            {currencyFormatter.format(info.getValue())}
+          </div>
+        );
       },
     }),
 
@@ -195,7 +200,7 @@ export const CategoryDetails = () => {
           onOpenChange={setOpen}
           triggerContent={
             <Button className="flex items-center gap-2">
-              <Plus size={16} />
+              <MdAddCircleOutline className="text-white text-[24px]" />
               Add Variant
             </Button>
           }
