@@ -15,7 +15,7 @@ import { useState } from "react";
 import { Dialog } from "../dialog/Dialog";
 import { Variant } from "./ProductDetails";
 import { Card } from "../Card/Card";
-import { ProductType } from "./ProductDisplay";
+import { currencyFormatter, ProductType } from "./ProductDisplay";
 
 interface ProductCardProps {
   product: ProductType;
@@ -193,7 +193,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
           <Link href={`/product/id/${product.slug}`}>
             <span className="text-[18px] text-[#4EA674] font-bold">
-              Rs. {product.price}
+              {currencyFormatter.format(product.price)}
             </span>
             {/* &nbsp;&nbsp;&nbsp;
             <span className="line-through text-[15px] text-[red] font-medium">
