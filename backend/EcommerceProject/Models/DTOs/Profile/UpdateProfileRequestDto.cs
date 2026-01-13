@@ -6,7 +6,7 @@ namespace EcommerceProject.Models.DTOs.Profile
         //public string? Phone { get; set; } // remove it
         public string? Address { get; set; }
         public string? City { get; set; }
-        public string? ProfileImageUrl { get; set; }
+        // public string? ProfileImageUrl { get; set; }
 
         //public DateOnly? DateOfBirth { get; set; } // remove it
         //public GenderType? Gender { get; set; } // remove it

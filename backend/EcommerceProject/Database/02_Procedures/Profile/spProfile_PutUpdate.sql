@@ -6,7 +6,7 @@ CREATE OR ALTER PROCEDURE spProfile_PutUpdate
     @FullName           VARCHAR(100),
     @Address            VARCHAR(500),
     @City               VARCHAR(100),
-    @ProfileImageUrl    VARCHAR(1024),
+--    @ProfileImageUrl    VARCHAR(1024),
     @Bio                VARCHAR(500)
 AS
 BEGIN
@@ -17,7 +17,7 @@ BEGIN
         FullName = @FullName,
         Address = @Address,
         City = @City,
-        ProfileImageUrl = @ProfileImageUrl,
+--        ProfileImageUrl = @ProfileImageUrl,
         UpdatedAt = SYSUTCDATETIME()
     WHERE UserId = @UserId AND DeletedAt IS NULL;
 

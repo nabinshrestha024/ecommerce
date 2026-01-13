@@ -44,8 +44,9 @@ namespace EcommerceProject.Controllers
             };
 
             await _userProfileService.PutUpdateProfileWithImageAsync(
-                dto,
-                body.ProfileImageFile);
+                dto
+                // body.ProfileImageFile
+                );
 
             return Ok(new { message = "Profile updated successfully!" });
         }

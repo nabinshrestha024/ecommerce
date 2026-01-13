@@ -125,18 +125,18 @@ namespace EcommerceProject.Services.Implementations
         
         public async Task PutUpdateProfileWithImageAsync(
             UpdateProfileRequestDto dto,
-            IFormFile? profileImage = null,
-            bool removeProfileImage = false,
+            // IFormFile? profileImage = null,
+            // bool removeProfileImage = false,
             CancellationToken ct = default)
         {
-            string? imageUrl = dto.ProfileImageUrl;
+            // string? imageUrl = dto.ProfileImageUrl;
 
-            if (profileImage != null)
-                imageUrl = await UploadProfileImageAsync(profileImage, ct);
-            else if (removeProfileImage)
-                await RemoveProfileImageAsync(ct);
+            // if (profileImage != null)
+            //     imageUrl = await UploadProfileImageAsync(profileImage, ct);
+            // else if (removeProfileImage)
+            //     await RemoveProfileImageAsync(ct);
 
-            dto.ProfileImageUrl = imageUrl;
+            // dto.ProfileImageUrl = imageUrl;
             await _repo.PutUpdateProfileAsync(UserId, dto);
         }
     }

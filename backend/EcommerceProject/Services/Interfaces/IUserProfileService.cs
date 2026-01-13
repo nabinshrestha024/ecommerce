@@ -19,8 +19,8 @@ namespace EcommerceProject.Services.Interfaces
 
         Task PutUpdateProfileWithImageAsync(
             UpdateProfileRequestDto dto,
-            IFormFile? profileImage = null,
-            bool removeProfileImage = false,
+            // IFormFile? profileImage = null,
+            // bool removeProfileImage = false,
             CancellationToken ct = default);
     }
 }

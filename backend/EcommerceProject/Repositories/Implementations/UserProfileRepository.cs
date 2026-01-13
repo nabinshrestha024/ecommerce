@@ -44,7 +44,7 @@ namespace EcommerceProject.Repositories.Implementations
                 //dto.Phone,  // remove it
                 dto.Address,
                 dto.City,
-                dto.ProfileImageUrl,
+                // dto.ProfileImageUrl,
                 //DateOfBirth = dto.DateOfBirth.HasValue // remove it
             //? dto.DateOfBirth.Value.ToDateTime(TimeOnly.MinValue)
             //: (DateTime?)null,
