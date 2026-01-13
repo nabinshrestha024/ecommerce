@@ -25,6 +25,5 @@ export const editCategory = async ({
     formData,
   );
 
-  console.log(res);
   return res.data;
 };
