@@ -4,8 +4,6 @@ import { useState, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ProductCard } from "./ProductCard";
 import { Category } from "./Category";
-import { useProductCategory } from "@/hooks/product/useProductCategory";
-import { useProduct } from "@/hooks/product/useProduct";
 import { useGetCatalogProduct } from "@/hooks/filter/useGetCatalogProduct";
 import { Variant, VariantAttributes } from "./ProductDetails";
 import { ProductCardSkeleton } from "../TrendingProduct/component/ProductCardLoading";
@@ -25,6 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/ui/select";
+import { Dialog } from "../Dialog/Dialog";
+import { Funnel } from "lucide-react";
 
 type FilterFormValues = {
   minPrice: string;
@@ -89,40 +89,27 @@ export const ProductDisplay = () => {
     pageSize: 20,
   });
 
-  const hasAnyFilter = useMemo(() => {
-    const hasActiveValues = Object.values(activeFilters).some((value) => {
-      if (Array.isArray(value)) return value.length > 0;
-      return value !== "" && value !== null && value !== undefined;
-    });
-    return hasActiveValues || tagsFromUrl.length > 0 || categoryId !== null;
-  }, [activeFilters, tagsFromUrl, categoryId]);
-
-  const prod = useProductCategory(categoryId || 0);
-  const products = useProduct(pagination.pageIndex + 1, pagination.pageSize);
-
   const effectiveTags =
     isFilterFormValues(activeFilters) && activeFilters.tags.length > 0
       ? activeFilters.tags
       : tagsFromUrl;
 
-  const filteredProducts = useGetCatalogProduct({
-    categoryId: categoryId || undefined,
-    tagNames: effectiveTags,
-    minPrice: isFilterFormValues(activeFilters)
-      ? activeFilters.minPrice || undefined
-      : undefined,
-    maxPrice: isFilterFormValues(activeFilters)
-      ? activeFilters.maxPrice || undefined
-      : undefined,
+  const [clicked, setClicked] = useState(false);
+  const catalogProducts = useGetCatalogProduct({
+    page: pagination.pageIndex + 1,
+    pageSize: pagination.pageSize,
+    categoryId: categoryId ?? undefined,
+    tagNames: effectiveTags.length ? effectiveTags : undefined,
+    minPrice: activeFilters.minPrice || undefined,
+    maxPrice: activeFilters.maxPrice || undefined,
   });
-
-  const dataSource = hasAnyFilter ? filteredProducts.data?.data : products.data;
+  const dataSource = catalogProducts.data?.data;
   const displayItems = dataSource?.items || [];
   const totalCount = dataSource?.totalCount || 0;
 
-  const isLoading = hasAnyFilter ? filteredProducts.isLoading : prod.isLoading;
-  const isError = hasAnyFilter ? filteredProducts.isError : prod.isError;
-
+  const isLoading = catalogProducts.isLoading;
+  const isError = catalogProducts.isError;
+  const highestPrice = catalogProducts.data?.data?.highestPrice || 0;
   const placeholderCount = 12;
   const totalPages = Math.ceil(totalCount / pagination.pageSize);
   const maxVisiblePages = 5;
@@ -161,11 +148,37 @@ export const ProductDisplay = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8 flex flex-col md:flex-row gap-5 items-start w-full">
-      <div className="flex flex-col gap-5 w-full md:w-40 md:min-w-40 md:sticky md:top-8 shrink-0">
-        <div className="w-full">
+      <div className="flex flex-col gap-3 w-full md:w-40 md:min-w-40 md:sticky md:top-8 md:max-h-[calc(100vh-4rem)] md:overflow-y-auto md:pr-2 shrink-0 ">
+        <div className="text-xl font-semibold underline mb-2 md:mb-1">
+          Categories
+        </div>
+        <div className="flex flex-row justify-between items-center w-full md:flex-col md:overflow-visible md:items-start gap-3 md:gap-5">
+          <Dialog
+            open={clicked}
+            onOpenChange={setClicked}
+            triggerClassName="md:hidden"
+            contentClassName="max-w-md w-[90vw]"
+            triggerText={
+              <div className="flex flex-row items-center gap-2 md:hidden rounded-sm shadow-md border px-2 ">
+                <span className="font-semibold ">Filter</span>
+                <Funnel className="w-3.5 h-3.5 text-gray-600" />
+              </div>
+            }
+          >
+            <Filter
+              onFilterChange={handleFilterChange}
+              onClose={() => setClicked(false)}
+              highestPrice={highestPrice}
+            />
+          </Dialog>
           <Category />
         </div>
-        <Filter onFilterChange={handleFilterChange} />
+        <div className="hidden md:block ">
+          <Filter
+            onFilterChange={handleFilterChange}
+            highestPrice={highestPrice}
+          />
+        </div>
       </div>
 
       <div className="space-y-5 w-full">
