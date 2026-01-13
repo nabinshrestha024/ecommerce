@@ -3,22 +3,28 @@ import * as Slider from "@radix-ui/react-slider";
 type PriceSliderProps = {
   priceRange: [number, number];
   onChangeAction: (priceRange: [number, number]) => void;
+  maxPrice?: number;
 };
 
 export const RangeSlider = ({
   priceRange,
   onChangeAction,
+  maxPrice,
 }: PriceSliderProps) => {
   return (
     <div>
-      <div>{`Price: Rs.${priceRange[0]} - Rs.${priceRange[1]}`}</div>
+      <div>
+        <div className="font-bold">Price Range:</div>
+        {`
+      Rs.${priceRange[0]} - Rs.${priceRange[1]}`}
+      </div>
       <Slider.Root
         value={priceRange}
         onValueChange={(value: [number, number]) =>
           onChangeAction([value[0], value[1]])
         }
         min={0}
-        max={1000}
+        max={maxPrice || 1000}
         step={10}
         className="relative flex items-center select-none touch-none w-full h-5"
       >

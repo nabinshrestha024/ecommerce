@@ -73,6 +73,7 @@ export const TopNav = () => {
           height={80}
           width={180}
           className="hidden lg:block"
+          onClick={() => router.push("/home")}
         />
         <Image
           src={"/logo.png"}
@@ -80,6 +81,7 @@ export const TopNav = () => {
           height={80}
           width={120}
           className="lg:hidden"
+          onClick={() => router.push("/home")}
         />
         <div className="items-center gap-2 hidden md:flex">
           <FaLocationDot className="text-2xl" />

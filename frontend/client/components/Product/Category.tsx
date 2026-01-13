@@ -3,15 +3,11 @@
 import { useCategory } from "@/hooks/category/useCategory";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Funnel } from "lucide-react";
-import { Dialog } from "../Dialog/Dialog";
-import { useState } from "react";
 
 export const Category = () => {
   const categoryItems = useCategory();
   const searchParams = useSearchParams();
   const activeCategoryId = searchParams.get("categoryId");
-  const [clicked, setClicked] = useState(false);
 
   const buildCategoryUrl = (categoryId: number | null) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -26,21 +22,8 @@ export const Category = () => {
   };
 
   return (
-    <div className="w-full ">
-      <div className="text-xl font-semibold underline mb-5">Categories</div>
+    <div className="w-full overflow-x-auto no-scrollbar">
       <div className="flex flex-row items-center justify-baseline">
-        <Dialog
-          open={clicked}
-          onOpenChange={setClicked}
-          triggerText={
-            <div className="flex flex-row items-center gap-2 md:hidden rounded-sm shadow-md border px-2">
-              <span className="font-semibold ">Filter</span>
-              <Funnel className="w-3.5 h-3.5 text-gray-600" />
-            </div>
-          }
-        >
-          <div></div>
-        </Dialog>
         <div className="w-full flex flex-row flex-nowrap px-2   md:flex-col gap-3 overflow-x-scroll no-scrollbar md:overflow-hidden justify-start md:justify-center md:py-5 border-b">
           <Link
             href={buildCategoryUrl(null)}
