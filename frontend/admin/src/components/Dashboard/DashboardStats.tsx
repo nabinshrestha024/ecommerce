@@ -1,5 +1,6 @@
 import { useGetOverview } from "@/hooks/report/useGetOverview";
 import { CardComponent } from "./CardComponent";
+import { useGetOrderReport } from "@/hooks/orderreport/useGetOrderReport";
 
 export const currencyFormatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
@@ -8,7 +9,7 @@ export const currencyFormatter = new Intl.NumberFormat("en-IN", {
 
 export const DashboardStats = () => {
   const data = useGetOverview("lastweek");
-
+  const orderReport = useGetOrderReport();
   const totalSales =
     data?.data?.reduce((sum, val) => sum + val.totalSales, 0) ?? 0;
   const totalOrders =
@@ -53,11 +54,15 @@ export const DashboardStats = () => {
         <div className="grid grid-cols-2 w-full items-start px-2 mt-2">
           <div className="text-[18px] font-medium flex flex-col mt-2">
             Pending{" "}
-            <span className="text-blue-500 text-2xl">{todaysOrders}</span>
+            <span className="text-blue-500 text-2xl">
+              {orderReport?.data?.pending ?? 0}
+            </span>
           </div>
           <div className="text-[18px] font-medium flex flex-col mt-2 border-l-2 border-l-gray-200 pl-4">
             Cancelled{" "}
-            <span className="text-red-500 text-2xl">{todaysOrders}</span>
+            <span className="text-red-500 text-2xl">
+              {orderReport?.data?.canceled ?? 0}
+            </span>
           </div>
         </div>
       </CardComponent>

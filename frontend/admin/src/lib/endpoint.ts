@@ -31,4 +31,6 @@ export const endpoint = {
   FETCHPRODUCTREVIEW: "admin/reviews/product",
   DELETEPRODUCTREVIEW: "admin/reviews/productDelete",
   USERREPORT: "admin/reports/user-registration-overview",
+  ORDERSTATUSREPORT: "admin/reports/orders-status-report",
+  DASHBOARDORDERREPORT: "admin/reports/orders-status-report",
 };
