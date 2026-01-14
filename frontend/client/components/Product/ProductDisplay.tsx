@@ -25,7 +25,7 @@ import {
 } from "@/ui/select";
 import { Dialog } from "../dialog/Dialog";
 import { Funnel } from "lucide-react";
-export const currencyFormatter = new Intl.NumberFormat("en-NP", {
+export const currencyFormatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
   currency: "NPR",
 });
