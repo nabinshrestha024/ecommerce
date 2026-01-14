@@ -54,5 +54,10 @@ namespace EcommerceProject.Services.Implementations
         {
             return await _repository.GetUserRegistrationOverviewAsync(filter);
         }
+
+        public async Task<OrdersStatusReportDto> GetOrdersStatusReportAsync(ReportFilter filter)
+        {
+            return await _repository.GetOrdersStatusReportAsync(filter);
+        }
     }
 }

@@ -92,6 +92,21 @@ namespace EcommerceProject.Repositories.Implementations
             );
         }
 
+        public async Task<OrdersStatusReportDto?> GetOrdersStatusReportAsync(ReportFilter filter)
+        {
+            var parameters = new { 
+                StartDate = filter.FromDate, 
+                EndDate = filter.ToDate 
+            };
+
+            using (var connection = _connectionFactory.CreateConnection())
+            {
+                return await connection.QueryFirstOrDefaultAsync<OrdersStatusReportDto>(
+                    "sp_GetOrdersStatusReport", 
+                    parameters, 
+                    commandType: CommandType.StoredProcedure);
+            }
+        }
 
     }
 }
