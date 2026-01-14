@@ -116,7 +116,7 @@ export const Review = () => {
       ) : (
         <Button
           onClick={() => router.push("/login")}
-          className="mx-auto mt-14 rounded-full bg-slate-900 px-10 py-4 text-sm font-medium text-white transition hover:bg-slate-600"
+          className="mx-auto mt-14 rounded-full bg-slate-900 px-10 py-4 text-sm font-medium text-white transition hover:bg-slate-600 hover:cursor-pointer"
         >
           Add Your Own Review
         </Button>
