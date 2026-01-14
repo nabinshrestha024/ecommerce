@@ -17,7 +17,7 @@ export const DashboardTransaction = () => {
     pageIndex: 0,
     pageSize: 10,
   });
-  const { data } = useFetchProduct();
+  const { data, isLoading } = useFetchProduct();
   const orders = useFetchOrder(pagination.pageIndex + 1, pagination.pageSize);
   const columnHelper = createColumnHelper<OrderData>();
   const columns = [

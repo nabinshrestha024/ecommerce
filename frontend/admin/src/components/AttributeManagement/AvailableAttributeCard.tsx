@@ -19,9 +19,10 @@ import {
 } from "@/ui/accordion";
 import { DropDown } from "../DropDown/DropDown";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { Spinner } from "../Spinner/Spinner";
 
 export const AvailableAttributeCard = () => {
-  const { data: attributes } = useFetchAttribute();
+  const { data: attributes, isLoading } = useFetchAttribute();
   const [selectedAttribute, setSelectedAttribute] = useState<number | null>(
     null,
   );
@@ -35,7 +36,9 @@ export const AvailableAttributeCard = () => {
   const [editOpen, setEditOpen] = useState<number | null>(null);
   const [editAttribOpen, setEditAttribOpen] = useState<number | null>(null);
 
-  return (
+  return isLoading ? (
+    <Spinner />
+  ) : (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
       {attributes?.map((attribute) => (
         <Card

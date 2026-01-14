@@ -12,6 +12,7 @@ import { usePutProfile } from "@/hooks/profile/usePutProfile";
 import type { ProfileResponse } from "@/services/profile.services";
 import { ChangePassword } from "./ChangePassword";
 import { SocialLinks } from "./SocialLink";
+import { Spinner } from "../Spinner/Spinner";
 
 export interface ProfileField {
   firstName?: string;
@@ -23,7 +24,7 @@ export interface ProfileField {
 }
 
 export const ProfileUpdate = () => {
-  const { data } = useGetProfile();
+  const { data, isLoading } = useGetProfile();
   const { mutate } = usePutProfile();
   const {
     register,
@@ -71,7 +72,9 @@ export const ProfileUpdate = () => {
     handleSubmit(onSubmit)(e);
   };
 
-  return (
+  return isLoading ? (
+    <Spinner />
+  ) : (
     <div className="space-y-5">
       <Card
         className="p-2 shadow-lg border-0 justify-between items-start relative "

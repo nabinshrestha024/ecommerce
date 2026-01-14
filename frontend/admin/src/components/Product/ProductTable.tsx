@@ -20,6 +20,7 @@ import { useDebounce } from "@/hooks/search/useDebounce";
 import { TagForm } from "./TagForm";
 import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog";
 import { ProductDiscountForm } from "./DiscountForm";
+import { Spinner } from "../Spinner/Spinner";
 
 export const ProductTable = () => {
   const [pagination, setPagination] = useState({
@@ -185,7 +186,9 @@ export const ProductTable = () => {
     onPaginationChange: setPagination,
   });
 
-  return (
+  return product.isLoading ? (
+    <Spinner />
+  ) : (
     <div className="w-full ">
       <div className="w-full justify-between flex mb-5">
         <div className="text-2xl font-bold text-gray-900 ">
