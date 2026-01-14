@@ -33,3 +33,15 @@ export const getLowStockProducts = async (
   });
   return response.data;
 };
+export const getSalesReport = async () => {
+  const response = await axiosInstance.get(`${endpoint.ORDERSTATUSREPORT}`, {
+    params: { Period: "lastweek" },
+  });
+  return response.data;
+};
+export const getDashboardOrderReport = async (period: string) => {
+  const response = await axiosInstance.get(`${endpoint.DASHBOARDORDERREPORT}`, {
+    params: { Period: period },
+  });
+  return response.data;
+};

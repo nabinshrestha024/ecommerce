@@ -53,9 +53,9 @@ export const VendorTableInternal = ({
   const columns = useMemo(
     () => [
       columnHelper.accessor("vendorId", {
-        header: () => <span className="block text-center">Vendor ID</span>,
+        header: () => <span className="block text-left">Vendor ID</span>,
         cell: (info) => (
-          <span className="block text-center">{info.getValue()}</span>
+          <span className="block text-left">{info.getValue()}</span>
         ),
       }),
       columnHelper.accessor("name", {
