@@ -13,7 +13,7 @@ export const productSchema = z.object({
 
   primaryIndex: z.coerce.number(),
 
-  image: z
+  images: z
     .any()
     .optional()
     .refine(

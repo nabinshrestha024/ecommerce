@@ -38,6 +38,7 @@ export const ProductForm = ({ product, onSave }: Props) => {
       description: product.description || "",
       shortDescription: product.shortDescription || "",
       isActive: true,
+      images: product.images?.[product.primaryIndex]?.imageUrl || null,
       primaryIndex: product.primaryIndex || 0,
     },
     mode: "onChange",
@@ -52,8 +53,8 @@ export const ProductForm = ({ product, onSave }: Props) => {
     formData.append("isActive", String(true));
     formData.append("primaryIndex", String(data.primaryIndex));
 
-    if (data.image) {
-      formData.append("image", data.image);
+    if (data.images) {
+      formData.append("images", data.images);
     }
 
     editProduct.mutate(
@@ -64,7 +65,7 @@ export const ProductForm = ({ product, onSave }: Props) => {
       {
         onSuccess: () => {
           onSave();
-          setImagePreview("");
+          setImagePreview(null);
         },
       },
     );
@@ -73,6 +74,7 @@ export const ProductForm = ({ product, onSave }: Props) => {
   const categories = useFetchCategory(1, 50);
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
   return (
     <div className="flex justify-center">
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
@@ -129,14 +131,15 @@ export const ProductForm = ({ product, onSave }: Props) => {
               <Inp
                 type="textarea"
                 placeholder=""
+                rows={4}
                 {...register("description")}
-                className={`w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 ${errors.description ? "border-red-500 focus-visible:border-red-500" : ""}`}
+                className={`w-full  px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 ${errors.description ? "border-red-500 focus-visible:border-red-500" : ""}`}
               />
             </div>
           </div>
 
           <div className="grid grid-cols-4 items-center gap-4 mt-5">
-            <label className="font-medium text-gray-700 mt-2">Short Desc</label>
+            <label className="font-medium text-gray-700 ">Short Desc</label>
             <div className="col-span-3">
               <Inp
                 type="textarea"
@@ -149,17 +152,20 @@ export const ProductForm = ({ product, onSave }: Props) => {
 
           <Controller
             control={control}
-            name="image"
+            name="images"
             render={({ field }) => (
               <div className="grid grid-cols-4 items-center gap-4  mt-5">
                 <label className="font-medium text-gray-700">Image</label>
 
                 <div className="col-span-3">
                   <Input
+                    defaultValue={
+                      product.images?.[product.primaryIndex]?.imageUrl
+                    }
                     autoComplete="off"
                     type="file"
-                    id="image"
-                    accept="image/*"
+                    id="images"
+                    accept="images/*"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {

@@ -1,14 +1,14 @@
 "use client";
 
-import { postDiscount } from "@/lib/discount/postDiscount";
+import { postProductDiscount } from "@/lib/discount/postProductDiscount";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export const usePostDiscount = () => {
+export const usePostProductDiscount = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["addDiscount"],
-    mutationFn: postDiscount,
+    mutationFn: postProductDiscount,
 
     onSuccess: () => {
       toast.success("Discount added");
