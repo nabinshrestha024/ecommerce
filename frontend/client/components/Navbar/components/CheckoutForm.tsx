@@ -77,16 +77,24 @@ export const CheckoutForm = ({
     reset();
   };
 
+  const profile = userProfile?.data;
+
   useEffect(() => {
-    if (userProfile) {
-      reset({
-        shippingName: userProfile.data.fullName,
-        shippingAddress: userProfile.data.address,
-        shippingCity: userProfile.data.city,
-        shippingPhone: userProfile.data.phone,
-      });
-    }
-  }, [userProfile]);
+    if (!profile) return;
+
+    reset({
+      shippingName: profile.fullName,
+      shippingAddress: profile.address,
+      shippingCity: profile.city,
+      shippingPhone: profile.phone,
+    });
+  }, [
+    profile?.fullName,
+    profile?.address,
+    profile?.city,
+    profile?.phone,
+    reset,
+  ]);
 
   return pay ? (
     <form
