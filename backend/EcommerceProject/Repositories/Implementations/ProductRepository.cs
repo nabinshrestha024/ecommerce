@@ -141,13 +141,13 @@ namespace EcommerceProject.Repositories.Implementations
             return deleted;
         }
 
-        public async Task<ProductDetailsDto?> GetBySlugOrIdAsync(string slugOrId, bool onlyActive, CancellationToken ct)
+        public async Task<ProductDetailsDto?> GetBySlugOrIdAsync(string slugOrId, bool onlyActive, bool includeInactiveVariants, CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
 
             using var multi = await conn.QueryMultipleAsync(
                 "spProducts_GetBySlugOrId",
-                new { SlugOrId = slugOrId, OnlyActive = onlyActive },
+                new { SlugOrId = slugOrId, OnlyActive = onlyActive, IncludeInactiveVariants = includeInactiveVariants },
                 commandType: CommandType.StoredProcedure
             );
 
