@@ -7,7 +7,9 @@ interface FormSectionProps {
 export const FormSection = ({ title, children }: FormSectionProps) => {
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-lg font-semibold text-foreground">{title}</h2>
+      <h2 className="text-lg font-semibold text-foreground">
+        {title} <span className=" text-red-500">*</span>
+      </h2>
       {children}
     </div>
   );

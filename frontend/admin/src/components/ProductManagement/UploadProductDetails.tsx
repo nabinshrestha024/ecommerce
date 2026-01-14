@@ -7,13 +7,18 @@ import { Card } from "@/ui/card";
 import { useFormContext } from "react-hook-form";
 import { X, Upload } from "lucide-react";
 import { useGetCategories } from "@/hooks/product/useGetCategories";
-// import { useGetAttributes } from "@/hooks/attribute/useGetAttributes"
 import { FormSection } from "./FormSection";
 import { useGetAttributes } from "@/hooks/attribute/useGetAttribute";
+import { Checkbox } from "@/ui/checkbox";
 
 type ImageItem = {
   file: File;
   preview: string;
+};
+
+type AttributeItem = {
+  id?: number;
+  name: string;
 };
 
 export const UploadProductDetails = forwardRef((_, ref) => {
@@ -93,8 +98,7 @@ export const UploadProductDetails = forwardRef((_, ref) => {
     <Card className="w-full rounded-lg p-6">
       <h1 className="text-2xl font-bold text-foreground">Product Details</h1>
 
-      <div className="mt-6 flex flex-col gap-8">
-        {/* Image Upload Section */}
+      <div className="flex flex-col gap-8">
         <FormSection title="Images">
           <div className="flex flex-col gap-4">
             <label htmlFor="productImage" className="block cursor-pointer">
@@ -110,11 +114,14 @@ export const UploadProductDetails = forwardRef((_, ref) => {
                   <p className="text-sm font-medium text-foreground">
                     Click to upload images
                   </p>
-                  <p className="text-xs text-muted-foreground">
-                    or drag and drop
-                  </p>
                 </div>
               </div>
+
+              {errors.images && (
+                <p className="text-xs text-destructive">
+                  {errors.images.message as string}
+                </p>
+              )}
             </label>
             <input
               id="productImage"
@@ -125,13 +132,6 @@ export const UploadProductDetails = forwardRef((_, ref) => {
               className="hidden"
             />
 
-            {errors.images && (
-              <p className="text-xs text-destructive">
-                {errors.images.message as string}
-              </p>
-            )}
-
-            {/* Image Grid */}
             {images.length > 0 && (
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                 {images.map((img, index) => (
@@ -166,58 +166,47 @@ export const UploadProductDetails = forwardRef((_, ref) => {
           </div>
         </FormSection>
 
-        {/* Categories Section */}
-        <FormSection title="Categories">
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="categoryId"
-              className="text-sm font-medium text-foreground"
-            >
-              Product Category <span className="text-destructive">*</span>
-            </label>
-            <select
-              id="categoryId"
-              {...register("categoryId")}
-              defaultValue=""
-              className={`rounded-md border-2 border-input bg-background px-3 py-2 text-sm transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary ${
-                errors.categoryId
-                  ? "border-destructive focus:border-destructive"
-                  : ""
-              }`}
-            >
-              <option value="" disabled>
-                Select a category...
-              </option>
-              {categories?.map(
-                (category: { categoryId: number; name: string }) => (
-                  <option key={category.categoryId} value={category.categoryId}>
-                    {category.name}
-                  </option>
-                ),
-              )}
-            </select>
-            {errors.categoryId && (
-              <p className="text-xs text-destructive">
-                {errors.categoryId.message as string}
-              </p>
+        <div className="flex flex-col gap-2">
+          <h2 className="text-lg font-semibold text-foreground">
+            Product Category <span className="text-destructive">*</span>
+          </h2>
+          <select
+            id="categoryId"
+            {...register("categoryId")}
+            defaultValue=""
+            className={`rounded-md border-2 bg-background px-3 py-2 text-sm transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary ${
+              errors.categoryId ? "border-destructive" : "border-input"
+            }`}
+          >
+            <option value="" disabled className="text-muted-foreground">
+              Select a category...
+            </option>
+            {categories?.map(
+              (category: { categoryId: number; name: string }) => (
+                <option
+                  key={category.categoryId}
+                  value={category.categoryId}
+                  className="text-foreground bg-background "
+                >
+                  {category.name}
+                </option>
+              ),
             )}
-          </div>
-        </FormSection>
+          </select>
+        </div>
 
-        {/* Attributes Section */}
         <FormSection title="Attributes">
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-            {attributesData?.map((item: any) => (
+            {attributesData?.map((item: AttributeItem) => (
               <div
                 key={item.id || item.name}
                 className="flex items-center gap-2"
               >
-                <input
-                  type="checkbox"
+                <Checkbox
                   id={`attr-${item.name}`}
                   value={item.name}
                   {...register("attributes")}
-                  className="h-4 w-4 cursor-pointer accent-primary"
+                  className="border-[#4EA764] data-[state=checked]:bg-[#4EA764] data-[state=checked]:border-[#4EA764] data-[state=checked]:text-white"
                 />
                 <label
                   htmlFor={`attr-${item.name}`}
