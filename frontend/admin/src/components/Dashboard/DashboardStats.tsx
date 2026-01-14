@@ -1,7 +1,7 @@
 import { useGetOverview } from "@/hooks/report/useGetOverview";
 import { CardComponent } from "./CardComponent";
 
-export const currencyFormatter = new Intl.NumberFormat("en-NP", {
+export const currencyFormatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
   currency: "NPR",
 });

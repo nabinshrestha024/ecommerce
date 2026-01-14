@@ -249,6 +249,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     <MdKeyboardArrowDown />
                   </button>
                   <div className="px-3 py-1 border rounded">{quantity}</div>
+
                   <button
                     className="p-1 rounded border"
                     onClick={() => handleIncrease()}
@@ -256,7 +257,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     <MdKeyboardArrowUp />
                   </button>
                 </div>
-                <div className="text-sm italic">Stock: {stockValue} </div>
+                <div>
+                  <div className="text-sm italic">
+                    Stock: {activeVariant?.stockQuantity}{" "}
+                  </div>
+                </div>
+              </div>
+              <div className="font-bold text-[18px]">
+                Price:{" "}
+                <span className="text-[18px] text-[#4EA674] font-bold">
+                  {currencyFormatter.format(activeVariant?.price ?? 0)}
+                </span>
               </div>
               <div className="flex flex-col gap-3">
                 <div className="font-bold text-[18px]">Variants</div>
