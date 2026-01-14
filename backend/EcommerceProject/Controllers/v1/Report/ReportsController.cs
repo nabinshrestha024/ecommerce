@@ -20,6 +20,14 @@ namespace EcommerceProject.Controllers.v1.Report
            
         }
 
+        [HttpGet("user-registration-overview")]
+        public async Task<IActionResult> GetUserRegistrationOverview([FromQuery] ReportFilter filter)
+        {
+            var report = await _reportservice.GetUserRegistrationOverviewReportAsync(filter);
+            return Ok(report);
+        }
+
+
         [HttpGet("sales-overview")]
         public async Task<IActionResult> SalesOverview([FromQuery] ReportFilter filter)
         {

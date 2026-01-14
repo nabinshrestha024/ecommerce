@@ -76,6 +76,22 @@ namespace EcommerceProject.Repositories.Implementations
                 );
         }
 
+        public async Task<IEnumerable<UserRegisterOverviewDto>> GetUserRegistrationOverviewAsync(ReportFilter filter)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@FromDate", filter.FromDate);
+            parameters.Add("@ToDate", filter.ToDate);
+            parameters.Add("@Period", filter.Period?.ToString().ToLower());
+
+            return await connection.QueryAsync<UserRegisterOverviewDto>(
+                "spReport_GetUserRegistrationOverview",
+                parameters,
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
 
     }
 }

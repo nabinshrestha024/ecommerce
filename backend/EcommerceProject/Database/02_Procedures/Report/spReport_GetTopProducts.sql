@@ -1,10 +1,6 @@
 ﻿USE [EcommerceDB]
 GO
-/****** Object:  StoredProcedure [dbo].[spReport_GetTopProducts]    Script Date: 1/13/2026 10:11:25 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
+
 
 CREATE OR ALTER PROCEDURE spReport_GetTopProducts
 (

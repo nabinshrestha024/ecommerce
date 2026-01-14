@@ -1,5 +1,6 @@
 ﻿using EcommerceProject.Filters;
 using EcommerceProject.Models.DTOs.Report;
+using EcommerceProject.Repositories.Implementations;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
 using FluentValidation;
@@ -49,5 +50,9 @@ namespace EcommerceProject.Services.Implementations
         }
 
 
+        public async Task<IEnumerable<UserRegisterOverviewDto>> GetUserRegistrationOverviewReportAsync(ReportFilter filter)
+        {
+            return await _repository.GetUserRegistrationOverviewAsync(filter);
+        }
     }
 }

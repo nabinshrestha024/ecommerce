@@ -9,5 +9,7 @@ namespace EcommerceProject.Services.Interfaces
         Task<IEnumerable<TopProductDto>> GetTopProductsAsync(ReportFilter filter);
         Task<IEnumerable<CategorySalesDto>> GetCategorySalesAsync(ReportFilter filter);
         Task<IEnumerable<LowStockProductDto>> GetLowStockAsync(ReportFilter filter);
+        Task<IEnumerable<UserRegisterOverviewDto>> GetUserRegistrationOverviewReportAsync(ReportFilter filter);
+
     }
 }
