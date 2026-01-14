@@ -24,7 +24,7 @@ export const CustomerOverviewChart = () => {
                     : "bg-transparent text-[#6A717F]"
                 }`}
               >
-                This week
+                Last week
               </button>
               <button
                 onClick={() => setWeeklyDetails("Last week")}
@@ -34,7 +34,7 @@ export const CustomerOverviewChart = () => {
                     : "bg-transparent text-[#6A717F] "
                 }`}
               >
-                Last week
+                Last month
               </button>
             </div>
           </div>
