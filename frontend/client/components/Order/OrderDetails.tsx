@@ -26,6 +26,7 @@ export const OrderDetails = ({
   const [signature, setSignature] = useState("");
   const [transactionUid, setTransactionUid] = useState("");
   const esewaInitiate = useInitiatePayment();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (data && data?.paymentStatus !== "Paid") {
@@ -37,7 +38,7 @@ export const OrderDetails = ({
         },
       });
     }
-  }, [data]);
+  }, [data, esewaInitiate, order.orderId]);
 
   if (isLoading)
     return (
@@ -109,8 +110,13 @@ export const OrderDetails = ({
                     Add Review
                   </Button>
                 }
+                open={open}
+                onOpenChange={setOpen}
               >
-                <ProductReviewForm productId={val.productId} />
+                <ProductReviewForm
+                  productId={val.productId}
+                  setOpen={setOpen}
+                />
               </Dialog>
             )}
           </div>

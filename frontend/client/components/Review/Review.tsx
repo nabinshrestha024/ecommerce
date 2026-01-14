@@ -102,33 +102,25 @@ export const Review = () => {
             </div>
           ))}
       </div>
-      <Dialog
-        open={open}
-        onOpenChange={setOpen}
-        triggerClassName="mx-auto mt-14 rounded-full bg-slate-900 px-10 py-4 text-sm font-medium text-white transition hover:bg-slate-600 hover:cursor-pointer"
-        triggerText="Add Your Own Review"
-      >
-        <div className="p-6">
-          {token ? (
+      {token ? (
+        <Dialog
+          open={open}
+          onOpenChange={setOpen}
+          triggerClassName="mx-auto mt-14 rounded-full bg-slate-900 px-10 py-4 text-sm font-medium text-white transition hover:bg-slate-600 hover:cursor-pointer"
+          triggerText="Add Your Own Review"
+        >
+          <div className="p-6">
             <ReviewForm onClose={() => setOpen(false)} />
-          ) : (
-            <div className="text-center py-4">
-              <p className="text-gray-700 text-lg mb-4">
-                Please log in to add a review.
-              </p>
-              <Button
-                variant="default"
-                onClick={() => {
-                  router.push("/login");
-                  setClicked(true);
-                }}
-              >
-                Log In
-              </Button>
-            </div>
-          )}
-        </div>
-      </Dialog>
+          </div>
+        </Dialog>
+      ) : (
+        <Button
+          onClick={() => router.push("/login")}
+          className="mx-auto mt-14 rounded-full bg-slate-900 px-10 py-4 text-sm font-medium text-white transition hover:bg-slate-600"
+        >
+          Add Your Own Review
+        </Button>
+      )}
     </section>
   );
 };
