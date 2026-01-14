@@ -21,7 +21,6 @@ export const CustomerTable = () => {
   });
   const user = useUser(pagination.pageIndex + 1, pagination.pageSize);
   const columnHelper = createColumnHelper<Person>();
-  const [loading, setLoading] = useState(false);
 
   const [selectedCustomer, setSelectedCustomer] = useState<Person | null>(null);
 
@@ -31,12 +30,7 @@ export const CustomerTable = () => {
 
   const deleteUser = useDeleteUser();
   const handleDelete = (userId: number) => {
-    setLoading(true);
-    deleteUser.mutate(userId, {
-      onSettled: () => {
-        setLoading(false);
-      },
-    });
+    deleteUser.mutate(userId, {});
   };
 
   const columns = [
@@ -100,44 +94,56 @@ export const CustomerTable = () => {
     columnHelper.display({
       id: "actions",
       header: () => <div className="flex justify-start">Action</div>,
-      cell: (info) => (
-        <div className="flex gap-2  items-center">
-          <Dialog
-            triggerContent={
-              <FaEdit
-                className="text-[#6A717F] text-[20px] cursor-pointer"
-                onClick={() => handleEdit(info.row.original)}
-              />
-            }
-          >
-            {selectedCustomer && (
-              <CustomerForm
-                customer={{
-                  ...selectedCustomer,
-                  userid: selectedCustomer.userid,
-                }}
-                onSave={() => {
-                  setSelectedCustomer(null);
-                }}
-              />
-            )}
-          </Dialog>
-          <ConfirmationDialog
-            trigger={
-              <button
-                type="button"
-                disabled={loading}
-                className="p-1 disabled:cursor-not-allowed"
+      cell: (info) => {
+        const isInactive = !info.row.original.isActive;
+
+        return (
+          <div className="flex gap-3 items-center">
+            {!isInactive ? (
+              <Dialog
+                triggerContent={
+                  <button
+                    type="button"
+                    className="p-1.5 hover:bg-gray-100 rounded-md transition-colors"
+                    onClick={() => handleEdit(info.row.original)}
+                  >
+                    <FaEdit className="text-gray-600 text-[18px]" />
+                  </button>
+                }
               >
-                <MdDelete
-                  className={`text-[20px] text-gray-500 cursor-pointer`}
-                />
+                {selectedCustomer && (
+                  <CustomerForm
+                    customer={selectedCustomer}
+                    onSave={() => setSelectedCustomer(null)}
+                  />
+                )}
+              </Dialog>
+            ) : (
+              <button disabled className="p-1.5 cursor-not-allowed">
+                <FaEdit className="text-gray-300 text-[18px]" />
               </button>
-            }
-            confirmFunc={() => handleDelete(info.row.original.userid)}
-          />
-        </div>
-      ),
+            )}
+
+            {!isInactive ? (
+              <ConfirmationDialog
+                trigger={
+                  <button
+                    type="button"
+                    className="p-1.5 hover:bg-gray-100 rounded-md transition-colors"
+                  >
+                    <MdDelete className="text-[18px] text-gray-500" />
+                  </button>
+                }
+                confirmFunc={() => handleDelete(info.row.original.userid)}
+              />
+            ) : (
+              <button disabled className="p-1.5 cursor-not-allowed">
+                <MdDelete className="text-[18px] text-gray-300" />
+              </button>
+            )}
+          </div>
+        );
+      },
     }),
   ];
 
