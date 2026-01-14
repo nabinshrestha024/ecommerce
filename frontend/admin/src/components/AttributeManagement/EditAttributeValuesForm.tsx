@@ -10,7 +10,7 @@ import { useEditAttributeValue } from "@/hooks/attribute/useEditAttributeValues.
 
 type Props = {
   attributeValues: AttributeValue;
-  onSave: (attributeValues: AttributeValue) => void;
+  onSave: () => void;
 };
 export const EditAttributeValueForm = ({ attributeValues, onSave }: Props) => {
   const editAttributeValue = useEditAttributeValue();
@@ -18,7 +18,6 @@ export const EditAttributeValueForm = ({ attributeValues, onSave }: Props) => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<AttributeFormValues>({
     resolver: zodResolver(attributeSchema) as Resolver<AttributeFormValues>,
@@ -34,16 +33,17 @@ export const EditAttributeValueForm = ({ attributeValues, onSave }: Props) => {
       value: data.value,
     };
 
-    editAttributeValue.mutate({
-      attributeValueId: attributeValues.attributeValueId,
-      attributeValueData: updatedAttributevalue,
-    });
-
-    onSave(updatedAttributevalue);
-
-    reset({
-      value: updatedAttributevalue.value,
-    });
+    editAttributeValue.mutate(
+      {
+        attributeValueId: attributeValues.attributeValueId,
+        attributeValueData: updatedAttributevalue,
+      },
+      {
+        onSuccess: () => {
+          onSave();
+        },
+      },
+    );
   };
 
   return (

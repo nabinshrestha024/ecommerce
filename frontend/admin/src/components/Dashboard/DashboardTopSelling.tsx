@@ -9,6 +9,7 @@ import {
   type ProductData,
 } from "@/hooks/product/useFetchProducts";
 import { Table } from "../Table/Table";
+import { currencyFormatter } from "./DashboardStats";
 
 export const DashboardTopSelling = () => {
   const { data } = useFetchProduct();
@@ -76,7 +77,11 @@ export const DashboardTopSelling = () => {
     columnHelper.accessor("price", {
       header: () => <div className="flex justify-end">Price</div>,
       cell: (info) => {
-        return <div className="text-right">{info.getValue()}</div>;
+        return (
+          <div className="text-right">
+            {currencyFormatter.format(info.getValue())}
+          </div>
+        );
       },
     }),
   ];
