@@ -5,7 +5,7 @@ CREATE OR ALTER PROCEDURE spProducts_GetBySlugOrId
 (
     @SlugOrId VARCHAR(200),
     @OnlyActive BIT = 1,
-    @IncludeInactiveVariants BIT = 0   -- ✅ NEW
+    @IncludeInactiveVariants BIT = 0   
 )
 AS
 BEGIN
@@ -20,9 +20,6 @@ BEGIN
         WHERE Slug = @SlugOrId;
     END
 
-    -- =========================
-    -- PRODUCT HEADER
-    -- =========================
     SELECT TOP 1
         p.ProductId,
         p.CategoryId,
@@ -58,9 +55,6 @@ BEGIN
     WHERE p.ProductId = @ProductId
       AND (@OnlyActive = 0 OR p.IsActive = 1);
 
-    -- =========================
-    -- VARIANTS
-    -- =========================
     SELECT
         v.VariantId,
         v.ProductId,
