@@ -3,7 +3,7 @@ import { VendorTable } from "@/components/vendor/VendorTable";
 
 export const Vendor = () => {
   return (
-    <div className="w-full pt-6 pr-11 pb-24 pl-5">
+    <div className="w-full p-5 space-y-5">
       <VendorHeader />
       <VendorTable />
     </div>

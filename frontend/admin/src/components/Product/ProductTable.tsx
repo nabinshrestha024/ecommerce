@@ -175,7 +175,7 @@ export const ProductTable = () => {
   });
 
   return (
-    <div className="w-full pt-6 pb-14 ">
+    <div className="w-full ">
       <div className="w-full justify-between flex mb-4">
         <div className="text-2xl font-bold text-gray-900 ">
           View all products

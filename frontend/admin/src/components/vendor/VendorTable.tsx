@@ -29,9 +29,7 @@ export const VendorTable = () => {
   }, [data]);
 
   return (
-    <div className="w-full px-4">
-      <h2 className="text-lg font-bold mb-4">Vendors Table</h2>
-
+    <div className="w-full">
       <VendorTableInternal
         data={vendors}
         editingVendor={editingVendor}

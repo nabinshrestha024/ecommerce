@@ -65,10 +65,8 @@ export const ProductManagement = () => {
   }, [isSuccess]);
 
   return (
-    <div className="px-2 sm:px-3 md:px-5 pt-3 md:pt-5 pb-6 md:pb-8 w-full max-w-full">
-      <div className="pt-5 pb-2 sm:pb-4">
-        <Header />
-      </div>
+    <div className="p-5 space-y-5 w-full max-w-full">
+      <Header />
       <FormProvider {...methods}>
         <form
           id="productForm"

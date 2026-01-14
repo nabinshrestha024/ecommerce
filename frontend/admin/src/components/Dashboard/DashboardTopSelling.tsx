@@ -91,7 +91,7 @@ export const DashboardTopSelling = () => {
   return (
     <div className="w-full mb-4">
       <Card>
-        <div>
+        <div className="space-y-5">
           <div className="flex justify-between items-center">
             <div className="text-xl font-semibold">Best Selling Products</div>
           </div>

@@ -80,7 +80,7 @@ export const DashboardTransaction = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-5 pr-5">
       <Card>
-        <div>
+        <div className="space-y-5">
           <div className="flex justify-between">
             <div className="text-xl font-semibold">Last 7 Orders</div>
           </div>
@@ -98,7 +98,7 @@ export const DashboardTransaction = () => {
             {data?.items
               ?.filter((item) => item.stockQuantity ?? 0 > 0)
               .map((val, index) => {
-                if (index < 4) {
+                if (index < 5) {
                   return (
                     <div className="grid grid-cols-[1fr_2fr_1fr] gap-1.5 items-start border-b border-b-gray-200 pb-2">
                       <div className="h-15 w-15 ">
@@ -108,7 +108,9 @@ export const DashboardTransaction = () => {
                         />
                       </div>
                       <div>
-                        <div className="text-sm font-semibold">{val.name}</div>
+                        <div className="text-sm font-semibold line-clamp-1">
+                          {val.name}
+                        </div>
                         <div className="text-xs text-gray-500 line-clamp-1">
                           {val.shortDescription}
                         </div>

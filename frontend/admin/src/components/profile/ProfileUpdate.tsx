@@ -11,7 +11,7 @@ import { useGetProfile } from "@/hooks/profile/useGetProfile";
 import { usePutProfile } from "@/hooks/profile/usePutProfile";
 import type { ProfileResponse } from "@/services/profile.services";
 import { ChangePassword } from "./ChangePassword";
-import { SocialLinks } from "./SocialLinks";
+import { SocialLinks } from "./SocialLink";
 
 export interface ProfileField {
   firstName?: string;
