@@ -35,6 +35,8 @@ export const DiscountTable = () => {
     });
   };
 
+  const [open, setOpen] = useState<number | null>(null);
+
   const handleEdit = (row: DiscountData) => {
     setSelectedDiscount(row);
   };
@@ -86,6 +88,10 @@ export const DiscountTable = () => {
       cell: (info) => (
         <div className="flex gap-2 justify-start items-center">
           <Dialog
+            open={open === info.row.original.discountId}
+            onOpenChange={(isOpen) => {
+              setOpen(isOpen ? info.row.original.discountId : null);
+            }}
             triggerContent={
               <FaEdit
                 className="text-[#6A717F] text-[20px] cursor-pointer"
@@ -94,12 +100,7 @@ export const DiscountTable = () => {
             }
           >
             {selectedDiscount && (
-              <DiscountForm
-                discount={selectedDiscount}
-                onSave={() => {
-                  setSelectedDiscount(null);
-                }}
-              />
+              <DiscountForm discount={selectedDiscount} setOpen={setOpen} />
             )}
           </Dialog>
           <BsPatchPlus

@@ -27,7 +27,7 @@ export const DiscountHeader = () => {
           </Button>
         }
       >
-        <AddDiscountForm />
+        <AddDiscountForm setOpen={setOpen} />
       </Dialog>
     </div>
   );
