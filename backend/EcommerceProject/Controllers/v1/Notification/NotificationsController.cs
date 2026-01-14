@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceProject.Controllers.v1.Notification
 {
-    [Authorize(Roles = "Admin,Customer")]
+    [Authorize(Roles = "Admin")]
     [Route("v1/notifications")]
     [ApiController]
     public class NotificationsController : ControllerBase

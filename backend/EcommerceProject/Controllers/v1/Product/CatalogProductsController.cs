@@ -22,6 +22,8 @@ namespace EcommerceProject.Controllers.v1.Product
             _urlService = urlService;
         }
 
+       
+
         [HttpGet]
         public async Task<IActionResult> GetProducts([FromQuery] int? categoryId, [FromQuery] string? search,[FromQuery] List<string>? tagNames, [FromQuery] decimal? minPrice,[FromQuery] decimal? maxPrice,  [FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
         {
@@ -41,7 +43,10 @@ namespace EcommerceProject.Controllers.v1.Product
                 }
             }
 
+
+
             return Ok(result);
+
         }
 
         [HttpGet("{slugOrId}")]
