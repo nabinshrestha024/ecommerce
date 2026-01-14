@@ -17,6 +17,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/ui/accordion";
+import { DropDown } from "../DropDown/DropDown";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 export const AvailableAttributeCard = () => {
   const { data: attributes } = useFetchAttribute();
@@ -28,6 +30,10 @@ export const AvailableAttributeCard = () => {
 
   const [selectedAttributeName, setSelectedAttributeName] =
     useState<ProductAttribute | null>();
+
+  const [addOpen, setAddOpen] = useState<number | null>(null);
+  const [editOpen, setEditOpen] = useState<number | null>(null);
+  const [editAttribOpen, setEditAttribOpen] = useState<number | null>(null);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
@@ -43,56 +49,74 @@ export const AvailableAttributeCard = () => {
                 <div className="text-sm font-bold text-gray-800 ">
                   {attribute.name}
                 </div>
-
-                <div
-                  className="ml-auto flex items-center gap-2"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Dialog
-                    triggerContent={
-                      <button
-                        onClick={() =>
-                          setSelectedAttribute(attribute.attributeId)
+                <div className="ml-auto flex item-center">
+                  <DropDown
+                    trigger={
+                      <button>
+                        <BsThreeDotsVertical />
+                      </button>
+                    }
+                  >
+                    <div
+                      className="ml-auto flex flex-col items-center gap-2"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Dialog
+                        triggerContent={
+                          <button
+                            onClick={() =>
+                              setSelectedAttribute(attribute.attributeId)
+                            }
+                            className="p-1.5 rounded-md text-gray-400 hover:text-[#4EA674] hover:bg-[#c2f8d9] transition-colors flex items-center gap-2 cursor-pointer"
+                            title="Add Attribute"
+                          >
+                            <MdAddCircleOutline className="text-[18px] cursor-pointer" />
+                            Add Attribute
+                          </button>
                         }
-                        className="p-1.5 rounded-md text-gray-400 hover:text-[#4EA674] hover:bg-[#c2f8d9] transition-colors"
-                        title="Add Attribute"
+                        open={addOpen === attribute.attributeId}
+                        onOpenChange={(isOpen) => {
+                          setAddOpen(isOpen ? attribute.attributeId : null);
+                        }}
                       >
-                        <MdAddCircleOutline className="text-[18px] cursor-pointer" />
-                      </button>
-                    }
-                  >
-                    {selectedAttribute === attribute.attributeId && (
-                      <div className="max-h-[70vh] overflow-auto scrollbar-hide">
-                        <AddAttributeValueForm
-                          attributeId={selectedAttribute}
-                        />
-                      </div>
-                    )}
-                  </Dialog>
+                        {selectedAttribute === attribute.attributeId && (
+                          <div className="max-h-[70vh] overflow-auto scrollbar-hide">
+                            <AddAttributeValueForm
+                              attributeId={selectedAttribute}
+                              setAddOpen={setAddOpen}
+                            />
+                          </div>
+                        )}
+                      </Dialog>
 
-                  <Dialog
-                    triggerContent={
-                      <button
-                        onClick={() => setSelectedAttributeName(attribute)}
-                        className="p-1.5 rounded-md text-gray-400 hover:text-[#4EA674] hover:bg-[#c2f8d9] transition-colors"
-                        title="Edit Attribute"
+                      <Dialog
+                        triggerContent={
+                          <button
+                            onClick={() => setSelectedAttributeName(attribute)}
+                            className="p-1.5 rounded-md text-gray-400 hover:text-[#4EA674] hover:bg-[#c2f8d9] transition-colors flex gap-2 items-center cursor-pointer"
+                            title="Edit Attribute"
+                          >
+                            <FaEdit className="text-[16px] cursor-pointer" />
+                            Edit Attribute
+                          </button>
+                        }
+                        open={editOpen == attribute.attributeId}
+                        onOpenChange={(isOpen) => {
+                          setEditOpen(isOpen ? attribute.attributeId : null);
+                        }}
                       >
-                        <FaEdit className="text-[16px] cursor-pointer" />
-                      </button>
-                    }
-                  >
-                    {selectedAttributeName?.attributeId ===
-                      attribute.attributeId && (
-                      <div className="max-h-[70vh] overflow-auto scrollbar-hide">
-                        <EditAttributeNameForm
-                          attributeName={selectedAttributeName}
-                          onSave={() => {
-                            setSelectedAttributeName(null);
-                          }}
-                        />
-                      </div>
-                    )}
-                  </Dialog>
+                        {selectedAttributeName?.attributeId ===
+                          attribute.attributeId && (
+                          <div className="max-h-[70vh] overflow-auto scrollbar-hide">
+                            <EditAttributeNameForm
+                              attributeName={selectedAttributeName}
+                              setEditOpen={setEditOpen}
+                            />
+                          </div>
+                        )}
+                      </Dialog>
+                    </div>
+                  </DropDown>
                 </div>
               </AccordionTrigger>
 
@@ -111,21 +135,28 @@ export const AvailableAttributeCard = () => {
                         <Dialog
                           triggerContent={
                             <button
-                              onClick={() => setSelectedAttributeValue(val)}
+                              onClick={() => {
+                                setSelectedAttributeValue(val);
+                                setEditAttribOpen(val.attributeValueId);
+                              }}
                               className="p-1.5 rounded-md text-gray-400 hover:text-[#4EA674] hover:bg-[#c2f8d9] transition-colors"
                               title="Edit Attribute"
                             >
                               <FaEdit className="text-[14px]" />
                             </button>
                           }
+                          open={editAttribOpen == val.attributeValueId}
+                          onOpenChange={(isOpen) => {
+                            setEditAttribOpen(
+                              isOpen ? val.attributeValueId : null,
+                            );
+                          }}
                         >
                           {selectedAttributeValue && (
                             <div className="max-h-[70vh] overflow-auto scrollbar-hide">
                               <EditAttributeValueForm
                                 attributeValues={selectedAttributeValue}
-                                onSave={() => {
-                                  setSelectedAttributeValue(null);
-                                }}
+                                setEditAttribOpen={setEditAttribOpen}
                               />
                             </div>
                           )}
