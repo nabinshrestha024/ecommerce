@@ -21,7 +21,7 @@ export const DiscountHeader = () => {
         open={open}
         onOpenChange={setOpen}
         triggerContent={
-          <Button className="rounded-full px-6 py-5 bg-[#4EA674] hover:bg-[#2a5f41] transition-all shadow-md hover:shadow-lg gap-2">
+          <Button className="px-5 py-4 text-[15px] font-bold leading-3 bg-[#4EA674] text-white  rounded-lg hover:bg-[#4EA674]">
             <GoPlusCircle size={20} />
             Add Discount
           </Button>

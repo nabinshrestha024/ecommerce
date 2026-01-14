@@ -90,7 +90,7 @@ export const CategoryCard = () => {
             cardClassName="p-3 border border-[#E5E7EB] shadow-sm"
           >
             <div className="flex flex-col gap-3">
-              <div className="w-full h-[185px] border rounded-md overflow-hidden">
+              <div className="w-full h-[185px] rounded-md overflow-hidden">
                 <img
                   src={
                     category.categoryImageURL instanceof File

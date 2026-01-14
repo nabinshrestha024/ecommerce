@@ -11,8 +11,6 @@ export type DiscountData = {
   isActive: boolean;
   startDate: string;
   endDate: string;
-  productIds?: number[];
-  variantIds?: number[];
 };
 
 export const useFetchDiscountProduct = () => {
@@ -20,5 +18,6 @@ export const useFetchDiscountProduct = () => {
     queryKey: ["discountData"],
     queryFn: Discount,
   });
+
   return { data, isLoading, isError, refetch };
 };
