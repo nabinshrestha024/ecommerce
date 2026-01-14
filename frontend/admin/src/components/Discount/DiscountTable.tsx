@@ -16,6 +16,7 @@ import {
 import { DiscountForm } from "./DiscountForm";
 import { usePatchDicount } from "@/hooks/discount/usePatchDiscount";
 import { currencyFormatter } from "../Dashboard/DashboardStats";
+import { Spinner } from "../Spinner/Spinner";
 
 export const DiscountTable = () => {
   const discountProduct = useFetchDiscountProduct();
@@ -126,7 +127,9 @@ export const DiscountTable = () => {
     onPaginationChange: setPagination,
   });
 
-  return (
+  return discountProduct.isLoading ? (
+    <Spinner />
+  ) : (
     <div className="w-full ">
       <div className="flex flex-col-reverse gap-3">
         <Table

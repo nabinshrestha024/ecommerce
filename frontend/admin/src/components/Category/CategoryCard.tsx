@@ -28,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/ui/select";
+import { Spinner } from "../Spinner/Spinner";
 
 type SelectedCategory = {
   categoryId: number;
@@ -80,7 +81,9 @@ export const CategoryCard = () => {
 
   const [open, setOpen] = useState<number | null>(null);
 
-  return (
+  return categories.isLoading ? (
+    <Spinner />
+  ) : (
     <div className="flex flex-col gap-4">
       <div className="w-full grid grid-cols-4 gap-5 pb-10">
         {paginatedCategories.map((category: CategoryData) => (

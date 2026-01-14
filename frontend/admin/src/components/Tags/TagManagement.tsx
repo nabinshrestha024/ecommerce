@@ -6,12 +6,15 @@ import { AddTagForm } from "./AddTagForm";
 import { useState } from "react";
 import { SquarePen } from "lucide-react";
 import { EditTagForm } from "./EditTagForm";
+import { Spinner } from "../Spinner/Spinner";
 export const TagManagement = () => {
   const { data, isLoading, isError, error } = useFetchTag();
   const [addTagOpen, setAddTagOpen] = useState(false);
   const [editOpen, setEditOpen] = useState<{ [key: string]: boolean }>({});
 
-  return (
+  return isLoading ? (
+    <Spinner />
+  ) : (
     <div className="p-5 space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border shadow-sm">
         <div>

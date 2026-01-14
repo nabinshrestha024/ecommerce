@@ -15,6 +15,7 @@ import { IoFilter } from "react-icons/io5";
 import { useFetchOrder, type OrderData } from "@/hooks/order/useFetchOrder";
 import { OrderDetails } from "./OrderDetails";
 import { currencyFormatter } from "../Dashboard/DashboardStats";
+import { Spinner } from "../Spinner/Spinner";
 
 const statusType = {
   DELIVERED: "Delivered",
@@ -343,7 +344,9 @@ export const OrderTable = () => {
     setSearchTerm(e.target.value);
   };
 
-  return (
+  return orders.isLoading ? (
+    <Spinner />
+  ) : (
     <div className="flex rounded-lg w-full gap-5">
       <div className="flex-1 gap-5 relative hover:cursor-pointer ">
         <Tabs

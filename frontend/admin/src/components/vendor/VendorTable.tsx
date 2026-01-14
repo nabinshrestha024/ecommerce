@@ -6,6 +6,7 @@ import { useDeleteVendor } from "@/hooks/vendor/useDeleteVendor";
 
 import { VendorTableInternal } from "./VendorTableInternal";
 import type { VendorTableProps } from "./types";
+import { Spinner } from "../Spinner/Spinner";
 
 export const VendorTable = () => {
   const { mutate: deleteVendor } = useDeleteVendor();
@@ -14,7 +15,7 @@ export const VendorTable = () => {
     pageIndex: 0,
     pageSize: 10,
   });
-  const { data, isError } = useGetVendor(
+  const { data, isError, isLoading } = useGetVendor(
     pagination.pageIndex + 1,
     pagination.pageSize,
   );
@@ -30,7 +31,9 @@ export const VendorTable = () => {
       .sort((a, b) => a.vendorId - b.vendorId);
   }, [data]);
 
-  return (
+  return isLoading ? (
+    <Spinner />
+  ) : (
     <div className="w-full">
       <VendorTableInternal
         data={vendors}
