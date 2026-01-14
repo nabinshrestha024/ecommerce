@@ -55,19 +55,12 @@ export const OrderTable = () => {
         id: "productName",
         header: () => <div className="flex justify-start">Product Name</div>,
         cell: (info) => (
-          <div className="w-[260px] flex items-center">
+          <div className="w-[260px]">
             <div
-              className="flex items-start overflow-hidden "
+              className="truncate cursor-pointer"
               onClick={() => handleRowClick(info.row.original)}
             >
-              {info
-                .getValue()
-                ?.split(", ")
-                .map((name, i) => (
-                  <span key={i} className="truncate">
-                    {name}, &nbsp;
-                  </span>
-                ))}
+              {info.getValue()}
             </div>
           </div>
         ),
@@ -82,9 +75,9 @@ export const OrderTable = () => {
       ),
     }),
     columnHelper.accessor("totalAmount", {
-      header: () => <div className="flex justify-end">Price</div>,
+      header: () => <div className="flex justify-start ">Price</div>,
       cell: (info) => (
-        <div className="text-end">
+        <div className="text-end w-30">
           {currencyFormatter.format(info.getValue())}
         </div>
       ),
@@ -352,11 +345,11 @@ export const OrderTable = () => {
 
   return (
     <div className="flex rounded-lg w-full gap-5">
-      <div className="flex-1 relative hover:cursor-pointer">
+      <div className="flex-1 gap-5 relative hover:cursor-pointer ">
         <Tabs
           defaultValue="All"
           data={tabsData}
-          tabsListClassName="bg-[#EAF8E7] flex dark:bg-accent"
+          tabsListClassName="bg-[#EAF8E7] flex dark:bg-accent mb-3"
         />
         <div className="absolute top-0 right-0 w-70 flex gap-2 justify-end items-center">
           <Input

@@ -150,13 +150,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       rootClassName="py-0 border shadow-xl lg:max-w-[285px]"
     >
       <div className="flex flex-col gap-2">
-        <div className="w-full h-[185px] relative ">
+        <div className="w-full h-[185px] relative shrink-0">
           <Link href={`/product/id/${product.slug}`}>
             <Image
               src={`${product.images[0]?.imageUrl}`}
               alt={product.name}
               fill
-              className="w-full h-full object-cover rounded-[12px]"
+              className="w-full h-full object-cover rounded-[12px] shrink-0"
               unoptimized
             />
           </Link>
@@ -224,7 +224,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </DialogTitle>
             <div className="flex flex-col  gap-3">
               <div className="flex items-start gap-5 w-full">
-                <div className="w-[100px] h-[100px] relative">
+                <div className="w-[100px] h-[100px] relative shrink-0">
                   <Image
                     src={product.primaryImageUrl}
                     alt={product.name}
