@@ -31,7 +31,7 @@ namespace EcommerceProject.Services.Implementations
        
         public async Task<ProductDetailsDto?> GetDetailsAsync(string slugOrId, CancellationToken ct)
         {
-            var product = await _repo.GetBySlugOrIdAsync(slugOrId, onlyActive: true, ct);
+            var product = await _repo.GetBySlugOrIdAsync(slugOrId, onlyActive: true, includeInactiveVariants: false, ct);
             if (product == null) return null;
 
             var relatedIds = await _repo.GetRelatedProductIdsAsync(
@@ -43,7 +43,7 @@ namespace EcommerceProject.Services.Implementations
 
             foreach (var id in relatedIds)
             {
-                var related = await _repo.GetBySlugOrIdAsync(id.ToString(), onlyActive: true, ct);
+                var related = await _repo.GetBySlugOrIdAsync(id.ToString(), onlyActive: true, includeInactiveVariants: false, ct);
                 if (related != null)
                 {
                     related.RelatedProducts.Clear();
@@ -70,7 +70,17 @@ namespace EcommerceProject.Services.Implementations
             );
         }
 
-        
+        public async Task<ProductDetailsDto?> AdminGetDetailsAsync(string slugOrId, CancellationToken ct)
+        {
+            return await _repo.GetBySlugOrIdAsync(
+                slugOrId,
+                onlyActive: false,
+                includeInactiveVariants: true,    // 👈 admin
+                ct
+            );
+        }
+
+
         private async Task<string> GenerateUniqueSlugAsync(string name, CancellationToken ct)
         {
             var baseSlug = SlugGenerator.Generate(name);

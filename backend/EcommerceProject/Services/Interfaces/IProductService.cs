@@ -14,7 +14,9 @@ namespace EcommerceProject.Services.Interfaces
         Task<ProductCatalogResponse> AdminGetProductsAsync(AdminProductFilterDto filter, PaginationDto pagination, CancellationToken ct);
         Task<int> CreateAsync(ProductCreateDto dto, IFormFileCollection? images, int? primaryIndex, CancellationToken ct);
         Task<bool> UpdateAsync(int id, ProductUpdateDto dto, IFormFileCollection? images, int? primaryIndex, CancellationToken ct);
-        
+        Task<ProductDetailsDto?> AdminGetDetailsAsync(string slugOrId, CancellationToken ct);
+
+
         Task<bool> DeleteAsync(int id, CancellationToken ct);
     }
 }

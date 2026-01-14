@@ -37,7 +37,7 @@ namespace EcommerceProject.Controllers.v1.Product
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id, CancellationToken ct)
         {
-            var product = await _service.GetDetailsAsync(id.ToString(), ct);
+            var product = await _service.AdminGetDetailsAsync(id.ToString(), ct);
             if (product is null) return NotFound();
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
