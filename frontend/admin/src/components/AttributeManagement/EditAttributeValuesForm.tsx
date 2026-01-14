@@ -7,12 +7,16 @@ import {
 import { useForm, type Resolver } from "react-hook-form";
 import type { AttributeValue } from "@/hooks/attribute/useFetchAttribute.ts";
 import { useEditAttributeValue } from "@/hooks/attribute/useEditAttributeValues.ts";
+import type { Dispatch, SetStateAction } from "react";
 
 type Props = {
   attributeValues: AttributeValue;
-  onSave: () => void;
+  setEditAttribOpen: Dispatch<SetStateAction<number | null>>;
 };
-export const EditAttributeValueForm = ({ attributeValues, onSave }: Props) => {
+export const EditAttributeValueForm = ({
+  attributeValues,
+  setEditAttribOpen,
+}: Props) => {
   const editAttributeValue = useEditAttributeValue();
 
   const {
@@ -40,7 +44,7 @@ export const EditAttributeValueForm = ({ attributeValues, onSave }: Props) => {
       },
       {
         onSuccess: () => {
-          onSave();
+          setEditAttribOpen(null);
         },
       },
     );

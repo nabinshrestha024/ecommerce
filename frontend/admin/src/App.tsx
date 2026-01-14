@@ -7,7 +7,6 @@ import { ProductManagement } from "./screens/product-management";
 import { Profile } from "./screens/profile";
 import { Login } from "./screens/login";
 import { Sidebar } from "./components/Sidebar/Sidebar";
-import { Navbar } from "./components/Navbar/Navbar";
 import { Vendor } from "./screens/vendor";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { PublicRoute } from "./routes/PublicRoute";
@@ -66,7 +65,7 @@ const AppLayout = () => {
     <div className="flex min-h-screen w-full overflow-hidden">
       <Sidebar />
       <div className="flex flex-col flex-1 min-w-0">
-        <Navbar />
+        {/* <Navbar /> */}
         <Outlet />
       </div>
     </div>

@@ -82,7 +82,7 @@ export const CategoryCard = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="w-full grid grid-cols-4 gap-5">
+      <div className="w-full grid grid-cols-4 gap-5 pb-10">
         {paginatedCategories.map((category: CategoryData) => (
           <Card
             key={category.categoryId}
@@ -150,7 +150,7 @@ export const CategoryCard = () => {
       </div>
 
       {totalPages > 0 && (
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center fixed bottom-5 left-0 w-full">
           <Pagination>
             <PaginationContent className="flex justify-around w-full">
               <PaginationItem className="flex gap-2">

@@ -1,3 +1,5 @@
+"use client";
+
 import { BasicDetails } from "@/components/ProductManagement/BasicDetails";
 import { Header } from "@/components/ProductManagement/Header";
 import { UploadProductDetails } from "@/components/ProductManagement/UploadProductDetails";
@@ -10,6 +12,7 @@ import {
 } from "@/components/ProductManagement/schema/ProductForm.zod";
 import { useCreateProduct } from "@/hooks/useCreateProduct";
 import { useRef, useEffect } from "react";
+import { Button } from "@/ui/button";
 export const ProductManagement = () => {
   const { mutate, isSuccess } = useCreateProduct();
   const uploadRef = useRef<{ resetImages: () => void }>(null);
@@ -65,7 +68,7 @@ export const ProductManagement = () => {
   }, [isSuccess]);
 
   return (
-    <div className="p-5 space-y-5 w-full max-w-full">
+    <div className="mx-auto w-full max-w-5xl space-y-6 px-4 py-8">
       <Header />
       <FormProvider {...methods}>
         <form
@@ -73,9 +76,19 @@ export const ProductManagement = () => {
           onSubmit={methods.handleSubmit(handleFormSubmit)}
           className="w-full"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-3 md:gap-5 w-full">
+          <div className="flex flex-col gap-6 w-full">
             <BasicDetails />
             <UploadProductDetails ref={uploadRef} />
+          </div>
+          <div className="flex justify-end mt-5 flex-row gap-2 sm:gap-4 shrink-0 w-full lg:w-auto">
+            <Button
+              variant="default"
+              className="px-5 py-7 text-[17px] w-full font-semibold leading-3 bg-[#4EA674] text-white  rounded-lg hover:bg-[#4EA674]"
+              type="submit"
+              form="productForm"
+            >
+              <span>Add new product</span>
+            </Button>
           </div>
         </form>
       </FormProvider>

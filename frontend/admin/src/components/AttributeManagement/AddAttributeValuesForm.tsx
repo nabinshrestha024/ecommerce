@@ -6,11 +6,14 @@ import {
 } from "./AttributeZodValidation.tsx";
 import { useForm, type Resolver } from "react-hook-form";
 import { usePostAttributeValue } from "@/hooks/attribute/usePostAttributeValues.ts";
+import type { Dispatch, SetStateAction } from "react";
 
 export const AddAttributeValueForm = ({
   attributeId,
+  setAddOpen,
 }: {
   attributeId: number;
+  setAddOpen: Dispatch<SetStateAction<number | null>>;
 }) => {
   const postAttributeValue = usePostAttributeValue();
 
@@ -24,7 +27,14 @@ export const AddAttributeValueForm = ({
   });
 
   const onSubmit = (data: AttributeFormValues) => {
-    postAttributeValue.mutate({ attributeId, data });
+    postAttributeValue.mutate(
+      { attributeId, data },
+      {
+        onSuccess: () => {
+          setAddOpen(null);
+        },
+      },
+    );
   };
 
   return (

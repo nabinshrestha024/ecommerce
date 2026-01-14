@@ -7,12 +7,16 @@ import {
   type AttributeNameFormValues,
 } from "./AddAttributeZodValidation.tsx";
 import { useEditAttributeName } from "@/hooks/attribute/useEditAttributeName.ts";
+import type { Dispatch, SetStateAction } from "react";
 
 type Props = {
   attributeName: ProductAttribute;
-  onSave: () => void;
+  setEditOpen: Dispatch<SetStateAction<number | null>>;
 };
-export const EditAttributeNameForm = ({ attributeName, onSave }: Props) => {
+export const EditAttributeNameForm = ({
+  attributeName,
+  setEditOpen,
+}: Props) => {
   const editAttributeName = useEditAttributeName();
 
   const {
@@ -42,7 +46,7 @@ export const EditAttributeNameForm = ({ attributeName, onSave }: Props) => {
       },
       {
         onSuccess: () => {
-          onSave();
+          setEditOpen(null);
         },
       },
     );
