@@ -54,7 +54,7 @@ export const DashboardChart = () => {
           </div>
         </div>
       </div>
-      <AreaChart data={data} />
+      <AreaChart data={data} name="Sales" />
     </Card>
   );
 };
