@@ -36,7 +36,7 @@ export const AvailableAttributeCard = () => {
   const [editAttribOpen, setEditAttribOpen] = useState<number | null>(null);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
       {attributes?.map((attribute) => (
         <Card
           key={attribute.attributeId}
@@ -45,7 +45,7 @@ export const AvailableAttributeCard = () => {
         >
           <Accordion type="single" collapsible className="w-full space-y-3">
             <AccordionItem value={attribute.attributeId.toString()}>
-              <AccordionTrigger className="w-full flex items-center justify-between px-4 py-3  rounded-xl  border-none  transition-all duration-200 shadow-sm hover:cursor-pointer">
+              <AccordionTrigger className="w-full flex items-center justify-between px-4 py-3  rounded-xl  border-b-none transition-all duration-200  hover:cursor-pointer">
                 <div className="text-sm font-bold text-gray-800 ">
                   {attribute.name}
                 </div>
