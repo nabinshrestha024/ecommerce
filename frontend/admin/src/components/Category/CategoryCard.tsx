@@ -6,9 +6,9 @@ import {
 } from "@/hooks/category/useFetchCategory";
 import { Card } from "../Card/Card";
 import { Dialog } from "../Dialog/Dialog";
-import { FaEdit } from "react-icons/fa";
 import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog";
-import { MdDelete } from "react-icons/md";
+import { FaTrash } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
 import { useDeleteCategory } from "@/hooks/category/useDeleteCategory";
 import { useState, useMemo } from "react";
 import { EditCategoryForm } from "./EditCategoryForm";
@@ -125,7 +125,7 @@ export const CategoryCard = () => {
                         }}
                         className="p-1.5 rounded-md hover:bg-gray-100"
                       >
-                        <FaEdit className="text-[18px]" />
+                        <MdEdit className="text-[20px] text-gray-500" />
                       </button>
                     }
                   >
@@ -139,7 +139,7 @@ export const CategoryCard = () => {
                   </Dialog>
 
                   <ConfirmationDialog
-                    trigger={<MdDelete className="text-[18px]" />}
+                    trigger={<FaTrash className="text-[18px] text-gray-500" />}
                     confirmFunc={() => handleDelete(category.categoryId)}
                   />
                 </div>

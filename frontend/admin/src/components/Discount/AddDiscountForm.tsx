@@ -50,7 +50,6 @@ export const AddDiscountForm = () => {
             <Input
               type="text"
               {...register("discountName")}
-              maxLength={10}
               className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.discountName ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             />
           </div>

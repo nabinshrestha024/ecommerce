@@ -4,8 +4,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { MdDelete } from "react-icons/md";
-import { FaEdit, FaTags } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import { FaTags } from "react-icons/fa";
 import { FaPercent } from "react-icons/fa6";
 import { Table } from "../Table/Table";
 import { useNavigate } from "react-router-dom";
@@ -145,8 +146,8 @@ export const ProductTable = () => {
 
           <Dialog
             triggerContent={
-              <FaEdit
-                className="text-[#6A717F] text-[20px] cursor-pointer"
+              <MdEdit
+                className="text-gray-500 text-[20px] cursor-pointer"
                 onClick={() => handleEdit(info.row.original)}
               />
             }
@@ -163,7 +164,7 @@ export const ProductTable = () => {
             )}
           </Dialog>
           <ConfirmationDialog
-            trigger={<MdDelete className="text-[#6A717F] text-[20px]" />}
+            trigger={<FaTrash className="text-gray-500 text-[18px]" />}
             confirmFunc={() => handleDelete(info.row.original.productId)}
           />
         </div>
