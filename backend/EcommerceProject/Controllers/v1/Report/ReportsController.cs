@@ -57,6 +57,12 @@ namespace EcommerceProject.Controllers.v1.Report
             return Ok(result);
         }
 
+        [HttpGet("orders-status-report")]
+        public async Task<IActionResult> GetOrdersStatusReport([FromQuery] ReportFilter filter)
+        {
+            var result = await _reportservice.GetOrdersStatusReportAsync(filter);
+            return Ok(result);
+        }
     }
 
 }
