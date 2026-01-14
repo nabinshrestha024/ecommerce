@@ -15,11 +15,11 @@ export const Footer = () => {
           <Input
             type={"text"}
             placeholder="Enter your email address"
-            className="bg-[#C1E6BA] shrink-0 w-[480px] h-12 rounded-3xl pr-25"
+            className="shrink-0 w-[480px] h-12 rounded-3xl pr-25 hover:cursor-pointer"
           />
           <Button
             variant={"ghost"}
-            className="bg-white rounded-3xl absolute right-2 top-1/2 -translate-y-1/2"
+            className="bg-white rounded-3xl absolute right-2 top-1/2 -translate-y-1/2 hover:cursor-pointer"
           >
             Subscribe
           </Button>
@@ -29,7 +29,7 @@ export const Footer = () => {
           <div>Connect With Us</div>
           <div className="flex gap-2 text-2xl">
             <FaFacebook className="text-blue-500 text-2xl" />
-            <FaInstagram className="text-white bg-[linear-gradient(to_right,#feda77,#fa7e1e,#d62976,#962fbf,#4f5bd5)] text-2xl" />
+            <FaInstagram className="text-white bg-[linear-gradient(to_right,#feda77,#fa7e1e,#d62976,#962fbf,#4f5bd5)] text-2xl rounded-md" />
             <FaXTwitter className="text-2xl" />
             <FaLinkedin className="text-blue-700 text-2xl" />
           </div>

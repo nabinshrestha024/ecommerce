@@ -5,10 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/ui/input";
 import { Card } from "../Card/Card";
-import {
-  SocialLinksSchema,
-  SocialLinksSchemaType,
-} from "./schemas/SocialLinks.zod";
+import { SocialLinksSchema } from "./schemas/SocialLinks.zod";
 import { useEffect, useState } from "react";
 import { useAddSocialLinks } from "@/hooks/socialLinks/useAddSocialLinks";
 import { useFetchSocialLinks } from "@/hooks/socialLinks/useFetchSocialLinks";
@@ -190,22 +187,13 @@ export const SocialLinks = () => {
 
   return (
     <Card
-      className="flex flex-col shadow-[0px_1px_3px_0px_#00000033] w-full rounded-xl px-0 overflow-hidden"
-      rootClassName="p-0 border-none shadow-none rounded-xl"
+      className="p-5 border-0 justify-between items-start relative "
+      rootClassName="p-0 border-none shadow-none rounded-2xl overflow-hidden "
     >
-      <div className="bg-[#4EA674] px-6 py-8 sm:px-8 ">
-        <div className="flex flex-row justify-between items-center">
-          <div>
-            <h2 className="font-bold text-2xl sm:text-3xl text-white mb-1">
-              Profile Settings
-            </h2>
-            <p className="text-blue-100 text-sm">
-              Manage your personal information
-            </p>
-          </div>
-        </div>
-      </div>
-      <form className="mt-4 sm:mt-5 flex flex-col gap-3 sm:gap-4 py-4 px-4 sm:py-6 sm:px-6 ">
+      <h3 className="text-2xl font-semibold text-gray-900 mb-5">
+        Update your social links
+      </h3>
+      <form className="flex flex-col gap-5 ">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="flex flex-col gap-1 relative">
             <label className="text-sm sm:text-base">Facebook</label>

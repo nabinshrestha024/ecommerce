@@ -1,25 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { format } from "timeago.js";
 import { useOrder } from "@/hooks/orders/useOrder";
 import { useFetchWishlist } from "@/hooks/wishlist/useFetchWishlist";
-import { Tabs } from "@/components/Tabs/Tabs";
 import { ProfileUpdate } from "@/components/Profile/ProfileUpdate";
-import { ChangePassword } from "@/components/Profile/ChangePassword";
-import { Order } from "@/components/Order/Order";
-import { Wishlist } from "@/components/Wishlist/Wishlist";
-import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "next/navigation";
 import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
-import { LogOut } from "lucide-react";
 import { useQueryState } from "nuqs";
-import { SocialLinks } from "@/components/Profile/SocialLinks";
 import { useFetchSocialLinks } from "@/hooks/socialLinks/useFetchSocialLinks";
 import Image from "next/image";
-import Link from "next/link";
-import { ConfirmationDialog } from "@/components/ConfirmationDialog/ConfirmationDialog";
+import { Camera } from "lucide-react";
 import { Spinner } from "@/ui/spinner";
+import { ProfileCropDialog } from "@/components/Profile/ProfileCropDialog";
 
 export default function UserProfile() {
   const { data, isLoading } = useFetchProfile();
@@ -27,71 +19,49 @@ export default function UserProfile() {
   const wishlist = useFetchWishlist();
   const socialLinks = useFetchSocialLinks();
 
-  const tabsData = [
-    {
-      id: 1,
-      value: "editProfile",
-      triggerText: "Edit Profile",
-      content: <ProfileUpdate />,
-    },
-    {
-      id: 2,
-      value: "socialLinks",
-      triggerText: "Social Links",
-      content: <SocialLinks />,
-    },
-    {
-      id: 3,
-      value: "changePassword",
-      triggerText: "Change Password",
-      content: <ChangePassword />,
-    },
-    {
-      id: 4,
-      value: "myOrders",
-      triggerText: "Orders",
-      content: <Order />,
-    },
-    {
-      id: 5,
-      value: "wishlist",
-      triggerText: "Wishlist",
-      content: <Wishlist />,
-    },
-  ];
-
-  const router = useRouter();
-  const { logout } = useAuth();
-
-  const handleLogout = () => {
-    router.push("/home");
-    logout();
-  };
-
-  const [page, setPage] = useQueryState("page", {
-    defaultValue: "editProfile",
-  });
+  const [cropOpen, setCropOpen] = useState<boolean>(false);
+  const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
 
   return isLoading || orders.isLoading || socialLinks.isLoading ? (
-    // || wishlist.isLoading
     <div className="fixed top-0 left-0 h-screen w-screen flex items-center justify-center">
       <Spinner className="size-8" />
     </div>
   ) : (
     <div className="w-full">
       <div className="min-h-screen bg-gray-50">
-        <div className="mx-auto p-3 md:p-6">
+        <div className="mx-25 p-3 md:p-6">
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
             <div className="flex items-start justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-20 h-20 bg-linear-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center text-white text-2xl font-bold relative overflow-hidden">
+              <div className="flex items-center gap-4 relative">
+                <div className=" w-20 h-20 shadow-xl  rounded-full flex items-center justify-center text-white text-2xl font-bold relative overflow-hidden">
                   <Image
                     src={data.profileImageUrl}
                     alt="Profile Picture"
                     fill
                     unoptimized
+                    className="object-cover"
                   />
                 </div>
+                <div
+                  className="absolute bottom-0.5 left-15 bg-gray-50 p-1 py-2 rounded-full hover:cursor-pointer shadow-2xl"
+                  onClick={() => fileRef.current?.click()}
+                >
+                  <Camera className="h-4" color="black" />
+                </div>
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const url = URL.createObjectURL(file);
+                    setCropImageSrc(url);
+                    setCropOpen(true);
+                  }}
+                />
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">
                     {data.fullName}
@@ -102,26 +72,16 @@ export default function UserProfile() {
                   </p>
                 </div>
               </div>
-              <ConfirmationDialog
-                trigger={
-                  <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-red-500 flex gap-2">
-                    <LogOut className="p-0.5" />{" "}
-                    <p className="hidden md:block">Log Out</p>
-                  </button>
-                }
-                confirmFunc={handleLogout}
-                description="Are you sure you want to logout?"
-              />
             </div>
 
-            <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t">
-              <div className="text-center" onClick={() => setPage("myOrders")}>
+            <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t ">
+              <div className="text-center hover:cursor-pointer">
                 <div className="text-2xl font-bold text-gray-900">
                   {Array.isArray(orders?.data) ? orders.data.length : 0}
                 </div>
                 <div className="text-sm text-gray-600">Orders</div>
               </div>
-              <div onClick={() => setPage("wishlist")} className="text-center">
+              <div className="text-center hover:cursor-pointer">
                 <div className="text-2xl font-bold text-gray-900">
                   {Array.isArray(wishlist?.data?.items)
                     ? wishlist.data.items.length
@@ -129,10 +89,7 @@ export default function UserProfile() {
                 </div>
                 <div className="text-sm text-gray-600">Wishlist</div>
               </div>
-              <div
-                onClick={() => setPage("socialLinks")}
-                className="text-center"
-              >
+              <div className="text-center hover:cursor-pointer">
                 <div className="text-2xl font-bold text-gray-900">
                   {socialLinks.data?.links.length}
                 </div>
@@ -140,14 +97,34 @@ export default function UserProfile() {
               </div>
             </div>
           </div>
-          <Tabs
-            data={tabsData}
-            defaultValue={page}
-            tabsListClassName=" w-full bg-[#EAF8E7]"
-            setPage={setPage}
-          ></Tabs>
+          <ProfileUpdate />
         </div>
       </div>
+      {cropImageSrc && (
+        <ProfileCropDialog
+          image={cropImageSrc}
+          open={cropOpen}
+          onClose={() => {
+            setCropOpen(false);
+            if (cropImageSrc) {
+              URL.revokeObjectURL(cropImageSrc);
+              setCropImageSrc(null);
+            }
+          }}
+          onSave={async () => {
+            try {
+              await data.refetch();
+            } catch {
+              // ignore
+            }
+            setCropOpen(false);
+            if (cropImageSrc) {
+              URL.revokeObjectURL(cropImageSrc);
+              setCropImageSrc(null);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -1,37 +1,24 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "../Card/Card";
-import {
-  SquarePen,
-  Upload,
-  User,
-  MapPin,
-  Calendar,
-  Mail,
-  Phone,
-  MessageSquare,
-} from "lucide-react";
+import { SquarePen } from "lucide-react";
 import { Button } from "@/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProfileUpdateSchema } from "./schemas/Profile.zod";
 import { Input } from "@/ui/input";
 import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
-import Image from "next/image";
 import { useEditProfile } from "@/hooks/profile/useEditProfile";
+import { ChangePassword } from "./ChangePassword";
+import { SocialLinks } from "./SocialLinks";
 
 export interface ProfileFormData {
-  profilePicture?: File;
-  fullName?: string;
-  password?: string;
-  email?: string;
-  phoneNumber?: string;
+  firstName?: string;
+  lastName?: string;
   address?: string;
-  biography?: string;
-  dateOfBirth?: string;
-  gender?: string;
-  status?: string;
   city?: string;
+  bio?: string;
+  profileImageFile?: File;
 }
 
 export const ProfileUpdate = () => {
@@ -46,11 +33,7 @@ export const ProfileUpdate = () => {
     resolver: zodResolver(ProfileUpdateSchema),
     mode: "all",
   });
-
-  const [preview, setPreview] = useState<string>("");
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const imageInputRef = useRef<HTMLInputElement>(null);
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
@@ -58,53 +41,27 @@ export const ProfileUpdate = () => {
 
   useEffect(() => {
     if (!data) return;
-
+    const firstName = data.fullName.split(" ")[0];
+    const lastName = data.fullName.trim().split(/\s+/).slice(1).join(" ");
     reset({
-      fullName: data.fullName ?? "",
-      email: data.email ?? "",
-      phoneNumber: data.phone ?? "",
+      firstName: firstName ?? "",
+      lastName: lastName ?? "",
       address: data.address ?? "",
-      dateOfBirth: data.dateOfBirth ?? "",
-      biography: data.bio ?? "",
+      bio: data.bio ?? "",
       city: data.city ?? "",
-      gender: data.gender ?? "",
     });
   }, [data, reset]);
 
-  const defaultImage = data?.profileImageUrl;
-
-  const handleImageInput = () => {
-    imageInputRef.current?.click();
-  };
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    setSelectedImage(file);
-    const imgUrl = URL.createObjectURL(file);
-    setPreview(imgUrl);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (preview) URL.revokeObjectURL(preview);
-    };
-  }, [preview]);
-
   const onSubmit = (formData: ProfileFormData) => {
     const dataToSend = new FormData();
-
-    dataToSend.append("FullName", formData.fullName || "Unknown");
-    dataToSend.append("Bio", formData.biography || "N/A");
+    const fullName = [formData.firstName, formData.lastName]
+      .filter(Boolean)
+      .join(" ")
+      .trim();
+    dataToSend.append("FullName", fullName || "Unknown");
+    dataToSend.append("Bio", formData.bio || "N/A");
     dataToSend.append("City", formData.city || "Unknown");
-    dataToSend.append("Status", formData.status ?? "0");
     dataToSend.append("Address", formData.address || "N/A");
-
-    if (selectedImage) {
-      dataToSend.append("ProfileImageFile", selectedImage, selectedImage.name);
-    }
-
     mutate(dataToSend as ProfileFormData);
   };
 
@@ -118,137 +75,89 @@ export const ProfileUpdate = () => {
       className="p-0 shadow-lg border-0 bg-white"
       rootClassName="p-0 border-none shadow-none rounded-2xl overflow-hidden"
     >
-      <div className="bg-[#4EA674] px-6 py-8 sm:px-8">
-        <div className="flex flex-row justify-between items-center">
-          <div>
-            <h2 className="font-bold text-2xl sm:text-3xl text-white mb-1">
-              Profile Settings
-            </h2>
-            <p className="text-blue-100 text-sm">
-              Manage your personal information
-            </p>
-          </div>
-          <button
-            className={`rounded-xl p-3 transition-all duration-200 ${
-              isEditing
-                ? "bg-white text-[#4EA674] shadow-md hover:shadow-lg"
-                : " text-white"
-            }`}
-            onClick={handleEditToggle}
-            aria-label={isEditing ? "Cancel editing" : "Edit profile"}
-          >
-            <SquarePen className="h-5 w-5" />
-          </button>
+      <div className="bg-[#4EA674] p-5 ">
+        <div>
+          <h2 className="font-bold text-2xl sm:text-3xl text-white mb-1">
+            Profile Settings
+          </h2>
+          <p className="text-blue-100 text-sm">
+            Manage your personal information
+          </p>
         </div>
       </div>
 
-      <div className="px-6 py-8 sm:px-8">
-        <div className="space-y-8">
-          <div className="flex flex-col items-center gap-6 pb-8 border-b border-gray-100">
-            <div className="relative group">
-              <div className="absolute inset-0 rounded-full blur opacity-25 group-hover:opacity-40 transition-opacity duration-300"></div>
-              <div className="relative">
-                <Image
-                  src={preview || defaultImage || "/default.jpg"}
-                  alt="Profile"
-                  width={120}
-                  height={120}
-                  className="h-28 w-28 sm:h-32 sm:w-32 rounded-full object-cover border-4 border-white shadow-xl relative"
-                  unoptimized
-                />
-              </div>
+      <div className="space-y-5">
+        <Card
+          className="p-5 shadow-lg border-0 justify-between items-start relative border-b-2 border-b-gray-100 "
+          rootClassName="p-0 border-none shadow-none rounded-none overflow-hidden"
+        >
+          <div className="space-y-5 ">
+            <div className="flex justify-between">
+              <h3 className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
+                Personal Information
+              </h3>
+              <button
+                className={`rounded-xl transition-all duration-200 ${
+                  isEditing
+                    ? "bg-white text-[#4EA674] shadow-md hover:shadow-lg"
+                    : " text-white"
+                }`}
+                onClick={handleEditToggle}
+                aria-label={isEditing ? "Cancel editing" : "Edit profile"}
+              >
+                <SquarePen className="h-5 w-5" color="black" />
+              </button>
             </div>
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              {...register("profilePicture")}
-              ref={imageInputRef}
-              onChange={handleImageChange}
-            />
-            <Button
-              type="button"
-              disabled={!isEditing}
-              onClick={handleImageInput}
-              className={`px-6 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 ${
-                !isEditing
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : " text-white hover:shadow-lg hover:scale-105 active:scale-95"
-              }`}
-            >
-              Upload New Picture
-            </Button>
-          </div>
 
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-              <User className="h-5 w-5 text-[#4EA674]" />
-              Personal Information
-            </h3>
-
-            <div className="space-y-5">
+            <div className="grid grid-cols-2 gap-5">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                  <User className="h-4 w-4 text-gray-400" />
-                  Full Name
+                <label className="text-md font-medium text-gray-700 flex items-center gap-2">
+                  First Name
                 </label>
                 <Input
                   type="text"
                   disabled={!isEditing}
-                  {...register("fullName")}
+                  {...register("firstName")}
                   className={`h-12 border-gray-200 focus:border-[#4EA674] focus:ring-[#4EA674] rounded-xl transition-all ${
                     !isEditing ? "bg-gray-50 cursor-not-allowed" : "bg-white"
                   }`}
                 />
-                {errors.fullName && (
-                  <p className="text-red-500 text-sm flex items-center gap-1 mt-1">
-                    {errors.fullName.message}
+                {errors.firstName && (
+                  <p className="text-red-500 text-md flex items-center gap-1 mt-1">
+                    {errors.firstName.message}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <label className="text-md font-medium text-gray-700 flex items-center gap-2">
+                  Last Name
+                </label>
+                <Input
+                  type="text"
+                  disabled={!isEditing}
+                  {...register("lastName")}
+                  className={`h-12 border-gray-200 focus:border-[#4EA674] focus:ring-[#4EA674] rounded-xl transition-all ${
+                    !isEditing ? "bg-gray-50 cursor-not-allowed" : "bg-white"
+                  }`}
+                />
+                {errors.lastName && (
+                  <p className="text-red-500 text-md flex items-center gap-1 mt-1">
+                    {errors.lastName.message}
                   </p>
                 )}
               </div>
             </div>
-          </div>
-
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-              <Mail className="h-5 w-5 text-[#4EA674]" />
-              Contact Details
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-5">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-gray-400" />
-                  Phone Number
-                </label>
-                <div className="h-12 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-600 flex items-center">
-                  {data?.phone || "Not provided"}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                  <User className="h-4 w-4 text-gray-400" />
+                <label className="text-md font-medium text-gray-700 flex items-center gap-2">
                   Gender
                 </label>
                 <div className="h-12 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-600 flex items-center">
                   {data?.gender || "Not specified"}
                 </div>
               </div>
-
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-gray-400" />
-                  Email
-                </label>
-                <div className="h-12 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-600 flex items-center truncate">
-                  {data?.email || "Not provided"}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-gray-400" />
+                <label className="text-md font-medium text-gray-700 flex items-center gap-2">
                   Date of Birth
                 </label>
                 <div className="h-12 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-600 flex items-center">
@@ -256,97 +165,114 @@ export const ProfileUpdate = () => {
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-[#4EA674]" />
-              Location
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-gray-400" />
-                  Address
-                </label>
-                <Input
-                  type="text"
-                  disabled={!isEditing}
-                  {...register("address")}
-                  className={`h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-all ${
-                    !isEditing ? "bg-gray-50 cursor-not-allowed" : "bg-white"
-                  }`}
-                />
-                {errors.address && (
-                  <p className="text-red-500 text-sm">
-                    {errors.address.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-gray-400" />
-                  City
-                </label>
-                <Input
-                  type="text"
-                  disabled={!isEditing}
-                  {...register("city")}
-                  className={`h-12 border-gray-200 focus:border-[#4EA674] focus:ring-[#4EA674]rounded-xl transition-all ${
-                    !isEditing ? "bg-gray-50 cursor-not-allowed" : "bg-white"
-                  }`}
-                  placeholder="Enter your city"
-                />
-                {errors.city && (
-                  <p className="text-red-500 text-sm">{errors.city.message}</p>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-              <MessageSquare className="h-5 w-5 text-[#4EA674]" />
-              About
-            </h3>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-md font-medium text-gray-700 flex items-center gap-2">
                 Biography
               </label>
               <textarea
                 disabled={!isEditing}
-                {...register("biography")}
+                {...register("bio")}
                 placeholder="Tell us about yourself..."
-                className={`w-full border border-gray-200 rounded-xl p-4 h-36 resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                className={`w-full border border-gray-200 rounded-xl p-4 h-36 resize-none focus:ring-2 focus:ring-green-600 focus:border-green-600 transition-all duration-200 ${
                   !isEditing
                     ? "bg-gray-50 cursor-not-allowed text-gray-400"
                     : "bg-white"
                 }`}
               />
-              {errors.biography && (
-                <p className="text-red-500 text-sm">
-                  {errors.biography.message}
-                </p>
+              {errors.bio && (
+                <p className="text-red-500 text-md">{errors.bio.message}</p>
               )}
             </div>
-          </div>
 
-          {isEditing && (
-            <div className="pt-4">
-              <Button
-                className="h-12 w-full font-semibold text-base rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-                variant="default"
-                type="button"
-                onClick={handleFormSubmit}
-              >
-                Save Changes
-              </Button>
+            <div className="space-y-5">
+              <h3 className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
+                Contact Details
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-md font-medium text-gray-700 flex items-center gap-2">
+                    Phone Number
+                  </label>
+                  <div className="h-12 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-600 flex items-center">
+                    {data?.phone || "Not provided"}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-md font-medium text-gray-700 flex items-center gap-2">
+                    Email
+                  </label>
+                  <div className="h-12 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-600 flex items-center truncate">
+                    {data?.email || "Not provided"}
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
-        </div>
+
+            <div className="space-y-5">
+              <h3 className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
+                Location
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-md font-medium text-gray-700 flex items-center gap-2">
+                    Address
+                  </label>
+                  <Input
+                    type="text"
+                    disabled={!isEditing}
+                    {...register("address")}
+                    className={`h-12 border-gray-200 focus:border-green-600 focus:ring-green-600 rounded-xl transition-all ${
+                      !isEditing ? "bg-gray-50 cursor-not-allowed" : "bg-white"
+                    }`}
+                  />
+                  {errors.address && (
+                    <p className="text-red-500 text-md">
+                      {errors.address.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-md font-medium text-gray-700 flex items-center gap-2">
+                    City
+                  </label>
+                  <Input
+                    type="text"
+                    disabled={!isEditing}
+                    {...register("city")}
+                    className={`h-12 border-gray-200 focus:border-green-600 focus:ring-green-600 rounded-xl transition-all ${
+                      !isEditing ? "bg-gray-50 cursor-not-allowed" : "bg-white"
+                    }`}
+                    placeholder="Enter your city"
+                  />
+                  {errors.city && (
+                    <p className="text-red-500 text-md">
+                      {errors.city.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {isEditing && (
+              <div className="pt-4">
+                <Button
+                  className="mt-3 sm:mt-4 h-10 w-full text-sm"
+                  variant={"default"}
+                  type="submit"
+                  onClick={handleFormSubmit}
+                >
+                  Save Changes
+                </Button>
+              </div>
+            )}
+          </div>
+        </Card>
+        <ChangePassword />
+        <SocialLinks />
       </div>
     </Card>
   );

@@ -19,6 +19,7 @@ export const endpoint = {
   PAYMENTSUCCESS: "payments/esewa/callback",
   NOTIFICATIONSEEN: "notifications",
   FETCHPROFILE: "profile/me",
+  CHANGEPROFILE: "profile/me/upload-image",
   CHANGEPASSWORD: "auth/change_password",
   FORGOTPASSWORD: "auth/auth/forgot-password",
   VERIFYOTP: "auth/verify-otp",

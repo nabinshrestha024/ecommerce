@@ -4,20 +4,20 @@ import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
 import Image from "next/image";
 import Link from "next/link";
-import { FaLocationDot } from "react-icons/fa6";
-import { Bell, Search, User } from "lucide-react";
+import { FaBell, FaLocationDot, FaUserLarge } from "react-icons/fa6";
+import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useSearch } from "@/hooks/search/useSearch";
 import { useDebounce } from "@/hooks/search/useDebounce";
-import { Notification } from "@/components/Notification/Notification";
 import { CartComponent } from "./CartComponent";
 import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
-import { IoMdExit } from "react-icons/io";
 import { ConfirmationDialog } from "@/components/ConfirmationDialog/ConfirmationDialog";
 import { Sidebar } from "./Sidebar";
+import { IoLogOut } from "react-icons/io5";
+import { Notification } from "@/components/Notification/Notification";
 
 interface AttributeType {
   name: string;
@@ -84,7 +84,7 @@ export const TopNav = () => {
           onClick={() => router.push("/home")}
         />
         <div className="items-center gap-2 hidden md:flex">
-          <FaLocationDot className="text-2xl" />
+          <FaLocationDot className="text-xl" />
           <div>
             <div className="text-xs">Deliver to</div>
             {isAuth ? (
@@ -96,13 +96,13 @@ export const TopNav = () => {
         </div>
       </div>
       <div className="gap-4 items-center hidden md:flex">
-        <div className="relative w-[400px] hidden lg:flex">
+        <div className="relative w-[400px] hidden lg:flex ">
           <Input
             type="text"
             value={searchData}
             placeholder="What are you looking for....."
             onChange={(e) => setSearchData(e.target.value)}
-            className="bg-[#EAF8E7] h-12 rounded-3xl pr-24"
+            className=" h-12 rounded-3xl pr-24 hover:cursor-pointer"
           />
 
           <Search
@@ -158,7 +158,7 @@ export const TopNav = () => {
 
         {isAuth ? (
           <Link href="/profile">
-            <User />
+            <FaUserLarge size={19} />
           </Link>
         ) : (
           <Link href="/login">
@@ -167,11 +167,12 @@ export const TopNav = () => {
         )}
 
         {!isAuth ? (
-          <Bell
+          <FaBell
             onClick={() =>
               toast.error("Please log in to see your notifications")
             }
             className="cursor-pointer"
+            size={13}
           />
         ) : (
           <Notification />
@@ -181,7 +182,12 @@ export const TopNav = () => {
 
         {isAuth && (
           <ConfirmationDialog
-            trigger={<IoMdExit className="text-xl text-black cursor-pointer" />}
+            trigger={
+              <IoLogOut
+                className="text-xl text-black cursor-pointer"
+                size={27}
+              />
+            }
             confirmFunc={logout}
             description="Are you sure you want to logout?"
           />

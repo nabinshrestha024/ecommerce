@@ -8,8 +8,8 @@ const advertisements = [
 
 export const ThirdCard = () => {
   return (
-    <div className="pt-2 h-[350px]">
-      <div className="grid grid-cols-2 gap-4 px-4 pt-2">
+    <div className="h-[305px]">
+      <div className="grid grid-cols-2 gap-4">
         {advertisements.map((ad, index) => (
           <div
             key={index}
@@ -29,7 +29,7 @@ export const ThirdCard = () => {
           </div>
         ))}
       </div>
-      <div className="flex justify-center items-center px-3">
+      <div className="flex justify-center items-center ">
         <div className="flex flex-row justify-between items-center rounded-xl w-full shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
           <Link
             href={`/product?categoryId=1`}

@@ -12,6 +12,7 @@ import {
 import { Bell, Clock, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { FaBell } from "react-icons/fa6";
 
 export interface NotificationType {
   notificationId: number;
@@ -61,12 +62,12 @@ export const Notification = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className="relative rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="relative rounded-lg  transition-colors"
           onPointerDownCapture={handleNotification}
         >
-          <Bell className="w-5 h-5 text-gray-700 dark:text-gray-300 cursor-pointer" />
+          <FaBell size={13} className="w-5 h-5 cursor-pointer" />
           {!read && (
-            <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center h-3 w-3 px-1 text-[10px] font-semibold text-white bg-red-500 rounded-full"></span>
+            <span className="absolute top-0 right-0 flex items-center justify-center h-2 w-2 px-1 text-[10px] font-semibold text-white bg-red-500 rounded-full"></span>
           )}
         </button>
       </DropdownMenuTrigger>
@@ -111,7 +112,7 @@ export const Notification = () => {
                 No notifications
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">
-                You're all caught up! Check back later.
+                You&apos;re all caught up! Check back later.
               </p>
             </div>
           ) : (

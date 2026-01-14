@@ -6,7 +6,7 @@ import { ThirdCard } from "./components/ThirdCard";
 export const Advertisement = () => {
   return (
     <div className="flex flex-col px-6 gap-3 w-full items-center">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 h-auto lg:h-[328px] lg:max-w-[1216px] justify-center items-center w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 h-auto lg:h-[328px] lg:max-w-[1216px] justify-center items-center w-full">
         <FirstCard />
         <SecondCard />
         <ThirdCard />

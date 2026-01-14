@@ -1,4 +1,6 @@
 import { Target, Users, Award, Heart, TrendingUp, Globe } from "lucide-react";
+import { FaAward, FaGlobe, FaUsers } from "react-icons/fa6";
+import { IoIosHeart } from "react-icons/io";
 
 export const values = [
   {
@@ -8,19 +10,19 @@ export const values = [
       "To deliver premium quality products that enhance everyday life while maintaining exceptional customer service and sustainable practices.",
   },
   {
-    icon: <Users size={28} color="white" />,
+    icon: <FaUsers size={28} color="white" />,
     title: "Customer First",
     description:
       "We prioritize our customers' needs and satisfaction above all else, ensuring every interaction exceeds expectations.",
   },
   {
-    icon: <Award size={28} color="white" />,
+    icon: <FaAward size={28} color="white" />,
     title: "Quality Assurance",
     description:
       "Every product is carefully selected and tested to meet our high standards of quality, durability, and performance.",
   },
   {
-    icon: <Heart size={28} color="white" />,
+    icon: <IoIosHeart size={28} color="white" />,
     title: "Community Care",
     description:
       "We believe in giving back to our community and supporting causes that make a positive impact on society.",
@@ -32,7 +34,7 @@ export const values = [
       "We continuously seek innovative solutions and products that bring value and convenience to our customers' lives.",
   },
   {
-    icon: <Globe size={28} color="white" />,
+    icon: <FaGlobe size={28} color="white" />,
     title: "Sustainability",
     description:
       "Committed to environmentally responsible practices and partnering with brands that share our green values.",
