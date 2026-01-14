@@ -85,7 +85,7 @@ export const Sidebar = () => {
   const { data } = useGetProfile();
 
   return (
-    <Root collapsible="icon" className="w-60">
+    <Root collapsible="icon" className="w-60 data-[collapsed=true]:w-16">
       <div
         className={`w-full flex ${collapsed ? "justify-center" : "justify-between"} items-center px-4 pt-2`}
       >
@@ -111,26 +111,44 @@ export const Sidebar = () => {
                     <SidebarMenuItem key={value.title}>
                       <SidebarMenuButton
                         className={`
-                          flex items-center gap-3 rounded-md px-3 py-2
-                          transition-all
-                          ${isActive ? "bg-green-600 text-white hover:bg-green-500 hover:text-white" : "text-[#6A717F] hover:bg-gray-100 hover:text-[#6A717F]"}
-                        `}
+    flex items-center rounded-md py-2 transition-all
+    ${collapsed ? "justify-center px-0" : "justify-start px-3 gap-3"}
+    ${
+      isActive
+        ? "bg-green-600 text-white hover:bg-green-500 hover:text-white"
+        : "text-[#6A717F] hover:bg-gray-200 hover:text-[#6A717F]"
+    }
+  `}
                       >
                         <Link
                           to={value.url}
-                          className="flex items-center gap-3 w-full"
+                          className={`flex items-center w-full ${
+                            collapsed ? "justify-center" : "gap-3"
+                          }`}
                         >
                           <Tooltip>
                             <TooltipTrigger>
                               <value.icon className="text-xl shrink-0" />
                             </TooltipTrigger>
-                            <TooltipContent
-                              className={`bg-foreground text-background ${collapsed ? "block" : "hidden"}`}
-                            >
-                              {value.title}
-                            </TooltipContent>
+                            {collapsed && (
+                              <TooltipContent
+                                side="right"
+                                className="bg-foreground text-background"
+                              >
+                                {value.title}
+                              </TooltipContent>
+                            )}
                           </Tooltip>
-                          <span>{value.title}</span>
+
+                          <span
+                            className={`transition-all duration-200 ${
+                              collapsed
+                                ? "opacity-0 w-0 overflow-hidden"
+                                : "opacity-100"
+                            }`}
+                          >
+                            {value.title}
+                          </span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
