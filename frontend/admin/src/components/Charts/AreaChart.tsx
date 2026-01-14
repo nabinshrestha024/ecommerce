@@ -6,6 +6,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Legend,
 } from "recharts";
 
 interface DataType {
@@ -26,14 +27,35 @@ const formatYAxis = (value: number): string => {
   return value.toString();
 };
 
-export const AreaChart = ({ data }: { data: DataType[] }) => {
+export const AreaChart = ({
+  data,
+  name,
+}: {
+  data: DataType[];
+  name: string;
+}) => {
   return (
     <div style={{ width: "100%", height: 280 }}>
       <ResponsiveContainer width="100%" height="100%">
-        <Root data={data} margin={{ top: 20, right: 0, left: 0, bottom: 0 }}>
+        <Root data={data} margin={{ top: 20, right: 0, left: 15, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="xAxis" />
-          <YAxis tickFormatter={formatYAxis} />
+          <XAxis
+            dataKey="xAxis"
+            label={{
+              value: "Date",
+              position: "insideBottom",
+              offset: -5,
+            }}
+          />
+          <YAxis
+            tickFormatter={formatYAxis}
+            label={{
+              value: name,
+              angle: -90,
+              position: "insideLeft",
+              offset: -5,
+            }}
+          />
           <Tooltip formatter={(value) => formatYAxis(Number(value))} />
           <Area
             type="monotone"

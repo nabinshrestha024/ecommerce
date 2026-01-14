@@ -15,7 +15,7 @@ export const CustomerLastWeekChart = () => {
     })) ?? [];
   return (
     <Card className="w-full">
-      <AreaChart data={data} />
+      <AreaChart data={data} name="New Customer" />
     </Card>
   );
 };
