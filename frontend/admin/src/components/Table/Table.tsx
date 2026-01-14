@@ -49,12 +49,15 @@ export const Table = <TData,>({
 
   return (
     <div className="space-y-3">
-      <table className="min-w-full mt-5 rounded-lg">
+      <table className="min-w-full rounded-lg">
         <thead className="bg-[#EAF8E7] dark:bg-accent">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th key={header.id} className="p-3 border-b">
+                <th
+                  key={header.id}
+                  className="p-3 border-b align-top text-left"
+                >
                   {flexRender(
                     header.column.columnDef.header,
                     header.getContext(),
@@ -80,8 +83,12 @@ export const Table = <TData,>({
                           ? "w-[250px]"
                           : cellName === "userName"
                             ? "w-[260px]"
-                            : ""
-                    } p-3 border-b align-top whitespace-nowrap`}
+                            : cellName === "productName"
+                              ? "w-[260px]"
+                              : cellName === "price"
+                                ? "w-[100px]"
+                                : ""
+                    } p-3 border-b align-middle whitespace-nowrap`}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>

@@ -3,7 +3,7 @@ import { AvailableAttributeCard } from "@/components/AttributeManagement/Availab
 
 export const AttributeManagement = () => {
   return (
-    <div className="p-3 flex flex-col gap-5">
+    <div className="p-5 flex flex-col gap-5">
       <AttributeHeader />
       <AvailableAttributeCard />
     </div>

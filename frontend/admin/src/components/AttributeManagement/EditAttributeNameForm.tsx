@@ -7,18 +7,21 @@ import {
   type AttributeNameFormValues,
 } from "./AddAttributeZodValidation.tsx";
 import { useEditAttributeName } from "@/hooks/attribute/useEditAttributeName.ts";
+import type { Dispatch, SetStateAction } from "react";
 
 type Props = {
   attributeName: ProductAttribute;
-  onSave: (attributeName: ProductAttribute) => void;
+  setEditOpen: Dispatch<SetStateAction<number | null>>;
 };
-export const EditAttributeNameForm = ({ attributeName, onSave }: Props) => {
+export const EditAttributeNameForm = ({
+  attributeName,
+  setEditOpen,
+}: Props) => {
   const editAttributeName = useEditAttributeName();
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<AttributeNameFormValues>({
     resolver: zodResolver(
@@ -36,16 +39,17 @@ export const EditAttributeNameForm = ({ attributeName, onSave }: Props) => {
       name: data.name,
     };
 
-    editAttributeName.mutate({
-      attributeId: attributeName.attributeId,
-      attributeData: updateAttributeName,
-    });
-
-    onSave(updateAttributeName);
-
-    reset({
-      name: updateAttributeName.name,
-    });
+    editAttributeName.mutate(
+      {
+        attributeId: attributeName.attributeId,
+        attributeData: updateAttributeName,
+      },
+      {
+        onSuccess: () => {
+          setEditOpen(null);
+        },
+      },
+    );
   };
 
   return (

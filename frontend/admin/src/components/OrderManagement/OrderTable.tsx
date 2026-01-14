@@ -14,6 +14,7 @@ import { DropDown } from "../DropDown/DropDown";
 import { IoFilter } from "react-icons/io5";
 import { useFetchOrder, type OrderData } from "@/hooks/order/useFetchOrder";
 import { OrderDetails } from "./OrderDetails";
+import { currencyFormatter } from "../Dashboard/DashboardStats";
 
 const statusType = {
   DELIVERED: "Delivered",
@@ -54,19 +55,12 @@ export const OrderTable = () => {
         id: "productName",
         header: () => <div className="flex justify-start">Product Name</div>,
         cell: (info) => (
-          <div className="flex items-center">
+          <div className="w-[260px]">
             <div
-              className="flex flex-col items-start  overflow-hidden "
+              className="truncate cursor-pointer"
               onClick={() => handleRowClick(info.row.original)}
             >
-              {info
-                .getValue()
-                ?.split(", ")
-                .map((name, i) => (
-                  <span key={i} className="block  truncate ">
-                    {name}
-                  </span>
-                ))}
+              {info.getValue()}
             </div>
           </div>
         ),
@@ -81,28 +75,33 @@ export const OrderTable = () => {
       ),
     }),
     columnHelper.accessor("totalAmount", {
-      header: () => <div className="flex justify-end">Price</div>,
-      cell: (info) => <div className="text-end">{info.getValue()}</div>,
+      header: () => <div className="flex justify-start ">Price</div>,
+      cell: (info) => (
+        <div className="text-end w-30">
+          {currencyFormatter.format(info.getValue())}
+        </div>
+      ),
     }),
     columnHelper.accessor("paymentStatus", {
-      header: "Payment",
+      header: () => <div className="flex justify-start">Payment</div>,
+
       cell: (info) => {
         return info.getValue() === "Paid" ? (
           <div
-            className="flex justify-center items-center"
+            className="flex  justify-start"
             onClick={() => handleRowClick(info.row.original)}
           >
-            <div className="text-green-500 flex items-center justify-start gap-3 w-20">
+            <div className="text-green-500 flex items-center gap-3 ">
               <div className="rounded-full h-2 w-2 bg-green-500"></div>
               {info.getValue()}
             </div>
           </div>
         ) : (
           <div
-            className="flex justify-center items-center"
+            className="flex justify-start items-center"
             onClick={() => handleRowClick(info.row.original)}
           >
-            <div className="text-amber-500 flex items-center justify-start gap-3 w-20">
+            <div className="text-amber-500 flex items-center  gap-3 ">
               <div className="rounded-full h-2 w-2 bg-amber-500"></div>
               {info.getValue()}
             </div>
@@ -111,12 +110,12 @@ export const OrderTable = () => {
       },
     }),
     columnHelper.accessor("status", {
-      header: "Status",
+      header: () => <div className="flex justify-start">Stauts</div>,
       cell: ({ row }) => {
         const original = row.original;
         return original.status === statusType.DELIVERED ? (
           <div
-            className="flex justify-center items-center"
+            className="flex items-center"
             onClick={() => handleRowClick(row.original)}
           >
             <div className="text-green-500 flex items-center justify-start gap-3 w-24">
@@ -126,7 +125,7 @@ export const OrderTable = () => {
           </div>
         ) : original.status === statusType.PENDING ? (
           <div
-            className="flex justify-center items-center"
+            className="flex  items-center"
             onClick={() => handleRowClick(row.original)}
           >
             <div className="text-orange-500 flex items-center justify-start gap-3 w-24">
@@ -136,7 +135,7 @@ export const OrderTable = () => {
           </div>
         ) : original.status === statusType.SHIPPED ? (
           <div
-            className="flex justify-center items-center"
+            className="flex  items-center"
             onClick={() => handleRowClick(row.original)}
           >
             <div className="text-gray-500 flex items-center justify-start gap-3 w-24">
@@ -147,7 +146,7 @@ export const OrderTable = () => {
         ) : (
           original.status === statusType.CANCELLED && (
             <div
-              className="flex justify-center items-center "
+              className="flex  items-center "
               onClick={() => handleRowClick(row.original)}
             >
               <div className="text-red-500 flex items-center justify-start gap-3 w-24">
@@ -345,12 +344,12 @@ export const OrderTable = () => {
   };
 
   return (
-    <div className="flex p-2 rounded-lg w-full gap-5">
-      <div className="flex-1 relative hover:cursor-pointer">
+    <div className="flex rounded-lg w-full gap-5">
+      <div className="flex-1 gap-5 relative hover:cursor-pointer ">
         <Tabs
           defaultValue="All"
           data={tabsData}
-          tabsListClassName="bg-[#EAF8E7] flex dark:bg-accent"
+          tabsListClassName="bg-[#EAF8E7] flex dark:bg-accent mb-3"
         />
         <div className="absolute top-0 right-0 w-70 flex gap-2 justify-end items-center">
           <Input

@@ -10,7 +10,7 @@ namespace EcommerceProject.Models.DTOs.Profile
         // public GenderType? Gender { get; set; } // remove it
         public string? Bio { get; set; }
 
-        public IFormFile? ProfileImageFile { get; set; }
+        // public IFormFile? ProfileImageFile { get; set; }
     }
     public enum GenderType
     {

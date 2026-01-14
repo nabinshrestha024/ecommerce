@@ -7,18 +7,21 @@ import {
 import { useForm, type Resolver } from "react-hook-form";
 import type { AttributeValue } from "@/hooks/attribute/useFetchAttribute.ts";
 import { useEditAttributeValue } from "@/hooks/attribute/useEditAttributeValues.ts";
+import type { Dispatch, SetStateAction } from "react";
 
 type Props = {
   attributeValues: AttributeValue;
-  onSave: (attributeValues: AttributeValue) => void;
+  setEditAttribOpen: Dispatch<SetStateAction<number | null>>;
 };
-export const EditAttributeValueForm = ({ attributeValues, onSave }: Props) => {
+export const EditAttributeValueForm = ({
+  attributeValues,
+  setEditAttribOpen,
+}: Props) => {
   const editAttributeValue = useEditAttributeValue();
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<AttributeFormValues>({
     resolver: zodResolver(attributeSchema) as Resolver<AttributeFormValues>,
@@ -34,16 +37,17 @@ export const EditAttributeValueForm = ({ attributeValues, onSave }: Props) => {
       value: data.value,
     };
 
-    editAttributeValue.mutate({
-      attributeValueId: attributeValues.attributeValueId,
-      attributeValueData: updatedAttributevalue,
-    });
-
-    onSave(updatedAttributevalue);
-
-    reset({
-      value: updatedAttributevalue.value,
-    });
+    editAttributeValue.mutate(
+      {
+        attributeValueId: attributeValues.attributeValueId,
+        attributeValueData: updatedAttributevalue,
+      },
+      {
+        onSuccess: () => {
+          setEditAttribOpen(null);
+        },
+      },
+    );
   };
 
   return (

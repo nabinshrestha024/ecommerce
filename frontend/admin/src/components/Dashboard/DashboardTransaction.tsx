@@ -10,6 +10,7 @@ import { useState } from "react";
 import { Table } from "../Table/Table";
 import { useFetchOrder, type OrderData } from "@/hooks/order/useFetchOrder";
 import { useFetchProduct } from "@/hooks/product/useFetchProducts";
+import { currencyFormatter } from "./DashboardStats";
 
 export const DashboardTransaction = () => {
   const [pagination, setPagination] = useState<PaginationState>({
@@ -64,7 +65,11 @@ export const DashboardTransaction = () => {
     columnHelper.accessor("totalAmount", {
       header: () => <div className="flex justify-end">Amount</div>,
       cell: (info) => {
-        return <div className="text-right">{info.getValue()}</div>;
+        return (
+          <div className="text-right">
+            {currencyFormatter.format(info.getValue())}
+          </div>
+        );
       },
     }),
   ];
@@ -78,9 +83,9 @@ export const DashboardTransaction = () => {
     onPaginationChange: setPagination,
   });
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-5 pr-5">
+    <div className="grid grid-cols-1 lg:grid-cols-[65%_35%] gap-5 pr-5">
       <Card>
-        <div>
+        <div className="space-y-5">
           <div className="flex justify-between">
             <div className="text-xl font-semibold">Last 7 Orders</div>
           </div>
@@ -98,9 +103,9 @@ export const DashboardTransaction = () => {
             {data?.items
               ?.filter((item) => item.stockQuantity ?? 0 > 0)
               .map((val, index) => {
-                if (index < 4) {
+                if (index < 5) {
                   return (
-                    <div className="grid grid-cols-[1fr_2fr_1fr] gap-1.5 items-start border-b border-b-gray-200 pb-2">
+                    <div className="grid grid-cols-[1fr_1fr_1fr] gap-1.5 items-start border-b border-b-gray-200 pb-2">
                       <div className="h-15 w-15 ">
                         <img
                           src={val.primaryImageUrl}
@@ -108,13 +113,15 @@ export const DashboardTransaction = () => {
                         />
                       </div>
                       <div>
-                        <div className="text-sm font-semibold">{val.name}</div>
+                        <div className="text-sm font-semibold line-clamp-1">
+                          {val.name}
+                        </div>
                         <div className="text-xs text-gray-500 line-clamp-1">
                           {val.shortDescription}
                         </div>
                       </div>
                       <div className="text-md font-semibold text-right">
-                        {val.price}
+                        {currencyFormatter.format(val.price)}
                       </div>
                     </div>
                   );

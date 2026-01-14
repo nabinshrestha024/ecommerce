@@ -1,21 +1,16 @@
-import { Button } from "@/ui/button";
+import { GoTag } from "react-icons/go";
 
 export const Header = () => {
   return (
-    <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center w-full pt-0 pb-4 sm:pb-6 md:pb-8 gap-4">
-      <div className="font-bold text-[22px] leading-[100%] tracking-[0.5%] shrink-0">
-        Add New Product
-      </div>
-      <div className="flex flex-row gap-2 sm:gap-4 shrink-0 w-full lg:w-auto">
-        <Button
-          variant="default"
-          className="h-12 flex-1 sm:flex-initial"
-          type="submit"
-          form="productForm"
-        >
-          <span className="hidden sm:inline">Publish Product</span>
-          <span className="sm:hidden">Publish</span>
-        </Button>
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border shadow-sm">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <GoTag className="text-[#4EA674]" />
+          Product Management
+        </h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Manage, organize, and publish your products efficiently.
+        </p>
       </div>
     </div>
   );

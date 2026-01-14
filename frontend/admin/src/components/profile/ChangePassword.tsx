@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useChangePassword } from "@/hooks/changePassword/useChangePassword";
 import { PasswordSchema } from "./schemas/Password.zod";
+import { SquarePen } from "lucide-react";
+import { useState } from "react";
 export const ChangePassword = () => {
   const {
     register,
@@ -24,23 +26,44 @@ export const ChangePassword = () => {
       newPassword: data.newPassword,
     });
   };
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+  };
   return (
     <Card
-      className="flex flex-col shadow-[0px_1px_3px_0px_#00000033] w-full py-4 px-4 sm:py-6 sm:px-6 rounded-xl"
-      cardClassName="p-0 border-none shadow-none rounded-xl"
+      className="p-2 shadow-lg border-0 justify-between items-start relative "
+      cardClassName="p-0 border-none shadow-none rounded-2xl overflow-hidden"
     >
       <div>
-        <div className="font-bold text-lg sm:text-[22px] leading-tight sm:leading-[26px] tracking-[0%]">
-          Change Password
+        <div className="flex w-full justify-between">
+          <h3 className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
+            Change your password
+          </h3>
+          <button
+            className={`rounded-xl transition-all duration-200 absolute top-2 right-3 ${
+              isEditing
+                ? "bg-white text-[#4EA674] shadow-md hover:shadow-lg"
+                : " text-white"
+            }`}
+            onClick={handleEditToggle}
+            aria-label={isEditing ? "Cancel editing" : "Edit profile"}
+          >
+            <SquarePen className="h-5 w-5" color="black" />
+          </button>
         </div>
         <form
-          className="mt-4 sm:mt-5 flex flex-col gap-3 sm:gap-4"
+          className="mt-4 sm:mt-5 grid grid-cols-2 gap-3 sm:gap-4"
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className="flex flex-col ">
-            <label className="text-sm sm:text-base">Current Password</label>
+            <label className="text-md font-medium text-gray-700">
+              Current Password
+            </label>
             <Input
               type="password"
+              disabled={!isEditing}
               {...register("currentPassword")}
               className="w-full mt-2"
               placeholder="Current password..."
@@ -52,9 +75,12 @@ export const ChangePassword = () => {
             )}
           </div>
           <div className="flex flex-col ">
-            <label className="text-sm sm:text-base">New Password</label>
+            <label className="text-md font-medium text-gray-700">
+              New Password
+            </label>
             <Input
               type="password"
+              disabled={!isEditing}
               {...register("newPassword")}
               className="w-full mt-2"
               placeholder="New password..."
@@ -66,9 +92,12 @@ export const ChangePassword = () => {
             )}
           </div>
           <div className="flex flex-col ">
-            <label className="text-sm sm:text-base">Confirm Password</label>
+            <label className="text-md font-medium text-gray-700">
+              Confirm Password
+            </label>
             <Input
               type="password"
+              disabled={!isEditing}
               {...register("confirmPassword")}
               className="w-full mt-2"
               placeholder="Confirm password..."
@@ -79,14 +108,15 @@ export const ChangePassword = () => {
               </div>
             )}
           </div>
-
-          <Button
-            className="mt-3 sm:mt-4 h-10 w-full text-sm sm:text-base"
-            variant={"default"}
-            type="submit"
-          >
-            Update Password
-          </Button>
+          {isEditing && (
+            <Button
+              className="mt-3 sm:mt-4 h-10 w-full text-sm"
+              variant={"default"}
+              type="submit"
+            >
+              Update Password
+            </Button>
+          )}
         </form>
       </div>
     </Card>

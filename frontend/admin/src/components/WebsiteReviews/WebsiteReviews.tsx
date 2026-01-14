@@ -40,7 +40,7 @@ export const WebsiteReviews = () => {
       cell: ({ row }) => {
         const original = row.original;
         return (
-          <div className="flex gap-5 items-start">
+          <div className="flex gap-5 items-center">
             <div className="h-15 w-15 rounded-full overflow-hidden">
               <img
                 src={original.userImageUrl}
@@ -55,7 +55,7 @@ export const WebsiteReviews = () => {
     columnHelper.accessor("rating", {
       header: () => <div className="flex justify-start">Rating</div>,
       cell: (info) => (
-        <div className="flex justify-start">
+        <div className="flex items-center">
           <div className="flex items-center mb-2">
             {[...Array(5)].map((_, i) => (
               <Star
@@ -89,7 +89,7 @@ export const WebsiteReviews = () => {
             {content?.length > 60 && (
               <button
                 onClick={() => setExpanded(!expanded)}
-                className="text-xs text-blue-500 hover:underline hover:cursor-pointer self-start mt-1"
+                className="text-xs text-green-600 hover:underline hover:cursor-pointer self-start mt-1"
               >
                 {expanded ? "See less" : "See more"}
               </button>
@@ -132,17 +132,25 @@ export const WebsiteReviews = () => {
         const isDisabled = row.isDeleted === true;
 
         return (
-          <div className="flex justify-center">
-            <ConfirmationDialog
-              trigger={
-                <div className="p-1 rounded-lg">
-                  <MdDelete
-                    className={`${isDisabled ? "cursor-not-allowed text-[#aaadb5]" : "cursor-pointer text-[#6A717F]"}  text-[20px]`}
-                  />
-                </div>
-              }
-              confirmFunc={() => removeReviews.mutate(row.reviewId)}
-            />
+          <div className="flex justify-start">
+            {isDisabled ? (
+              <div className="p-1 rounded-lg">
+                <MdDelete
+                  className={`${isDisabled ? "cursor-not-allowed text-[#aaadb5]" : "cursor-pointer text-[#6A717F]"}  text-[20px]`}
+                />
+              </div>
+            ) : (
+              <ConfirmationDialog
+                trigger={
+                  <div className="p-1 rounded-lg ">
+                    <MdDelete
+                      className={`${isDisabled ? "cursor-not-allowed text-[#aaadb5]" : "cursor-pointer text-[#6A717F]"}  text-[20px]`}
+                    />
+                  </div>
+                }
+                confirmFunc={() => removeReviews.mutate(row.reviewId)}
+              />
+            )}
           </div>
         );
       },

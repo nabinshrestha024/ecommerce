@@ -12,7 +12,7 @@ export const TagManagement = () => {
   const [editOpen, setEditOpen] = useState<{ [key: string]: boolean }>({});
 
   return (
-    <div className="p-6 space-y-8">
+    <div className="p-5 space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border shadow-sm">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
@@ -27,7 +27,7 @@ export const TagManagement = () => {
           open={addTagOpen}
           onOpenChange={setAddTagOpen}
           triggerContent={
-            <Button className="rounded-full px-6 py-5 bg-[#4EA674] hover:bg-[#2a5f41] transition-all shadow-md hover:shadow-lg gap-2">
+            <Button className="px-5 py-4 text-[15px] font-bold leading-3 bg-[#4EA674] text-white  rounded-lg hover:bg-[#4EA674]">
               <GoPlusCircle size={20} />
               Create New Tag
             </Button>
@@ -71,7 +71,7 @@ export const TagManagement = () => {
             {data?.map((val) => (
               <div
                 key={val.tagId}
-                className="group flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl hover:border-green-200 hover:bg-green-50/30 transition-all duration-200 shadow-sm"
+                className="group flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl hover:border-green-200 hover:bg-green-50/30 transition-all duration-200 shadow-sm hover:cursor-pointer"
               >
                 <div className="flex items-center gap-3 w-full overflow-hidden justify-between">
                   <div className="flex flex-row items-center gap-2 ">
@@ -87,7 +87,7 @@ export const TagManagement = () => {
                       setEditOpen((prev) => ({ ...prev, [val.tagId]: open }))
                     }
                     triggerContent={
-                      <SquarePen className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <SquarePen className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" />
                     }
                   >
                     <EditTagForm

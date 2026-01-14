@@ -1,8 +1,14 @@
+"use client";
+
+import type React from "react";
+
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { Card } from "../Card/Card";
+import { Card } from "@/ui/card";
 import { useFormContext } from "react-hook-form";
-import { X } from "lucide-react";
+import { X, Upload } from "lucide-react";
 import { useGetCategories } from "@/hooks/product/useGetCategories";
+// import { useGetAttributes } from "@/hooks/attribute/useGetAttributes"
+import { FormSection } from "./FormSection";
 import { useGetAttributes } from "@/hooks/attribute/useGetAttribute";
 
 type ImageItem = {
@@ -12,7 +18,7 @@ type ImageItem = {
 
 export const UploadProductDetails = forwardRef((_, ref) => {
   const { data } = useGetCategories();
-  const attributesData = useGetAttributes();
+  const { data: attributesData } = useGetAttributes();
   const categories = data?.items ?? [];
   const {
     register,
@@ -84,76 +90,103 @@ export const UploadProductDetails = forwardRef((_, ref) => {
   }, [images]);
 
   return (
-    <Card
-      className="shadow-[0px_1px_3px_0px_#00000033] w-full h-auto py-4 sm:py-6 px-4 sm:px-6 rounded-xl"
-      cardClassName="p-0 border-none shadow-none rounded-xl w-full"
-    >
-      <div className="font-bold text-[22px] leading-[26px] tracking-[0%]">
-        Upload Product Details
-      </div>
-      <div className="flex flex-col mt-6 gap-8">
-        <div className="flex flex-col ">
-          <label htmlFor="productImage" className="block cursor-pointer">
-            <div
-              className={`relative border border-gray-300 rounded-md p-2 flex text-left items-center justify-center ${errors.images ? "border-red-500" : ""}`}
-            >
-              <span className="text-sm text-left">Upload Image</span>
-            </div>
-          </label>
-          <input
-            id="productImage"
-            type="file"
-            accept="image/*"
-            multiple
-            {...register("images", { onChange: handleFileChange })}
-            className="hidden"
-          />
+    <Card className="w-full rounded-lg p-6">
+      <h1 className="text-2xl font-bold text-foreground">Product Details</h1>
 
-          {images.length > 0 && (
-            <div className="grid grid-cols-3 mt-3 gap-3">
-              {images.map((img, index) => (
-                <div key={index} className="relative">
-                  <img
-                    src={img.preview}
-                    onClick={() => handleSetPrimaryImage(index)}
-                    className={`h-35 w-full object-cover rounded-lg  cursor-pointer ${index === primaryImage ? "ring-2 ring-green-600" : ""}`}
-                  />
-                  {index === primaryImage && (
-                    <span className="absolute -top-0.5 -left-0.5 bg-green-600 text-white text-xs px-2 py-1 rounded-tl rounded-br">
-                      Primary
-                    </span>
-                  )}
-                  <div className="flex justify-center items-center rounded-full bg-red-500 absolute -top-1.5 -right-1.5">
+      <div className="mt-6 flex flex-col gap-8">
+        {/* Image Upload Section */}
+        <FormSection title="Images">
+          <div className="flex flex-col gap-4">
+            <label htmlFor="productImage" className="block cursor-pointer">
+              <div
+                className={`relative flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed p-8 transition-colors ${
+                  errors.images
+                    ? "border-destructive bg-destructive/5"
+                    : "border-input bg-secondary/30 hover:border-primary hover:bg-secondary/50"
+                }`}
+              >
+                <Upload className="h-8 w-8 text-muted-foreground" />
+                <div className="text-center">
+                  <p className="text-sm font-medium text-foreground">
+                    Click to upload images
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    or drag and drop
+                  </p>
+                </div>
+              </div>
+            </label>
+            <input
+              id="productImage"
+              type="file"
+              accept="image/*"
+              multiple
+              {...register("images", { onChange: handleFileChange })}
+              className="hidden"
+            />
+
+            {errors.images && (
+              <p className="text-xs text-destructive">
+                {errors.images.message as string}
+              </p>
+            )}
+
+            {/* Image Grid */}
+            {images.length > 0 && (
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                {images.map((img, index) => (
+                  <div key={index} className="relative group">
+                    <img
+                      src={img.preview || "/placeholder.svg"}
+                      alt={`Product preview ${index + 1}`}
+                      onClick={() => handleSetPrimaryImage(index)}
+                      className={`aspect-square w-full cursor-pointer rounded-lg object-cover transition-all ${
+                        index === primaryImage
+                          ? "ring-2 ring-primary"
+                          : "ring-1 ring-input group-hover:ring-primary"
+                      }`}
+                    />
+                    {index === primaryImage && (
+                      <span className="absolute bottom-1 left-1 rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground">
+                        Primary
+                      </span>
+                    )}
                     <button
                       type="button"
                       onClick={() => handleDeleteImage(index)}
+                      className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-white shadow-sm transition-transform hover:scale-110"
+                      aria-label={`Delete image ${index + 1}`}
                     >
-                      <X className="text-white h-4 w-4" />
+                      <X className="h-3 w-3" />
                     </button>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-3">
-          <div className="font-bold text-[22px] leading-[26px] tracking-[0%]">
-            Categories
+                ))}
+              </div>
+            )}
           </div>
-          <div className="flex flex-col ">
-            <label className="block text-sm font-medium">
-              Product Categories
+        </FormSection>
+
+        {/* Categories Section */}
+        <FormSection title="Categories">
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="categoryId"
+              className="text-sm font-medium text-foreground"
+            >
+              Product Category <span className="text-destructive">*</span>
             </label>
             <select
+              id="categoryId"
               {...register("categoryId")}
               defaultValue=""
-              className={`w-full h-9 px-3 border mt-2 border-gray-300 bg-foreground-black rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${
-                errors.categoryId ? "border-red-500" : ""
+              className={`rounded-md border-2 border-input bg-background px-3 py-2 text-sm transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary ${
+                errors.categoryId
+                  ? "border-destructive focus:border-destructive"
+                  : ""
               }`}
             >
               <option value="" disabled>
-                Select product categories...
+                Select a category...
               </option>
               {categories?.map(
                 (category: { categoryId: number; name: string }) => (
@@ -163,37 +196,47 @@ export const UploadProductDetails = forwardRef((_, ref) => {
                 ),
               )}
             </select>
+            {errors.categoryId && (
+              <p className="text-xs text-destructive">
+                {errors.categoryId.message as string}
+              </p>
+            )}
           </div>
-        </div>
+        </FormSection>
 
-        <div className="flex flex-col gap-3">
-          <div className="font-bold text-[22px] leading-[26px] tracking-[0%]">
-            Attributes
-          </div>
-          <div className="grid grid-cols-3">
-            {attributesData.data?.map((item) => {
-              return (
-                <div className="flex items-center gap-2 p-2 pb-0 ">
-                  <input
-                    type="checkbox"
-                    value={item.name}
-                    {...register("attributes")}
-                    className="h-4 w-4 border-gray-300 rounded cursor-pointer accent-[#01a73e] dark:accent-emerald-600"
-                  />
-                  <label className="text-sm font-medium cursor-pointer">
-                    {item.name}
-                  </label>
-                </div>
-              );
-            })}
+        {/* Attributes Section */}
+        <FormSection title="Attributes">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+            {attributesData?.map((item: any) => (
+              <div
+                key={item.id || item.name}
+                className="flex items-center gap-2"
+              >
+                <input
+                  type="checkbox"
+                  id={`attr-${item.name}`}
+                  value={item.name}
+                  {...register("attributes")}
+                  className="h-4 w-4 cursor-pointer accent-primary"
+                />
+                <label
+                  htmlFor={`attr-${item.name}`}
+                  className="text-sm font-medium cursor-pointer text-foreground"
+                >
+                  {item.name}
+                </label>
+              </div>
+            ))}
           </div>
           {errors.attributes && (
-            <p className="text-sm text-red-500">
+            <p className="text-xs text-destructive">
               {errors.attributes?.message as string}
             </p>
           )}
-        </div>
+        </FormSection>
       </div>
     </Card>
   );
 });
+
+UploadProductDetails.displayName = "UploadProductDetails";

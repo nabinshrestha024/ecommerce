@@ -1,10 +1,10 @@
 import { axiosInstance } from "@/lib/axiosInstance";
 import { endpoint } from "@/lib/endpoint";
 
-export const getSalesOverview = async (startDate: string, endDate: string) => {
+export const getSalesOverview = async (period: string) => {
   const response = await axiosInstance.get(
     `${endpoint.REPORT}/sales-overview`,
-    { params: { FromDate: startDate, ToDate: endDate } },
+    { params: { Period: period } },
   );
   return response.data;
 };

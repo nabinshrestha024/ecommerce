@@ -1,4 +1,3 @@
-import { Input } from "@/components/Input/Input";
 import {
   ReviewFormSchema,
   ReviewFormValues,
@@ -9,11 +8,13 @@ import { usePostProductReview } from "@/hooks/productReview/usePostProductReview
 import { Button } from "@/ui/button";
 import { Label } from "@/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Dispatch, SetStateAction } from "react";
 import { Controller, Resolver, useForm } from "react-hook-form";
 interface ReviewFormProps {
   productId: number;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 }
-export const ProductReviewForm = ({ productId }: ReviewFormProps) => {
+export const ProductReviewForm = ({ productId, setOpen }: ReviewFormProps) => {
   const productReview = usePostProductReview();
   const {
     register,
@@ -26,10 +27,17 @@ export const ProductReviewForm = ({ productId }: ReviewFormProps) => {
   });
 
   const onSubmit = (data: ReviewFormValues) => {
-    productReview.mutate({
-      productId,
-      data,
-    });
+    productReview.mutate(
+      {
+        productId,
+        data,
+      },
+      {
+        onSuccess: () => {
+          setOpen(false);
+        },
+      },
+    );
   };
 
   return (
@@ -55,6 +63,7 @@ export const ProductReviewForm = ({ productId }: ReviewFormProps) => {
             <div className="">
               <TextArea
                 {...register("content")}
+                maxLength={250}
                 placeholder="Write a review..."
                 className="w-[250px] text-sm text-gray-800 border border-gray-300 rounded-lg 
                        focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent

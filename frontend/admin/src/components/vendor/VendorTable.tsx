@@ -25,13 +25,13 @@ export const VendorTable = () => {
 
   const vendors = useMemo(() => {
     if (!Array.isArray(data?.data?.items)) return [];
-    return [...data.data.items].sort((a, b) => a.vendorId - b.vendorId);
+    return [...data.data.items]
+      .filter((vendor) => vendor.isActive)
+      .sort((a, b) => a.vendorId - b.vendorId);
   }, [data]);
 
   return (
-    <div className="w-full px-4">
-      <h2 className="text-lg font-bold mb-4">Vendors Table</h2>
-
+    <div className="w-full">
       <VendorTableInternal
         data={vendors}
         editingVendor={editingVendor}

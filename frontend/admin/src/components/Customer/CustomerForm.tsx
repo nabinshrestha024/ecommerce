@@ -10,7 +10,7 @@ import type { Person } from "./CustomerProfile.tsx";
 
 type Props = {
   customer: Person;
-  onSave: (customer: Person) => void;
+  onSave: () => void;
 };
 
 export const CustomerForm = ({ customer, onSave }: Props) => {
@@ -18,7 +18,6 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<CustomerFormValues>({
     resolver: zodResolver(customerSchema) as Resolver<CustomerFormValues>,
     defaultValues: {
@@ -40,19 +39,17 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
       isActive: data.role === "true",
     };
 
-    editUser.mutate({
-      userid: customer.userid,
-      userData: updatedUser,
-    });
-
-    onSave(updatedUser);
-
-    reset({
-      name: updatedUser.fullName,
-      phone: updatedUser.phone,
-      address: updatedUser.address,
-      role: updatedUser.role ? "true" : "false",
-    });
+    editUser.mutate(
+      {
+        userid: customer.userid,
+        userData: updatedUser,
+      },
+      {
+        onSuccess: () => {
+          onSave();
+        },
+      },
+    );
   };
 
   return (

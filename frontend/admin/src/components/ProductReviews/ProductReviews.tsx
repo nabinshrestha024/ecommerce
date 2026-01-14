@@ -94,7 +94,7 @@ export const ProductReviews = () => {
             {content?.length > 60 && (
               <button
                 onClick={() => setExpanded(!expanded)}
-                className="text-xs text-blue-500 hover:underline hover:cursor-pointer self-start mt-1"
+                className="text-xs text-green-600 hover:underline hover:cursor-pointer self-start mt-1"
               >
                 {expanded ? "See less" : "See more"}
               </button>
@@ -134,16 +134,25 @@ export const ProductReviews = () => {
       header: "Actions",
       cell: (info) => {
         const row = info.row.original;
+        const isDisabled = row.isDeleted === true;
         return (
-          <div className="flex justify-center">
-            <ConfirmationDialog
-              trigger={
-                <div className="p-1 rounded-lg cursor-pointer">
-                  <MdDelete className="text-[#6A717F] text-[20px]" />
-                </div>
-              }
-              confirmFunc={() => removeReviews.mutate(row.reviewId)}
-            />
+          <div className="flex justify-start">
+            {isDisabled ? (
+              <div className="p-1 rounded-lg">
+                <MdDelete
+                  className={`${isDisabled ? "cursor-not-allowed text-[#aaadb5]" : "cursor-pointer text-[#6A717F]"}  text-[20px]`}
+                />
+              </div>
+            ) : (
+              <ConfirmationDialog
+                trigger={
+                  <div className="p-1 rounded-lg cursor-pointer">
+                    <MdDelete className="text-[#6A717F] text-[20px]" />
+                  </div>
+                }
+                confirmFunc={() => removeReviews.mutate(row.reviewId)}
+              />
+            )}
           </div>
         );
       },

@@ -23,9 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/ui/select";
-import { Dialog } from "../Dialog/Dialog";
+import { Dialog } from "../dialog/Dialog";
 import { Funnel } from "lucide-react";
-
+export const currencyFormatter = new Intl.NumberFormat("en-NP", {
+  style: "currency",
+  currency: "NPR",
+});
 type FilterFormValues = {
   minPrice: string;
   maxPrice: string;
@@ -182,7 +185,7 @@ export const ProductDisplay = () => {
       </div>
 
       <div className="space-y-5 w-full">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 w-full gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 w-full gap-3 md:gap-6">
           {(isLoading || isError) &&
             Array.from({ length: placeholderCount }).map((_, index) => (
               <ProductCardSkeleton key={index} />

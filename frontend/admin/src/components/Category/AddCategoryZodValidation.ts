@@ -11,8 +11,8 @@ export const categorySchema = z.object({
     ),
 
   description: z.string().min(2, "Description must be at least 2 characters"),
-  isFeatured: z.boolean(),
-  isActive: z.boolean(),
+  isFeatured: z.boolean("Select isFeatured"),
+  isActive: z.boolean("Select isActive"),
   sortOrder: z.coerce.number().min(0, "Sort Order is required"),
 });
 
