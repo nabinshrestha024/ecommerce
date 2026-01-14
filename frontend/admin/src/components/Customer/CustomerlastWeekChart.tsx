@@ -1,17 +1,18 @@
+import { useGetCustomerReport } from "@/hooks/customer/useGetCustomerReport";
 import { Card } from "../Card/Card";
 import { AreaChart } from "../Charts/AreaChart";
-
-const data = [
-  { xAxis: "Sun", yAxis: 3500 },
-  { xAxis: "Mon", yAxis: 2500 },
-  { xAxis: "Tue", yAxis: 2000 },
-  { xAxis: "Wed", yAxis: 2380 },
-  { xAxis: "Thurs", yAxis: 1890 },
-  { xAxis: "Fri", yAxis: 2390 },
-  { xAxis: "Sat", yAxis: 3490 },
-];
+import type { ChartType } from "../Dashboard/DashboardChart";
 
 export const CustomerLastWeekChart = () => {
+  const customerData = useGetCustomerReport("lastmonth");
+  const data: ChartType[] =
+    customerData?.data?.map((val) => ({
+      xAxis: new Date(val.date).toLocaleDateString("en-US", {
+        month: "numeric",
+        day: "numeric",
+      }),
+      yAxis: val.totalRegistrations,
+    })) ?? [];
   return (
     <Card className="w-full">
       <AreaChart data={data} />
