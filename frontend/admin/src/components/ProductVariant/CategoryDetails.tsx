@@ -28,6 +28,17 @@ import { Table } from "../Table/Table";
 import { useParams } from "react-router-dom";
 import { currencyFormatter } from "../Dashboard/DashboardStats";
 import { MdAddCircleOutline } from "react-icons/md";
+import { FaEdit } from "react-icons/fa";
+import { VariantForm } from "./VariantForm";
+
+export interface Variant {
+  variantId: number;
+  productId: number;
+  price: number;
+  stockQuantity: number;
+  isActive: boolean;
+  isDefault: boolean;
+}
 
 export const CategoryDetails = () => {
   const [pagination, setPagination] = useState({
@@ -61,6 +72,12 @@ export const CategoryDetails = () => {
       delete next[attributeName];
       return next;
     });
+  };
+
+  const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
+
+  const handleEdit = (row: Variant) => {
+    setSelectedVariant(row);
   };
 
   const handleAddVariant = () => {
@@ -151,7 +168,7 @@ export const CategoryDetails = () => {
     }),
 
     columnHelper.accessor("price", {
-      header: () => <div className="flex justify-end">Price</div>,
+      header: () => <div className="flex justify-start">Price</div>,
       cell: (info) => {
         return (
           <div className="text-right">
@@ -166,6 +183,35 @@ export const CategoryDetails = () => {
       cell: (info) => {
         return <div className="text-left">{info.getValue()}</div>;
       },
+    }),
+
+    columnHelper.display({
+      id: "actions",
+      header: () => <div className="flex justify-start">Action</div>,
+      cell: (info) => (
+        <Dialog
+          triggerContent={
+            <FaEdit
+              className="text-[#6A717F] text-[20px] cursor-pointer flex items-center"
+              onClick={() => {
+                handleEdit(info.row.original);
+              }}
+            />
+          }
+        >
+          {selectedVariant && (
+            <VariantForm
+              variant={{
+                ...selectedVariant,
+                variantId: selectedVariant.variantId,
+              }}
+              onSave={() => {
+                setSelectedVariant(null);
+              }}
+            />
+          )}
+        </Dialog>
+      ),
     }),
   ];
 
