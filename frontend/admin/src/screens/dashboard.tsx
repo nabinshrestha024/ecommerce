@@ -3,7 +3,6 @@ import { DashboardStats } from "@/components/Dashboard/DashboardStats";
 import { DashboardTopSelling } from "@/components/Dashboard/DashboardTopSelling";
 import { DashboardTransaction } from "@/components/Dashboard/DashboardTransaction";
 import { Button } from "@/ui/button";
-import { GoTag } from "react-icons/go";
 import { MdAddCircleOutline } from "react-icons/md";
 import { Link } from "react-router-dom";
 
@@ -13,7 +12,6 @@ export const Dashboard = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border shadow-sm">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <GoTag className="text-[#4EA674]" />
             Dashboard
           </h1>
           <p className="text-sm text-gray-500 mt-1">

@@ -5,8 +5,8 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { BsPatchPlus } from "react-icons/bs";
-import { FaEdit } from "react-icons/fa";
+import { BsPatchCheckFill } from "react-icons/bs";
+import { MdEdit } from "react-icons/md";
 import { Table } from "../Table/Table";
 import { Dialog } from "../Dialog/Dialog";
 import {
@@ -93,8 +93,8 @@ export const DiscountTable = () => {
               setOpen(isOpen ? info.row.original.discountId : null);
             }}
             triggerContent={
-              <FaEdit
-                className="text-[#6A717F] text-[20px] cursor-pointer"
+              <MdEdit
+                className="text-gray-500 text-[20px] cursor-pointer"
                 onClick={() => handleEdit(info.row.original)}
               />
             }
@@ -103,8 +103,8 @@ export const DiscountTable = () => {
               <DiscountForm discount={selectedDiscount} setOpen={setOpen} />
             )}
           </Dialog>
-          <BsPatchPlus
-            className="text-[#6A717F] text-[20px] cursor-pointer"
+          <BsPatchCheckFill
+            className="text-gray-500 text-[20px] cursor-pointer"
             onClick={() => handlePatch(info.row.original)}
           />
         </div>

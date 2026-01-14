@@ -75,7 +75,7 @@ export const DashboardTopSelling = () => {
       },
     }),
     columnHelper.accessor("price", {
-      header: () => <div className="flex justify-end">Price</div>,
+      header: () => <div className="flex justify-start">Price</div>,
       cell: (info) => {
         return (
           <div className="text-right">

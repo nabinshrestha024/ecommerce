@@ -28,7 +28,7 @@ import { Table } from "../Table/Table";
 import { useParams } from "react-router-dom";
 import { currencyFormatter } from "../Dashboard/DashboardStats";
 import { MdAddCircleOutline } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
 import { VariantForm } from "./VariantForm";
 
 export interface Variant {
@@ -191,8 +191,8 @@ export const CategoryDetails = () => {
       cell: (info) => (
         <Dialog
           triggerContent={
-            <FaEdit
-              className="text-[#6A717F] text-[20px] cursor-pointer flex items-center"
+            <MdEdit
+              className="text-gray-500 text-[20px] cursor-pointer flex items-center"
               onClick={() => {
                 handleEdit(info.row.original);
               }}

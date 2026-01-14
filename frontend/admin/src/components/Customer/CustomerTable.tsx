@@ -4,8 +4,8 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { MdDelete } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
 import { Table } from "../Table/Table";
 import { type Person } from "../Customer/CustomerProfile.tsx";
 import { Dialog } from "../Dialog/Dialog.tsx";
@@ -98,7 +98,7 @@ export const CustomerTable = () => {
         const isInactive = !info.row.original.isActive;
 
         return (
-          <div className="flex gap-3 items-center">
+          <div className="flex gap-2 items-center">
             {!isInactive ? (
               <Dialog
                 triggerContent={
@@ -107,7 +107,7 @@ export const CustomerTable = () => {
                     className="p-1.5 hover:bg-gray-100 rounded-md transition-colors"
                     onClick={() => handleEdit(info.row.original)}
                   >
-                    <FaEdit className="text-gray-600 text-[18px]" />
+                    <MdEdit className="text-gray-500 text-[20px]" />
                   </button>
                 }
               >
@@ -120,7 +120,7 @@ export const CustomerTable = () => {
               </Dialog>
             ) : (
               <button disabled className="p-1.5 cursor-not-allowed">
-                <FaEdit className="text-gray-300 text-[18px]" />
+                <MdEdit className="text-gray-300 text-[20px]" />
               </button>
             )}
 
@@ -131,14 +131,14 @@ export const CustomerTable = () => {
                     type="button"
                     className="p-1.5 hover:bg-gray-100 rounded-md transition-colors"
                   >
-                    <MdDelete className="text-[18px] text-gray-500" />
+                    <FaTrash className="text-[18px] text-gray-500" />
                   </button>
                 }
                 confirmFunc={() => handleDelete(info.row.original.userid)}
               />
             ) : (
               <button disabled className="p-1.5 cursor-not-allowed">
-                <MdDelete className="text-[18px] text-gray-300" />
+                <FaTrash className="text-[18px] text-gray-300" />
               </button>
             )}
           </div>

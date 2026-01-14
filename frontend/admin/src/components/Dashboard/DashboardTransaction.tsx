@@ -63,7 +63,7 @@ export const DashboardTransaction = () => {
       },
     }),
     columnHelper.accessor("totalAmount", {
-      header: () => <div className="flex justify-end">Amount</div>,
+      header: () => <div className="flex justify-start">Amount</div>,
       cell: (info) => {
         return (
           <div className="text-right">

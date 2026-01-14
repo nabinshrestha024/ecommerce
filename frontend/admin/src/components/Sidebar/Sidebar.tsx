@@ -1,9 +1,11 @@
-import { IoMdHome, IoMdPerson } from "react-icons/io";
+import { IoMdHome } from "react-icons/io";
 import { FaProductHunt, FaShoppingCart, FaStar, FaTags } from "react-icons/fa";
 import { BsPlusCircleFill } from "react-icons/bs";
-import { CgProfile } from "react-icons/cg";
-import { BiCategory } from "react-icons/bi";
-import { AiOutlinePercentage } from "react-icons/ai";
+import { FaPercentage } from "react-icons/fa";
+import { FaUserLarge } from "react-icons/fa6";
+import { FaUserGroup } from "react-icons/fa6";
+import { FaUsers } from "react-icons/fa6";
+import { MdReviews } from "react-icons/md";
 import {
   Sidebar as Root,
   SidebarContent,
@@ -21,6 +23,8 @@ import { useState } from "react";
 import { TooltipContent, Tooltip, TooltipTrigger } from "@/ui/tooltip";
 import { LogoutButton } from "../Logout/LogoutButton";
 import { useGetProfile } from "@/hooks/profile/useGetProfile";
+import { BiSolidCategory } from "react-icons/bi";
+import { RiApps2AddFill } from "react-icons/ri";
 
 const items = [
   {
@@ -28,14 +32,13 @@ const items = [
     data: [
       { title: "Dashboard", url: "/dashboard", icon: IoMdHome },
       {
-        title: "Order Management",
-        url: "/order-management",
+        title: "Order",
+        url: "/order",
         icon: FaShoppingCart,
       },
-      { title: "Customer", url: "/customer", icon: IoMdPerson },
+      { title: "Customer", url: "/customer", icon: FaUsers },
       { title: "Product", url: "/product", icon: FaProductHunt },
-      { title: "Category", url: "/category", icon: BiCategory },
-      { title: "Website Review", url: "/website-reviews", icon: FaStar },
+      { title: "Category", url: "/category", icon: BiSolidCategory },
     ],
   },
   {
@@ -44,7 +47,7 @@ const items = [
       {
         title: "Product Management",
         url: "/product-management",
-        icon: BsPlusCircleFill,
+        icon: RiApps2AddFill,
       },
 
       {
@@ -53,15 +56,21 @@ const items = [
         icon: BsPlusCircleFill,
       },
       {
-        title: "Discount",
-        url: "/discount",
-        icon: AiOutlinePercentage,
+        title: "Discount Management",
+        url: "/discount-management",
+        icon: FaPercentage,
       },
       {
         title: "Tag Management",
         url: "/tag-management",
         icon: FaTags,
       },
+    ],
+  },
+  {
+    group: "Review",
+    data: [
+      { title: "Website Review", url: "/website-reviews", icon: MdReviews },
       {
         title: "Product Review",
         url: "/product-reviews",
@@ -71,11 +80,11 @@ const items = [
   },
   {
     group: "User",
-    data: [{ title: "User Profile", url: "/profile", icon: CgProfile }],
+    data: [{ title: "User Profile", url: "/profile", icon: FaUserLarge }],
   },
   {
     group: "Vendor",
-    data: [{ title: "Vendor", url: "/vendor", icon: CgProfile }],
+    data: [{ title: "Vendor", url: "/vendor", icon: FaUserGroup }],
   },
 ];
 
