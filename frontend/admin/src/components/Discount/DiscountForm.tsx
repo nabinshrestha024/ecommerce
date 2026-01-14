@@ -113,7 +113,7 @@ export const DiscountForm = ({ discount, setOpen }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 mt-5">
-          <label className="col-span-1 font-medium text-gray-700">
+          <label className="col-span-1 font-medium text-gray-700 whitespace-nowrap">
             Discount Name
           </label>
           <div className="col-span-3">
@@ -132,7 +132,9 @@ export const DiscountForm = ({ discount, setOpen }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4  mt-5">
-          <label className="font-medium text-gray-700">Discount Type</label>
+          <label className="col-span-1 font-medium text-gray-700 whitespace-nowrap">
+            Discount Type
+          </label>
           <div className="col-span-3">
             <Select
               defaultValue={discountType}
@@ -145,7 +147,9 @@ export const DiscountForm = ({ discount, setOpen }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 mt-5">
-          <label className="font-medium text-gray-700">Discount Value</label>
+          <label className="col-span-1 font-medium text-gray-700 whitespace-nowrap">
+            Discount Value
+          </label>
           <div className="col-span-3">
             <Input
               type="text"
@@ -162,7 +166,9 @@ export const DiscountForm = ({ discount, setOpen }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 mt-5">
-          <label className="font-medium text-gray-700 mt-2">Start Date</label>
+          <label className="font-medium text-gray-700 whitespace-nowrap">
+            Start Date
+          </label>
           <div className="col-span-3">
             <Input
               type="date"

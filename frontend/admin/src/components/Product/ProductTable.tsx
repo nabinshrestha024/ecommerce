@@ -4,8 +4,9 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { MdDelete } from "react-icons/md";
-import { FaEdit, FaTags } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import { FaTags } from "react-icons/fa";
 import { FaPercent } from "react-icons/fa6";
 import { Table } from "../Table/Table";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +20,7 @@ import { useDebounce } from "@/hooks/search/useDebounce";
 import { TagForm } from "./TagForm";
 import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog";
 import { ProductDiscountForm } from "./DiscountForm";
+import { Spinner } from "../Spinner/Spinner";
 
 export const ProductTable = () => {
   const [pagination, setPagination] = useState({
@@ -145,8 +147,8 @@ export const ProductTable = () => {
 
           <Dialog
             triggerContent={
-              <FaEdit
-                className="text-[#6A717F] text-[20px] cursor-pointer"
+              <MdEdit
+                className="text-gray-500 text-[20px] cursor-pointer"
                 onClick={() => handleEdit(info.row.original)}
               />
             }
@@ -163,7 +165,7 @@ export const ProductTable = () => {
             )}
           </Dialog>
           <ConfirmationDialog
-            trigger={<MdDelete className="text-[#6A717F] text-[20px]" />}
+            trigger={<FaTrash className="text-gray-500 text-[18px]" />}
             confirmFunc={() => handleDelete(info.row.original.productId)}
           />
         </div>
@@ -184,7 +186,9 @@ export const ProductTable = () => {
     onPaginationChange: setPagination,
   });
 
-  return (
+  return product.isLoading ? (
+    <Spinner />
+  ) : (
     <div className="w-full ">
       <div className="w-full justify-between flex mb-5">
         <div className="text-2xl font-bold text-gray-900 ">

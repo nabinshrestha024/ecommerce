@@ -5,8 +5,8 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { BsPatchPlus } from "react-icons/bs";
-import { FaEdit } from "react-icons/fa";
+import { BsPatchCheckFill } from "react-icons/bs";
+import { MdEdit } from "react-icons/md";
 import { Table } from "../Table/Table";
 import { Dialog } from "../Dialog/Dialog";
 import {
@@ -16,6 +16,7 @@ import {
 import { DiscountForm } from "./DiscountForm";
 import { usePatchDicount } from "@/hooks/discount/usePatchDiscount";
 import { currencyFormatter } from "../Dashboard/DashboardStats";
+import { Spinner } from "../Spinner/Spinner";
 
 export const DiscountTable = () => {
   const discountProduct = useFetchDiscountProduct();
@@ -93,8 +94,8 @@ export const DiscountTable = () => {
               setOpen(isOpen ? info.row.original.discountId : null);
             }}
             triggerContent={
-              <FaEdit
-                className="text-[#6A717F] text-[20px] cursor-pointer"
+              <MdEdit
+                className="text-gray-500 text-[20px] cursor-pointer"
                 onClick={() => handleEdit(info.row.original)}
               />
             }
@@ -103,8 +104,8 @@ export const DiscountTable = () => {
               <DiscountForm discount={selectedDiscount} setOpen={setOpen} />
             )}
           </Dialog>
-          <BsPatchPlus
-            className="text-[#6A717F] text-[20px] cursor-pointer"
+          <BsPatchCheckFill
+            className="text-gray-500 text-[20px] cursor-pointer"
             onClick={() => handlePatch(info.row.original)}
           />
         </div>
@@ -126,7 +127,9 @@ export const DiscountTable = () => {
     onPaginationChange: setPagination,
   });
 
-  return (
+  return discountProduct.isLoading ? (
+    <Spinner />
+  ) : (
     <div className="w-full ">
       <div className="flex flex-col-reverse gap-3">
         <Table
