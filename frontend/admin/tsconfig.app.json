@@ -29,5 +29,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "../client/components/Profile/ProfileCropDialog.tsx"]
+  "include": ["src"]
 }
