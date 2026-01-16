@@ -141,7 +141,7 @@ export const TopNav = () => {
                   >
                     <div className="w-10 h-10 relative rounded overflow-hidden">
                       <Image
-                        src={`http://192.168.80.242${product?.images[0]?.imageUrl}`}
+                        src={`${product?.images[0]?.imageUrl}`}
                         alt={product.name}
                         fill
                         className="object-cover"
