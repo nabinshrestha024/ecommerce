@@ -118,7 +118,18 @@ export default function UserProfile() {
                 </div>
               </div>
               <Link
-                href={"#links"}
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelected("profile");
+
+                  requestAnimationFrame(() => {
+                    document.getElementById("links")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  });
+                }}
                 className="text-center hover:cursor-pointer group"
               >
                 <div className="text-2xl font-bold text-gray-900 group">
