@@ -11,6 +11,7 @@ import { useFetchProfile } from "@/hooks/profile/useFetchProfile";
 import { useEditProfile } from "@/hooks/profile/useEditProfile";
 import { ChangePassword } from "./ChangePassword";
 import { SocialLinks } from "./SocialLinks";
+import { MdEdit } from "react-icons/md";
 
 export interface ProfileFormData {
   firstName?: string;
@@ -97,15 +98,13 @@ export const ProfileUpdate = () => {
                 Personal Information
               </h3>
               <button
-                className={`rounded-xl transition-all duration-200 ${
-                  isEditing
-                    ? "bg-white text-[#4EA674] shadow-md hover:shadow-lg"
-                    : " text-white"
+                className={` transition-all duration-200 ${
+                  isEditing ? "bg-white text-[#4EA674]" : " text-white"
                 }`}
                 onClick={handleEditToggle}
                 aria-label={isEditing ? "Cancel editing" : "Edit profile"}
               >
-                <SquarePen className="h-5 w-5" color="black" />
+                <MdEdit className="h-5 w-5 text-gray-500" />
               </button>
             </div>
 
