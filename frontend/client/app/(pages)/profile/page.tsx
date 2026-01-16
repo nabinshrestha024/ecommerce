@@ -25,7 +25,9 @@ export default function UserProfile() {
   const [cropOpen, setCropOpen] = useState<boolean>(false);
   const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
-  const [selected, setSelected] = useQueryState("profile");
+  const [selected, setSelected] = useQueryState("value", {
+    defaultValue: "profile",
+  });
 
   return isLoading || orders.isLoading || socialLinks.isLoading ? (
     <div className="fixed top-0 left-0 h-screen w-screen flex items-center justify-center">
