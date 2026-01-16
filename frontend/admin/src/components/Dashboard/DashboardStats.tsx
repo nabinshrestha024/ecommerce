@@ -61,7 +61,7 @@ export const DashboardStats = () => {
           <div className="text-[18px] font-medium flex flex-col mt-2 border-l-2 border-l-gray-200 pl-4">
             Cancelled{" "}
             <span className="text-red-500 text-2xl">
-              {orderReport?.data?.canceled ?? 0}
+              {orderReport?.data?.cancelled ?? 0}
             </span>
           </div>
         </div>

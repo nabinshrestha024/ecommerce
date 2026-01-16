@@ -125,93 +125,95 @@ export const OrderDetails = ({
         ))}
       </div>
 
-      <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <p className="text-sm text-gray-500 font-medium">Order Total</p>
-            <p className="text-2xl font-black text-gray-900">
-              Rs. {order.totalAmount}
-            </p>
-          </div>
-          <div className="text-right">
-            <span
-              className={`text-[10px] uppercase tracking-widest px-3 py-1 rounded-full font-bold shadow-sm ${
-                order.paymentStatus === "Paid"
-                  ? "bg-green-100 text-green-700 border border-green-200"
-                  : "bg-amber-100 text-amber-700 border border-amber-200"
-              }`}
-            >
-              {order.paymentStatus}
-            </span>
-          </div>
-        </div>
-
-        {order.paymentStatus !== "Paid" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <ConfirmationDialog
-              trigger={
-                <Button
-                  variant="outline"
-                  disabled={isCancelling}
-                  className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors py-6 rounded-xl flex gap-2"
-                >
-                  <Trash2 size={18} />
-                  Cancel Order
-                </Button>
-              }
-              confirmFunc={() => cancelOrder(order.orderId)}
-            />
-
-            <form
-              action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"
-              method="POST"
-              className="w-full"
-            >
-              <input type="hidden" name="amount" value={total} />
-              <input type="hidden" name="tax_amount" value="0" />
-              <input type="hidden" name="total_amount" value={total} />
-              <input type="hidden" name="product_service_charge" value="0" />
-              <input type="hidden" name="product_delivery_charge" value="0" />
-              <input
-                type="hidden"
-                name="transaction_uuid"
-                value={transactionUid}
-              />
-              <input type="hidden" name="product_code" value="EPAYTEST" />
-              <input
-                type="hidden"
-                name="success_url"
-                value="http://localhost:3000/success"
-              />
-              <input
-                type="hidden"
-                name="failure_url"
-                value="http://localhost:3000/failure"
-              />
-              <input
-                type="hidden"
-                name="signed_field_names"
-                value="total_amount,transaction_uuid,product_code"
-              />
-              <input type="hidden" name="signature" value={signature} />
-
-              <Button
-                type="submit"
-                disabled={!signature}
-                className="w-full bg-[#60bb46] hover:bg-[#52a63b] text-white py-6 rounded-xl flex gap-2 shadow-lg shadow-green-100"
+      {order.status !== "Cancelled" && (
+        <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <p className="text-sm text-gray-500 font-medium">Order Total</p>
+              <p className="text-2xl font-black text-gray-900">
+                Rs. {order.totalAmount}
+              </p>
+            </div>
+            <div className="text-right">
+              <span
+                className={`text-[10px] uppercase tracking-widest px-3 py-1 rounded-full font-bold shadow-sm ${
+                  order.paymentStatus === "Paid"
+                    ? "bg-green-100 text-green-700 border border-green-200"
+                    : "bg-amber-100 text-amber-700 border border-amber-200"
+                }`}
               >
-                Pay with eSewa
-              </Button>
-            </form>
+                {order.paymentStatus}
+              </span>
+            </div>
           </div>
-        )}
 
-        {order.paymentStatus === "Paid" && (
-          <div className="flex items-center justify-center gap-2 text-green-600 font-medium bg-green-50 p-4 rounded-xl border border-green-100">
-            Payment Completed Successfully
-          </div>
-        )}
-      </div>
+          {order.paymentStatus !== "Paid" && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <ConfirmationDialog
+                trigger={
+                  <Button
+                    variant="outline"
+                    disabled={isCancelling}
+                    className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors py-6 rounded-xl flex gap-2"
+                  >
+                    <Trash2 size={18} />
+                    Cancel Order
+                  </Button>
+                }
+                confirmFunc={() => cancelOrder(order.orderId)}
+              />
+
+              <form
+                action="https://rc-epay.esewa.com.np/api/epay/main/v2/form"
+                method="POST"
+                className="w-full"
+              >
+                <input type="hidden" name="amount" value={total} />
+                <input type="hidden" name="tax_amount" value="0" />
+                <input type="hidden" name="total_amount" value={total} />
+                <input type="hidden" name="product_service_charge" value="0" />
+                <input type="hidden" name="product_delivery_charge" value="0" />
+                <input
+                  type="hidden"
+                  name="transaction_uuid"
+                  value={transactionUid}
+                />
+                <input type="hidden" name="product_code" value="EPAYTEST" />
+                <input
+                  type="hidden"
+                  name="success_url"
+                  value="http://localhost:3000/success"
+                />
+                <input
+                  type="hidden"
+                  name="failure_url"
+                  value="http://localhost:3000/failure"
+                />
+                <input
+                  type="hidden"
+                  name="signed_field_names"
+                  value="total_amount,transaction_uuid,product_code"
+                />
+                <input type="hidden" name="signature" value={signature} />
+
+                <Button
+                  type="submit"
+                  disabled={!signature}
+                  className="w-full bg-[#60bb46] hover:bg-[#52a63b] text-white py-6 rounded-xl flex gap-2 shadow-lg shadow-green-100"
+                >
+                  Pay with eSewa
+                </Button>
+              </form>
+            </div>
+          )}
+
+          {order.paymentStatus === "Paid" && (
+            <div className="flex items-center justify-center gap-2 text-green-600 font-medium bg-green-50 p-4 rounded-xl border border-green-100">
+              Payment Completed Successfully
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
