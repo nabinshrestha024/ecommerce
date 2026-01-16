@@ -12,6 +12,7 @@ import {
 import { X } from "lucide-react";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog";
+import { currencyFormatter } from "../Dashboard/DashboardStats";
 
 export const OrderDetails = ({
   order,
@@ -72,9 +73,19 @@ export const OrderDetails = ({
                 </div>
 
                 <div className="text-right">
-                  <p className="text-sm font-bold text-gray-900">
-                    Rs. {val.unitPrice.toLocaleString()}
-                  </p>
+                  <div className="flex flex-col gap-2">
+                    {val?.finalPrice === 0 ? (
+                      <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                        {currencyFormatter.format(val?.lineTotal ?? 0)}
+                      </span>
+                    ) : (
+                      <div className="flex gap-2">
+                        <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                          {currencyFormatter.format(val?.finalPrice ?? 0)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   <p className="text-[11px] text-gray-400 font-medium">
                     Qty: {val.quantity}
                   </p>

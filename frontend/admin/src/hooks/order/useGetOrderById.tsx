@@ -10,6 +10,7 @@ export type OrderData = {
   quantity: number;
   unitPrice: number;
   lineTotal: number;
+  finalPrice: number;
   productImageUrl?: string;
   productDescription?: string;
   variant: AttributeType[];
