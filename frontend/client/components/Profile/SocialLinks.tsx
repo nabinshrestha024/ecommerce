@@ -190,7 +190,7 @@ export const SocialLinks = () => {
       className="p-5 border-0 justify-between items-start relative "
       rootClassName="p-0 border-none shadow-none rounded-2xl overflow-hidden "
     >
-      <h3 className="text-2xl font-semibold text-gray-900 mb-5">
+      <h3 className="text-2xl font-semibold text-gray-900 mb-5" id="links">
         Update your social links
       </h3>
       <form className="flex flex-col gap-5 ">
