@@ -1,47 +1,51 @@
-﻿USE [EcommerceDB]
+﻿USE EcommerceDB;
 GO
 
-CREATE OR ALTER PROCEDURE spReport_GetTotalSales
+
+CREATE OR ALTER PROCEDURE dbo.spReport_GetTotalSales
+(
     @FromDate DATETIME = NULL,
-    @ToDate DATETIME = NULL,
-    @Period VARCHAR(20) = NULL
+    @ToDate   DATETIME = NULL,
+    @Period   VARCHAR(20) = NULL
+)
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    if @Period IS NOT NULL
-    BEGIN 
-    IF @Period = 'day'
-    BEGIN 
-    SET @FromDate =CAST(GETDATE() AS DATE);
-    SET @ToDate = DATEADD(DAY, 1, @FromDate);
-    END
+    DECLARE @Today DATE = CAST(GETDATE() AS DATE);
 
-    ELSE IF @Period = 'lastweek'
+    IF @Period IS NOT NULL
+    BEGIN
+        IF @Period = 'day'
         BEGIN
-            SET @ToDate   = GETDATE();
-            SET @FromDate = DATEADD(DAY, -7, @ToDate);
+            SET @FromDate = @Today;
+            SET @ToDate   = DATEADD(DAY, 1, @Today);
         END
-
+        ELSE IF @Period = 'lastweek'
+        BEGIN
+            SET @FromDate = DATEADD(DAY, -6, @Today);
+            SET @ToDate   = DATEADD(DAY, 1, @Today);
+        END
         ELSE IF @Period = 'lastmonth'
         BEGIN
-            SET @ToDate   = GETDATE();
-            SET @FromDate = DATEADD(MONTH, -1, @ToDate);
+            SET @FromDate = DATEADD(DAY, -29, @Today); 
+            SET @ToDate   = DATEADD(DAY, 1, @Today);
+        END
+    END
 
-END
-END
 
+    IF @FromDate IS NULL SET @FromDate = '2020-01-01';
+    IF @ToDate   IS NULL SET @ToDate   = DATEADD(DAY, 1, @Today);
 
-;WITH DateRange AS
+    ;WITH DateRange AS
     (
         SELECT CAST(@FromDate AS DATE) AS [Date]
         UNION ALL
         SELECT DATEADD(DAY, 1, [Date])
         FROM DateRange
-        WHERE [Date] < DATEADD(DAY, -1, CAST(@ToDate AS DATE))
+        WHERE [Date] < CAST(DATEADD(DAY, -1, @ToDate) AS DATE)
     )
-
-        SELECT
+    SELECT
         d.[Date],
         ISNULL(SUM(o.TotalAmount), 0) AS TotalSales,
         COUNT(o.OrderId) AS TotalOrders

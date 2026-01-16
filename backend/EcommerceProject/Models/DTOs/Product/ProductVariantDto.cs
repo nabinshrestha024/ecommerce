@@ -9,6 +9,13 @@ namespace EcommerceProject.Models.DTOs.Product
         public int VariantId { get; set; }
         public string SKU { get; set; } = default!;
         public decimal Price { get; set; }
+
+        public int? DiscountId { get; set; }
+
+        public string DiscountType { get; set; } = "";
+        public decimal? DiscountValue { get; set; }
+
+        public decimal FinalPrice { get; set; }
         public int StockQuantity { get; set; }
         public bool IsDefault { get; set; }
         public bool IsActive { get; set; }
