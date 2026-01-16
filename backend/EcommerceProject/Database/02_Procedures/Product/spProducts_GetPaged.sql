@@ -76,7 +76,7 @@ BEGIN
         p.UpdatedAt,
         v.Price AS Price,
         v.StockQuantity,
-        v.DiscountId,
+         CASE WHEN d.DiscountId IS NOT NULL THEN d.DiscountId ELSE NULL END AS DiscountId,
         d.DiscountType,
         d.DiscountValue,
 
@@ -116,7 +116,7 @@ BEGIN
         pv.ProductId,
         pv.SKU,
         pv.Price,
-        pv.DiscountId,
+        CASE WHEN d.DiscountId IS NOT NULL THEN d.DiscountId ELSE NULL END AS DiscountId,
         d.DiscountType,
         d.DiscountValue,
         CASE
