@@ -16,13 +16,15 @@ import { useUpdateCart } from "@/hooks/cart/useUpdateCart";
 import { Checkbox } from "@/ui/checkbox";
 import { CartProductType } from "./TopNav";
 import { Dialog } from "@/components/dialog/Dialog";
+import { FaShoppingCart } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa6";
 
 export const CartComponent = () => {
   const [open, setOpen] = useState(false);
   const deleteCart = useDeleteCart();
   const updateCart = useUpdateCart();
 
-  const { data, isLoading, isError, error, refetch } = useFetchCart();
+  const { data, isLoading, refetch } = useFetchCart();
   const { token } = useAuth();
   const isAuth = Boolean(token);
   const router = useRouter();
@@ -66,11 +68,11 @@ export const CartComponent = () => {
         className="relative transition-transform active:scale-95 text-2xl"
       >
         {isAuth && (data?.length ?? 0) > 0 && (
-          <span className="absolute -top-2 -right-2 h-4 w-4 bg-red-600 rounded-full flex items-center justify-center text-[10px] text-white font-bold ring-2 ring-white animate-in zoom-in">
+          <span className="absolute -top-1 -right-2 h-3 w-3 bg-red-600 rounded-full flex items-center justify-center text-[8px] text-white font-bold ring-1 ring-white animate-in zoom-in">
             {data?.length}
           </span>
         )}
-        <MdOutlineShoppingCart className="text-gray-700 cursor-pointer" />
+        <FaShoppingCart className="cursor-pointer" size={22} />
       </button>
 
       {open && (
@@ -89,7 +91,7 @@ export const CartComponent = () => {
           <header className="flex items-center justify-between px-6 py-5 border-b bg-white">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-gray-100 rounded-lg">
-                <MdOutlineShoppingCart className="text-xl text-gray-800" />
+                <FaShoppingCart className="text-xl text-gray-800" />
               </div>
               <div>
                 <h2 className="text-lg font-bold text-gray-900">Your Cart</h2>
@@ -133,7 +135,7 @@ export const CartComponent = () => {
                     Your cart is empty
                   </h3>
                   <p className="text-sm text-gray-500 mt-1">
-                    Looks like you haven't added anything yet.
+                    Looks like you haven&apos;t added anything yet.
                   </p>
                 </div>
                 <Button
@@ -183,7 +185,7 @@ export const CartComponent = () => {
                           className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                           onClick={() => deleteCart.mutate(val.cartId)}
                         >
-                          <Trash2 size={16} />
+                          <FaTrash size={16} />
                         </button>
                       </div>
 

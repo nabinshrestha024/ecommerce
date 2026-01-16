@@ -6,7 +6,7 @@ import { Card } from "@/components/Card/Card";
 import { socialIconMap } from "@/components/Profile/socialIconMap.import";
 import { ProfileUpdate } from "@/components/Profile/ProfileUpdate";
 import { ProfileCropDialog } from "@/components/Profile/ChangeProfile";
-import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { ProfileHeader } from "@/components/Profile/ProfileHeader";
 
 export interface SocialLink {
   platform: "Instagram" | "Facebook" | "Twitter";
@@ -21,7 +21,7 @@ export const Profile = () => {
   const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
   return (
-    <>
+    <div className="mx-auto w-full max-w-5xl">
       <ProfileHeader />
       <Card
         className="flex flex-col shadow-[0px_1px_3px_0px_#00000033] w-full p-5 sm:py-6 px-4 sm:px-6 rounded-xl"
@@ -122,6 +122,6 @@ export const Profile = () => {
           />
         )}
       </Card>
-    </>
+    </div>
   );
 };

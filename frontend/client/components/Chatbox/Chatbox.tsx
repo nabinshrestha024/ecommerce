@@ -6,6 +6,7 @@ import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
 import { Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { MdOutlineChatBubble } from "react-icons/md";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -135,18 +136,7 @@ export default function Chatbot() {
         aria-label="Open chat"
         className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-green-600 shadow-lg flex items-center justify-center border-none cursor-pointer"
       >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="white"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
-        </svg>
+        <MdOutlineChatBubble color="white" />
       </button>
       {open && (
         <div className="fixed bottom-24 right-6 w-100 h-[450px] bg-white rounded-xl flex flex-col shadow-xl animate-slideUp">
