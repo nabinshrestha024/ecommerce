@@ -29,16 +29,18 @@ export const OrderDetails = ({
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (data && data?.paymentStatus !== "Paid") {
-      esewaInitiate.mutate(order.orderId, {
-        onSuccess: (data: EsewaPaymentPayload) => {
-          setTotal(data.fields.amount);
-          setSignature(data.fields.signature);
-          setTransactionUid(data.fields.transaction_uuid);
-        },
-      });
-    }
-  }, [data, esewaInitiate, order.orderId]);
+    if (!data) return;
+    if (data.paymentStatus === "Paid") return;
+    if (signature) return;
+
+    esewaInitiate.mutate(order.orderId, {
+      onSuccess: (data: EsewaPaymentPayload) => {
+        setTotal(data.fields.amount);
+        setSignature(data.fields.signature);
+        setTransactionUid(data.fields.transaction_uuid);
+      },
+    });
+  }, [data?.paymentStatus, order.orderId, signature]);
 
   if (isLoading)
     return (
