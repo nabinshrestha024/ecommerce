@@ -18,6 +18,12 @@ namespace EcommerceProject.Models.DTOs
         public decimal Price { get; set; }
         public int StockQuantity { get; set; }
 
+        public int? DiscountId { get; set; }
+        public string DiscountType { get; set; }
+        public decimal? DiscountValue { get; set; }
+        public decimal FinalPrice { get; set; }
+
+
         public List<ProductVariantDto> Variants { get; set; } = new(); 
         public List<ProductImageDto> Images { get; set; } = new();
         public List<ProductAttributeSummaryDto> AvailableAttributes { get; set; } = new();

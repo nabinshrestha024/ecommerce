@@ -17,6 +17,10 @@ namespace EcommerceProject.Models.DTOs.Product
         public string? PrimaryImageUrl { get; set; }
         public decimal Price { get; set; }
         public int StockQuantity { get; set; }
+        public int? DiscountId { get; set; }
+        public string DiscountType { get; set; }
+        public decimal? DiscountValue { get; set; }
+        public decimal FinalPrice { get; set; }
 
         public List<ProductVariantDto> Variants { get; set; } = new();
         public List<ProductImageDto> Images { get; set; } = new();

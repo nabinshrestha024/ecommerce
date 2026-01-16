@@ -87,11 +87,16 @@ namespace EcommerceProject.Repositories.Implementations
 
                 product.Tags = await _tagRepository.GetByProductIdAsync(product.ProductId, ct);
 
+               
                 if (product.Variants.Any())
                 {
                     var defaultVar = product.Variants.FirstOrDefault(v => v.IsDefault) ?? product.Variants.First();
 
-                    product.Price = defaultVar.FinalPrice > 0 ? defaultVar.FinalPrice : defaultVar.Price;
+                    product.Price = defaultVar.Price;               
+                    product.FinalPrice = defaultVar.FinalPrice > 0  
+                        ? defaultVar.FinalPrice
+                        : defaultVar.Price;
+
                     product.StockQuantity = defaultVar.StockQuantity;
                 }
             }
