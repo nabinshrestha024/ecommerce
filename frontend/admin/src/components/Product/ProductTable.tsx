@@ -34,7 +34,7 @@ export const ProductTable = () => {
   const [selectedProduct, setSelectedProduct] = useState<ProductRes | null>(
     null,
   );
-
+  const [addOpen, setAddOpen] = useState<number | null>(null);
   const columnHelper = createColumnHelper<ProductRes>();
   const debounceSearch = useDebounce(searchProduct, 500);
   const handleRowClick = (row: ProductRes) => {
@@ -138,11 +138,18 @@ export const ProductTable = () => {
           </Dialog>
 
           <Dialog
+            open={addOpen === info.row.original.productId}
+            onOpenChange={(isOpen) => {
+              setAddOpen(isOpen ? info.row.original.productId : null);
+            }}
             triggerContent={
               <FaPercent className="text-[#6A717F] text-[20px] cursor-pointer" />
             }
           >
-            <ProductDiscountForm id={info.row.original.productId} />
+            <ProductDiscountForm
+              id={info.row.original.productId}
+              setAddOpen={setAddOpen}
+            />
           </Dialog>
 
           <Dialog

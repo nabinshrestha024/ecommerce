@@ -21,6 +21,7 @@ export interface Variant {
   isDefault: boolean;
   isActive: boolean;
   attributes: Record<string, string | undefined>;
+  finalPrice: number;
 }
 
 export interface VariantAttributes {
@@ -166,9 +167,22 @@ const ProductDetails = () => {
             </div>
 
             <div>
-              <span className="text-2xl sm:text-3xl font-bold text-[#4EA674]">
-                {currencyFormatter.format(activeVariant?.price ?? 0)}
-              </span>
+              <div className="flex flex-col gap-2">
+                {activeVariant?.finalPrice === 0 ? (
+                  <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                    {currencyFormatter.format(activeVariant?.price ?? 0)}
+                  </span>
+                ) : (
+                  <div className="flex gap-2">
+                    <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                      {currencyFormatter.format(activeVariant?.finalPrice ?? 0)}
+                    </span>
+                    <span className="md:text-[15px] text-[12px] font-bold  text-red-500 line-through">
+                      {currencyFormatter.format(activeVariant?.price ?? 0)}
+                    </span>
+                  </div>
+                )}
+              </div>
               <div className="flex flex-col sm:flex-row sm:justify-between gap-2 text-base sm:text-lg font-bold">
                 <span>
                   <span className="font-normal">Category: </span>
