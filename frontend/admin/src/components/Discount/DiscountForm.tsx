@@ -102,13 +102,8 @@ export const DiscountForm = ({ discount, setOpen }: Props) => {
               type="text"
               placeholder=""
               {...register("discountId")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.discountId ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             />
-            {errors.discountId && (
-              <p className="text-[12px] text-red-500 ">
-                {errors.discountId.message}
-              </p>
-            )}
           </div>
         </div>
 
@@ -121,13 +116,8 @@ export const DiscountForm = ({ discount, setOpen }: Props) => {
               type="text"
               placeholder=""
               {...register("discountName")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.discountName ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             />
-            {errors.discountName && (
-              <p className="text-[12px] text-red-500 ">
-                {errors.discountName.message}
-              </p>
-            )}
           </div>
         </div>
 
@@ -155,13 +145,8 @@ export const DiscountForm = ({ discount, setOpen }: Props) => {
               type="text"
               placeholder=""
               {...register("discountValue")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.discountValue ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             />
-            {errors.discountValue && (
-              <p className="text-[12px] text-red-500 ">
-                {errors.discountValue.message}
-              </p>
-            )}
           </div>
         </div>
 
@@ -174,13 +159,8 @@ export const DiscountForm = ({ discount, setOpen }: Props) => {
               type="date"
               placeholder=""
               {...register("startDate")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded resize-none focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.startDate ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             />
-            {errors.startDate && (
-              <p className="text-[12px] text-red-500 ">
-                {errors.startDate.message}
-              </p>
-            )}
           </div>
         </div>
 
@@ -191,13 +171,8 @@ export const DiscountForm = ({ discount, setOpen }: Props) => {
               type="date"
               placeholder=""
               {...register("endDate")}
-              className="w-full px-4 py-2 border border-[#DFE0E1] rounded resize-none focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.endDate ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             />
-            {errors.endDate && (
-              <p className="text-[12px] text-red-500 ">
-                {errors.endDate.message}
-              </p>
-            )}
           </div>
         </div>
 

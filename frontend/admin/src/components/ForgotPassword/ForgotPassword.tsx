@@ -72,7 +72,7 @@ export const ForgotPassword = ({ onClose }: onCloseProps) => {
   };
 
   return (
-    <div className="max-h-[70vh] h-full overflow-y-auto overflow-x-hidden bg-white rounded-lg shadow-lg">
+    <div className="max-h-[70vh] h-full overflow-y-auto overflow-x-hidden ">
       {step === "Email" && (
         <form
           className="p-6 space-y-4"
@@ -88,14 +88,9 @@ export const ForgotPassword = ({ onClose }: onCloseProps) => {
             <Input
               type="text"
               {...emailForm.register("email")}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
               placeholder="your@email.com"
+              className={`${emailForm.formState.errors.email ? "border-red-500" : ""}`}
             />
-            {emailForm.formState.errors.email && (
-              <div className="text-sm text-red-600 mt-1">
-                {emailForm.formState.errors.email.message}
-              </div>
-            )}
           </div>
           <div className="flex justify-center items-center pt-4">
             <Button

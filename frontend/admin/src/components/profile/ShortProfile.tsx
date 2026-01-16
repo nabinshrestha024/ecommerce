@@ -22,6 +22,7 @@ import { ProfileUpdate } from "./ProfileUpdate";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/ui/hover-card";
 import { ChangePassword } from "./ChangePassword";
 import { Dialog, DialogContent } from "@/ui/dialog";
+import { MdEdit } from "react-icons/md";
 
 export interface SocialLink {
   platform: "Instagram" | "Facebook" | "Twitter";
@@ -223,7 +224,7 @@ export const ShortProfile = () => {
               className={`flex justify-center items-center rounded-md border gap-3 px-3 py-2 mt-2 border-[#E5E7EB] hover:bg-gray-50 w-full sm:w-auto ${socialLink && "hidden"}`}
               onClick={handleSociallink}
             >
-              <SquarePen size={16} />
+              <MdEdit size={16} className="text-gray-500" />
               Update social links
             </button>
 

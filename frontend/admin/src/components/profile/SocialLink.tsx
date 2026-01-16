@@ -6,8 +6,9 @@ import { Input } from "@/ui/input";
 import { Card } from "../Card/Card";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { FiMinus } from "react-icons/fi";
-import { Edit, Save } from "lucide-react";
+import { FaTrash } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import { Save } from "lucide-react";
 import { usePostSocial } from "@/hooks/socialLinks/usePostSocial";
 import { useEditSocial } from "@/hooks/socialLinks/useEditSocial";
 import { useDeleteSocial } from "@/hooks/socialLinks/useDeleteSocial";
@@ -213,7 +214,7 @@ export const SocialLinks = () => {
               type="text"
               {...register("facebook")}
               disabled={!(isEditing === "Facebook")}
-              className="w-full mt-2 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-all"
+              className={`w-full mt-2 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-all ${errors.facebook?.message ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
               placeholder="Facebook Profile URL"
             />
             {isEditing === "Facebook" ? (
@@ -221,28 +222,23 @@ export const SocialLinks = () => {
                 className="absolute right-7 top-0 flex items-center justify-center cursor-pointer"
                 onClick={() => handleSave("Facebook")}
               >
-                <Save size={20} />
+                <Save size={20} className="text-gray-500" />
               </div>
             ) : (
               <div
                 className="absolute right-7 top-0 flex items-center justify-center cursor-pointer"
                 onClick={() => setIsEditing("Facebook")}
               >
-                <Edit size={20} />
+                <MdEdit size={20} className="text-gray-500" />
               </div>
             )}
             {facebookId && facebook !== "" && (
               <div
-                className="absolute right-0 top-0 h-5 w-5 flex items-center justify-center rounded-full bg-red-500 cursor-pointer"
+                className="absolute right-0 top-0 h-5 w-5 flex items-center justify-center cursor-pointer "
                 onClick={() => deleteSocialLink.mutate(facebookId)}
               >
-                <FiMinus className="text-xl text-white" />
+                <FaTrash className="text-[18px] text-gray-500" />
               </div>
-            )}
-            {errors.facebook && (
-              <p className="text-sm text-red-600 mt-1">
-                {errors.facebook.message}
-              </p>
             )}
           </div>
           <div className="flex flex-col gap-1 relative">
@@ -253,7 +249,7 @@ export const SocialLinks = () => {
               type="text"
               {...register("instagram")}
               disabled={!(isEditing === "Instagram")}
-              className="w-full mt-2 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-all"
+              className={`w-full mt-2 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-all ${errors.instagram?.message ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
               placeholder="Instagram Profile URL"
             />
             {isEditing === "Instagram" ? (
@@ -261,28 +257,23 @@ export const SocialLinks = () => {
                 className="absolute right-7 top-0 flex items-center justify-center cursor-pointer"
                 onClick={() => handleSave("Instagram")}
               >
-                <Save size={20} />
+                <Save size={20} className="text-gray-500" />
               </div>
             ) : (
               <div
                 className="absolute right-7 top-0 flex items-center justify-center cursor-pointer"
                 onClick={() => setIsEditing("Instagram")}
               >
-                <Edit size={20} />
+                <MdEdit size={20} className="text-gray-500" />
               </div>
             )}
             {instagramId && instagram !== "" && (
               <div
-                className="absolute right-0 top-0 h-5 w-5 flex items-center justify-center rounded-full bg-red-500 cursor-pointer"
+                className={`absolute right-0 top-0 h-5 w-5 }`}
                 onClick={() => deleteSocialLink.mutate(instagramId)}
               >
-                <FiMinus className="text-xl text-white" />
+                <FaTrash className="text-[18px] text-gray-500" />
               </div>
-            )}
-            {errors.instagram && (
-              <p className="text-sm text-red-600 mt-1">
-                {errors.instagram.message}
-              </p>
             )}
           </div>
           <div className="flex flex-col gap-1 relative">
@@ -291,7 +282,7 @@ export const SocialLinks = () => {
               type="text"
               {...register("twitter")}
               disabled={!(isEditing === "X")}
-              className="w-full mt-2 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-all"
+              className={`w-full mt-2 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl transition-all ${errors.twitter?.message ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
               placeholder="X Profile URL"
             />
             {isEditing === "X" ? (
@@ -299,30 +290,25 @@ export const SocialLinks = () => {
                 className="absolute right-7 top-0 flex items-center justify-center cursor-pointer"
                 onClick={() => handleSave("X")}
               >
-                <Save size={20} />
+                <Save size={20} className="text-gray-500" />
               </div>
             ) : (
               <div
                 className="absolute right-7 top-0 flex items-center justify-center cursor-pointer"
                 onClick={() => setIsEditing("X")}
               >
-                <Edit size={20} />
+                <MdEdit size={20} className="text-gray-500" />
               </div>
             )}
             {twitterId && twitter !== "" && (
               <div
-                className="absolute right-0 top-0 h-5 w-5 flex items-center justify-center rounded-full bg-red-500 cursor-pointer"
+                className="absolute right-0 top-0 h-5 w-5 flex items-center justify-center "
                 onClick={() => deleteSocialLink.mutate(twitterId)}
               >
-                <FiMinus className="text-xl text-white" />
+                <FaTrash className="text-[18px] text-gray-500" />
               </div>
             )}
           </div>
-          {errors.twitter && (
-            <p className="text-sm text-red-600 mt-1">
-              {errors.twitter.message}
-            </p>
-          )}
         </div>
       </form>
     </Card>

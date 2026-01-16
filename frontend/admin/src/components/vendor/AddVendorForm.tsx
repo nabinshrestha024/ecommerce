@@ -46,12 +46,9 @@ export const AddVendorForm = () => {
           <input
             type="text"
             placeholder="Enter company name"
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.name ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             {...register("name")}
           />
-          {errors.name && (
-            <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
-          )}
         </div>
 
         <div>
@@ -59,14 +56,9 @@ export const AddVendorForm = () => {
           <input
             type="text"
             placeholder="Enter contact person"
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.contactPerson ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             {...register("contactPerson")}
           />
-          {errors.contactPerson && (
-            <p className="text-sm text-red-500 mt-1">
-              {errors.contactPerson.message}
-            </p>
-          )}
         </div>
 
         <div>
@@ -74,12 +66,9 @@ export const AddVendorForm = () => {
           <input
             type="email"
             placeholder="Enter email"
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.email ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             {...register("email")}
           />
-          {errors.email && (
-            <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
-          )}
         </div>
 
         <div>
@@ -87,12 +76,9 @@ export const AddVendorForm = () => {
           <input
             type="tel"
             placeholder="Enter phone number"
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.phone ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             {...register("phone")}
           />
-          {errors.phone && (
-            <p className="text-sm text-red-500 mt-1">{errors.phone.message}</p>
-          )}
         </div>
 
         <div>
@@ -100,14 +86,9 @@ export const AddVendorForm = () => {
           <input
             type="text"
             placeholder="Enter address"
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+            className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.address ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             {...register("address")}
           />
-          {errors.address && (
-            <p className="text-sm text-red-500 mt-1">
-              {errors.address.message}
-            </p>
-          )}
         </div>
 
         <div className="flex justify-center mt-4">

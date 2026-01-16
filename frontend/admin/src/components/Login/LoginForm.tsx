@@ -42,8 +42,8 @@ export const AdminLoginForm = () => {
           {...register("email")}
           type="email"
           placeholder="Enter your email"
+          className={`${errors.email ? "border-red-500 focus:border-red-500" : ""}`}
         />
-        <p className="text-red-500">{errors.email?.message}</p>
       </div>
       <div className="flex flex-col gap-3">
         <Label htmlFor="password">Password</Label>
@@ -51,25 +51,36 @@ export const AdminLoginForm = () => {
           {...register("password")}
           type="password"
           placeholder="Enter your password"
+          className={`${errors.password ? "border-red-500 focus:border-red-500" : ""}`}
         />
-        <p className="text-red-500">{errors.password?.message}</p>
+      </div>
+      <div className="mt-5 text-sm space-x-5 flex justify-between">
+        <div>
+          Don&apos;t have an account?{" "}
+          {/* <Link
+            href={"/signup"}
+            className="text-blue-500 underline cursor-pointer"
+          >
+            Sign Up
+          </Link> */}
+        </div>
+        <Dialog
+          open={open}
+          onOpenChange={setOpen}
+          triggerContent={
+            <div className="text-blue-500 underline cursor-pointer">
+              Forgot password?
+            </div>
+          }
+        >
+          <ForgotPassword onClose={() => setOpen(false)} />
+        </Dialog>
       </div>
       <div>
         <Button type="submit" className="mt-5 w-full" value={"Login"}>
           {isPending ? "Logging in..." : "Login"}
         </Button>
       </div>
-      <Dialog
-        open={open}
-        onOpenChange={setOpen}
-        triggerContent={
-          <button className="text-sm underline" onClick={() => setOpen(true)}>
-            Forgot Password?
-          </button>
-        }
-      >
-        <ForgotPassword onClose={() => setOpen(false)} />
-      </Dialog>
     </form>
   );
 };
