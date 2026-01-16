@@ -17,8 +17,8 @@ export function useSendEmail() {
       }
     },
 
-    onError: () => {
-      toast.error("Please make sure the email you've entered is registered..");
+    onError: (e) => {
+      toast.error(e.message);
     },
   });
 }

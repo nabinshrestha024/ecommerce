@@ -101,7 +101,7 @@ export const Input = forwardRef<HTMLElement, Props>(
         <div className={cn("relative w-full", className)}>
           <Root
             type={!password ? "text" : "password"}
-            className="pr-10"
+            className={cn("pr-10", className)}
             disabled={disabled}
             name={name}
             ref={ref as Ref<HTMLInputElement>}
