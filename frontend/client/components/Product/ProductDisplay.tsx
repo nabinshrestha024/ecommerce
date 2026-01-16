@@ -68,6 +68,7 @@ export interface ProductType {
   availableAttributes?: VariantAttributes[];
   images: ImageType[];
   relatedProducts: ProductType[];
+  finalPrice: number;
 }
 
 export const ProductDisplay = () => {

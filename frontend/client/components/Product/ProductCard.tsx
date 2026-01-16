@@ -192,13 +192,29 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </Link>
 
           <Link href={`/product/id/${product.slug}`}>
-            <span className="text-[18px] text-[#4EA674] font-bold">
+            {/* <span className="text-[18px] text-[#4EA674] font-bold">
               {currencyFormatter.format(product.price)}
             </span>
             {/* &nbsp;&nbsp;&nbsp;
             <span className="line-through text-[15px] text-[red] font-medium">
               Rs. {product.price}
             </span> */}
+            <div>
+              {activeVariant?.finalPrice === 0 ? (
+                <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                  {currencyFormatter.format(product.price ?? 0)}
+                </span>
+              ) : (
+                <div className="flex flex-col md:flex-row gap-0 md:gap-2 items-center">
+                  <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                    {currencyFormatter.format(product?.finalPrice ?? 0)}
+                  </span>
+                  <span className="md:text-[12px] text-[12px] font-bold  text-red-500 line-through">
+                    {currencyFormatter.format(product?.price ?? 0)}
+                  </span>
+                </div>
+              )}
+            </div>
           </Link>
         </div>
       </div>
@@ -263,11 +279,27 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   </div>
                 </div>
               </div>
-              <div className="font-bold text-[18px]">
+              {/* <div className="font-bold text-[18px]">
                 Price:{" "}
                 <span className="text-[18px] text-[#4EA674] font-bold">
                   {currencyFormatter.format(activeVariant?.price ?? 0)}
                 </span>
+              </div> */}
+              <div className="flex flex-col gap-2">
+                {activeVariant?.finalPrice === 0 ? (
+                  <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                    {currencyFormatter.format(activeVariant?.price ?? 0)}
+                  </span>
+                ) : (
+                  <div className="flex gap-2">
+                    <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                      {currencyFormatter.format(activeVariant?.finalPrice ?? 0)}
+                    </span>
+                    <span className="md:text-[15px] text-[12px] font-bold  text-red-500 line-through">
+                      {currencyFormatter.format(activeVariant?.price ?? 0)}
+                    </span>
+                  </div>
+                )}
               </div>
               <div className="flex flex-col gap-3">
                 <div className="font-bold text-[18px]">Variants</div>

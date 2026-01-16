@@ -11,22 +11,31 @@ import {
 import { discountSchema, type DiscountFormValues } from "./DiscountFormZod.ts";
 import { useFetchDiscountProduct } from "@/hooks/discount/useFetchDiscount.ts";
 import { usePostProductDiscount } from "@/hooks/discount/usePostProductDiscount.ts";
+import type { Dispatch, SetStateAction } from "react";
 
 type Props = {
   id: number;
+  setAddOpen: Dispatch<SetStateAction<number | null>>;
 };
 
-export const ProductDiscountForm = ({ id }: Props) => {
+export const ProductDiscountForm = ({ id, setAddOpen }: Props) => {
   const addDiscount = usePostProductDiscount();
   const { handleSubmit, control } = useForm<DiscountFormValues>({
     resolver: zodResolver(discountSchema) as Resolver<DiscountFormValues>,
     mode: "onChange",
   });
   const onSubmit = (data: DiscountFormValues) => {
-    addDiscount.mutate({
-      productIds: [id],
-      discountId: data.discountId,
-    });
+    addDiscount.mutate(
+      {
+        productIds: [id],
+        discountId: data.discountId,
+      },
+      {
+        onSuccess: () => {
+          setAddOpen(null);
+        },
+      },
+    );
   };
 
   const discount = useFetchDiscountProduct();

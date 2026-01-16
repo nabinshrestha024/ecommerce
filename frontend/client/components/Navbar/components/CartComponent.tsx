@@ -18,6 +18,7 @@ import { CartProductType } from "./TopNav";
 import { Dialog } from "@/components/dialog/Dialog";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
+import { currencyFormatter } from "@/components/Product/ProductDisplay";
 
 export const CartComponent = () => {
   const [open, setOpen] = useState(false);
@@ -201,10 +202,19 @@ export const CartComponent = () => {
                       </div>
 
                       <div className="mt-auto pt-3 flex items-center justify-between">
-                        <span className="text-sm font-bold text-gray-900">
-                          Rs. {val.totalPrice}
-                        </span>
-
+                        <div className="flex flex-col gap-2">
+                          {val?.finalPrice === 0 ? (
+                            <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                              {currencyFormatter.format(val?.price ?? 0)}
+                            </span>
+                          ) : (
+                            <div className="flex gap-2">
+                              <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                                {currencyFormatter.format(val?.finalPrice ?? 0)}
+                              </span>
+                            </div>
+                          )}
+                        </div>
                         <div className="flex items-center bg-white border rounded-lg shadow-sm overflow-hidden">
                           <button
                             onClick={() =>
