@@ -23,8 +23,7 @@ export const Filter = ({
 }: FilterProps) => {
   const { data } = useFetchTags();
   const searchParams = useSearchParams();
-  const filterdata = data?.data;
-  const selectTags = filterdata?.slice(0, 4);
+
   const tagsFromUrl = searchParams.get("tags");
   const minPriceFromUrl = searchParams.get("minPrice");
   const maxPriceFromUrl = searchParams.get("maxPrice");
@@ -57,12 +56,18 @@ export const Filter = ({
           {data?.data?.map((tag: { tagId: number; name: string }) => (
             <div key={tag.tagId} className="flex items-center gap-2">
               <input
+                id={`tag-${tag.tagId}`}
                 type="checkbox"
                 value={tag.name}
                 {...register("tags")}
                 className="h-4 w-4 border-gray-300 rounded cursor-pointer accent-[#01a73e] dark:accent-emerald-600"
               />
-              <label className="ml-2 cursor-pointer">{tag.name}</label>
+              <label
+                htmlFor={`tag-${tag.tagId}`}
+                className="ml-2 cursor-pointer"
+              >
+                {tag.name}
+              </label>
             </div>
           ))}
         </div>
