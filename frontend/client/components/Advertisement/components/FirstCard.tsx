@@ -1,4 +1,4 @@
-import { Card } from "@/components/Card/Card";
+import { Card } from "@/components/card/Card";
 import Image from "next/image";
 import Link from "next/link";
 

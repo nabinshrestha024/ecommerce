@@ -14,7 +14,7 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { useState } from "react";
 import { Dialog } from "../dialog/Dialog";
 import { Variant } from "./ProductDetails";
-import { Card } from "../Card/Card";
+import { Card } from "../card/Card";
 import { currencyFormatter, ProductType } from "./ProductDisplay";
 
 interface ProductCardProps {

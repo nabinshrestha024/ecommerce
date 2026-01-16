@@ -28,7 +28,6 @@ export const Filter = ({
   const tagsFromUrl = searchParams.get("tags");
   const minPriceFromUrl = searchParams.get("minPrice");
   const maxPriceFromUrl = searchParams.get("maxPrice");
-  const [showMore, setShowMore] = useState(false);
   const [priceRange, setPriceRange] = useState<[number, number]>([
     0,
     highestPrice || 1000,
@@ -53,31 +52,19 @@ export const Filter = ({
     <div className="w-full">
       <div className="text-xl font-semibold underline mb-4">Filter</div>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-        <div className="max-h-[30vh] overflow-y-auto md:max-h-none md:mb-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-500">
+        <div className="max-h-[30vh] overflow-y-auto md:max-h-42 md:mb-4 no-scrollbar scrollbar-thumb-gray-400 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-500">
           <h3 className="font-medium mb-2">Tags</h3>
-          {(showMore ? data?.data : selectTags)?.map(
-            (tag: { tagId: number; name: string }) => (
-              <div key={tag.tagId} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  value={tag.name}
-                  {...register("tags")}
-                  className="h-4 w-4 border-gray-300 rounded cursor-pointer accent-[#01a73e] dark:accent-emerald-600"
-                />
-                <label className="ml-2 cursor-pointer">{tag.name}</label>
-              </div>
-            ),
-          )}
-          <div>
-            <Button
-              type="button"
-              variant="link"
-              className="p-0"
-              onClick={() => setShowMore(!showMore)}
-            >
-              {showMore ? "Show Less" : "Show More"}
-            </Button>
-          </div>
+          {data?.data?.map((tag: { tagId: number; name: string }) => (
+            <div key={tag.tagId} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                value={tag.name}
+                {...register("tags")}
+                className="h-4 w-4 border-gray-300 rounded cursor-pointer accent-[#01a73e] dark:accent-emerald-600"
+              />
+              <label className="ml-2 cursor-pointer">{tag.name}</label>
+            </div>
+          ))}
         </div>
 
         <div className="flex flex-col gap-3 mt-2">

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Card } from "@/components/Card/Card";
+import { Card } from "@/components/card/Card";
 import { useProduct } from "@/hooks/product/useProduct";
 import { Skeleton } from "@/components/Skeleton/Skeleton";
 import Link from "next/link";
