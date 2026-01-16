@@ -54,8 +54,8 @@ export const RegisterForm = ({}: {
             id="fullName"
             {...register("fullName")}
             placeholder="Enter your full name"
+            className={`${errors.fullName ? "border-red-500" : ""}`}
           />
-          <p className="text-red-500">{errors.fullName?.message}</p>
         </div>
         <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
@@ -64,8 +64,8 @@ export const RegisterForm = ({}: {
             {...register("email")}
             type="email"
             placeholder="m@example.com"
+            className={` ${errors.email ? "border-red-500 focus:border-red-500" : ""}`}
           />
-          <p className="text-red-500">{errors.email?.message}</p>
         </div>
         <div className="grid gap-2">
           <Label htmlFor="phone">Phone number</Label>
@@ -82,9 +82,8 @@ export const RegisterForm = ({}: {
               },
             })}
             placeholder="Enter your phone number"
-            className="no-spinner"
+            className={`no-spinner ${errors.phone ? "border-red-500 focus:border-red-500" : ""}`}
           />
-          <p className="text-red-500">{errors.phone?.message}</p>
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">Password</Label>
@@ -93,8 +92,8 @@ export const RegisterForm = ({}: {
             {...register("password")}
             type="password"
             placeholder="Enter your password"
+            className={`${errors.password ? "border-red-500 focus:border-red-500" : ""}`}
           />
-          <p className="text-red-500">{errors.password?.message}</p>
         </div>
         <div className="grid gap-2">
           <Label htmlFor="rePassword">Re-Password</Label>
@@ -103,8 +102,8 @@ export const RegisterForm = ({}: {
             {...register("repassword")}
             type="password"
             placeholder="Enter your password again"
+            className={`${errors.repassword ? "border-red-500 focus:border-red-500" : ""}`}
           />
-          <p className="text-red-500">{errors.repassword?.message}</p>
         </div>
         <div className="grid gap-2">
           <Label htmlFor="city">Date of Birth</Label>
@@ -113,8 +112,8 @@ export const RegisterForm = ({}: {
             {...register("dateOfBirth")}
             type="date"
             placeholder="Enter your date of birth"
+            className={`${errors.dateOfBirth ? "border-red-500 focus:border-red-500" : ""}`}
           />
-          <p className="text-red-500">{errors.dateOfBirth?.message}</p>
         </div>
         <div className="grid gap-2">
           <Label htmlFor="city">Gender</Label>
@@ -124,7 +123,7 @@ export const RegisterForm = ({}: {
                 type="radio"
                 {...register("gender")}
                 value={"Male"}
-                className="h-4 w-4"
+                className={`w-4 h-4 ${errors.gender ? "border-red-500 focus:border-red-500" : ""}`}
               />
               <div>Male</div>
             </div>
@@ -133,12 +132,11 @@ export const RegisterForm = ({}: {
                 type="radio"
                 value={"Female"}
                 {...register("gender")}
-                className="h-4 w-4"
+                className={`w-4 h-4 ${errors.gender ? "border-red-500 focus:border-red-500" : ""}`}
               />
               <div>Female</div>
             </div>
           </div>
-          <p className="text-red-500">{errors.gender?.message}</p>
         </div>
         <div className="grid gap-2">
           <Label htmlFor="address">Address</Label>
@@ -147,8 +145,8 @@ export const RegisterForm = ({}: {
             {...register("address")}
             type="text"
             placeholder="Enter your address"
+            className={`${errors.address ? "border-red-500 focus:border-red-500" : ""}`}
           />
-          <p className="text-red-500">{errors.address?.message}</p>
         </div>
         <div className="grid gap-2">
           <Label htmlFor="city">City</Label>
@@ -157,8 +155,8 @@ export const RegisterForm = ({}: {
             {...register("city")}
             type="text"
             placeholder="Enter your city"
+            className={`${errors.city ? "border-red-500 focus:border-red-500" : ""}`}
           />
-          <p className="text-red-500">{errors.city?.message}</p>
         </div>
       </div>
       <div>
@@ -166,7 +164,7 @@ export const RegisterForm = ({}: {
           Register
         </Button>
       </div>
-      <div>
+      <div className="text-center text-[12px]">
         Already have an account?{" "}
         <Link href={"/login"} className="text-blue-500 underline">
           Login
