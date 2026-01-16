@@ -205,7 +205,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                   {currencyFormatter.format(product.price ?? 0)}
                 </span>
               ) : (
-                <div className="flex flex-col md:flex-row gap-0 md:gap-2 items-center">
+                <div className="flex flex-col lg:flex-row gap-0 lg:gap-2 lg:items-center">
                   <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
                     {currencyFormatter.format(product?.finalPrice ?? 0)}
                   </span>
