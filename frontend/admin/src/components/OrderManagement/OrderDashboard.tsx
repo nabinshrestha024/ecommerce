@@ -1,26 +1,28 @@
-import { GoTag } from "react-icons/go";
 import { Card } from "../Card/Card";
+import { useGetOrderReport } from "@/hooks/orderreport/useGetOrderReport";
 
 export const OrderDashboard = () => {
+  const orderdata = useGetOrderReport();
+  console.log(orderdata.data?.totalOrders);
   const data = [
     {
       heading: "Total Orders",
-      description: "1,240",
+      description: String(orderdata.data?.totalOrders || 0),
       time: "Last 7 days",
     },
     {
-      heading: "New Orders",
-      description: "240",
+      heading: "Pending Orders",
+      description: String(orderdata.data?.pending || 0),
       time: "Last 7 days",
     },
     {
-      heading: "Completed Orders",
-      description: "960",
+      heading: "Delivered Orders",
+      description: String(orderdata.data?.delivered || 0),
       time: "Last 7 days",
     },
     {
       heading: "Canceled Orders",
-      description: "87",
+      description: String(orderdata.data?.canceled || 0),
       time: "Last 7 days",
     },
   ];
@@ -29,7 +31,6 @@ export const OrderDashboard = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border shadow-sm">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <GoTag className="text-[#4EA674]" />
             Order Management
           </h1>
           <p className="text-sm text-gray-500 mt-1">

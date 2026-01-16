@@ -2,6 +2,7 @@ import { useGetOverview } from "@/hooks/report/useGetOverview";
 import { Card } from "../Card/Card";
 import { AreaChart } from "../Charts/AreaChart";
 import { useEffect, useState } from "react";
+import { Spinner } from "../Spinner/Spinner";
 
 export interface ChartType {
   xAxis: string;
@@ -54,7 +55,7 @@ export const DashboardChart = () => {
           </div>
         </div>
       </div>
-      <AreaChart data={data} />
+      {sales.isLoading ? <Spinner /> : <AreaChart data={data} name="Sales" />}
     </Card>
   );
 };

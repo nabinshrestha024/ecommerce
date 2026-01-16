@@ -87,7 +87,9 @@ export const Table = <TData,>({
                               ? "w-[260px]"
                               : cellName === "price"
                                 ? "w-[100px]"
-                                : ""
+                                : cellName === "discountValue"
+                                  ? "w-[150px]"
+                                  : ""
                     } p-3 border-b align-middle whitespace-nowrap`}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -31,7 +31,7 @@ export const App = () => {
           <Route element={<AppLayout />}>
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/order-management" element={<OrderManagement />} />
+            <Route path="/order" element={<OrderManagement />} />
             <Route path="/customer" element={<Customer />} />
             <Route path="/product" element={<Product />} />
             <Route path="/category" element={<Category />} />
@@ -40,7 +40,7 @@ export const App = () => {
               path="/attribute-management"
               element={<AttributeManagement />}
             />
-            <Route path="/discount" element={<Discount />} />
+            <Route path="/discount-management" element={<Discount />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/vendor" element={<Vendor />} />
             <Route path="/product-variant/:id" element={<ProductVariant />} />

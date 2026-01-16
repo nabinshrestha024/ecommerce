@@ -8,13 +8,14 @@ import {
 import { useEditDicount } from "@/hooks/discount/useEditDiscount.ts";
 import type { DiscountData } from "@/hooks/discount/useFetchDiscount.ts";
 import { Select } from "../Select/Select.tsx";
+import type { Dispatch, SetStateAction } from "react";
 
 type Props = {
   discount: DiscountData;
-  onSave: (discount: DiscountData) => void;
+  setOpen: Dispatch<SetStateAction<number | null>>;
 };
 
-export const DiscountForm = ({ discount, onSave }: Props) => {
+export const DiscountForm = ({ discount, setOpen }: Props) => {
   const {
     discountId,
     discountType,
@@ -39,15 +40,14 @@ export const DiscountForm = ({ discount, onSave }: Props) => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
     setValue,
   } = useForm<DiscountFormValues>({
     resolver: zodResolver(DiscountSchema) as Resolver<DiscountFormValues>,
     defaultValues: {
       discountId,
       discountValue,
-      startDate,
-      endDate,
+      startDate: startDate.split("T")[0],
+      endDate: endDate.split("T")[0],
       discountType,
       discountName,
     },
@@ -75,21 +75,17 @@ export const DiscountForm = ({ discount, onSave }: Props) => {
       isActive: true,
     };
 
-    editDiscount.mutate({
-      discountId: discount.discountId,
-      discountData: updatedDiscount,
-    });
-
-    onSave(updatedDiscount);
-
-    reset({
-      discountId: updatedDiscount.discountId,
-      discountValue: updatedDiscount.discountValue,
-      discountName: updatedDiscount.discountName,
-      discountType: updatedDiscount.discountType,
-      startDate: updatedDiscount.startDate,
-      endDate: updatedDiscount.endDate,
-    });
+    editDiscount.mutate(
+      {
+        discountId: discount.discountId,
+        discountData: updatedDiscount,
+      },
+      {
+        onSuccess: () => {
+          setOpen(null);
+        },
+      },
+    );
   };
 
   return (
@@ -117,7 +113,7 @@ export const DiscountForm = ({ discount, onSave }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 mt-5">
-          <label className="col-span-1 font-medium text-gray-700">
+          <label className="col-span-1 font-medium text-gray-700 whitespace-nowrap">
             Discount Name
           </label>
           <div className="col-span-3">
@@ -125,7 +121,6 @@ export const DiscountForm = ({ discount, onSave }: Props) => {
               type="text"
               placeholder=""
               {...register("discountName")}
-              maxLength={10}
               className="w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0"
             />
             {errors.discountName && (
@@ -137,7 +132,9 @@ export const DiscountForm = ({ discount, onSave }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4  mt-5">
-          <label className="font-medium text-gray-700">Discount Type</label>
+          <label className="col-span-1 font-medium text-gray-700 whitespace-nowrap">
+            Discount Type
+          </label>
           <div className="col-span-3">
             <Select
               defaultValue={discountType}
@@ -150,7 +147,9 @@ export const DiscountForm = ({ discount, onSave }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 mt-5">
-          <label className="font-medium text-gray-700">Discount Value</label>
+          <label className="col-span-1 font-medium text-gray-700 whitespace-nowrap">
+            Discount Value
+          </label>
           <div className="col-span-3">
             <Input
               type="text"
@@ -167,7 +166,9 @@ export const DiscountForm = ({ discount, onSave }: Props) => {
         </div>
 
         <div className="grid grid-cols-4 gap-4 mt-5">
-          <label className="font-medium text-gray-700 mt-2">Start Date</label>
+          <label className="font-medium text-gray-700 whitespace-nowrap">
+            Start Date
+          </label>
           <div className="col-span-3">
             <Input
               type="date"

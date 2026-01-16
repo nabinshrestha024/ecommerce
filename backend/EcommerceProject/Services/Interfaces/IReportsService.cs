@@ -11,5 +11,7 @@ namespace EcommerceProject.Services.Interfaces
         Task<IEnumerable<LowStockProductDto>> GetLowStockAsync(ReportFilter filter);
         Task<IEnumerable<UserRegisterOverviewDto>> GetUserRegistrationOverviewReportAsync(ReportFilter filter);
 
+        Task<OrdersStatusReportDto> GetOrdersStatusReportAsync(ReportFilter filter);
+
     }
 }

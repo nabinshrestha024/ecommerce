@@ -13,15 +13,49 @@ interface DataType {
   yAxis: number;
 }
 
-export const AreaChart = ({ data }: { data: DataType[] }) => {
+const formatYAxis = (value: number): string => {
+  if (value >= 1_00_00_000) {
+    return `${(value / 1_00_00_000).toFixed(1)} Cr`;
+  }
+  if (value >= 1_00_000) {
+    return `${(value / 1_00_000).toFixed(1)} L`;
+  }
+  if (value >= 1_000) {
+    return `${(value / 1_000).toFixed(1)} K`;
+  }
+  return value.toString();
+};
+
+export const AreaChart = ({
+  data,
+  name,
+}: {
+  data: DataType[];
+  name: string;
+}) => {
   return (
     <div style={{ width: "100%", height: 280 }}>
       <ResponsiveContainer width="100%" height="100%">
-        <Root data={data} margin={{ top: 20, right: 0, left: 0, bottom: 0 }}>
+        <Root data={data} margin={{ top: 20, right: 0, left: 15, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="xAxis" />
-          <YAxis />
-          <Tooltip />
+          <XAxis
+            dataKey="xAxis"
+            label={{
+              value: "Date",
+              position: "insideBottom",
+              offset: -5,
+            }}
+          />
+          <YAxis
+            tickFormatter={formatYAxis}
+            label={{
+              value: name,
+              angle: -90,
+              position: "insideLeft",
+              offset: -5,
+            }}
+          />
+          <Tooltip formatter={(value) => formatYAxis(Number(value))} />
           <Area
             type="monotone"
             dataKey="yAxis"

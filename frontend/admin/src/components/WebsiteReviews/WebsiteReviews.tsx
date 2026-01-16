@@ -11,6 +11,7 @@ import { Star } from "lucide-react";
 import { useRemoveWebsiteReview } from "@/hooks/websiteReview/useRemoveWebsiteReview";
 import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog";
 import { MdDelete } from "react-icons/md";
+import { Spinner } from "../Spinner/Spinner";
 
 export interface ReviewType {
   reviewId: number;
@@ -178,7 +179,7 @@ export const WebsiteReviews = () => {
     pageCount: data ? Math.ceil(data.totalCount / pagination.pageSize) : -1,
   });
   return isLoading ? (
-    <div>Loading...</div>
+    <Spinner />
   ) : isError ? (
     <div>{error?.message}</div>
   ) : data.length === 0 ? (

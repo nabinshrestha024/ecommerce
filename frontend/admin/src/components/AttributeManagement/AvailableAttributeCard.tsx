@@ -1,5 +1,5 @@
 import { Card } from "../Card/Card";
-import { FaEdit } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
 import { Dialog } from "../Dialog/Dialog";
 import { useState } from "react";
 import {
@@ -19,9 +19,10 @@ import {
 } from "@/ui/accordion";
 import { DropDown } from "../DropDown/DropDown";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { Spinner } from "../Spinner/Spinner";
 
 export const AvailableAttributeCard = () => {
-  const { data: attributes } = useFetchAttribute();
+  const { data: attributes, isLoading } = useFetchAttribute();
   const [selectedAttribute, setSelectedAttribute] = useState<number | null>(
     null,
   );
@@ -35,7 +36,9 @@ export const AvailableAttributeCard = () => {
   const [editOpen, setEditOpen] = useState<number | null>(null);
   const [editAttribOpen, setEditAttribOpen] = useState<number | null>(null);
 
-  return (
+  return isLoading ? (
+    <Spinner />
+  ) : (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
       {attributes?.map((attribute) => (
         <Card
@@ -70,7 +73,7 @@ export const AvailableAttributeCard = () => {
                             className="p-1.5 rounded-md text-gray-400 hover:text-[#4EA674] hover:bg-[#c2f8d9] transition-colors flex items-center gap-2 cursor-pointer"
                             title="Add Attribute"
                           >
-                            <MdAddCircleOutline className="text-[18px] cursor-pointer" />
+                            <MdAddCircleOutline className="text-[20px] text-gray-500 cursor-pointer" />
                             Add Attribute
                           </button>
                         }
@@ -96,7 +99,7 @@ export const AvailableAttributeCard = () => {
                             className="p-1.5 rounded-md text-gray-400 hover:text-[#4EA674] hover:bg-[#c2f8d9] transition-colors flex gap-2 items-center cursor-pointer"
                             title="Edit Attribute"
                           >
-                            <FaEdit className="text-[16px] cursor-pointer" />
+                            <MdEdit className="text-[20px] text-gray-500 cursor-pointer" />
                             Edit Attribute
                           </button>
                         }
@@ -142,7 +145,7 @@ export const AvailableAttributeCard = () => {
                               className="p-1.5 rounded-md text-gray-400 hover:text-[#4EA674] hover:bg-[#c2f8d9] transition-colors"
                               title="Edit Attribute"
                             >
-                              <FaEdit className="text-[14px]" />
+                              <MdEdit className="text-[14px]" />
                             </button>
                           }
                           open={editAttribOpen == val.attributeValueId}

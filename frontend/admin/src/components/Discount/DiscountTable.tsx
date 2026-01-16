@@ -5,8 +5,8 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { BsPatchPlus } from "react-icons/bs";
-import { FaEdit } from "react-icons/fa";
+import { BsPatchCheckFill } from "react-icons/bs";
+import { MdEdit } from "react-icons/md";
 import { Table } from "../Table/Table";
 import { Dialog } from "../Dialog/Dialog";
 import {
@@ -15,6 +15,8 @@ import {
 } from "@/hooks/discount/useFetchDiscount";
 import { DiscountForm } from "./DiscountForm";
 import { usePatchDicount } from "@/hooks/discount/usePatchDiscount";
+import { currencyFormatter } from "../Dashboard/DashboardStats";
+import { Spinner } from "../Spinner/Spinner";
 
 export const DiscountTable = () => {
   const discountProduct = useFetchDiscountProduct();
@@ -34,6 +36,8 @@ export const DiscountTable = () => {
     });
   };
 
+  const [open, setOpen] = useState<number | null>(null);
+
   const handleEdit = (row: DiscountData) => {
     setSelectedDiscount(row);
   };
@@ -52,6 +56,11 @@ export const DiscountTable = () => {
     }),
     columnHelper.accessor("discountValue", {
       header: "Discount Value",
+      cell: (info) => (
+        <div className="text-end">
+          {currencyFormatter.format(info.getValue())}
+        </div>
+      ),
     }),
 
     columnHelper.accessor("isActive", {
@@ -60,7 +69,7 @@ export const DiscountTable = () => {
         const value = info.getValue();
 
         return (
-          <div className="flex gap-3 justify-center  items-center cursor-pointer">
+          <div className="flex gap-3 justify-start  items-center cursor-pointer">
             <div
               className={`w-2 h-2 rounded-full ${
                 value ? "bg-[#21C45D]" : "bg-[#EF4343]"
@@ -78,26 +87,25 @@ export const DiscountTable = () => {
       id: "actions",
       header: "Actions",
       cell: (info) => (
-        <div className="flex gap-2 justify-center items-center">
+        <div className="flex gap-2 justify-start items-center">
           <Dialog
+            open={open === info.row.original.discountId}
+            onOpenChange={(isOpen) => {
+              setOpen(isOpen ? info.row.original.discountId : null);
+            }}
             triggerContent={
-              <FaEdit
-                className="text-[#6A717F] text-[20px] cursor-pointer"
+              <MdEdit
+                className="text-gray-500 text-[20px] cursor-pointer"
                 onClick={() => handleEdit(info.row.original)}
               />
             }
           >
             {selectedDiscount && (
-              <DiscountForm
-                discount={selectedDiscount}
-                onSave={() => {
-                  setSelectedDiscount(null);
-                }}
-              />
+              <DiscountForm discount={selectedDiscount} setOpen={setOpen} />
             )}
           </Dialog>
-          <BsPatchPlus
-            className="text-[#6A717F] text-[20px] cursor-pointer"
+          <BsPatchCheckFill
+            className="text-gray-500 text-[20px] cursor-pointer"
             onClick={() => handlePatch(info.row.original)}
           />
         </div>
@@ -119,8 +127,10 @@ export const DiscountTable = () => {
     onPaginationChange: setPagination,
   });
 
-  return (
-    <div className="w-full p-4 border border-[#E5E7EB] rounded-lg">
+  return discountProduct.isLoading ? (
+    <Spinner />
+  ) : (
+    <div className="w-full ">
       <div className="flex flex-col-reverse gap-3">
         <Table
           table={table}
