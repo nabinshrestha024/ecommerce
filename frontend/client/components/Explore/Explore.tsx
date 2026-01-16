@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/ui/button";
-import { Card } from "../Card/Card";
+import { Card } from "../card/Card";
 import Image from "next/image";
 import { useCategory } from "@/hooks/category/useCategory";
 import Link from "next/link";
