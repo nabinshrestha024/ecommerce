@@ -49,7 +49,7 @@ BEGIN
              ORDER BY IsDefault DESC, Price ASC)
         ) AS StockQuantity,
 
-        v.DiscountId,
+        CASE WHEN d.DiscountId IS NOT NULL THEN d.DiscountId ELSE NULL END AS DiscountId,
         d.DiscountType,
         d.DiscountValue,
 
@@ -81,7 +81,7 @@ BEGIN
         v.SKU,
         v.Price,
         v.StockQuantity,
-        v.DiscountId,
+        CASE WHEN d.DiscountId IS NOT NULL THEN d.DiscountId ELSE NULL END AS DiscountId,
         d.DiscountType,
         d.DiscountValue,
         CASE
