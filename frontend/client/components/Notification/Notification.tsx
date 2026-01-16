@@ -11,7 +11,6 @@ import {
 } from "@/ui/dropdown-menu";
 import { Bell, Clock, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { FaBell } from "react-icons/fa6";
 
 export interface NotificationType {
@@ -121,7 +120,7 @@ export const Notification = () => {
                 <div key={val.notificationId}>
                   <DropdownMenuItem
                     onClick={() => {
-                      router.push("/profile?page=myOrders");
+                      router.push("/profile?profile=orders");
                     }}
                     className={`px-4 hide-scrollbar py-3 cursor-pointer transition-colors focus:bg-gray-50 dark:focus:bg-gray-800 ${
                       val.isRead === false

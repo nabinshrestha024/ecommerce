@@ -12,6 +12,9 @@ import Image from "next/image";
 import { Camera } from "lucide-react";
 import { Spinner } from "@/ui/spinner";
 import { ProfileCropDialog } from "@/components/Profile/ProfileCropDialog";
+import { Order } from "@/components/Order/Order";
+import { Wishlist } from "@/components/Wishlist/Wishlist";
+import Link from "next/link";
 
 export default function UserProfile() {
   const { data, isLoading } = useFetchProfile();
@@ -22,13 +25,14 @@ export default function UserProfile() {
   const [cropOpen, setCropOpen] = useState<boolean>(false);
   const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const [selected, setSelected] = useQueryState("profile");
 
   return isLoading || orders.isLoading || socialLinks.isLoading ? (
     <div className="fixed top-0 left-0 h-screen w-screen flex items-center justify-center">
       <Spinner className="size-8" />
     </div>
   ) : (
-    <div className="w-full">
+    <div className="w-full scroll-smooth">
       <div className="min-h-screen bg-gray-50">
         <div className="mx:2 lg:mx-25 p-3 md:p-6">
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
@@ -41,6 +45,7 @@ export default function UserProfile() {
                     fill
                     unoptimized
                     className="object-cover"
+                    onClick={() => setSelected("profile")}
                   />
                 </div>
                 <div
@@ -63,11 +68,22 @@ export default function UserProfile() {
                   }}
                 />
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">
+                  <h1
+                    className="text-2xl font-bold text-gray-900 cursor-pointer"
+                    onClick={() => setSelected("profile")}
+                  >
                     {data.fullName}
                   </h1>
-                  <p className="text-gray-600">{data.email}</p>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p
+                    className="text-gray-600 cursor-pointer"
+                    onClick={() => setSelected("profile")}
+                  >
+                    {data.email}
+                  </p>
+                  <p
+                    className="text-sm text-gray-500 mt-1 cursor-pointer"
+                    onClick={() => setSelected("profile")}
+                  >
                     Joined {format(data.createdAt)}
                   </p>
                 </div>
@@ -75,29 +91,52 @@ export default function UserProfile() {
             </div>
 
             <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t ">
-              <div className="text-center hover:cursor-pointer">
-                <div className="text-2xl font-bold text-gray-900">
+              <div
+                className="text-center hover:cursor-pointer group"
+                onClick={() => setSelected("orders")}
+              >
+                <div className="text-2xl font-bold text-gray-900 group">
                   {Array.isArray(orders?.data) ? orders.data.length : 0}
                 </div>
-                <div className="text-sm text-gray-600">Orders</div>
+                <div className="text-sm text-gray-600 group group-hover:underline underline-offset-2">
+                  Orders
+                </div>
               </div>
-              <div className="text-center hover:cursor-pointer">
-                <div className="text-2xl font-bold text-gray-900">
+              <div
+                className="text-center hover:cursor-pointer group"
+                onClick={() => setSelected("wishlist")}
+              >
+                <div className="text-2xl font-bold text-gray-900 group">
                   {Array.isArray(wishlist?.data?.items)
                     ? wishlist.data.items.length
                     : 0}
                 </div>
-                <div className="text-sm text-gray-600">Wishlist</div>
+                <div className="text-sm text-gray-600 group group-hover:underline underline-offset-2">
+                  Wishlist
+                </div>
               </div>
-              <div className="text-center hover:cursor-pointer">
-                <div className="text-2xl font-bold text-gray-900">
+              <Link
+                href={"#links"}
+                className="text-center hover:cursor-pointer group"
+              >
+                <div className="text-2xl font-bold text-gray-900 group">
                   {socialLinks.data?.links.length}
                 </div>
-                <div className="text-sm text-gray-600">Social Links</div>
-              </div>
+                <div className="text-sm text-gray-600 group group-hover:underline underline-offset-2">
+                  Social Links
+                </div>
+              </Link>
             </div>
           </div>
-          <ProfileUpdate />
+          {selected === "profile" ? (
+            <ProfileUpdate />
+          ) : selected === "orders" ? (
+            <Order />
+          ) : selected === "wishlist" ? (
+            <Wishlist />
+          ) : (
+            <div></div>
+          )}
         </div>
       </div>
       {cropImageSrc && (
