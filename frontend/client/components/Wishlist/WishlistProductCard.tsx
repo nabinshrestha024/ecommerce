@@ -16,6 +16,7 @@ import { useFetchWishlist } from "@/hooks/wishlist/useFetchWishlist";
 import { WishlistItem } from "../TrendingProduct/component/TrendingProductCard";
 import Link from "next/link";
 import { IoIosHeart, IoIosHeartEmpty } from "react-icons/io";
+import { currencyFormatter } from "../Product/ProductDisplay";
 
 export const WishlistProductCard = ({
   productId,
@@ -204,13 +205,20 @@ export const WishlistProductCard = ({
             </span>
           </div> */}
           <div>
-            <span className="text-[18px] text-[#4EA674] font-bold">
-              Rs. {product?.price}
-            </span>
-            &nbsp;&nbsp;&nbsp;
-            <span className="line-through text-[15px] text-[red] font-medium">
-              Rs. {product?.price}
-            </span>
+            {activeVariant?.finalPrice === 0 ? (
+              <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                {currencyFormatter.format(product?.price ?? 0)}
+              </span>
+            ) : (
+              <div className="flex flex-col">
+                <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                  {currencyFormatter.format(product?.finalPrice ?? 0)}
+                </span>
+                <span className="md:text-[12px] text-[12px] font-bold  text-red-500 line-through">
+                  {currencyFormatter.format(product?.price ?? 0)}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>
