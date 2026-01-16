@@ -45,13 +45,8 @@ export const AddAttributeForm = ({
                 type="text"
                 placeholder=""
                 {...register("name")}
-                className="w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+                className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.name ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
               />
-              {errors.name && (
-                <p className="text-[12px] text-red-500 ">
-                  {errors.name.message}
-                </p>
-              )}
             </div>
           </div>
         </div>

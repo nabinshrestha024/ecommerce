@@ -7,6 +7,7 @@ import { useChangePassword } from "@/hooks/changePassword/useChangePassword";
 import { PasswordSchema } from "./schemas/Password.zod";
 import { SquarePen } from "lucide-react";
 import { useState } from "react";
+import { MdEdit } from "react-icons/md";
 export const ChangePassword = () => {
   const {
     register,
@@ -42,71 +43,53 @@ export const ChangePassword = () => {
             Change your password
           </h3>
           <button
-            className={`rounded-xl transition-all duration-200 absolute top-2 right-3 ${
-              isEditing
-                ? "bg-white text-[#4EA674] shadow-md hover:shadow-lg"
-                : " text-white"
+            className={`transition-all duration-200 absolute top-2 right-3 ${
+              isEditing ? "bg-white text-[#4EA674]" : " text-white"
             }`}
             onClick={handleEditToggle}
             aria-label={isEditing ? "Cancel editing" : "Edit profile"}
           >
-            <SquarePen className="h-5 w-5" color="black" />
+            <MdEdit className="h-5 w-5 text-gray-500" />
           </button>
         </div>
-        <form
-          className="mt-4 sm:mt-5 grid grid-cols-2 gap-3 sm:gap-4"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="flex flex-col ">
-            <label className="text-md font-medium text-gray-700">
-              Current Password
-            </label>
-            <Input
-              type="password"
-              disabled={!isEditing}
-              {...register("currentPassword")}
-              className="w-full mt-2"
-              placeholder="Current password..."
-            />
-            {errors.currentPassword && (
-              <div className="text-sm text-red-600 ">
-                {errors.currentPassword.message}
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col ">
-            <label className="text-md font-medium text-gray-700">
-              New Password
-            </label>
-            <Input
-              type="password"
-              disabled={!isEditing}
-              {...register("newPassword")}
-              className="w-full mt-2"
-              placeholder="New password..."
-            />
-            {errors.newPassword && (
-              <p className="text-sm text-red-600">
-                {errors.newPassword.message}
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col ">
-            <label className="text-md font-medium text-gray-700">
-              Confirm Password
-            </label>
-            <Input
-              type="password"
-              disabled={!isEditing}
-              {...register("confirmPassword")}
-              className="w-full mt-2"
-              placeholder="Confirm password..."
-            />
-            {errors.confirmPassword && (
-              <div className="text-sm text-red-600">
-                {errors.confirmPassword.message}
-              </div>
-            )}
+        <form className="mt-4 sm:mt-5" onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex flex-col ">
+              <label className="text-md font-medium text-gray-700">
+                Current Password
+              </label>
+              <Input
+                type="password"
+                disabled={!isEditing}
+                {...register("currentPassword")}
+                className={`w-full mt-2 ${errors.currentPassword?.message ? "border-red-500" : ""}`}
+                placeholder="Current password..."
+              />
+            </div>
+            <div className="flex flex-col ">
+              <label className="text-md font-medium text-gray-700">
+                New Password
+              </label>
+              <Input
+                type="password"
+                disabled={!isEditing}
+                {...register("newPassword")}
+                className={`w-full mt-2 ${errors.newPassword?.message ? "border-red-500" : ""}`}
+                placeholder="New password..."
+              />
+            </div>
+            <div className="flex flex-col ">
+              <label className="text-md font-medium text-gray-700">
+                Confirm Password
+              </label>
+              <Input
+                type="password"
+                disabled={!isEditing}
+                {...register("confirmPassword")}
+                className={`w-full mt-2 ${errors.confirmPassword?.message ? "border-red-500" : ""}`}
+                placeholder="Confirm password..."
+              />
+            </div>
           </div>
           {isEditing && (
             <Button

@@ -7,8 +7,8 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { MdDelete } from "react-icons/md";
-import { FaEdit } from "react-icons/fa";
+import { MdDelete, MdEdit } from "react-icons/md";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { Table } from "../Table/Table";
 import { Dialog } from "../Dialog/Dialog";
 import { VendorForm } from "./VendorForm";
@@ -103,7 +103,9 @@ export const VendorTableInternal = ({
         cell: ({ row }) => (
           <div className="flex gap-3 justify-center">
             <Dialog
-              triggerContent={<FaEdit className="cursor-pointer" />}
+              triggerContent={
+                <MdEdit className=" text-[20px] text-gray-500 cursor-pointer" />
+              }
               open={
                 isDialogOpen &&
                 editingVendor?.vendorId === row.original.vendorId
@@ -130,7 +132,9 @@ export const VendorTableInternal = ({
             </Dialog>
 
             <ConfirmationDialog
-              trigger={<MdDelete className="cursor-pointer" />}
+              trigger={
+                <FaTrash className="text-[18px] cursor-pointer text-gray-500" />
+              }
               confirmFunc={() => onDelete(row.original.vendorId)}
             />
           </div>

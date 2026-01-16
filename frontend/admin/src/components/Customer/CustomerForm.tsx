@@ -24,7 +24,7 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
       name: customer.fullName,
       address: customer.address,
       phone: customer.phone,
-      role: customer.isActive ? "true" : "false",
+      role: customer.role ? "true" : "false",
     },
     mode: "onChange",
   });
@@ -36,7 +36,7 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
       fullName: data.name,
       phone: data.phone,
       address: data.address,
-      isActive: data.role === "true",
+      role: data.role === "true",
     };
 
     editUser.mutate(

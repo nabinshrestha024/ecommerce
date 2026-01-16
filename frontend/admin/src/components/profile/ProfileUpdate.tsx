@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Card } from "../Card/Card";
-import { SquarePen } from "lucide-react";
 import { Button } from "@/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +12,7 @@ import type { ProfileResponse } from "@/services/profile.services";
 import { ChangePassword } from "./ChangePassword";
 import { SocialLinks } from "./SocialLink";
 import { Spinner } from "../Spinner/Spinner";
+import { MdEdit } from "react-icons/md";
 
 export interface ProfileField {
   firstName?: string;
@@ -247,15 +247,13 @@ export const ProfileUpdate = () => {
         </div>
 
         <button
-          className={`rounded-xl transition-all duration-200 absolute top-2 right-3 ${
-            isEditing
-              ? "bg-white text-[#4EA674] shadow-md hover:shadow-lg"
-              : " text-white"
+          className={`transition-all duration-200 absolute top-2 right-3 ${
+            isEditing ? "bg-white text-[#4EA674] " : " text-white"
           }`}
           onClick={handleEditToggle}
           aria-label={isEditing ? "Cancel editing" : "Edit profile"}
         >
-          <SquarePen className="h-5 w-5" color="black" />
+          <MdEdit size={20} className="text-gray-500" />
         </button>
       </Card>
       <ChangePassword />

@@ -83,11 +83,8 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
               type="text"
               placeholder="Enter business name"
               {...register("name")}
-              className="w-full px-4 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.name ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             />
-            {errors.name && (
-              <p className="text-[12px] text-red-500">{errors.name.message}</p>
-            )}
           </div>
         </div>
         <div className="grid grid-cols-[1fr_3fr] gap-4 items-center mt-5">
@@ -97,13 +94,8 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
               type="text"
               placeholder="Enter contact person"
               {...register("contactPerson")}
-              className="w-full px-4  border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.contactPerson ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             />
-            {errors.contactPerson && (
-              <p className="text-[12px] text-red-500">
-                {errors.contactPerson.message}
-              </p>
-            )}
           </div>
         </div>
 
@@ -114,11 +106,8 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
               type="email"
               placeholder="Enter email address"
               {...register("email")}
-              className="w-full px-4  border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.email ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             />
-            {errors.email && (
-              <p className="text-[12px] text-red-500">{errors.email.message}</p>
-            )}
           </div>
         </div>
 
@@ -129,11 +118,8 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
               type="text"
               placeholder="Enter phone number"
               {...register("phone")}
-              className="w-full px-4 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.phone ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             />
-            {errors.phone && (
-              <p className="text-[12px] text-red-500">{errors.phone.message}</p>
-            )}
           </div>
         </div>
 
@@ -144,13 +130,8 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
               type="text"
               placeholder="Enter address"
               {...register("address")}
-              className="w-full px-4 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0"
+              className={`w-full px-4 py-2 border border-[#DFE0E1] rounded  focus-visible:ring-0 ${errors.address ? "border-red-500 focus-visible:border-red-500" : " border-[#DFE0E1] focus-visible:border-[#DFE0E1]"}`}
             />
-            {errors.address && (
-              <p className="text-[12px] text-red-500">
-                {errors.address.message}
-              </p>
-            )}
           </div>
         </div>
 
