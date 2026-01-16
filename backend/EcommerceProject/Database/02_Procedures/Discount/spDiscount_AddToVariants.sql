@@ -1,7 +1,7 @@
-﻿USE [EcommerceDB]
+﻿USE EcommerceDB
 GO
 
-CREATE PROCEDURE spDiscount_AddToVariants
+CREATE OR ALTER PROCEDURE spDiscount_AddToVariants
 (
     @DiscountId INT,
     @VariantId INT
@@ -16,4 +16,12 @@ BEGIN
         INSERT INTO DiscountVariants (DiscountId, VariantId)
         VALUES (@DiscountId, @VariantId);
     END
+
+        UPDATE ProductVariants
+    SET DiscountId = @DiscountId
+    WHERE VariantId = @VariantId;
+
+   
+
+
 END

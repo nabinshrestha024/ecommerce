@@ -1,11 +1,11 @@
 ﻿USE [EcommerceDB]
 GO
 
-CREATE OR ALTER PROCEDURE spProducts_GetPaged
+CREATE OR ALTER   PROCEDURE spProducts_GetPaged
 (
     @CategoryId     INT             = NULL,
     @Search         VARCHAR(200)    = NULL,
-    @TagNames       VARCHAR(MAX)    = NULL,
+    @TagNames       VARCHAR(MAX)    = NULL,  
     @MinPrice       DECIMAL(10,2)   = NULL,
     @MaxPrice       DECIMAL(10,2)   = NULL,
     @Page           INT             = 1,
@@ -18,11 +18,6 @@ BEGIN
 
     DECLARE @Offset INT = (@Page - 1) * @PageSize;
 
-    CREATE TABLE #PagedIds
-    (
-        ProductId INT PRIMARY KEY
-    );
-
     ;WITH FilteredProducts AS
     (
         SELECT DISTINCT p.ProductId
@@ -31,6 +26,8 @@ BEGIN
             ON v.ProductId = p.ProductId
            AND v.IsDefault = 1
            AND v.IsActive = 1
+        LEFT JOIN ProductTags pt ON p.ProductId = pt.ProductId
+        LEFT JOIN Tags t ON pt.TagId = t.TagId
         WHERE
             (@CategoryId IS NULL OR p.CategoryId = @CategoryId)
             AND (@OnlyActive = 0 OR p.IsActive = 1)
@@ -44,50 +41,63 @@ BEGIN
                 OR (v.Price IS NOT NULL AND v.Price >= @MinPrice)
             )
             AND (
-                @MaxPrice IS NULL
-                OR (v.Price IS NOT NULL AND v.Price <= @MaxPrice)
+                 @MaxPrice IS NULL
+                 OR (v.Price IS NOT NULL AND v.Price <= @MaxPrice)
             )
+
             AND (
                 @TagNames IS NULL
-                OR p.ProductId IN
-                (
-                    SELECT pt2.ProductId
-                    FROM ProductTags pt2
-                    INNER JOIN Tags t2 ON pt2.TagId = t2.TagId
-                    WHERE LTRIM(RTRIM(t2.Name)) IN
-                          (SELECT LTRIM(RTRIM(value))
-                           FROM STRING_SPLIT(@TagNames, ','))
-                    GROUP BY pt2.ProductId
-                    HAVING COUNT(DISTINCT t2.Name) =
-                           (SELECT COUNT(*)
-                            FROM STRING_SPLIT(@TagNames, ','))
-                )
+                OR t.Name IN (SELECT value FROM STRING_SPLIT(@TagNames, ','))
             )
     )
-    INSERT INTO #PagedIds (ProductId)
-    SELECT ProductId
+    SELECT ProductId INTO #PagedIds
     FROM FilteredProducts
-    ORDER BY ProductId
+    ORDER BY ProductId DESC
     OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
 
     SELECT
-        p.*,
-        c.Name AS CategoryName,
-        (
-            SELECT TOP 1 pi.ImageUrl
-            FROM ProductImages pi
-            WHERE pi.ProductId = p.ProductId
-            ORDER BY pi.IsPrimary ASC, pi.SortOrder ASC
-        ) AS PrimaryImageUrl
-    FROM Products p
-    LEFT JOIN Categories c ON p.CategoryId = c.CategoryId
-    WHERE p.ProductId IN (SELECT ProductId FROM #PagedIds)
-    ORDER BY p.ProductId ASC;
+    p.*,
+    c.Name AS CategoryName,
+    (
+        SELECT TOP 1 pi.ImageUrl
+        FROM ProductImages pi
+        WHERE pi.ProductId = p.ProductId
+        ORDER BY pi.IsPrimary DESC, pi.SortOrder ASC
+    ) AS PrimaryImageUrl
+FROM Products p
+INNER JOIN Categories c ON p.CategoryId = c.CategoryId
+WHERE p.ProductId IN (SELECT ProductId FROM #PagedIds)
+ORDER BY p.ProductId DESC;
 
-    SELECT *
-    FROM ProductVariants
-    WHERE ProductId IN (SELECT ProductId FROM #PagedIds)
-    ORDER BY IsDefault ASC;
+    
+        -- Step 3: Return Product Variants with DiscountId and FinalPrice
+    SELECT
+        pv.VariantId,
+        pv.ProductId,
+        pv.SKU,
+        pv.Price AS Price,
+        pv.DiscountId,
+        d.DiscountType,
+        d.DiscountValue,
+        CASE 
+            WHEN d.DiscountType = 'Percentage' THEN pv.Price - (pv.Price * d.DiscountValue / 100)
+            WHEN d.DiscountType = 'Flat' THEN pv.Price - d.DiscountValue
+            ELSE pv.Price
+        END AS FinalPrice,
+        pv.StockQuantity,
+        pv.IsActive,
+        pv.IsDefault,
+        pv.CreatedAt,
+        pv.UpdatedAt
+    FROM ProductVariants pv
+    LEFT JOIN Discounts d 
+        ON d.DiscountId = pv.DiscountId
+        AND d.IsActive = 1
+        AND (d.StartDate IS NULL OR d.StartDate <= GETDATE())
+        AND (d.EndDate IS NULL OR d.EndDate >= GETDATE())
+    WHERE pv.ProductId IN (SELECT ProductId FROM #PagedIds)
+    ORDER BY pv.IsDefault DESC;
+
 
     SELECT
         vav.VariantId,
@@ -100,16 +110,14 @@ BEGIN
     INNER JOIN ProductVariants pv ON vav.VariantId = pv.VariantId
     WHERE pv.ProductId IN (SELECT ProductId FROM #PagedIds);
 
-    SELECT *
-    FROM ProductImages
+    SELECT * FROM ProductImages
     WHERE ProductId IN (SELECT ProductId FROM #PagedIds);
 
     SELECT COUNT(DISTINCT p.ProductId)
     FROM Products p
-    LEFT JOIN ProductVariants v
-        ON v.ProductId = p.ProductId
-       AND v.IsDefault = 1
-       AND v.IsActive = 1
+    LEFT JOIN ProductVariants v ON v.ProductId = p.ProductId AND v.IsDefault = 1 AND v.IsActive = 1
+    LEFT JOIN ProductTags pt ON p.ProductId = pt.ProductId
+    LEFT JOIN Tags t ON pt.TagId = t.TagId
     WHERE
         (@CategoryId IS NULL OR p.CategoryId = @CategoryId)
         AND (@OnlyActive = 0 OR p.IsActive = 1)
@@ -117,26 +125,6 @@ BEGIN
         AND (@MaxPrice IS NULL OR v.Price <= @MaxPrice)
         AND (
             @TagNames IS NULL
-            OR p.ProductId IN
-            (
-                SELECT pt2.ProductId
-                FROM ProductTags pt2
-                INNER JOIN Tags t2 ON pt2.TagId = t2.TagId
-                WHERE LTRIM(RTRIM(t2.Name)) IN
-                      (SELECT LTRIM(RTRIM(value))
-                       FROM STRING_SPLIT(@TagNames, ','))
-                GROUP BY pt2.ProductId
-                HAVING COUNT(DISTINCT t2.Name) =
-                       (SELECT COUNT(*)
-                        FROM STRING_SPLIT(@TagNames, ','))
-            )
+            OR t.Name IN (SELECT value FROM STRING_SPLIT(@TagNames, ','))
         );
-
-    SELECT ISNULL(MAX(v.Price), 0)
-    FROM ProductVariants v
-    INNER JOIN Products p ON v.ProductId = p.ProductId
-    WHERE p.IsActive = 1;
-
-    DROP TABLE #PagedIds;
 END
-GO
