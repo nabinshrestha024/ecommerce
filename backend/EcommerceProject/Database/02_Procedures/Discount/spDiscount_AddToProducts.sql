@@ -1,7 +1,8 @@
 ﻿USE [EcommerceDB]
 GO
 
-CREATE OR ALTER PROCEDURE spDiscount_AddToProducts
+
+CREATE OR ALTER   PROCEDURE [dbo].[spDiscount_AddToProducts]
 (
     @DiscountId INT,
     @ProductId INT
@@ -16,4 +17,8 @@ BEGIN
         INSERT INTO DiscountProducts (DiscountId, ProductId)
         VALUES (@DiscountId, @ProductId);
     END
+
+            UPDATE ProductVariants
+    SET DiscountId = @DiscountId
+    WHERE @ProductId = @ProductId;
 END

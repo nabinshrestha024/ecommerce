@@ -69,14 +69,14 @@ namespace EcommerceProject.Repositories.Implementations
                 {
                     variant.Attributes = allAttributes
                         .Where(a => a.VariantId == variant.VariantId)
-                        .GroupBy(a => a.AttributeName)
+                        .GroupBy(a => string.IsNullOrEmpty(a.AttributeName) ? "Unknown" : a.AttributeName)
                         .ToDictionary(
                             g => g.Key,
                             g => g.First().AttributeValue ?? ""
                         );
                 }
                 product.AvailableAttributes = allAttributes
-                    .Where(a => product.Variants.Any(v => v.VariantId == a.VariantId))
+                    .Where(a => product.Variants.Any(v => v.VariantId == a.VariantId) && !string.IsNullOrEmpty(a.AttributeName))
                     .GroupBy(a => a.AttributeName)
                     .Select(g => new ProductAttributeSummaryDto
                     {
@@ -90,7 +90,8 @@ namespace EcommerceProject.Repositories.Implementations
                 if (product.Variants.Any())
                 {
                     var defaultVar = product.Variants.FirstOrDefault(v => v.IsDefault) ?? product.Variants.First();
-                    product.Price = defaultVar.Price;
+
+                    product.Price = defaultVar.FinalPrice > 0 ? defaultVar.FinalPrice : defaultVar.Price;
                     product.StockQuantity = defaultVar.StockQuantity;
                 }
             }
