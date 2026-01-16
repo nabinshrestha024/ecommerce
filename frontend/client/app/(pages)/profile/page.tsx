@@ -25,7 +25,9 @@ export default function UserProfile() {
   const [cropOpen, setCropOpen] = useState<boolean>(false);
   const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
-  const [selected, setSelected] = useQueryState("profile");
+  const [selected, setSelected] = useQueryState("value", {
+    defaultValue: "profile",
+  });
 
   return isLoading || orders.isLoading || socialLinks.isLoading ? (
     <div className="fixed top-0 left-0 h-screen w-screen flex items-center justify-center">
@@ -116,7 +118,18 @@ export default function UserProfile() {
                 </div>
               </div>
               <Link
-                href={"#links"}
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelected("profile");
+
+                  requestAnimationFrame(() => {
+                    document.getElementById("links")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  });
+                }}
                 className="text-center hover:cursor-pointer group"
               >
                 <div className="text-2xl font-bold text-gray-900 group">
