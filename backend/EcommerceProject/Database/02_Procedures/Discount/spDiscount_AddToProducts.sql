@@ -9,6 +9,7 @@ CREATE OR ALTER   PROCEDURE [dbo].[spDiscount_AddToProducts]
 )
 AS
 BEGIN
+
     IF NOT EXISTS (
         SELECT 1 FROM DiscountProducts
         WHERE DiscountId = @DiscountId AND ProductId = @ProductId
@@ -20,5 +21,5 @@ BEGIN
 
             UPDATE ProductVariants
     SET DiscountId = @DiscountId
-    WHERE @ProductId = @ProductId;
+    WHERE   ProductId = @ProductId;
 END

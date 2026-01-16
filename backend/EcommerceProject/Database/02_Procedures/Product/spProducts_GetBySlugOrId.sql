@@ -13,6 +13,7 @@ BEGIN
 
     DECLARE @ProductId INT = TRY_CONVERT(INT, @SlugOrId);
 
+   
     IF @ProductId IS NULL
     BEGIN
         SELECT @ProductId = ProductId
@@ -30,28 +31,47 @@ BEGIN
         p.ShortDescription,
         p.HasVariants,
         p.IsActive,
-        COALESCE(
-            v.Price,
+
+        COALESCE(v.Price,
             (SELECT TOP 1 Price
              FROM ProductVariants
              WHERE ProductId = p.ProductId
                AND (@IncludeInactiveVariants = 1 OR IsActive = 1)
-             ORDER BY Price ASC)
+             ORDER BY IsDefault DESC, Price ASC)
         ) AS Price,
-        COALESCE(
-            v.StockQuantity,
+
+
+        COALESCE(v.StockQuantity,
             (SELECT TOP 1 StockQuantity
              FROM ProductVariants
              WHERE ProductId = p.ProductId
                AND (@IncludeInactiveVariants = 1 OR IsActive = 1)
-             ORDER BY Price ASC)
-        ) AS StockQuantity
+             ORDER BY IsDefault DESC, Price ASC)
+        ) AS StockQuantity,
+
+        v.DiscountId,
+        d.DiscountType,
+        d.DiscountValue,
+
+        CASE
+            WHEN d.DiscountType = 'Percentage'
+                THEN v.Price - (v.Price * d.DiscountValue / 100)
+            WHEN d.DiscountType = 'Flat'
+                THEN v.Price - d.DiscountValue
+            ELSE v.Price
+        END AS FinalPrice
+
     FROM Products p
     INNER JOIN Categories c ON p.CategoryId = c.CategoryId
     LEFT JOIN ProductVariants v
         ON v.ProductId = p.ProductId
        AND v.IsDefault = 1
        AND (@IncludeInactiveVariants = 1 OR v.IsActive = 1)
+    LEFT JOIN Discounts d
+        ON d.DiscountId = v.DiscountId
+       AND d.IsActive = 1
+       AND (d.StartDate IS NULL OR d.StartDate <= GETDATE())
+       AND (d.EndDate IS NULL OR d.EndDate >= GETDATE())
     WHERE p.ProductId = @ProductId
       AND (@OnlyActive = 0 OR p.IsActive = 1);
 
@@ -61,34 +81,46 @@ BEGIN
         v.SKU,
         v.Price,
         v.StockQuantity,
+        v.DiscountId,
+        d.DiscountType,
+        d.DiscountValue,
+        CASE
+            WHEN d.DiscountType = 'Percentage'
+                THEN v.Price - (v.Price * d.DiscountValue / 100)
+            WHEN d.DiscountType = 'Flat'
+                THEN v.Price - d.DiscountValue
+            ELSE v.Price
+        END AS FinalPrice,
         v.IsDefault,
         v.IsActive
     FROM ProductVariants v
+    LEFT JOIN Discounts d
+        ON d.DiscountId = v.DiscountId
+       AND d.IsActive = 1
+       AND (d.StartDate IS NULL OR d.StartDate <= GETDATE())
+       AND (d.EndDate IS NULL OR d.EndDate >= GETDATE())
     WHERE v.ProductId = @ProductId
-      AND (
-            @IncludeInactiveVariants = 1
-            OR v.IsActive = 1
-          )
+      AND (@IncludeInactiveVariants = 1 OR v.IsActive = 1)
     ORDER BY v.IsDefault DESC, v.VariantId ASC;
+
 
     SELECT
         vav.VariantId,
-        @ProductId AS ProductId,
+        pv.ProductId,
         pa.Name AS AttributeName,
         pav.Value AS AttributeValue
     FROM VariantAttributeValues vav
     INNER JOIN ProductAttributeValues pav
         ON vav.AttributeValueId = pav.AttributeValueId
+        INNER JOIN ProductVariants pv
+    ON vav.VariantId = pv.VariantId
     INNER JOIN ProductAttributes pa
         ON pav.AttributeId = pa.AttributeId
     WHERE vav.VariantId IN (
         SELECT VariantId
         FROM ProductVariants
         WHERE ProductId = @ProductId
-          AND (
-                @IncludeInactiveVariants = 1
-                OR IsActive = 1
-              )
+          AND (@IncludeInactiveVariants = 1 OR IsActive = 1)
     )
 
     UNION ALL
@@ -102,6 +134,7 @@ BEGIN
     INNER JOIN ProductAttributes pa
         ON par.AttributeId = pa.AttributeId
     WHERE par.ProductId = @ProductId;
+
 
     SELECT
         pi.ProductImageId,
