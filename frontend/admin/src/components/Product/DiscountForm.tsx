@@ -47,8 +47,8 @@ export const ProductDiscountForm = ({ id, setAddOpen }: Props) => {
           Add Discount
         </div>
         <div className="flex-1 overflow-auto ">
-          <div className="grid grid-cols-4 gap-4 items-center  mt-5">
-            <label className="col-span-1 font-medium text-gray-700">
+          <div className="grid grid-cols-4 gap-2 items-center  mt-5">
+            <label className="col-span-1 font-small text-gray-700">
               Discount Name
             </label>
             <div className="col-span-3">
@@ -86,7 +86,7 @@ export const ProductDiscountForm = ({ id, setAddOpen }: Props) => {
             type="submit"
             className="bg-green-600 hover:bg-green-700 text-white px-10 py-2 rounded transition mt-5"
           >
-            Save Product
+            Save Discount
           </button>
         </div>
       </form>
