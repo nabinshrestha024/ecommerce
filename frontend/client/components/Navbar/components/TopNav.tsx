@@ -172,7 +172,7 @@ export const TopNav = () => {
               toast.error("Please log in to see your notifications")
             }
             className="cursor-pointer"
-            size={13}
+            size={19}
           />
         ) : (
           <Notification />

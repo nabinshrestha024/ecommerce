@@ -77,12 +77,12 @@ export const ProfileUpdate = () => {
   ) : (
     <div className="space-y-5">
       <Card
-        className="p-2 shadow-lg border-0 justify-between items-start relative "
-        cardClassName="p-0 border-none shadow-none rounded-2xl overflow-hidden"
+        className="p-5 shadow-lg border-0 justify-between items-start relative border-b-2 border-b-gray-100 "
+        cardClassName="p-0 border-none shadow-none rounded-none overflow-hidden"
       >
         <div className="space-y-5 ">
           <div className="space-y-4">
-            <h3 className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
+            <h3 className="text-2xl font-semibold text-gray-900 flex items-center gap-2 ">
               Personal Information
             </h3>
             <div className="grid grid-cols-2 gap-5">

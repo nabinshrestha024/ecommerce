@@ -29,7 +29,7 @@ export const ForgetPasswordDialogContent = ({
     resolver: zodResolver(NewPasswordFormSchema),
     mode: "onBlur",
   });
-  const [render, setRender] = useState(2);
+  const [render, setRender] = useState(1);
   const [value, setValue] = useState("");
   const [email, setEmail] = useState("");
   const sendEmail = useSendEmail();

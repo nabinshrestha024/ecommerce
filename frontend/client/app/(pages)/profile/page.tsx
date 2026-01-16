@@ -30,7 +30,7 @@ export default function UserProfile() {
   ) : (
     <div className="w-full">
       <div className="min-h-screen bg-gray-50">
-        <div className="mx-25 p-3 md:p-6">
+        <div className="mx:2 lg:mx-25 p-3 md:p-6">
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-4 relative">

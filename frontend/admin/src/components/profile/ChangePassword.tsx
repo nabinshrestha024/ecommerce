@@ -33,8 +33,8 @@ export const ChangePassword = () => {
   };
   return (
     <Card
-      className="p-2 shadow-lg border-0 justify-between items-start relative "
-      cardClassName="p-0 border-none shadow-none rounded-2xl overflow-hidden"
+      className="p-5 shadow-none rounded-none border-0 justify-between items-start relative border-b-2 border-b-gray-100 "
+      cardClassName="p-0 border-none shadow-none rounded-none overflow-hidden"
     >
       <div>
         <div className="flex w-full justify-between">

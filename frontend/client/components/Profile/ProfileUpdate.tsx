@@ -86,7 +86,7 @@ export const ProfileUpdate = () => {
         </div>
       </div>
 
-      <div className="space-y-5">
+      <div>
         <Card
           className="p-5 shadow-lg border-0 justify-between items-start relative border-b-2 border-b-gray-100 "
           rootClassName="p-0 border-none shadow-none rounded-none overflow-hidden"
@@ -258,16 +258,14 @@ export const ProfileUpdate = () => {
             </div>
 
             {isEditing && (
-              <div className="pt-4">
-                <Button
-                  className="mt-3 sm:mt-4 h-10 w-full text-sm"
-                  variant={"default"}
-                  type="submit"
-                  onClick={handleFormSubmit}
-                >
-                  Save Changes
-                </Button>
-              </div>
+              <Button
+                className="h-10 w-full text-sm"
+                variant={"default"}
+                type="submit"
+                onClick={handleFormSubmit}
+              >
+                Save Changes
+              </Button>
             )}
           </div>
         </Card>

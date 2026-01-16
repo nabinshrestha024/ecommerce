@@ -53,64 +53,64 @@ export const ChangePassword = () => {
             <SquarePen className="h-5 w-5" color="black" />
           </button>
         </div>
-        <form
-          className="grid grid-cols-2 gap-5"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="flex flex-col ">
-            <label className="text-md font-medium text-gray-700">
-              Current Password
-            </label>
-            <Input
-              type="password"
-              disabled={!isEditing}
-              {...register("currentPassword")}
-              className="w-full mt-2"
-              placeholder="Current password..."
-            />
-            {errors.currentPassword && (
-              <div className="text-sm text-red-600 ">
-                {errors.currentPassword.message}
-              </div>
-            )}
+        <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid grid-cols-2 gap-5">
+            <div className="flex flex-col ">
+              <label className="text-md font-medium text-gray-700">
+                Current Password
+              </label>
+              <Input
+                type="password"
+                disabled={!isEditing}
+                {...register("currentPassword")}
+                className="w-full mt-2"
+                placeholder="Current password..."
+              />
+              {errors.currentPassword && (
+                <div className="text-sm text-red-600 ">
+                  {errors.currentPassword.message}
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col ">
+              <label className="text-md font-medium text-gray-700">
+                New Password
+              </label>
+              <Input
+                type="password"
+                disabled={!isEditing}
+                {...register("newPassword")}
+                className="w-full mt-2"
+                placeholder="New password..."
+              />
+              {errors.newPassword && (
+                <p className="text-sm text-red-600">
+                  {errors.newPassword.message}
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col ">
+              <label className="text-md font-medium text-gray-700">
+                Confirm Password
+              </label>
+              <Input
+                type="password"
+                disabled={!isEditing}
+                {...register("confirmPassword")}
+                className="w-full mt-2"
+                placeholder="Confirm password..."
+              />
+              {errors.confirmPassword && (
+                <div className="text-sm text-red-600">
+                  {errors.confirmPassword.message}
+                </div>
+              )}
+            </div>
           </div>
-          <div className="flex flex-col ">
-            <label className="text-md font-medium text-gray-700">
-              New Password
-            </label>
-            <Input
-              type="password"
-              disabled={!isEditing}
-              {...register("newPassword")}
-              className="w-full mt-2"
-              placeholder="New password..."
-            />
-            {errors.newPassword && (
-              <p className="text-sm text-red-600">
-                {errors.newPassword.message}
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col ">
-            <label className="text-md font-medium text-gray-700">
-              Confirm Password
-            </label>
-            <Input
-              type="password"
-              disabled={!isEditing}
-              {...register("confirmPassword")}
-              className="w-full mt-2"
-              placeholder="Confirm password..."
-            />
-            {errors.confirmPassword && (
-              <div className="text-sm text-red-600">
-                {errors.confirmPassword.message}
-              </div>
-            )}
-          </div>
+
           {isEditing && (
             <Button
-              className="mt-3 sm:mt-4 h-10 w-full text-sm"
+              className="h-10 w-full text-sm"
               variant={"default"}
               type="submit"
             >
