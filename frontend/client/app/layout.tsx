@@ -4,7 +4,6 @@ import "./globals.css";
 import { Toaster } from "@/ui/sonner";
 import { Providers } from "./provider";
 import ClientLayout from "./ClientLayout";
-import Chatbot from "@/components/Chatbox/Chatbox";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +34,6 @@ export default function RootLayout({
           <Providers>
             {children}
             <Toaster />
-            <Chatbot />
           </Providers>
         </ClientLayout>
       </body>
