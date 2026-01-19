@@ -44,11 +44,11 @@ export const RegisterForm = ({}: {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="py-6 flex flex-col gap-2"
+      className="py-6 flex flex-col gap-3"
     >
-      <div className="text-3xl font-semibold mb-5">Register</div>
-      <div className="flex flex-col gap-6 px-2 max-h-[300px] overflow-scroll overflow-x-hidden">
-        <div className="grid gap-2">
+      <div className="text-4xl font-bold mb-5">Register</div>
+      <div className="flex flex-col gap-4 px-1 max-h-[300px] overflow-scroll overflow-y- overflow-x-hidden">
+        <div className="flex flex-col gap-4">
           <Label htmlFor="fullName">Full name</Label>
           <Input
             id="fullName"
@@ -57,17 +57,17 @@ export const RegisterForm = ({}: {
             className={`${errors.fullName ? "border-red-500" : ""}`}
           />
         </div>
-        <div className="grid gap-2">
+        <div className="flex flex-col gap-4">
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
             {...register("email")}
             type="email"
-            placeholder="m@example.com"
+            placeholder="Enter your email"
             className={` ${errors.email ? "border-red-500 focus:border-red-500" : ""}`}
           />
         </div>
-        <div className="grid gap-2">
+        <div className="flex flex-col gap-4">
           <Label htmlFor="phone">Phone number</Label>
           <Input
             type="text"
@@ -85,7 +85,7 @@ export const RegisterForm = ({}: {
             className={`no-spinner ${errors.phone ? "border-red-500 focus:border-red-500" : ""}`}
           />
         </div>
-        <div className="grid gap-2">
+        <div className="flex flex-col gap-4">
           <Label htmlFor="password">Password</Label>
           <Input
             id="password"
@@ -93,9 +93,10 @@ export const RegisterForm = ({}: {
             type="password"
             placeholder="Enter your password"
             className={`${errors.password ? "border-red-500 focus:border-red-500" : ""}`}
+            autoComplete="off"
           />
         </div>
-        <div className="grid gap-2">
+        <div className="flex flex-col gap-4">
           <Label htmlFor="rePassword">Re-Password</Label>
           <Input
             id="rePassword"
@@ -105,7 +106,7 @@ export const RegisterForm = ({}: {
             className={`${errors.repassword ? "border-red-500 focus:border-red-500" : ""}`}
           />
         </div>
-        <div className="grid gap-2">
+        <div className="flex flex-col gap-4">
           <Label htmlFor="city">Date of Birth</Label>
           <Input
             id="city"
@@ -115,7 +116,7 @@ export const RegisterForm = ({}: {
             className={`${errors.dateOfBirth ? "border-red-500 focus:border-red-500" : ""}`}
           />
         </div>
-        <div className="grid gap-2">
+        <div className="flex flex-col gap-4">
           <Label htmlFor="city">Gender</Label>
           <div className="flex gap-5">
             <div className="flex gap-2 items-center">
@@ -138,7 +139,7 @@ export const RegisterForm = ({}: {
             </div>
           </div>
         </div>
-        <div className="grid gap-2">
+        <div className="flex flex-col gap-4">
           <Label htmlFor="address">Address</Label>
           <Input
             id="address"
@@ -148,7 +149,7 @@ export const RegisterForm = ({}: {
             className={`${errors.address ? "border-red-500 focus:border-red-500" : ""}`}
           />
         </div>
-        <div className="grid gap-2">
+        <div className="flex flex-col gap-4">
           <Label htmlFor="city">City</Label>
           <Input
             id="city"
@@ -164,9 +165,12 @@ export const RegisterForm = ({}: {
           Register
         </Button>
       </div>
-      <div className="text-center text-[12px]">
+      <div>
         Already have an account?{" "}
-        <Link href={"/login"} className="text-blue-500 underline">
+        <Link
+          href={"/login"}
+          className="text-green-600 text-[16px] underline cursor-pointer"
+        >
           Login
         </Link>
       </div>

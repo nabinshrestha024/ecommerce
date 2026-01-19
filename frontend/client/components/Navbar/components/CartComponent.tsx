@@ -1,11 +1,7 @@
 import { Button } from "@/ui/button";
-import { Trash2, X, ShoppingBag } from "lucide-react";
+import { X, ShoppingBag } from "lucide-react";
 import Image from "next/image";
-import {
-  MdKeyboardArrowDown,
-  MdKeyboardArrowUp,
-  MdOutlineShoppingCart,
-} from "react-icons/md";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { CheckoutForm } from "./CheckoutForm";
 import { useEffect, useState } from "react";
 import { useDeleteCart } from "@/hooks/cart/useDeleteCart";
@@ -15,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { useUpdateCart } from "@/hooks/cart/useUpdateCart";
 import { Checkbox } from "@/ui/checkbox";
 import { CartProductType } from "./TopNav";
-import { Dialog } from "@/components/dialog/Dialog";
+import { Dialog } from "@/components/Dialog/Dialog";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
 import { currencyFormatter } from "@/components/Product/ProductDisplay";
@@ -35,7 +31,7 @@ export const CartComponent = () => {
     data?.filter((item) => selectedCartItemIds.includes(item.cartId)) ?? [];
   const totalPrice =
     selectedItems?.reduce(
-      (sum, val) => sum + val.quantity * val.totalPrice,
+      (sum, val) => sum + val.quantity * val.finalPrice,
       0,
     ) ?? 0;
   useEffect(() => {
@@ -62,13 +58,31 @@ export const CartComponent = () => {
     }
   };
 
+  const handleSelectAll = () => {
+    if (!data || data.length === 0) {
+      setSelectedCartItemIds([]);
+      return;
+    }
+    const allIds = data.map((v) => v.cartId);
+    const allSelected =
+      allIds.length > 0 &&
+      allIds.every((id) => selectedCartItemIds.includes(id));
+    setSelectedCartItemIds(allSelected ? [] : allIds);
+  };
+
+  const allSelected = Boolean(
+    data &&
+    data.length > 0 &&
+    data.every((item) => selectedCartItemIds.includes(item.cartId)),
+  );
+
   return (
     <div className="flex gap-2 shrink-0 items-center">
       <button
         onClick={() => setOpen(true)}
         className="relative transition-transform active:scale-95 text-2xl"
       >
-        {isAuth && (data?.length ?? 0) > 0 && (
+        {(data?.length ?? 0) > 0 && (
           <span className="absolute -top-1 -right-2 h-3 w-3 bg-red-600 rounded-full flex items-center justify-center text-[8px] text-white font-bold ring-1 ring-white animate-in zoom-in">
             {data?.length}
           </span>
@@ -113,16 +127,7 @@ export const CartComponent = () => {
           </header>
 
           <div className="flex-1 overflow-y-auto px-6 py-4 custom-scrollbar">
-            {!isAuth ? (
-              <div className="h-full flex flex-col items-center justify-center text-center">
-                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-                  <ShoppingBag className="text-gray-300" size={32} />
-                </div>
-                <p className="text-gray-600 font-medium">
-                  Please login to view your cart
-                </p>
-              </div>
-            ) : isLoading ? (
+            {isLoading ? (
               <div className="flex items-center justify-center h-40">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
               </div>
@@ -144,13 +149,24 @@ export const CartComponent = () => {
                     setOpen(false);
                     router.push("/product");
                   }}
-                  className="rounded-full px-8"
                 >
                   Start Shopping
                 </Button>
               </div>
             ) : (
-              <div className="space-y-6">
+              <div className="space-y-3">
+                <div className="flex gap-4 px-3">
+                  <div className="flex items-center">
+                    <Checkbox
+                      className="border-[#4EA764] data-[state=checked]:bg-[#4EA764] data-[state=checked]:border-[#4EA764] data-[state=checked]:text-white"
+                      checked={allSelected}
+                      onClick={handleSelectAll}
+                    />
+                  </div>
+                  <div className="text-sm font-bold text-gray-900">
+                    Select All
+                  </div>
+                </div>
                 {data?.map((val) => (
                   <div
                     key={val.cartId}
@@ -159,6 +175,7 @@ export const CartComponent = () => {
                     <div className="flex items-center">
                       <Checkbox
                         className="border-[#4EA764] data-[state=checked]:bg-[#4EA764] data-[state=checked]:border-[#4EA764] data-[state=checked]:text-white"
+                        checked={selectedCartItemIds.includes(val.cartId)}
                         onClick={() => handleSelect(val)}
                       />
                     </div>
@@ -269,24 +286,30 @@ export const CartComponent = () => {
                 </div>
               </div>
 
-              <Dialog
-                triggerClassName="w-full"
-                triggerText={
-                  <Button
-                    variant="default"
-                    className="w-full h-12 text-md font-bold rounded-xl shadow-lg shadow-gray-200 transition-all hover:-translate-y-px active:translate-y-px"
-                    onClick={() => setOpen(false)}
-                  >
-                    Proceed to Checkout
-                  </Button>
-                }
-              >
-                <CheckoutForm
-                  data={selectedItems ?? []}
-                  totalPrice={totalPrice}
-                  selectedCartItemIds={selectedCartItemIds}
-                />
-              </Dialog>
+              {selectedCartItemIds.length === 0 ? (
+                <Button className="w-full h-12 text-md font-bold hover:cursor-not-allowed">
+                  Proceed to Checkout
+                </Button>
+              ) : (
+                <Dialog
+                  triggerClassName="w-full"
+                  triggerText={
+                    <Button
+                      variant="default"
+                      className="w-full h-12 text-md font-bold shadow-lg shadow-gray-200 transition-all hover:-translate-y-px active:translate-y-px "
+                      onClick={() => setOpen(false)}
+                    >
+                      Proceed to Checkout
+                    </Button>
+                  }
+                >
+                  <CheckoutForm
+                    data={selectedItems ?? []}
+                    totalPrice={totalPrice}
+                    selectedCartItemIds={selectedCartItemIds}
+                  />
+                </Dialog>
+              )}
             </div>
           )}
         </div>

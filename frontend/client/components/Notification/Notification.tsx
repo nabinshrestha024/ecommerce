@@ -1,6 +1,8 @@
 "use client";
+import { useAuth } from "@/contexts/AuthContext";
 import { useNotification } from "@/hooks/notification/useNotification";
 import { useNotificationSeen } from "@/hooks/notification/useNotificationSeen";
+import { Button } from "@/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/ui/dropdown-menu";
 import { Bell, Clock, Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FaBell } from "react-icons/fa6";
 
@@ -25,7 +28,8 @@ export interface NotificationType {
 export const Notification = () => {
   const { data, isLoading, isError, error, refetch } = useNotification();
   const read = data?.every((val) => val.isRead === true);
-
+  const { token } = useAuth();
+  const isAuth = Boolean(token);
   const router = useRouter();
 
   const formatTime = (dateString: string) => {
@@ -65,7 +69,7 @@ export const Notification = () => {
           onPointerDownCapture={handleNotification}
         >
           <FaBell size={13} className="w-5 h-5 cursor-pointer" />
-          {!read && (
+          {!read && isAuth && (
             <span className="absolute top-0 right-0 flex items-center justify-center h-2 w-2 px-1 text-[10px] font-semibold text-white bg-red-500 rounded-full"></span>
           )}
         </button>
@@ -83,9 +87,25 @@ export const Notification = () => {
         </DropdownMenuLabel>
 
         <div className="max-h-[400px] overflow-y-auto">
-          {isLoading ? (
+          {!isAuth ? (
             <div className="flex flex-col items-center justify-center py-12 px-4">
-              <Loader2 className="w-8 h-8 text-blue-500 animate-spin mb-3" />
+              <p className="text-sm font-medium text-center">
+                Please{" "}
+                <Link
+                  className="underline text-green-600 hover:cursor-pointer"
+                  href={"/login"}
+                >
+                  login
+                </Link>{" "}
+                to view your notifications
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">
+                {error?.message}
+              </p>
+            </div>
+          ) : isLoading ? (
+            <div className="flex flex-col items-center justify-center py-12 px-4">
+              <Loader2 className="w-8 h-8 text-green-600 animate-spin mb-3" />
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 Loading notifications...
               </p>
