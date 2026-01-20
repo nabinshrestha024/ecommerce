@@ -7,6 +7,8 @@
         public string FullName { get; set; }
         public DateTime OrderDate { get; set; }
         public decimal TotalAmount { get; set; }
+
+        public decimal GrandTotal { get; set; }
         public string Status { get; set; } = default!;
         public string PaymentStatus { get; set; } = default!;
         public string ShippingCity { get; set; } = default!;

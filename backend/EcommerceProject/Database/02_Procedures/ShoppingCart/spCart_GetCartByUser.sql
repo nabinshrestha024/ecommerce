@@ -1,7 +1,8 @@
 ﻿USE [EcommerceDB]
 GO
 
-CREATE OR ALTER PROCEDURE spCart_GetCartByUser
+
+CREATE OR ALTER   PROCEDURE [dbo].[spCart_GetCartByUser]
 (
     @UserId INT
 )
@@ -57,7 +58,7 @@ BEGIN
 
         WHERE vav.VariantId =sc.VariantId
         FOR JSON PATH
-        ) AS Attributes
+        ) AS AttributesJson
 
         
 

@@ -22,6 +22,7 @@
         public decimal? DiscountAmount { get; set; }  // per unit
         public decimal? FinalPrice { get; set; }
 
+        public string? AttributesJson { get; set; }
         public List<CartItemAttributeDto> Attributes { get; set; } = new();
     }
 }
