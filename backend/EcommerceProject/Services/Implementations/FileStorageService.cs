@@ -1,4 +1,5 @@
 ﻿using EcommerceProject.Services.Interfaces;
+using EcommerceProject.Exceptions;
 
 namespace EcommerceProject.Services.Implementations
 {
@@ -176,5 +177,81 @@ namespace EcommerceProject.Services.Implementations
                 _logger.LogWarning(ex, "Error cleaning up old profile images for user {UserId}", userId);
             }
         }
+
+        public async Task<string> SaveBannerImageAsync(IFormFile file, int bannerId, CancellationToken ct)
+        {
+            if (file == null || file.Length <= 0)
+                throw new BadRequestException("Image file is required.");
+
+            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (!Allowed.Contains(ext))
+                throw new BadRequestException($"Only JPG, JPEG, PNG, and WEBP images are allowed. Received: {ext}");
+
+            if (file.Length > 11 * 1024 * 1024) // 11MB limit
+                throw new BadRequestException("Image size must not exceed 11MB.");
+
+            var root = _configuration["FilePath"] 
+                    ?? _env.WebRootPath 
+                    ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+
+            var folder = Path.Combine(root, "images", "banners");
+
+            try 
+            {
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Could not create directory at {Path}", folder);
+                throw new Exception("Server filesystem configuration error.");
+            }
+
+            var name = $"banner_{bannerId}_{Guid.NewGuid():N}{ext}";
+            var path = Path.Combine(folder, name);
+
+            await using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                await file.CopyToAsync(fs, ct);
+            }
+
+            _logger.LogInformation("Saved banner image for banner {BannerId}: {FileName}", bannerId, name);
+
+            return $"/images/banners/{name}";
+        }
+
+        public async Task<bool> DeleteBannerImageAsync(string imagePath, CancellationToken ct)
+        {
+            if (string.IsNullOrWhiteSpace(imagePath))
+                return true;
+
+            try
+            {
+                var fileName = Path.GetFileName(imagePath);
+                if (string.IsNullOrEmpty(fileName))
+                    return false;
+
+                var root = _configuration["FilePath"] ?? _env.WebRootPath ?? "wwwroot";
+                var filePath = Path.Combine(root, "images", "banners", fileName);
+
+                if (File.Exists(filePath))
+                {
+                    await Task.Run(() => File.Delete(filePath), ct);
+                    _logger.LogInformation("Deleted banner image: {FileName}", fileName);
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Error deleting banner image: {ImagePath}", imagePath);
+                return false;
+            }
+        }
+
+
     }
 }

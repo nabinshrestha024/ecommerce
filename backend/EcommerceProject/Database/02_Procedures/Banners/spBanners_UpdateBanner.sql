@@ -2,26 +2,23 @@ USE EcommerceDB;
 GO
 
 CREATE OR ALTER PROCEDURE spBanners_UpdateBanner
-    @BannerId        INT,
-    @Title           VARCHAR(200),
-    @Description     VARCHAR(300),
-    @ImageUrl        VARCHAR(500),
-    @RedirectUrl     VARCHAR(500) = NULL,
-    @SortOrder       INT,
-    @IsActive        BIT = 1
+    @BannerId       INT,
+    @Title          VARCHAR(200),
+    @Description    VARCHAR(1000),
+    @RedirectUrl    VARCHAR(500) = NULL,
+    @SortOrder      INT,
+    @IsActive       BIT
 AS
 BEGIN
     UPDATE Banners
     SET
-        Title       = @Title,
+        Title = @Title,
         Description = @Description,
-        ImageUrl    = @ImageUrl,
         RedirectUrl = @RedirectUrl,
-        SortOrder   = @SortOrder,
-        IsActive    = @IsActive,
-        UpdatedAt   = SYSDATETIME()
+        SortOrder = @SortOrder,
+        IsActive = @IsActive,
+        UpdatedAt = GETUTCDATE()
     WHERE BannerId = @BannerId;
-END;
-GO
+END
 
 PRINT 'Stored Procedure spBanners_UpdateBanner created or altered successfully.';

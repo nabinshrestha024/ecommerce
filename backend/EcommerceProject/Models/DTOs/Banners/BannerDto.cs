@@ -7,9 +7,6 @@ public class BannerDto
     public string Description { get; set; } = null!;
     public string ImageUrl { get; set; } = null!;
     public string? RedirectUrl { get; set; }
-    public string SliderCode { get; set; } = "home";
     public int SortOrder { get; set; }
     public bool IsActive { get; set; }
-    public DateTime? StartAt { get; set; }
-    public DateTime? EndAt { get; set; }   
 }
