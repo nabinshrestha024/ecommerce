@@ -1,10 +1,13 @@
-﻿using Dapper;
+﻿using Azure.Core;
+using Dapper;
 using EcommerceProject.Database;
 using EcommerceProject.Models.DTOs.ShoppingCart;
 using EcommerceProject.Repositories.Interfaces;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Data.Common;
 using System.Text.Json;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace EcommerceProject.Repositories.Implementations
 {
@@ -17,33 +20,28 @@ namespace EcommerceProject.Repositories.Implementations
             _connectionFactory = configurationFactory;
         }
 
-        public async Task<IEnumerable<CartItemDto>> GetCartAsync(int userId)
+        public async Task<IEnumerable<CartItemDto>> GetCartAsync(int? userId)
         {
             using var connection = _connectionFactory.CreateConnection();
-            var cartDictionary = new Dictionary<int, CartItemDto>();
-            var result = await connection.QueryAsync<CartItemDto, string, CartItemDto>(
+
+            var result = await connection.QueryAsync<CartItemDto>(
                 "spCart_GetCartByUser",
-                (cart, AttributeJson) =>
-                {
-                    if (!cartDictionary.TryGetValue(cart.CartId, out var existing))
-                    {
-                        if (!string.IsNullOrEmpty(AttributeJson))
-                        {
-                            cart.Attributes = JsonSerializer.Deserialize<List<CartItemAttributeDto>>(AttributeJson) ?? new();
-                        }
-                        cartDictionary.Add(cart.CartId, cart);
-                        return cart;
-                    }
-                    return existing;
-                },
                 new { UserId = userId },
-                splitOn: "Attributes",
                 commandType: CommandType.StoredProcedure);
-            return cartDictionary.Values.ToList();
-            
+
+            foreach (var item in result)
+            {
+                if (!string.IsNullOrEmpty(item.AttributesJson))
+                    item.Attributes = JsonSerializer.Deserialize<List<CartItemAttributeDto>>(item.AttributesJson) ?? new();
+                else
+                    item.Attributes = new List<CartItemAttributeDto>();
+            }
+
+            return result;
+
         }
 
-        public async Task AddToCartAsync(int userId, int variantId, int quantity)
+        public async Task AddToCartAsync(int? userId, int variantId, int quantity)
         {
             using var conn = _connectionFactory.CreateConnection();
             await conn.ExecuteAsync("spCart_AddToCart",
@@ -52,6 +50,17 @@ namespace EcommerceProject.Repositories.Implementations
                     VariantId = variantId,
                     Quantity = quantity },
                 commandType: CommandType.StoredProcedure);
+        }
+
+        public async Task MergeCartAsync(int guestCartId, int userId)
+        {
+            using var conn = _connectionFactory.CreateConnection();
+
+            var param = new DynamicParameters();
+            param.Add("@GuestCartId", guestCartId);
+            param.Add("@UserId", userId);
+
+            await conn.ExecuteAsync("spCart_MergeCartByUser", param, commandType: CommandType.StoredProcedure);
         }
 
         public async Task UpdateQuantityAsync(int cartId, int quantity)

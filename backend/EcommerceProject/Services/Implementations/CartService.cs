@@ -27,12 +27,14 @@ namespace EcommerceProject.Services.Implementations
 
         }
 
-        public async Task<IEnumerable<CartItemDto>> GetCartAsync(int userId)
+        public async Task<IEnumerable<CartItemDto>> GetCartAsync(int? userId)
         {
-            if (userId <= 0)
-                throw new ArgumentException("Invalid user");
-
-            var result = await _cartRepository.GetCartAsync(userId);
+            if (!userId.HasValue || userId.Value <= 0)
+            {
+                return new List<CartItemDto>();
+            }
+               
+            var result = await _cartRepository.GetCartAsync(userId.Value);
             foreach (var item in result)
             {
                 item.ProductImageUrl = _urlService.ToAbsoluteUrl(item.ProductImageUrl);
@@ -40,8 +42,14 @@ namespace EcommerceProject.Services.Implementations
             return result;
         }
 
-        public async Task AddToCartAsync(int userId, int variantId, int quantity, CancellationToken ct = default)
+        public async Task AddToCartAsync(int? userId, int variantId, int quantity, CancellationToken ct = default)
         {
+            if (!userId.HasValue)
+            {
+                throw new InvalidOperationException("Guest cart should be handled client - side");
+
+            }
+
             var exists = await _variantrepo.ExistsAsync(variantId, ct);
 
             if (!exists)
@@ -52,7 +60,7 @@ namespace EcommerceProject.Services.Implementations
 
 
 
-            var cartItems = await _cartRepository.GetCartAsync(userId);
+            var cartItems = await _cartRepository.GetCartAsync(userId.Value);
 
             var cartItem = cartItems.FirstOrDefault(x => x.VariantId == variantId);
 
@@ -71,12 +79,19 @@ namespace EcommerceProject.Services.Implementations
             }
             else
             {
-                await _cartRepository.AddToCartAsync(userId, variantId, quantity);
+                await _cartRepository.AddToCartAsync(userId.Value, variantId, quantity);
 
             }
 
         }
 
+        public async Task MergeCartAfterLoginAsync(int guestCartId, int userId)
+        {
+            if (guestCartId <= 0)
+                return;
+
+            await _cartRepository.MergeCartAsync(guestCartId, userId);
+        }
         public async Task UpdateQuantityAsync(int cartId, int quantity)
         {
             if (quantity <= 0)
@@ -97,13 +112,6 @@ namespace EcommerceProject.Services.Implementations
         {
             return await _cartRepository.CheckoutAsync(userId);
         }
-
-        //public async Task<CheckoutsResponseDto> CheckoutSelectedItemsAsync(int userId,CheckoutsRequestDto request)
-        //{
-
-        //    return await _cartRepository.CheckoutSelectedItemsAsync(
-        //        userId,request);
-        //}
 
         public async Task<CheckoutsResponseDto> CheckoutSelectedItemsAsync(int userId, CheckoutsRequestDto request)
         {

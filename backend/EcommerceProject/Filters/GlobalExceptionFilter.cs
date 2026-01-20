@@ -32,6 +32,6 @@ namespace EcommerceProject.Filters
             };
 
             context.ExceptionHandled = true;
-        }
+            }
     }
 }

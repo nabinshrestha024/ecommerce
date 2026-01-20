@@ -95,44 +95,58 @@ namespace EcommerceProject.Services.Implementations
         }
 
 
-        public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
+        public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto, bool isAdminLogin)
         {
             var ipAddress = _httpContext.HttpContext?
-                .Connection.RemoteIpAddress?.ToString()?? "unknown";
+                .Connection.RemoteIpAddress?.ToString() ?? "unknown";
 
-            if(await _loginRateLimiter.IsLockedAsync(loginDto.Email, ipAddress))
+            if (await _loginRateLimiter.IsLockedAsync(loginDto.Email, ipAddress))
             {
-                throw new Exception("Too many failed login attempts. Try again later");
+                throw new UnauthorizedAccessException("Too many failed login attempts. Try again later.");
             }
 
-            var user = await _userService.GetUserByEmailAsync(loginDto.Email,true);
+            var user = await _userService.GetUserByEmailAsync(loginDto.Email, true);
+
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash!))
             {
                 await _loginRateLimiter.RegisterFailureAsync(loginDto.Email, ipAddress);
-                
-                throw new Exception("Invalid email or password.");
+                throw new UnauthorizedAccessException("Invalid email or password.");
             }
+
             if (!user.IsActive)
             {
-                throw new Exception("User account is inactive.");
+                throw new UnauthorizedAccessException("User account is inactive.");
+            }
+
+            // ✅ ROLE CHECK (CORE FIX)
+            // Admin login requires user.Role = 1
+            if (isAdminLogin && user.Role == false)
+            {
+                throw new UnauthorizedAccessException("You are not authorized to access admin panel.");
+            }
+
+            // Customer login requires user.Role = 0
+            if (!isAdminLogin && user.Role == true)
+            {
+                throw new UnauthorizedAccessException("You are not authorized to access customer panel.");
             }
 
             await _loginRateLimiter.ResetAsync(loginDto.Email, ipAddress);
 
-            var accesstoken = _jwtService.GenerateJwtToken(user);
+            var accessToken = _jwtService.GenerateJwtToken(user);
             var refreshToken = TokenGenerator.GenerateRefreshToken();
-
 
             var refreshTokenHash = TokenHasher.Hash(refreshToken);
 
             var refreshExpiry = DateTime.UtcNow.AddDays(
-                Convert.ToInt32(_configuration["Jwt:RefreshToken"]));
+                Convert.ToInt32(_configuration["Jwt:RefreshToken"])
+            );
 
             await _auth.SaveRefreshTokenAsync(
                 user.UserId,
                 refreshTokenHash,
-                refreshExpiry);
-
+                refreshExpiry
+            );
 
             _httpContext.HttpContext!.Response.Cookies.Append(
                 "refreshToken",
@@ -141,20 +155,21 @@ namespace EcommerceProject.Services.Implementations
                 {
                     HttpOnly = true,
                     Secure = true,
-
                     SameSite = SameSiteMode.Strict,
                     Expires = refreshExpiry
                 }
-    );
+            );
 
             return new AuthResponseDto
             {
-                Token = accesstoken,
+                Token = accessToken,
                 RefreshToken = refreshToken,
-                Expiration = DateTime.UtcNow.AddHours(Convert.ToDouble(_configuration["Jwt:ExpireHours"]))
-                
+                Expiration = DateTime.UtcNow.AddHours(
+                    Convert.ToDouble(_configuration["Jwt:ExpireHours"])
+                )
             };
         }
+
 
         public async Task<AuthResponseDto> RefreshTokenAsync(string refreshToken)
 

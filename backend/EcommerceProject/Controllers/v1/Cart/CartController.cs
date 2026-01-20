@@ -1,16 +1,18 @@
 ﻿
 using EcommerceProject.Models.DTOs.ShoppingCart;
+using EcommerceProject.Models.Entities;
 using EcommerceProject.Services.Interfaces;
 using EcommerceProject.utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Bcpg;
 using System.Security.Claims;
 
 namespace EcommerceProject.Controllers.v1.Cart
 {
     [ApiController]
     [Route("v1/cart/")]
-    [Authorize(Roles = "Customer")]
+   
 
     public class CartController : ControllerBase
     {
@@ -25,17 +27,21 @@ namespace EcommerceProject.Controllers.v1.Cart
 
 
         [HttpGet("get")]
-
-        public async Task<IActionResult> GetCart()
+        [AllowAnonymous]
+        public async Task<IActionResult> GetCart([FromQuery] int? userId)
         {
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                userId = User.GetUserId();
+            }
 
-            int userId = User.GetUserId();
             var cartItems = await _cartService.GetCartAsync(userId);
             return Ok(cartItems);
         }
 
-        
+
         [HttpPost("add")]
+        [AllowAnonymous]
 
         public async Task<IActionResult> AddCart([FromBody] AddCartRequestDto request)
         {
@@ -55,9 +61,24 @@ namespace EcommerceProject.Controllers.v1.Cart
 
                 }
 
-                int userId = User.GetUserId();
+                if(!User.Identity?.IsAuthenticated ?? true)
+                {
+                    return Ok(new
+                    {
+                        message = "Add To guest Cart",
+                        isGuest = true
+                    });
+                }
 
-                await _cartService.AddToCartAsync(userId, request.VariantId, request.Quantity);
+                int? userId = User.GetUserId();
+                if (!userId.HasValue)
+                {
+                    return Unauthorized(new { message = "User not found in token." });
+                }
+
+
+
+                await _cartService.AddToCartAsync(userId.Value, request.VariantId, request.Quantity);
                 return Ok(new { message = "Product added to cart" });
 
             }catch(Exception ex)
@@ -83,6 +104,8 @@ namespace EcommerceProject.Controllers.v1.Cart
             await _cartService.RemoveItemAsync(cartId);
             return Ok("Item removed");
         }
+
+        [Authorize(Roles = "Customer")]
 
         [HttpPost("checkout")]
         public async Task<IActionResult> CheckoutSelectedItems([FromBody] CheckoutsRequestDto request)
@@ -119,6 +142,21 @@ namespace EcommerceProject.Controllers.v1.Cart
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = ex.Message });
+            }
+        }
+        [HttpPost("merge")]
+        public async Task<IActionResult> MergeCart([FromBody] MergeCartDto dto)
+        {
+            try
+            {
+                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+                await _cartService.MergeCartAfterLoginAsync(dto.GuestCartId, userId);
+                return Ok(new { message = "Cart merged successfully" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Internal Server Error", error = ex.Message });
             }
         }
     }

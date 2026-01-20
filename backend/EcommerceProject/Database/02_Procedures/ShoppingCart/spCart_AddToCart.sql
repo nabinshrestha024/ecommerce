@@ -1,8 +1,8 @@
 ﻿USE [EcommerceDB]
 GO
 
-CREATE OR ALTER   PROCEDURE spCart_AddToCart
-    @UserId INT,
+CREATE OR ALTER PROCEDURE spCart_AddToCart
+    @UserId INT = NULL,
     @VariantId INT,
     @Quantity INT
 AS
@@ -22,6 +22,8 @@ BEGIN
         IF @Quantity > @Stock
         THROW 50002, 'Insufficient stock', 1;
 
+        IF @UserId IS NOT NULL
+        BEGIN 
     IF EXISTS (
         SELECT 1 FROM ShoppingCarts 
         WHERE UserId = @UserId AND VariantId = @VariantId
@@ -36,4 +38,5 @@ BEGIN
         INSERT INTO ShoppingCarts (UserId, VariantId, Quantity)
         VALUES (@UserId, @VariantId, @Quantity)
     END
+END
 END
