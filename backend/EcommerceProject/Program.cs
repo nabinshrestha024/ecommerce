@@ -106,6 +106,7 @@ builder.Services.AddScoped<IProductAttributeRepository, ProductAttributeReposito
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IAdminDiscountRepository, AdminDiscountRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<IBannerRepository, BannerRepository>();
 
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IAdminDiscountService, AdminDiscountService>();
@@ -128,6 +129,7 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IUrlService, UrlService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IBannerService, BannerService>();
 builder.Services.AddHttpContextAccessor(); 
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
