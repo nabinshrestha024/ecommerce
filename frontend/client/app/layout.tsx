@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/ui/sonner";
 import { Providers } from "./provider";
 import ClientLayout from "./ClientLayout";
+import { CartDataProvider } from "@/contexts/CartContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,12 +31,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ClientLayout>
-          <Providers>
-            {children}
-            <Toaster />
-          </Providers>
-        </ClientLayout>
+        <CartDataProvider>
+          <ClientLayout>
+            <Providers>
+              {children}
+              <Toaster />
+            </Providers>
+          </ClientLayout>
+        </CartDataProvider>
       </body>
     </html>
   );

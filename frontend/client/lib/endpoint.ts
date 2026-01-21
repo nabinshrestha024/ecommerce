@@ -30,4 +30,5 @@ export const endpoint = {
   CATALOGPRODUCTS: "catalog/products",
   REVIEW: "reviews",
   FETCH_BANNER: "banners",
+  MERGECART: "cart/merge",
 };

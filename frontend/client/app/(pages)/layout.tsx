@@ -13,13 +13,11 @@ export default function Layout({
   const isAuth = useAuth();
   return (
     <div>
-      <CartDataProvider>
-        <>
-          <Navbar />
-          <NuqsAdapter>{children}</NuqsAdapter>
-          {isAuth && <Chatbot />}
-        </>
-      </CartDataProvider>
+      <>
+        <Navbar />
+        <NuqsAdapter>{children}</NuqsAdapter>
+        {isAuth && <Chatbot />}
+      </>
     </div>
   );
 }
