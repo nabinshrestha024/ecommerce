@@ -39,7 +39,6 @@ const getDefaultSelectedVariants = (
 const ProductDetails = () => {
   const { id } = useParams();
   const productItems = useProductDetails(id as string);
-  console.log(productItems, "productitems");
   const addToCart = useAddToCart();
   const { token } = useAuth();
 
