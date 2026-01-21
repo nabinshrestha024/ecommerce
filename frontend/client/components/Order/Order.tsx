@@ -42,6 +42,7 @@ export type OrderData = {
   orderDate: number;
   shippingCity: string;
   totalAmount: number;
+  grandTotal: number;
   paymentStatus: string;
   status: string;
   shippingName: string;
@@ -120,12 +121,12 @@ export const Order = () => {
         header: "Date",
         cell: (info) => new Date(info.getValue()).toLocaleDateString(),
       }),
-      columnHelper.accessor("totalAmount", {
+      columnHelper.accessor("grandTotal", {
         header: "Price",
         cell: (info) => (
           <div
             onClick={() => handleRowClick(info.row.original)}
-            className="cursor-pointer"
+            className="cursor-pointer text-end"
           >
             Rs. {info.getValue()}
           </div>
@@ -222,7 +223,7 @@ export const Order = () => {
             new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime(),
         );
       } else if (sortType === "price") {
-        result.sort((a, b) => Number(a.totalAmount) - Number(b.totalAmount));
+        result.sort((a, b) => Number(a.grandTotal) - Number(b.grandTotal));
       }
 
       return result;
