@@ -29,4 +29,5 @@ export const endpoint = {
   TAGS: "tags",
   CATALOGPRODUCTS: "catalog/products",
   REVIEW: "reviews",
+  FETCH_BANNER: "banners",
 };
