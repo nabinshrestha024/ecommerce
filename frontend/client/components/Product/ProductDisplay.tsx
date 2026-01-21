@@ -26,6 +26,7 @@ import {
 import { Dialog } from "../dialog/Dialog";
 import { Funnel } from "lucide-react";
 import { AttributeType } from "../Order/Order";
+import { useCart } from "@/contexts/CartContext";
 export const currencyFormatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
   currency: "NPR",
@@ -101,17 +102,7 @@ export const ProductDisplay = () => {
     () => (tagsParam ? tagsParam.split(",") : []),
     [tagsParam],
   );
-  const [cartLocal, setCartLocal] = useState<LocalCartType[]>(() => {
-    if (typeof window === "undefined") return [];
-
-    try {
-      const data = localStorage.getItem("cart");
-      return data ? (JSON.parse(data) as LocalCartType[]) : [];
-    } catch (error) {
-      console.error("Failed to parse cart from localStorage", error);
-      return [];
-    }
-  });
+  const { cartLocal, setCartLocal } = useCart();
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
     minPrice: "",
     maxPrice: "",
@@ -235,12 +226,7 @@ export const ProductDisplay = () => {
                 (product: ProductType) => (product.stockQuantity ?? 0) > 0,
               )
               .map((product: ProductType) => (
-                <ProductCard
-                  key={product.productId}
-                  product={product}
-                  cartLocal={cartLocal}
-                  setCartLocal={setCartLocal}
-                />
+                <ProductCard key={product.productId} product={product} />
               ))}
         </div>
 

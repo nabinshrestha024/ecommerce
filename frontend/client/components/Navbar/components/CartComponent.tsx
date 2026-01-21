@@ -18,6 +18,7 @@ import {
   currencyFormatter,
   LocalCartType,
 } from "@/components/Product/ProductDisplay";
+import { useCart } from "@/contexts/CartContext";
 
 export const CartComponent = () => {
   const [open, setOpen] = useState(false);
@@ -28,31 +29,7 @@ export const CartComponent = () => {
   const { token } = useAuth();
   const isAuth = Boolean(token);
   const router = useRouter();
-
-  const [cartLocal, setCartLocal] = useState<LocalCartType[]>(() => {
-    if (typeof window === "undefined") return [];
-
-    try {
-      const data = localStorage.getItem("cart");
-      return data ? (JSON.parse(data) as LocalCartType[]) : [];
-    } catch (error) {
-      console.error("Failed to parse cart from localStorage", error);
-      return [];
-    }
-  });
-
-  useEffect(() => {
-    const handler = (e: Event) => {
-      const ce = e as CustomEvent<LocalCartType[]>;
-      if (ce?.detail && Array.isArray(ce.detail)) {
-        setCartLocal(ce.detail);
-      }
-    };
-
-    window.addEventListener("localCartChanged", handler as EventListener);
-    return () =>
-      window.removeEventListener("localCartChanged", handler as EventListener);
-  }, []);
+  const { cartLocal, setCartLocal } = useCart();
 
   const [selectedCartItemIds, setSelectedCartItemIds] = useState<number[]>([]);
   const [selectedLocalCartItemIds, setSelectedLocalCartItemIds] = useState<
@@ -62,7 +39,6 @@ export const CartComponent = () => {
   const selectedItems =
     data?.filter((item) => selectedCartItemIds.includes(item.cartId)) ?? [];
 
-  // For guest/local cart we use `variantId` as identifier
   const selectedLocalItems =
     cartLocal?.filter((item) =>
       selectedLocalCartItemIds.includes(item.variantId),
@@ -152,7 +128,6 @@ export const CartComponent = () => {
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartLocal));
-    console.log(cartLocal);
   }, [cartLocal]);
 
   return (
@@ -161,9 +136,14 @@ export const CartComponent = () => {
         onClick={() => setOpen(true)}
         className="relative transition-transform active:scale-95 text-2xl"
       >
-        {(data?.length ?? 0) > 0 && (
+        {(data?.length ?? 0) > 0 && token && (
           <span className="absolute -top-1 -right-2 h-3 w-3 bg-red-600 rounded-full flex items-center justify-center text-[8px] text-white font-bold ring-1 ring-white animate-in zoom-in">
             {data?.length}
+          </span>
+        )}
+        {(cartLocal?.length ?? 0) > 0 && !token && (
+          <span className="absolute -top-1 -right-2 h-3 w-3 bg-red-600 rounded-full flex items-center justify-center text-[8px] text-white font-bold ring-1 ring-white animate-in zoom-in">
+            {cartLocal?.length}
           </span>
         )}
         <FaShoppingCart className="cursor-pointer" size={22} />
@@ -473,8 +453,7 @@ export const CartComponent = () => {
                                         ),
                                         totalPrice:
                                           (item.quantity - 1) * item.price,
-                                        finalPrice:
-                                          (item.quantity - 1) * item.price,
+                                        finalPrice: item.price,
                                       }
                                     : item,
                                 ),
@@ -498,8 +477,7 @@ export const CartComponent = () => {
                                         quantity: item.quantity + 1,
                                         totalPrice:
                                           (item.quantity + 1) * item.price,
-                                        finalPrice:
-                                          (item.quantity + 1) * item.price,
+                                        finalPrice: item.price,
                                       }
                                     : item,
                                 ),
@@ -540,7 +518,7 @@ export const CartComponent = () => {
                 <Button className="w-full h-12 text-md font-bold hover:cursor-not-allowed">
                   Proceed to Checkout
                 </Button>
-              ) : (
+              ) : token ? (
                 <Dialog
                   triggerClassName="w-full"
                   triggerText={
@@ -559,6 +537,14 @@ export const CartComponent = () => {
                     selectedCartItemIds={selectedCartItemIds}
                   />
                 </Dialog>
+              ) : (
+                <Button
+                  variant="default"
+                  className="w-full h-12 text-md font-bold shadow-lg shadow-gray-200 transition-all hover:-translate-y-px active:translate-y-px "
+                  onClick={() => setOpen(false)}
+                >
+                  Proceed to Checkout
+                </Button>
               )}
             </div>
           )}
@@ -591,16 +577,7 @@ export const CartComponent = () => {
                 <Button
                   className="w-full h-12 text-md font-bold"
                   onClick={() => {
-                    try {
-                      localStorage.setItem(
-                        "selectedLocalItems",
-                        JSON.stringify(selectedLocalCartItemIds),
-                      );
-                    } catch (err) {
-                      // ignore
-                    }
-                    setOpen(false);
-                    router.push(`/checkout`);
+                    router.push(`/login`);
                   }}
                 >
                   Proceed to Checkout

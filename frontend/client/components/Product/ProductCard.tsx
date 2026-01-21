@@ -20,11 +20,10 @@ import {
   ProductType,
 } from "./ProductDisplay";
 import { toast } from "sonner";
+import { useCart } from "@/contexts/CartContext";
 
 interface ProductCardProps {
   product: ProductType;
-  cartLocal: LocalCartType[];
-  setCartLocal: Dispatch<SetStateAction<LocalCartType[]>>;
 }
 
 const getDefaultSelectedVariants = (
@@ -34,11 +33,7 @@ const getDefaultSelectedVariants = (
   return defaultVariant?.attributes ?? {};
 };
 
-export const ProductCard = ({
-  product,
-  cartLocal,
-  setCartLocal,
-}: ProductCardProps) => {
+export const ProductCard = ({ product }: ProductCardProps) => {
   const stockValue = 20;
   const [quantity, setQuantity] = useState(1);
   const addToCart = useAddToCart();
@@ -46,6 +41,7 @@ export const ProductCard = ({
   const addMutate = useAddWishlist();
   const deleteMutate = useDeleteWishlist();
   const wishlists = useFetchWishlist();
+  const { cartLocal, setCartLocal } = useCart();
   const [selectedVariants, setSelectedVariants] = useState<
     Record<string, string | undefined>
   >(() => getDefaultSelectedVariants(product?.variants));
@@ -65,50 +61,57 @@ export const ProductCard = ({
 
   const handleAddToCart = (variantId: number, quantity: number) => {
     if (token) {
-      addToCart.mutate({
-        variantId: variantId,
-        quantity: quantity,
-      });
-    } else {
-      const unitPrice = activeVariant?.price ?? product.price ?? 0;
-      const unitFinalPrice =
-        activeVariant?.finalPrice ?? product.finalPrice ?? 0;
-
-      const attributesForCart = Object.entries(selectedVariants ?? {}).map(
-        ([name, value]) => ({ name, value: value ?? "" }),
-      );
-
-      const newItem = {
-        cartId: Math.random(),
-        productId: product.productId,
-        variantId: variantId,
-
-        productName: product.name,
-        sku: product.sku,
-        productImageUrl: product.primaryImageUrl,
-        description: product.description,
-
-        price: unitPrice,
-        quantity: quantity,
-        totalPrice: unitPrice * quantity,
-        finalPrice: unitFinalPrice * quantity,
-
-        addedDate: new Date().toISOString(),
-        attributes: attributesForCart,
-      };
-
-      const newCart = [...cartLocal, newItem];
-      setCartLocal((prev) => [...prev, newItem]);
-
-      try {
-        window.dispatchEvent(
-          new CustomEvent("localCartChanged", { detail: newCart }),
-        );
-        localStorage.setItem("cart", JSON.stringify(newCart));
-      } catch (err) {}
-
-      toast.success("Item added to cart successfully");
+      addToCart.mutate({ variantId, quantity });
+      return;
     }
+
+    const attributesForCart = Object.entries(selectedVariants ?? {}).map(
+      ([name, value]) => ({ name, value: value ?? "" }),
+    );
+
+    const unitFinalPrice =
+      product.finalPrice === 0 ? product.price : product.finalPrice;
+
+    setCartLocal((prev) => {
+      const existingItem = prev.find((item) => item.variantId === variantId);
+
+      if (existingItem) {
+        return prev.map((item) =>
+          item.variantId === variantId
+            ? {
+                ...item,
+                quantity: item.quantity + quantity,
+                totalPrice: (item.quantity + quantity) * unitFinalPrice,
+                finalPrice: unitFinalPrice,
+              }
+            : item,
+        );
+      }
+
+      return [
+        ...prev,
+        {
+          cartId: Date.now(),
+          productId: product.productId,
+          variantId,
+
+          productName: product.name,
+          sku: product.sku,
+          productImageUrl: product.primaryImageUrl,
+          description: product.description,
+
+          price: product.price,
+          quantity,
+          totalPrice: unitFinalPrice * quantity,
+          finalPrice: unitFinalPrice,
+
+          addedDate: new Date().toISOString(),
+          attributes: attributesForCart,
+        },
+      ];
+    });
+
+    toast.success("Item added to cart successfully");
   };
 
   const handleIncrease = () => {
