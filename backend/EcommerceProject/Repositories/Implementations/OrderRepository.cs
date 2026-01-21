@@ -111,63 +111,155 @@ namespace EcommerceProject.Repositories.Implementations
             return header;
         }
 
+        //public async Task<PagedResult<AdminOrderRowDto>> AdminGetPagedAsync(
+        //    PaginationDto pagination,
+        //    string? status,
+        //    string? search,
+        //    CancellationToken ct)
+        //{
+        //    using var conn = _db.CreateConnection();
+        //    var orderDict = new Dictionary<int, AdminOrderRowDto>();
+
+        //    using var multi = await conn.QueryMultipleAsync(
+        //        "spAdminOrders_GetPaged",
+        //        new {
+        //            Page = pagination.Page,
+        //            PageSize = pagination.PageSize,
+        //            Status = status,
+        //            Search = search
+        //        },
+        //        commandType: CommandType.StoredProcedure
+        //    );
+
+        //    multi.Read<AdminOrderRowDto, OrderItemDto, AdminOrderRowDto>(
+        //        (order, item) => {
+        //            if (!orderDict.TryGetValue(order.OrderId, out var existing)) {
+        //                existing = order;
+        //                existing.Items = new List<OrderItemDto>();
+        //                orderDict.Add(order.OrderId, existing);
+        //            }
+        //            if (item != null) existing.Items.Add(item);
+        //            return existing;
+        //        },
+        //        splitOn: "OrderItemId"
+        //    );
+
+        //    var totalCount = await multi.ReadFirstAsync<int>();
+
+        //    using (var multis = await conn.QueryMultipleAsync("spAdminOrders_GetPaged", commandType: CommandType.StoredProcedure))
+        //    {
+        //        var allAttributes = (await multi.ReadAsync<dynamic>()).ToList();
+
+        //        foreach (var order in orderDict.Values)
+        //        {
+        //            foreach (var item in order.Items)
+        //            {
+        //                item.Variant = allAttributes
+        //                    .Where(a => (int)a.OrderItemId == item.OrderItemId)
+        //                    .Select(a => new OrderItemVariantAttributeDto
+        //                    {
+        //                        Name = (string)a.Name,
+        //                        Value = (string)a.Value
+        //                    })
+        //                    .ToList();
+        //            }
+        //        }
+        //    }
+        //    return new PagedResult<AdminOrderRowDto>(
+        //        orderDict.Values.ToList(),
+        //        pagination.Page,
+        //        pagination.PageSize,
+        //        totalCount
+        //    );
+        //}
         public async Task<PagedResult<AdminOrderRowDto>> AdminGetPagedAsync(
-            PaginationDto pagination,
-            string? status,
-            string? search,
-            CancellationToken ct)
+    PaginationDto pagination,
+    string? status,
+    string? search,
+    CancellationToken ct)
         {
             using var conn = _db.CreateConnection();
             var orderDict = new Dictionary<int, AdminOrderRowDto>();
 
-            using var multi = await conn.QueryMultipleAsync(
+            // 1️⃣ Get Orders + Items + TotalCount
+            using (var multi = await conn.QueryMultipleAsync(
                 "spAdminOrders_GetPaged",
-                new {
+                new
+                {
                     Page = pagination.Page,
                     PageSize = pagination.PageSize,
                     Status = status,
                     Search = search
                 },
-                commandType: CommandType.StoredProcedure
-            );
-
-            multi.Read<AdminOrderRowDto, OrderItemDto, AdminOrderRowDto>(
-                (order, item) => {
-                    if (!orderDict.TryGetValue(order.OrderId, out var existing)) {
-                        existing = order;
-                        existing.Items = new List<OrderItemDto>();
-                        orderDict.Add(order.OrderId, existing);
-                    }
-                    if (item != null) existing.Items.Add(item);
-                    return existing;
-                },
-                splitOn: "OrderItemId"
-            );
-
-            var totalCount = await multi.ReadFirstAsync<int>();
-
-            var allAttributes = (await multi.ReadAsync<dynamic>()).ToList();
-
-            foreach (var order in orderDict.Values)
+                commandType: CommandType.StoredProcedure))
             {
-                foreach (var item in order.Items)
-                {
-                    item.Variant = allAttributes
-                        .Where(a => (int)a.OrderItemId == item.OrderItemId)
-                        .Select(a => new OrderItemVariantAttributeDto {
-                            Name = (string)a.Name,
-                            Value = (string)a.Value
-                        })
-                        .ToList();
-                }
-            }
+                multi.Read<AdminOrderRowDto, OrderItemDto, AdminOrderRowDto>(
+                    (order, item) =>
+                    {
+                        if (!orderDict.TryGetValue(order.OrderId, out var existing))
+                        {
+                            existing = order;
+                            existing.Items = new List<OrderItemDto>();
+                            orderDict.Add(order.OrderId, existing);
+                        }
 
-            return new PagedResult<AdminOrderRowDto>(
-                orderDict.Values.ToList(),
-                pagination.Page,
-                pagination.PageSize,
-                totalCount
-            );
+                        if (item != null)
+                            existing.Items.Add(item);
+
+                        return existing;
+                    },
+                    splitOn: "OrderItemId"
+                );
+
+                var totalCount = await multi.ReadFirstAsync<int>();
+
+                // 2️⃣ Fetch attributes using normal query
+                var orderItemIds = orderDict.Values
+                    .SelectMany(o => o.Items)
+                    .Select(i => i.OrderItemId)
+                    .Distinct()
+                    .ToList();
+
+                List<OrderItemVariantAttributeDto> allAttributes = new();
+
+                if (orderItemIds.Any())
+                {
+                    const string sql = @"
+                SELECT
+                    OrderId,
+                    Name,
+                    Value
+                FROM OrderItem
+                WHERE OrderItemId IN @Ids";
+
+                    allAttributes = (await conn.QueryAsync<OrderItemVariantAttributeDto>(
+                        sql,
+                        new { Ids = orderItemIds }
+                    )).ToList();
+                }
+
+                // 3️⃣ Map attributes
+                var lookup = allAttributes
+                    .GroupBy(a => a.OrderItemId)
+                    .ToDictionary(g => g.Key, g => g.ToList());
+
+                foreach (var order in orderDict.Values)
+                {
+                    foreach (var item in order.Items)
+                    {
+                        item.Variant = lookup.TryGetValue(item.OrderItemId, out var attrs)
+                            ? attrs
+                            : new List<OrderItemVariantAttributeDto>();
+                    }
+                }
+
+                return new PagedResult<AdminOrderRowDto>(
+                    orderDict.Values.ToList(),
+                    pagination.Page,
+                    pagination.PageSize,
+                    totalCount
+                );
+            }
         }
 
         public async Task<OrderDetailDto?> AdminGetByIdAsync(int orderId, CancellationToken ct)
