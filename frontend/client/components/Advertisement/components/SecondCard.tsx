@@ -36,21 +36,22 @@ export const SecondCard = () => {
                 </div>
               ))
             : data?.items
-                ?.filter((item) => item.categoryId === 1)
+                ?.filter((item) => item.categoryName === "Electronics")
+                .filter((item) => item.stockQuantity > 0)
                 .map(
                   (item, index) =>
                     index < 4 && (
                       <Link
                         href={`/product/id/${item.slug}`}
                         key={item.productId}
-                        className="overflow-hidden flex items-center justify-center rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+                        className="flex items-center justify-center rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer"
                       >
-                        <div className="relative h-25 w-[81px]">
+                        <div className="relative h-25 w-[320px]">
                           <Image
                             src={item.primaryImageUrl}
                             alt={item.name}
                             fill
-                            className="max-w-full object-contain rounded-lg hover:scale-105 transition-transform duration-300"
+                            className="max-w-full object-cover rounded-lg hover:scale-102 transition-transform duration-300"
                             unoptimized
                           />
                         </div>

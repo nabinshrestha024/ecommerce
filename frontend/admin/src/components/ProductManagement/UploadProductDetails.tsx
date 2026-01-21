@@ -4,7 +4,7 @@ import type React from "react";
 
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Card } from "@/ui/card";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
 import { X, Upload } from "lucide-react";
 import { useGetCategories } from "@/hooks/product/useGetCategories";
 import { FormSection } from "./FormSection";
@@ -28,6 +28,7 @@ export const UploadProductDetails = forwardRef((_, ref) => {
   const {
     register,
     setValue,
+    control,
     formState: { errors },
   } = useFormContext();
 
@@ -202,18 +203,38 @@ export const UploadProductDetails = forwardRef((_, ref) => {
                 key={item.id || item.name}
                 className="flex items-center gap-2"
               >
-                <Checkbox
-                  id={`attr-${item.name}`}
-                  value={item.name}
-                  {...register("attributes")}
-                  className="border-[#4EA764] data-[state=checked]:bg-[#4EA764] data-[state=checked]:border-[#4EA764] data-[state=checked]:text-white"
+                <Controller
+                  control={control}
+                  name="attributes"
+                  render={({ field }) => {
+                    const current: string[] = field.value || [];
+                    const checked = current.includes(item.name);
+                    return (
+                      <>
+                        <Checkbox
+                          id={`attr-${item.name}`}
+                          checked={checked}
+                          onClick={() => {
+                            if (checked) {
+                              field.onChange(
+                                current.filter((v) => v !== item.name),
+                              );
+                            } else {
+                              field.onChange([...current, item.name]);
+                            }
+                          }}
+                          className="border-[#4EA764] data-[state=checked]:bg-[#4EA764] data-[state=checked]:border-[#4EA764] data-[state=checked]:text-white"
+                        />
+                        <label
+                          htmlFor={`attr-${item.name}`}
+                          className="text-sm font-medium cursor-pointer text-foreground"
+                        >
+                          {item.name}
+                        </label>
+                      </>
+                    );
+                  }}
                 />
-                <label
-                  htmlFor={`attr-${item.name}`}
-                  className="text-sm font-medium cursor-pointer text-foreground"
-                >
-                  {item.name}
-                </label>
               </div>
             ))}
           </div>

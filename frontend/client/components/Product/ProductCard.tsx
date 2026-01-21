@@ -4,7 +4,6 @@ import { IoIosHeart, IoIosHeartEmpty } from "react-icons/io";
 import Link from "next/link";
 import { useAddToCart } from "@/hooks/cart/useAddToCart";
 import { useAuth } from "@/contexts/AuthContext";
-import { toast } from "sonner";
 import { useAddWishlist } from "@/hooks/wishlist/useAddWishlist";
 import { useDeleteWishlist } from "@/hooks/wishlist/useDeleteWishlist";
 import { useFetchWishlist } from "@/hooks/wishlist/useFetchWishlist";
@@ -12,10 +11,11 @@ import { WishlistItem } from "../TrendingProduct/component/TrendingProductCard";
 import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { useState } from "react";
-import { Dialog } from "../dialog/Dialog";
+import { Dialog } from "../Dialog/Dialog";
 import { Variant } from "./ProductDetails";
 import { Card } from "../card/Card";
 import { currencyFormatter, ProductType } from "./ProductDisplay";
+import { toast } from "sonner";
 
 interface ProductCardProps {
   product: ProductType;

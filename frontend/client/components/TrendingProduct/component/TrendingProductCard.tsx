@@ -2,6 +2,7 @@
 import { useProduct } from "@/hooks/product/useProduct";
 import { ProductCardSkeleton } from "./ProductCardLoading";
 import { ProductCard } from "@/components/Product/ProductCard";
+import { useState } from "react";
 
 export interface WishlistItem {
   productId: number;
@@ -17,7 +18,14 @@ export interface WishlistItem {
 export type wishlistData = number | undefined;
 
 export const TrendingProductCard = () => {
-  const { data, isLoading, isError } = useProduct();
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 100,
+  });
+  const { data, isLoading, isError } = useProduct(
+    pagination.pageIndex + 1,
+    pagination.pageSize,
+  );
   const placeholderCount = 3;
 
   return (
@@ -32,12 +40,14 @@ export const TrendingProductCard = () => {
           <ProductCardSkeleton key={index} />
         ))}
 
-      {data?.items?.map(
-        (product, index) =>
-          index < 3 && (
-            <ProductCard key={product.productId} product={product} />
-          ),
-      )}
+      {data?.items
+        ?.filter((qty) => qty.stockQuantity > 0)
+        .map(
+          (product, index) =>
+            index < 3 && (
+              <ProductCard key={product.productId} product={product} />
+            ),
+        )}
     </div>
   );
 };

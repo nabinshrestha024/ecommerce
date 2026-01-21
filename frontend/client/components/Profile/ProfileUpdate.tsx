@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Card } from "../Card/Card";
-import { SquarePen } from "lucide-react";
+import { Card } from "../card/Card";
 import { Button } from "@/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";

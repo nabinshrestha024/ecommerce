@@ -19,6 +19,7 @@ import Link from "next/link";
 export default function UserProfile() {
   const { data, isLoading } = useFetchProfile();
   const orders = useOrder();
+  console.log("orders", orders);
   const wishlist = useFetchWishlist();
   const socialLinks = useFetchSocialLinks();
 
@@ -94,51 +95,37 @@ export default function UserProfile() {
 
             <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t ">
               <div
-                className="text-center hover:cursor-pointer group"
+                className="text-center group"
                 onClick={() => setSelected("orders")}
               >
-                <div className="text-2xl font-bold text-gray-900 group">
+                <div className="text-2xl font-bold text-[gray-900] group underline hover:cursor-pointer hover:text-[#4EA674]">
                   {Array.isArray(orders?.data) ? orders.data.length : 0}
                 </div>
-                <div className="text-sm text-gray-600 group group-hover:underline underline-offset-2">
+                <div className="text-sm text-gray-600 group underline-offset-2">
                   Orders
                 </div>
               </div>
               <div
-                className="text-center hover:cursor-pointer group"
+                className="text-center group"
                 onClick={() => setSelected("wishlist")}
               >
-                <div className="text-2xl font-bold text-gray-900 group">
+                <div className="text-2xl font-bold text-gray-900 group underline hover:cursor-pointer hover:text-[#4EA674]">
                   {Array.isArray(wishlist?.data?.items)
                     ? wishlist.data.items.length
                     : 0}
                 </div>
-                <div className="text-sm text-gray-600 group group-hover:underline underline-offset-2">
+                <div className="text-sm text-gray-600 group underline-offset-2">
                   Wishlist
                 </div>
               </div>
-              <Link
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setSelected("profile");
-
-                  requestAnimationFrame(() => {
-                    document.getElementById("links")?.scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
-                    });
-                  });
-                }}
-                className="text-center hover:cursor-pointer group"
-              >
-                <div className="text-2xl font-bold text-gray-900 group">
-                  {socialLinks.data?.links.length}
+              <div className="text-center group">
+                <div className="text-2xl font-bold text-gray-900 group underline hover:cursor-pointer hover:text-[#4EA674]">
+                  {Array.isArray(orders?.data) ? orders.data.length : 0}
                 </div>
-                <div className="text-sm text-gray-600 group group-hover:underline underline-offset-2">
-                  Social Links
+                <div className="text-sm text-gray-600 group underline-offset-2">
+                  Orders
                 </div>
-              </Link>
+              </div>
             </div>
           </div>
           {selected === "profile" ? (

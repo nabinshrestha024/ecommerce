@@ -7,7 +7,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useInitiatePayment } from "@/hooks/esewa/useInitiatePayment";
 import { EsewaPaymentPayload } from "../Navbar/components/CheckoutForm";
 import { Trash2, X } from "lucide-react";
-import { Dialog } from "../dialog/Dialog";
+import { Dialog } from "../Dialog/Dialog";
 import { ProductReviewForm } from "../Product/Review/ReviewForm";
 import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog";
 
@@ -154,6 +154,7 @@ export const OrderDetails = ({
                   <Button
                     variant="outline"
                     disabled={isCancelling}
+                    onClick={() => setOpen(false)}
                     className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors py-6 rounded-xl flex gap-2"
                   >
                     <Trash2 size={18} />

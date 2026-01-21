@@ -65,16 +65,18 @@ export const TopNav = () => {
 
   const search = useSearch(debounceSearch);
   return (
-    <div className="flex justify-between px-5 lg:px-10 items-center py-5 border-b">
+    <div className="w-full bg-white flex justify-between px-5 lg:px-10 items-center py-5 border-b">
       <div className="flex gap-2 md:divide-x-2">
-        <Image
-          src={"/logo.png"}
-          alt="Logo"
-          height={80}
-          width={180}
-          className="hidden lg:block cursor-pointer"
-          onClick={() => router.push("/home")}
-        />
+        <Link href={"#top"}>
+          <Image
+            src={"/logo.png"}
+            alt="Logo"
+            height={80}
+            width={180}
+            className="hidden lg:block cursor-pointer"
+            onClick={() => router.push("/home")}
+          />
+        </Link>
         <Image
           src={"/logo.png"}
           alt="Logo"
@@ -102,7 +104,7 @@ export const TopNav = () => {
             value={searchData}
             placeholder="What are you looking for....."
             onChange={(e) => setSearchData(e.target.value)}
-            className=" h-12 rounded-3xl pr-24 hover:cursor-pointer"
+            className=" h-12 rounded-3xl pr-24 hover:cursor-text"
           />
 
           <Search
@@ -166,17 +168,7 @@ export const TopNav = () => {
           </Link>
         )}
 
-        {!isAuth ? (
-          <FaBell
-            onClick={() =>
-              toast.error("Please log in to see your notifications")
-            }
-            className="cursor-pointer"
-            size={19}
-          />
-        ) : (
-          <Notification />
-        )}
+        <Notification />
 
         <CartComponent />
 
