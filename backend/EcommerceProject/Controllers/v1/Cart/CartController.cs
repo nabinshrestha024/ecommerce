@@ -12,7 +12,7 @@ namespace EcommerceProject.Controllers.v1.Cart
 {
     [ApiController]
     [Route("v1/cart/")]
-   
+
 
     public class CartController : ControllerBase
     {
@@ -49,19 +49,19 @@ namespace EcommerceProject.Controllers.v1.Cart
 
             try
             {
-                if (request.VariantId <=0)
+                if (request.VariantId <= 0)
                 {
                     return BadRequest(new { message = " VALID ProductId is required" });
 
                 }
 
-                if(request.Quantity <= 0)
+                if (request.Quantity <= 0)
                 {
                     return BadRequest(new { message = "Quantity must be greater than 0" });
 
                 }
 
-                if(!User.Identity?.IsAuthenticated ?? true)
+                if (!User.Identity?.IsAuthenticated ?? true)
                 {
                     return Ok(new
                     {
@@ -81,11 +81,11 @@ namespace EcommerceProject.Controllers.v1.Cart
                 await _cartService.AddToCartAsync(userId.Value, request.VariantId, request.Quantity);
                 return Ok(new { message = "Product added to cart" });
 
-            }catch(Exception ex)
+            } catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
-            
+
         }
 
         [HttpPut("Update")]
@@ -112,7 +112,7 @@ namespace EcommerceProject.Controllers.v1.Cart
         {
             try
             {
-               
+
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
 
                 if (userIdClaim == null)
@@ -120,7 +120,7 @@ namespace EcommerceProject.Controllers.v1.Cart
                     return Unauthorized(new { message = "User not found in token." });
 
                 }
-                    
+
 
                 int userId = int.Parse(userIdClaim.Value);
 
@@ -144,20 +144,38 @@ namespace EcommerceProject.Controllers.v1.Cart
                 return StatusCode(500, new { message = ex.Message });
             }
         }
-        [HttpPost("merge")]
-        public async Task<IActionResult> MergeCart([FromBody] MergeCartDto dto)
-        {
-            try
-            {
-                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-                await _cartService.MergeCartAfterLoginAsync(dto.GuestCartId, userId);
-                return Ok(new { message = "Cart merged successfully" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Internal Server Error", error = ex.Message });
-            }
+        //[Authorize]
+        //[HttpPost("merge")]
+        //public async Task<IActionResult> MergeCart([FromBody] List<GuestCartItemDto> guestCart)
+        //{
+        //    try
+        //    {
+        //        if(guestCart == null || guestCart.Any())
+        //        {
+        //            return Ok();
+        //        }
+
+        //        int userId = User.GetUserId().Value;
+        //        await _cartService.MergeGuestCartAsync(userId, guestCart);
+        //        return Ok(new { message = "Cart merged successfully" });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, new { message = "Internal Server Error", error = ex.Message });
+        //    }
+        //}
+        [HttpPost("merge")]
+        [Authorize]
+        public async Task<IActionResult> MergeCart([FromBody] List<GuestCartItemDto> guestCart)
+        {
+            int userId = User.GetUserId().Value;
+
+            if (guestCart == null || guestCart.Count == 0)
+                return Ok(new { message = "Guest cart empty" });
+
+            await _cartService.MergeGuestCartAsync(userId, guestCart);
+            return Ok(new { message = "Cart merged successfully" });
         }
     }
 }

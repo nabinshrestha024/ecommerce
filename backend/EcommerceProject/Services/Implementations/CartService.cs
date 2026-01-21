@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using EcommerceProject.Database;
 using EcommerceProject.Models.DTOs.ShoppingCart;
+using EcommerceProject.Models.Entities;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
 using Microsoft.AspNetCore.Connections;
@@ -85,12 +86,12 @@ namespace EcommerceProject.Services.Implementations
 
         }
 
-        public async Task MergeCartAfterLoginAsync(int guestCartId, int userId)
+        public async Task MergeGuestCartAsync(int userId, List<GuestCartItemDto> guestCart)
         {
-            if (guestCartId <= 0)
-                return;
-
-            await _cartRepository.MergeCartAsync(guestCartId, userId);
+            foreach (var item in guestCart)
+            {
+                await _cartRepository.AddToCartAsync(userId, item.VariantId, item.Quantity);
+            }
         }
         public async Task UpdateQuantityAsync(int cartId, int quantity)
         {

@@ -41,7 +41,7 @@ namespace EcommerceProject.Repositories.Implementations
 
         }
 
-        public async Task AddToCartAsync(int? userId, int variantId, int quantity)
+        public async Task AddToCartAsync(int userId, int variantId, int quantity)
         {
             using var conn = _connectionFactory.CreateConnection();
             await conn.ExecuteAsync("spCart_AddToCart",
