@@ -1,8 +1,7 @@
 USE EcommerceDB;
-
 GO
 
-CREATE OR ALTER   PROCEDURE spOrders_GetMyOrders
+CREATE OR ALTER PROCEDURE spOrders_GetMyOrders
     @UserId INT
 AS
 BEGIN
@@ -19,7 +18,10 @@ BEGIN
         o.PaymentStatus,
         o.ShippingCity
     FROM Orders o
-    INNER JOIN USers u ON o.UserId = u.UserId
+    INNER JOIN Users u 
+        ON o.UserId = u.UserId
+   
     WHERE o.UserId = @UserId
     ORDER BY o.OrderDate DESC;
 END
+GO
