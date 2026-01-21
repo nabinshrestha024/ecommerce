@@ -10,15 +10,21 @@ import { useFetchWishlist } from "@/hooks/wishlist/useFetchWishlist";
 import { WishlistItem } from "../TrendingProduct/component/TrendingProductCard";
 import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
-import { useState } from "react";
-import { Dialog } from "../Dialog/Dialog";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dialog } from "../dialog/Dialog";
 import { Variant } from "./ProductDetails";
 import { Card } from "../card/Card";
-import { currencyFormatter, ProductType } from "./ProductDisplay";
+import {
+  currencyFormatter,
+  LocalCartType,
+  ProductType,
+} from "./ProductDisplay";
 import { toast } from "sonner";
 
 interface ProductCardProps {
   product: ProductType;
+  cartLocal: LocalCartType[];
+  setCartLocal: Dispatch<SetStateAction<LocalCartType[]>>;
 }
 
 const getDefaultSelectedVariants = (
@@ -28,7 +34,11 @@ const getDefaultSelectedVariants = (
   return defaultVariant?.attributes ?? {};
 };
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+export const ProductCard = ({
+  product,
+  cartLocal,
+  setCartLocal,
+}: ProductCardProps) => {
   const stockValue = 20;
   const [quantity, setQuantity] = useState(1);
   const addToCart = useAddToCart();
@@ -53,14 +63,51 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     ),
   );
 
-  const handleAddToCart = (productId: number, quantity: number) => {
+  const handleAddToCart = (variantId: number, quantity: number) => {
     if (token) {
       addToCart.mutate({
-        variantId: productId,
+        variantId: variantId,
         quantity: quantity,
       });
     } else {
-      toast.message("Login to add to cart");
+      const unitPrice = activeVariant?.price ?? product.price ?? 0;
+      const unitFinalPrice =
+        activeVariant?.finalPrice ?? product.finalPrice ?? 0;
+
+      const attributesForCart = Object.entries(selectedVariants ?? {}).map(
+        ([name, value]) => ({ name, value: value ?? "" }),
+      );
+
+      const newItem = {
+        cartId: Math.random(),
+        productId: product.productId,
+        variantId: variantId,
+
+        productName: product.name,
+        sku: product.sku,
+        productImageUrl: product.primaryImageUrl,
+        description: product.description,
+
+        price: unitPrice,
+        quantity: quantity,
+        totalPrice: unitPrice * quantity,
+        finalPrice: unitFinalPrice * quantity,
+
+        addedDate: new Date().toISOString(),
+        attributes: attributesForCart,
+      };
+
+      const newCart = [...cartLocal, newItem];
+      setCartLocal((prev) => [...prev, newItem]);
+
+      try {
+        window.dispatchEvent(
+          new CustomEvent("localCartChanged", { detail: newCart }),
+        );
+        localStorage.setItem("cart", JSON.stringify(newCart));
+      } catch (err) {}
+
+      toast.success("Item added to cart successfully");
     }
   };
 

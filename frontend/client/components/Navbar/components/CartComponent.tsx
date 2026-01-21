@@ -11,10 +11,13 @@ import { useRouter } from "next/navigation";
 import { useUpdateCart } from "@/hooks/cart/useUpdateCart";
 import { Checkbox } from "@/ui/checkbox";
 import { CartProductType } from "./TopNav";
-import { Dialog } from "@/components/Dialog/Dialog";
+import { Dialog } from "@/components/dialog/Dialog";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
-import { currencyFormatter } from "@/components/Product/ProductDisplay";
+import {
+  currencyFormatter,
+  LocalCartType,
+} from "@/components/Product/ProductDisplay";
 
 export const CartComponent = () => {
   const [open, setOpen] = useState(false);
@@ -26,11 +29,53 @@ export const CartComponent = () => {
   const isAuth = Boolean(token);
   const router = useRouter();
 
+  const [cartLocal, setCartLocal] = useState<LocalCartType[]>(() => {
+    if (typeof window === "undefined") return [];
+
+    try {
+      const data = localStorage.getItem("cart");
+      return data ? (JSON.parse(data) as LocalCartType[]) : [];
+    } catch (error) {
+      console.error("Failed to parse cart from localStorage", error);
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const ce = e as CustomEvent<LocalCartType[]>;
+      if (ce?.detail && Array.isArray(ce.detail)) {
+        setCartLocal(ce.detail);
+      }
+    };
+
+    window.addEventListener("localCartChanged", handler as EventListener);
+    return () =>
+      window.removeEventListener("localCartChanged", handler as EventListener);
+  }, []);
+
   const [selectedCartItemIds, setSelectedCartItemIds] = useState<number[]>([]);
+  const [selectedLocalCartItemIds, setSelectedLocalCartItemIds] = useState<
+    number[]
+  >([]);
+
   const selectedItems =
     data?.filter((item) => selectedCartItemIds.includes(item.cartId)) ?? [];
+
+  // For guest/local cart we use `variantId` as identifier
+  const selectedLocalItems =
+    cartLocal?.filter((item) =>
+      selectedLocalCartItemIds.includes(item.variantId),
+    ) ?? [];
+
   const totalPrice =
     selectedItems?.reduce(
+      (sum, val) => sum + val.quantity * val.finalPrice,
+      0,
+    ) ?? 0;
+
+  const localTotalPrice =
+    selectedLocalItems?.reduce(
       (sum, val) => sum + val.quantity * val.finalPrice,
       0,
     ) ?? 0;
@@ -58,16 +103,38 @@ export const CartComponent = () => {
     }
   };
 
-  const handleSelectAll = () => {
-    if (!data || data.length === 0) {
-      setSelectedCartItemIds([]);
-      return;
+  const handleLocalSelect = (cart: CartProductType) => {
+    const local = cart as unknown as LocalCartType;
+    const id = local.variantId ?? (cart.cartId as number);
+    if (selectedLocalCartItemIds.includes(id)) {
+      setSelectedLocalCartItemIds((prev) => prev.filter((v) => v !== id));
+    } else {
+      setSelectedLocalCartItemIds((prev) => [...prev, id]);
     }
-    const allIds = data.map((v) => v.cartId);
-    const allSelected =
-      allIds.length > 0 &&
-      allIds.every((id) => selectedCartItemIds.includes(id));
-    setSelectedCartItemIds(allSelected ? [] : allIds);
+  };
+
+  const handleSelectAll = () => {
+    if (token) {
+      if (!data || data.length === 0) {
+        setSelectedCartItemIds([]);
+        return;
+      }
+      const allIds = data.map((v) => v.cartId);
+      const allSelected =
+        allIds.length > 0 &&
+        allIds.every((id) => selectedCartItemIds.includes(id));
+      setSelectedCartItemIds(allSelected ? [] : allIds);
+    } else {
+      if (!cartLocal || cartLocal.length === 0) {
+        setSelectedLocalCartItemIds([]);
+        return;
+      }
+      const allIds = cartLocal.map((v) => v.variantId);
+      const allSelected =
+        allIds.length > 0 &&
+        allIds.every((id) => selectedLocalCartItemIds.includes(id));
+      setSelectedLocalCartItemIds(allSelected ? [] : allIds);
+    }
   };
 
   const allSelected = Boolean(
@@ -75,6 +142,18 @@ export const CartComponent = () => {
     data.length > 0 &&
     data.every((item) => selectedCartItemIds.includes(item.cartId)),
   );
+  const allLocalSelected = Boolean(
+    cartLocal &&
+    cartLocal.length > 0 &&
+    cartLocal.every((item) =>
+      selectedLocalCartItemIds.includes(item.variantId),
+    ),
+  );
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cartLocal));
+    console.log(cartLocal);
+  }, [cartLocal]);
 
   return (
     <div className="flex gap-2 shrink-0 items-center">
@@ -131,7 +210,145 @@ export const CartComponent = () => {
               <div className="flex items-center justify-center h-40">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
               </div>
-            ) : data?.length === 0 ? (
+            ) : token ? (
+              data?.length === 0 ? (
+                <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
+                  <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center">
+                    <ShoppingBag className="text-gray-200" size={40} />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800">
+                      Your cart is empty
+                    </h3>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Looks like you haven&apos;t added anything yet.
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => {
+                      setOpen(false);
+                      router.push("/product");
+                    }}
+                  >
+                    Start Shopping
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="flex gap-4 px-3">
+                    <div className="flex items-center">
+                      <Checkbox
+                        className="border-[#4EA764] data-[state=checked]:bg-[#4EA764] data-[state=checked]:border-[#4EA764] data-[state=checked]:text-white"
+                        checked={allSelected}
+                        onClick={handleSelectAll}
+                      />
+                    </div>
+                    <div className="text-sm font-bold text-gray-900">
+                      Select All
+                    </div>
+                  </div>
+                  {data?.map((val) => (
+                    <div
+                      key={val.cartId}
+                      className="group flex gap-4 p-3 rounded-xl border border-transparent hover:border-gray-100 hover:bg-gray-50 transition-all"
+                    >
+                      <div className="flex items-center">
+                        <Checkbox
+                          className="border-[#4EA764] data-[state=checked]:bg-[#4EA764] data-[state=checked]:border-[#4EA764] data-[state=checked]:text-white"
+                          checked={selectedCartItemIds.includes(val.cartId)}
+                          onClick={() => handleSelect(val)}
+                        />
+                      </div>
+                      <div className="w-24 h-24 relative rounded-xl overflow-hidden bg-gray-100 border shrink-0 shadow-sm">
+                        <Image
+                          src={`${val.productImageUrl}` || "/a.jpg"}
+                          fill
+                          alt={val.productName}
+                          className="object-cover group-hover:scale-105 transition-transform"
+                          unoptimized
+                        />
+                      </div>
+
+                      <div className="flex-1 flex flex-col min-w-0">
+                        <div className="flex justify-between items-start gap-2">
+                          <div className="min-w-0">
+                            <h4 className="text-sm font-bold text-gray-900 truncate uppercase tracking-tight">
+                              {val.productName}
+                            </h4>
+                            <p className="text-xs text-gray-500 line-clamp-1 mt-0.5">
+                              {val.description}
+                            </p>
+                          </div>
+                          <button
+                            className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                            onClick={() => deleteCart.mutate(val.cartId)}
+                          >
+                            <FaTrash size={16} />
+                          </button>
+                        </div>
+
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {val.attributes.map((attr, ind) => (
+                            <span
+                              key={ind}
+                              className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded-md font-medium"
+                            >
+                              {attr.name}: {attr.value}
+                            </span>
+                          ))}
+                        </div>
+
+                        <div className="mt-auto pt-3 flex items-center justify-between">
+                          <div className="flex flex-col gap-2">
+                            {val?.finalPrice === 0 ? (
+                              <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                                {currencyFormatter.format(val?.price ?? 0)}
+                              </span>
+                            ) : (
+                              <div className="flex gap-2">
+                                <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                                  {currencyFormatter.format(
+                                    val?.finalPrice ?? 0,
+                                  )}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center bg-white border rounded-lg shadow-sm overflow-hidden">
+                            <button
+                              onClick={() =>
+                                handleQuantityDecrease({
+                                  cartId: val.cartId,
+                                  quantity: val.quantity,
+                                })
+                              }
+                              disabled={val.quantity <= 1}
+                              className="p-1.5 hover:bg-gray-50 disabled:opacity-30 transition-colors"
+                            >
+                              <MdKeyboardArrowDown size={18} />
+                            </button>
+                            <span className="px-3 text-xs font-bold w-8 text-center">
+                              {val.quantity}
+                            </span>
+                            <button
+                              onClick={() =>
+                                updateCart.mutate({
+                                  cartId: val.cartId,
+                                  quantity: val.quantity + 1,
+                                })
+                              }
+                              className="p-1.5 hover:bg-gray-50 transition-colors"
+                            >
+                              <MdKeyboardArrowUp size={18} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
+            ) : cartLocal?.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
                 <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center">
                   <ShoppingBag className="text-gray-200" size={40} />
@@ -159,7 +376,7 @@ export const CartComponent = () => {
                   <div className="flex items-center">
                     <Checkbox
                       className="border-[#4EA764] data-[state=checked]:bg-[#4EA764] data-[state=checked]:border-[#4EA764] data-[state=checked]:text-white"
-                      checked={allSelected}
+                      checked={allLocalSelected}
                       onClick={handleSelectAll}
                     />
                   </div>
@@ -167,16 +384,20 @@ export const CartComponent = () => {
                     Select All
                   </div>
                 </div>
-                {data?.map((val) => (
+                {cartLocal?.map((val) => (
                   <div
-                    key={val.cartId}
+                    key={val.variantId}
                     className="group flex gap-4 p-3 rounded-xl border border-transparent hover:border-gray-100 hover:bg-gray-50 transition-all"
                   >
                     <div className="flex items-center">
                       <Checkbox
                         className="border-[#4EA764] data-[state=checked]:bg-[#4EA764] data-[state=checked]:border-[#4EA764] data-[state=checked]:text-white"
-                        checked={selectedCartItemIds.includes(val.cartId)}
-                        onClick={() => handleSelect(val)}
+                        checked={selectedLocalCartItemIds.includes(
+                          val.variantId,
+                        )}
+                        onClick={() =>
+                          handleLocalSelect(val as unknown as CartProductType)
+                        }
                       />
                     </div>
                     <div className="w-24 h-24 relative rounded-xl overflow-hidden bg-gray-100 border shrink-0 shadow-sm">
@@ -201,7 +422,13 @@ export const CartComponent = () => {
                         </div>
                         <button
                           className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                          onClick={() => deleteCart.mutate(val.cartId)}
+                          onClick={() =>
+                            setCartLocal((prev) =>
+                              prev.filter(
+                                (value) => value.cartId !== val.cartId,
+                              ),
+                            )
+                          }
                         >
                           <FaTrash size={16} />
                         </button>
@@ -235,10 +462,23 @@ export const CartComponent = () => {
                         <div className="flex items-center bg-white border rounded-lg shadow-sm overflow-hidden">
                           <button
                             onClick={() =>
-                              handleQuantityDecrease({
-                                cartId: val.cartId,
-                                quantity: val.quantity,
-                              })
+                              setCartLocal((prev) =>
+                                prev.map((item) =>
+                                  item.variantId === val.variantId
+                                    ? {
+                                        ...item,
+                                        quantity: Math.max(
+                                          1,
+                                          item.quantity - 1,
+                                        ),
+                                        totalPrice:
+                                          (item.quantity - 1) * item.price,
+                                        finalPrice:
+                                          (item.quantity - 1) * item.price,
+                                      }
+                                    : item,
+                                ),
+                              )
                             }
                             disabled={val.quantity <= 1}
                             className="p-1.5 hover:bg-gray-50 disabled:opacity-30 transition-colors"
@@ -250,10 +490,20 @@ export const CartComponent = () => {
                           </span>
                           <button
                             onClick={() =>
-                              updateCart.mutate({
-                                cartId: val.cartId,
-                                quantity: val.quantity + 1,
-                              })
+                              setCartLocal((prev) =>
+                                prev.map((item) =>
+                                  item.variantId === val.variantId
+                                    ? {
+                                        ...item,
+                                        quantity: item.quantity + 1,
+                                        totalPrice:
+                                          (item.quantity + 1) * item.price,
+                                        finalPrice:
+                                          (item.quantity + 1) * item.price,
+                                      }
+                                    : item,
+                                ),
+                              )
                             }
                             className="p-1.5 hover:bg-gray-50 transition-colors"
                           >
@@ -309,6 +559,52 @@ export const CartComponent = () => {
                     selectedCartItemIds={selectedCartItemIds}
                   />
                 </Dialog>
+              )}
+            </div>
+          )}
+          {!isAuth && cartLocal && cartLocal.length > 0 && (
+            <div className="p-6 border-t bg-gray-50/50 space-y-4">
+              <div className="flex items-end justify-between">
+                <div className="space-y-1">
+                  <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold">
+                    Subtotal
+                  </p>
+                  <p className="text-sm text-gray-400 italic">
+                    Taxes calculated at checkout
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-2xl font-black text-gray-900 leading-none">
+                    Rs. {localTotalPrice}
+                  </p>
+                </div>
+              </div>
+
+              {selectedLocalCartItemIds.length === 0 ? (
+                <Button
+                  className="w-full h-12 text-md font-bold hover:cursor-not-allowed"
+                  disabled
+                >
+                  Proceed to Checkout
+                </Button>
+              ) : (
+                <Button
+                  className="w-full h-12 text-md font-bold"
+                  onClick={() => {
+                    try {
+                      localStorage.setItem(
+                        "selectedLocalItems",
+                        JSON.stringify(selectedLocalCartItemIds),
+                      );
+                    } catch (err) {
+                      // ignore
+                    }
+                    setOpen(false);
+                    router.push(`/checkout`);
+                  }}
+                >
+                  Proceed to Checkout
+                </Button>
               )}
             </div>
           )}
