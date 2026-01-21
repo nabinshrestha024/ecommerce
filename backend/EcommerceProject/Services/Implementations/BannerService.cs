@@ -2,7 +2,7 @@ using EcommerceProject.Models.DTOs.Banners;
 using EcommerceProject.Repositories.Interfaces;
 using EcommerceProject.Services.Interfaces;
 using EcommerceProject.Exceptions;
-using Microsoft.AspNetCore.Http;
+using System.Security.AccessControl;
 
 namespace EcommerceProject.Services.Implementations
 {
@@ -11,15 +11,44 @@ namespace EcommerceProject.Services.Implementations
         private readonly IBannerRepository _repo;
         private readonly IFileStorageService _files;
 
-        public BannerService(IBannerRepository repo, IFileStorageService files)
+        private readonly IUrlService _urlService;
+
+        public BannerService(IBannerRepository repo, IFileStorageService files, IUrlService urlService)
         {
             _repo = repo;
             _files = files;
+            _urlService = urlService;
         }
 
-        public Task<IEnumerable<BannerResponseDto>> GetAllBannerAsync()
+        public async Task<IEnumerable<BannerResponseDto>> GetActiveBannerAsync()
         {
-            return _repo.GetAllBannerAsync();
+            var banners = await _repo.GetActiveBannerAsync();
+
+            foreach (var banner in banners)
+            {
+                if (!string.IsNullOrEmpty(banner.ImageUrl))
+                {
+                    banner.ImageUrl = _urlService.ToAbsoluteUrl(banner.ImageUrl);
+                }
+            }
+
+            return banners;
+        }
+
+        public async Task<IEnumerable<BannerResponseDto>> GetAllBannerAsync()
+        {
+            var banners = await _repo.GetAllBannerAsync();
+            var bannerList = banners.ToList();
+
+            foreach(var banner in bannerList)
+            {
+                if( !string.IsNullOrEmpty(banner.ImageUrl))
+                {
+                    banner.ImageUrl = _urlService.ToAbsoluteUrl(banner.ImageUrl);
+                }
+            }
+
+            return bannerList;
         }
 
         public async Task<int> CreateBannerAsync(
@@ -39,21 +68,21 @@ namespace EcommerceProject.Services.Implementations
             return bannerId;
         }
 
-
-        public async Task UpdateBannerAsync(UpdateBannerDto dto, IFormFile? imageFile, CancellationToken ct)
+        public async Task UpdateBannerAsync(int id, UpdateBannerDto dto, IFormFile? imageFile, CancellationToken ct)
         {
-            var banner = await _repo.GetByIdAsync(dto.BannerId)
-                         ?? throw new BadRequestException("Banner not found");
+            var banner = await _repo.GetByIdAsync(id)
+                        ?? throw new BadRequestException("Banner not found");
 
-            await _repo.UpdateBannerAsync(dto);
+            await _repo.UpdateBannerAsync(id, dto);
 
             if (imageFile != null)
             {
                 if (!string.IsNullOrEmpty(banner.ImageUrl))
                     await _files.DeleteBannerImageAsync(banner.ImageUrl, ct);
 
-                var savedPath = await _files.SaveBannerImageAsync(imageFile, dto.BannerId, ct);
-                await _repo.UpdateBannerImageAsync(dto.BannerId, savedPath);
+                var savedPath = await _files.SaveBannerImageAsync(imageFile, id, ct);
+                
+                await _repo.UpdateBannerImageAsync(id, savedPath);
             }
         }
 

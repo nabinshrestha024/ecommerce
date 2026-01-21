@@ -15,11 +15,21 @@ namespace EcommerceProject.Repositories.Implementations
             _db = db;
         }
 
-        public async Task<IEnumerable<BannerResponseDto>> GetAllBannerAsync()
+        public async Task<IEnumerable<BannerResponseDto>> GetActiveBannerAsync()
         {
             using var connection = _db.CreateConnection();
             return await connection.QueryAsync<BannerResponseDto>(
                 "spBanners_GetActiveBanners",
+                commandType: CommandType.StoredProcedure
+            );
+        }
+
+        public async Task<IEnumerable<BannerResponseDto>> GetAllBannerAsync()
+        {
+            using var connection = _db.CreateConnection();
+            // Use a stored procedure that DOES NOT filter by IsActive
+            return await connection.QueryAsync<BannerResponseDto>(
+                "spBanners_GetAllBannersAdmin", 
                 commandType: CommandType.StoredProcedure
             );
         }
@@ -54,14 +64,14 @@ namespace EcommerceProject.Repositories.Implementations
             );
         }
 
-        public async Task UpdateBannerAsync(UpdateBannerDto dto)
+        public async Task UpdateBannerAsync(int id, UpdateBannerDto dto)
         {
             using var connection = _db.CreateConnection();
             await connection.ExecuteAsync(
                 "spBanners_UpdateBanner",
                 new
                 {
-                    dto.BannerId,
+                    BannerId = id,
                     dto.Title,
                     dto.Description,
                     dto.RedirectUrl,
