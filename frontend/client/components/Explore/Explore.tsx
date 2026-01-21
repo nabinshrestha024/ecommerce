@@ -26,7 +26,7 @@ export const Explore = () => {
           </Button>
         </div>
 
-        <div className="flex gap-5 justify-center md:justify-start text-center mt-8 flex-wrap">
+        <div className="grid grid-cols-4 gap-5 justify-center md:justify-start text-center mt-8 flex-wrap">
           {isLoading &&
             Array.from({ length: placeholderCount }).map((_, index) => (
               <CategoryCardSkeleton key={index} />
