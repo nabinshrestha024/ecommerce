@@ -65,6 +65,11 @@ const items = [
         url: "/tag-management",
         icon: FaTags,
       },
+      {
+        title: "Banner Management",
+        url: "/banner-management",
+        icon: FaTags,
+      },
     ],
   },
   {

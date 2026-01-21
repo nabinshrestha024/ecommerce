@@ -124,10 +124,10 @@ const ProductDetails = () => {
 
   return (
     <div className="w-full px-4 sm:px-6 md:px-10 lg:px-20 py-6 md:py-10 flex flex-col gap-5">
-      <Card className="p-0">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 py-5">
-          <div className="flex flex-col gap-5 px-3 sm:px-5 py-4 md:py-8">
-            <div className="w-full max-w-[600px] h-[300px] sm:h-[350px] md:h-[400px] relative mx-auto">
+      <Card className="p-0 ">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 py-2">
+          <div className="flex flex-col gap-5 p-2 ">
+            <div className="w-full max-w-[645px] h-[450px] relative mx-auto">
               <Image
                 src={displayedImage || ""}
                 alt="Product"
@@ -137,7 +137,7 @@ const ProductDetails = () => {
               />
             </div>
 
-            <div className="flex justify-start lg:justify-center gap-2 sm:gap-3 border-t-2 pt-2 overflow-x-auto">
+            <div className="flex justify-start lg:justify-center gap-2 border-t-2 pt-2 overflow-x-auto">
               {imageUrls?.map((image, index) => (
                 <div
                   key={index}
@@ -156,130 +156,149 @@ const ProductDetails = () => {
             </div>
           </div>
 
-          <div className="p-3 sm:p-4 flex flex-col gap-3 md:gap-4">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold">
-                {productItems.data?.name}
-              </h1>
-              <p className="text-base sm:text-lg">
-                {productItems.data?.description}
-              </p>
-            </div>
+          <div className="flex flex-col gap-8 p-3 max-h-[600px] overflow-y-auto">
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <h1 className="text-[28px] md:text-2xl font-bold">
+                  {productItems.data?.name}
+                </h1>
+                <p className="text-md md:text-[18px] ">
+                  {productItems.data?.shortDescription}
+                </p>
+              </div>
 
-            <div>
-              <div className="flex flex-col gap-2">
-                {activeVariant?.finalPrice === 0 ? (
-                  <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
-                    {currencyFormatter.format(activeVariant?.price ?? 0)}
-                  </span>
-                ) : (
-                  <div className="flex gap-2">
-                    <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
-                      {currencyFormatter.format(activeVariant?.finalPrice ?? 0)}
-                    </span>
-                    <span className="md:text-[15px] text-[12px] font-bold  text-red-500 line-through">
+              <div className="space-y-0.5">
+                <div className="flex flex-col gap-2">
+                  {activeVariant?.finalPrice === 0 ? (
+                    <span className="text-[20px]  md:text-[35px] font-bold text-[#4EA674]">
                       {currencyFormatter.format(activeVariant?.price ?? 0)}
                     </span>
-                  </div>
-                )}
-              </div>
-              <div className="flex flex-col sm:flex-row sm:justify-between gap-2 text-base sm:text-lg font-bold">
-                <span>
-                  <span className="font-normal">Category: </span>
-                  {productItems.data?.categoryName}
-                </span>
-                <span>
-                  <span className="font-normal">Stock: </span>
-                  {activeVariant?.stockQuantity}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-3">
-              <div className="font-bold text-base sm:text-lg">Variants</div>
-
-              {productItems.data?.availableAttributes?.map(
-                (variant, attrIndex) => (
-                  <div key={variant.name}>
-                    <div className="mb-1 font-medium text-sm sm:text-base">
-                      {variant.name}
+                  ) : (
+                    <div className="flex gap-2 items-center font-bold">
+                      <span className="text-[20px] md:text-[35px]  text-[#4EA674]">
+                        {currencyFormatter.format(
+                          activeVariant?.finalPrice ?? 0,
+                        )}
+                      </span>
+                      <span className="text-[15px] md:text-[18px] text-red-500 line-through">
+                        {currencyFormatter.format(activeVariant?.price ?? 0)}
+                      </span>
                     </div>
-                    <div className="flex gap-2 flex-wrap">
-                      {variant.values.map((value) => {
-                        const isSelected =
-                          selectedVariants[variant.name] === value;
+                  )}
+                </div>
+                <div className="flex gap-5">
+                  <div className="flex gap-2 items-center">
+                    <span className="text-[18px] font-semibold">
+                      Category:{" "}
+                    </span>
+                    <p className="text-[18px] font-bold">
+                      {productItems.data?.categoryName}
+                    </p>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <span className="text-[18px] font-semibold">Stock: </span>
+                    <p className="text-[18px] font-bold">
+                      {activeVariant?.stockQuantity}
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-                        const disabled =
-                          attrIndex !== 0 &&
-                          !isAvailable(
-                            productItems.data?.variants ?? [],
-                            selectedVariants,
-                            variant.name,
-                            value,
-                          );
+              <div className="flex gap-5">
+                <div className="text-[18px] font-semibold">Variants: </div>
+                <div className="flex flex-col gap-3">
+                  {productItems.data?.availableAttributes?.map(
+                    (variant, attrIndex) => (
+                      <div key={variant.name}>
+                        <div className="mb-1 text-[18px] font-bold">
+                          {variant.name}
+                        </div>
+                        <div className="flex gap-2 flex-wrap">
+                          {variant.values.map((value) => {
+                            const isSelected =
+                              selectedVariants[variant.name] === value;
 
-                        return (
-                          <label
-                            key={value}
-                            className={`px-3 py-1.5 sm:px-4 sm:py-2 border rounded-md cursor-pointer transition text-sm sm:text-base
+                            const disabled =
+                              attrIndex !== 0 &&
+                              !isAvailable(
+                                productItems.data?.variants ?? [],
+                                selectedVariants,
+                                variant.name,
+                                value,
+                              );
+
+                            return (
+                              <label
+                                key={value}
+                                className={`px-3 py-1.5 sm:px-4 sm:py-2 border rounded-md cursor-pointer transition text-sm sm:text-base
                               ${
                                 isSelected
                                   ? "border-green-500 bg-green-50 text-green-600"
                                   : "border-gray-300"
                               }
                               ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
-                          >
-                            <input
-                              type="radio"
-                              name={variant.name}
-                              value={value}
-                              checked={isSelected}
-                              disabled={disabled}
-                              onChange={() =>
-                                handleVariantChange(variant.name, value)
-                              }
-                              className="hidden"
-                            />
-                            {value}
-                          </label>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ),
-              )}
-            </div>
-
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="p-1 border rounded"
-                >
-                  <MdKeyboardArrowDown />
-                </button>
-                <div className="px-3 py-1 border rounded">{quantity}</div>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="p-1 border rounded"
-                  disabled={quantity >= (activeVariant?.stockQuantity ?? 0)}
-                >
-                  <MdKeyboardArrowUp />
-                </button>
+                              >
+                                <input
+                                  type="radio"
+                                  name={variant.name}
+                                  value={value}
+                                  checked={isSelected}
+                                  disabled={disabled}
+                                  onChange={() =>
+                                    handleVariantChange(variant.name, value)
+                                  }
+                                  className="hidden"
+                                />
+                                {value}
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ),
+                  )}
+                </div>
               </div>
 
-              {activeVariant?.stockQuantity === 0 ? (
-                <Button disabled className="w-full sm:w-[200px] bg-gray-500">
-                  Out of Stock
-                </Button>
-              ) : (
-                <Button
-                  className="w-full sm:w-[200px]"
-                  onClick={handleAddToCart}
-                >
-                  Add to cart
-                </Button>
-              )}
+              <div className="flex flex-col gap-5">
+                <div className="flex items-center gap-7">
+                  <p className="text-[18px] font-semibold">Quantity:</p>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="p-1 border rounded"
+                    >
+                      <MdKeyboardArrowDown />
+                    </button>
+                    <div className="px-3 py-1 border rounded">{quantity}</div>
+                    <button
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="p-1 border rounded"
+                      disabled={quantity >= (activeVariant?.stockQuantity ?? 0)}
+                    >
+                      <MdKeyboardArrowUp />
+                    </button>
+                  </div>
+                </div>
+
+                {activeVariant?.stockQuantity === 0 ? (
+                  <Button disabled className="w-full sm:w-[200px] bg-gray-500">
+                    Out of Stock
+                  </Button>
+                ) : (
+                  <Button
+                    className="w-full sm:w-[200px]"
+                    onClick={handleAddToCart}
+                  >
+                    Add to cart
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="text-[20px] font-bold ">Product details:</div>
+              <div>{productItems.data?.description}</div>
             </div>
           </div>
         </div>

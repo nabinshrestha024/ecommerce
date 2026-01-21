@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const categorySchema = z.object({
-  name: z.string().min(2, "Category name must be at least 2 characters"),
+  name: z.string().min(1, "Category name is required"),
   categoryImageURL: z
     .file()
     .optional()
@@ -10,7 +10,7 @@ export const categorySchema = z.object({
       "Invalid image file",
     ),
 
-  description: z.string().min(2, "Description must be at least 2 characters"),
+  description: z.string().min(2, "Description is required"),
   isFeatured: z.boolean("Select isFeatured"),
   isActive: z.boolean("Select isActive"),
   sortOrder: z.coerce.number().min(0, "Sort Order is required"),

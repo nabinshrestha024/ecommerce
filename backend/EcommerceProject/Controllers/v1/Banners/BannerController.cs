@@ -6,7 +6,7 @@ using EcommerceProject.Services.Interfaces;
 namespace EcommerceProject.Controllers.v1.Banners
 {
     [ApiController]
-    [Route("v1/banners")]
+    [Route("v1/admin/banners")]
     public class BannerController : ControllerBase
     {
         private readonly IBannerService _service;
