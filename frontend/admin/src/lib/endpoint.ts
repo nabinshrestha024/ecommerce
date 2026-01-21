@@ -1,6 +1,6 @@
 export const endpoint = {
   REGISTER: "auth/register",
-  LOGIN: "auth/login",
+  LOGIN: "auth/login/admin",
   LOGOUT: "auth/logout",
   FETCH_PRODUCT: "admin/products",
   FETCH_ORDER: "admin/orders",
