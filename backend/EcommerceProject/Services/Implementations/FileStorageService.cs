@@ -93,7 +93,7 @@ namespace EcommerceProject.Services.Implementations
             if (file.Length > 5 * 1024 * 1024)
                 throw new InvalidOperationException("File size exceeds 5MB limit");
 
-            //var root = _env.WebRootPath ?? "wwwroot";
+            // var root = _env.WebRootPath ?? "wwwroot";
             var root = _configuration["FilePath"] ?? _env.WebRootPath ?? "wwwroot";
             var folder = Path.Combine(root, "images", "profile");
             Directory.CreateDirectory(folder);

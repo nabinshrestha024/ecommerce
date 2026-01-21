@@ -5,6 +5,8 @@ namespace EcommerceProject.Services.Interfaces;
 
 public interface IBannerService
 {
+    Task<IEnumerable<BannerResponseDto>> GetActiveBannerAsync();
+
     Task<IEnumerable<BannerResponseDto>> GetAllBannerAsync();
 
     Task<int> CreateBannerAsync(
@@ -13,6 +15,7 @@ public interface IBannerService
         CancellationToken ct);
 
     Task UpdateBannerAsync(
+        int id,
         UpdateBannerDto dto,
         IFormFile? image,
         CancellationToken ct);

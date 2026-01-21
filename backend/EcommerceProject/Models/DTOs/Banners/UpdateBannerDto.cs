@@ -2,7 +2,6 @@ namespace EcommerceProject.Models.DTOs.Banners;
 
 public class UpdateBannerDto
 {
-    public int BannerId { get; set; }
     public string Title { get; set; } = null!;
     public string Description { get; set; } = null!;
     public string? RedirectUrl { get; set; }
