@@ -27,7 +27,7 @@ export const NavRoutes = () => {
   // const { setOpen } = useSidebar();
   const pathname = usePathname();
   return (
-    <div className="flex flex-col md:flex-row gap-10 justify-center items-center py-5 border-b">
+    <div className="w-full bg-white flex flex-col md:flex-row gap-10 justify-center items-center py-5 border-b">
       {data.map((val) => {
         const isActive = pathname.startsWith(val.url);
 

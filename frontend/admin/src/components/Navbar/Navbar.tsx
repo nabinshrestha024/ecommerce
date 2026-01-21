@@ -27,13 +27,15 @@ export const Navbar = () => {
                         ? "Profile"
                         : pathname === "/tag-management"
                           ? "Tag Management"
-                          : pathname === "/product-reviews"
-                            ? "Product Reviews"
-                            : pathname === "/website-reviews"
-                              ? "Website Reviews"
-                              : pathname === "/vendor"
-                                ? "Vendor"
-                                : "";
+                          : pathname === "/banner-management"
+                            ? "Banner Management"
+                            : pathname === "/product-reviews"
+                              ? "Product Reviews"
+                              : pathname === "/website-reviews"
+                                ? "Website Reviews"
+                                : pathname === "/vendor"
+                                  ? "Vendor"
+                                  : "";
 
   return (
     <nav className=" border-b h-16 flex items-center justify-between px-2 w-full">

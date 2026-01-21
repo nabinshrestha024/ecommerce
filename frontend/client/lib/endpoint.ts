@@ -1,6 +1,6 @@
 export const endpoint = {
   REGISTER: "auth/register",
-  LOGIN: "auth/login",
+  LOGIN: "auth/login/customer",
   LOGOUT: "auth/logout",
   PRODUCT: "catalog/products",
   CATEGORY: "categories",
@@ -29,4 +29,6 @@ export const endpoint = {
   TAGS: "tags",
   CATALOGPRODUCTS: "catalog/products",
   REVIEW: "reviews",
+  FETCH_BANNER: "banners",
+  MERGECART: "cart/merge",
 };

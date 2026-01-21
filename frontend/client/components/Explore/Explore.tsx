@@ -16,7 +16,7 @@ export const Explore = () => {
     <div className="w-full px-6 mx-auto flex items-center justify-center">
       <div className="w-full max-w-[1216px]">
         <div className="w-full flex justify-between items-center">
-          <h1 className="font-bold text-xl">Start exploring now</h1>
+          <h1 className="font-bold text-xl">Start Exploring Now</h1>
           <Button
             variant={"outline"}
             className="rounded-2xl border border-black text-xs"
@@ -26,7 +26,7 @@ export const Explore = () => {
           </Button>
         </div>
 
-        <div className="flex gap-5 justify-center md:justify-start text-center mt-8 flex-wrap">
+        <div className="grid grid-cols-4 gap-5 justify-center md:justify-start text-center mt-8 flex-wrap">
           {isLoading &&
             Array.from({ length: placeholderCount }).map((_, index) => (
               <CategoryCardSkeleton key={index} />

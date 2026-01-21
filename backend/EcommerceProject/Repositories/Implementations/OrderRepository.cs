@@ -50,13 +50,28 @@ namespace EcommerceProject.Repositories.Implementations
         {
             using var conn = _db.CreateConnection();
 
-            var items = await conn.QueryAsync<OrderSummaryDto>(
+            var lookup = new Dictionary<int, OrderSummaryDto>();
+
+            await conn.QueryAsync<OrderSummaryDto, OrderItemDto, OrderSummaryDto>(
                 "spOrders_GetMyOrders",
+                (order, item) =>
+                {
+                    if (!lookup.TryGetValue(order.OrderId, out var existing))
+                    {
+                        existing = order;
+                        existing.Items = new List<OrderItemDto>();
+                        lookup.Add(existing.OrderId, existing);
+                    }
+
+                    existing.Items.Add(item);
+                    return existing;
+                },
                 new { UserId = userId },
+                splitOn: "ProductId",
                 commandType: CommandType.StoredProcedure
             );
 
-            return items.ToList();
+            return lookup.Values.ToList();
         }
 
         public async Task<OrderDetailDto?> GetByIdForUserAsync(int userId, int orderId, CancellationToken ct)

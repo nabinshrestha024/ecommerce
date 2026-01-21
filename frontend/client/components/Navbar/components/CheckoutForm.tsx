@@ -147,7 +147,7 @@ export const CheckoutForm = ({
 
                 <div className="mt-auto pt-3 flex items-center justify-between">
                   <span className="text-sm font-bold text-gray-900">
-                    Rs. {val.totalPrice.toLocaleString()}
+                    Rs. {val.finalPrice.toLocaleString()}
                   </span>
 
                   <div className="flex text-sm items-center bg-white overflow-hidden">

@@ -9,9 +9,12 @@ import Link from "next/link";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { useRouter } from "next/navigation";
 import { Input } from "../Input/Input";
-import { Dialog } from "../Dialog/Dialog";
+import { Dialog } from "../dialog/Dialog";
 import { ForgetPasswordDialogContent } from "../ForgetPassword/ForgetPasswordDialogContent";
 import { useState } from "react";
+import { useCart } from "@/contexts/CartContext";
+import { CartDataType } from "@/lib/cart/mergeCart";
+import { useMergeCart } from "@/hooks/cart/useMergeCart";
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -26,11 +29,21 @@ export const LoginForm = () => {
     mode: "onChange",
   });
 
+  const { cartLocal, setCartLocal } = useCart();
+  const mergeCart = useMergeCart();
+
   const onSubmit = (data: LoginFormSchemaType) => {
     reset();
     mutate(data, {
       onSuccess: () => {
-        router.push("/");
+        if (cartLocal.length !== 0) {
+          const cartData: CartDataType[] = cartLocal.map((val) => ({
+            variantId: val.variantId,
+            quantity: val.quantity,
+          }));
+          mergeCart.mutate(cartData);
+        }
+        router.push("/home");
       },
     });
   };
@@ -39,11 +52,11 @@ export const LoginForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="py-6 flex flex-col gap-2.5"
+      className="py-6 flex flex-col gap-3"
     >
-      <div className="text-3xl font-semibold mb-5">Login</div>
+      <div className="text-4xl font-bold mb-5">Login</div>
       <div className="flex flex-col">
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2">
           <Label htmlFor="email">Email</Label>
           <Input
             type="email"
@@ -61,35 +74,32 @@ export const LoginForm = () => {
             {...register("password")}
             placeholder="Enter your password"
             className={`${errors.password ? "border-red-500 focus:border-red-500" : ""}`}
+            autoComplete="off"
           />
         </div>
       </div>
-      <div className="mt-5 text-sm space-x-5 flex justify-between">
-        <div>
-          Don&apos;t have an account?{" "}
-          <Link
-            href={"/signup"}
-            className="text-blue-500 underline cursor-pointer"
-          >
-            Sign Up
-          </Link>
-        </div>
-        <Dialog
-          open={open}
-          onOpenChange={setOpen}
-          triggerText={
-            <div className="text-blue-500 underline cursor-pointer">
-              Forgot password?
-            </div>
-          }
-        >
-          <ForgetPasswordDialogContent setOpen={setOpen} />
-        </Dialog>
-      </div>
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+        triggerText={
+          <div className="text-green-600 text-[16px] flex justify-end underline cursor-pointer">
+            Forgot password?
+          </div>
+        }
+      >
+        <ForgetPasswordDialogContent setOpen={setOpen} />
+      </Dialog>
+      <Button type="submit" className="w-full mt-2" value={"Login"}>
+        Login
+      </Button>
       <div>
-        <Button type="submit" className="mt-5 w-full" value={"Login"}>
-          Login
-        </Button>
+        Don&apos;t have an account?{" "}
+        <Link
+          href={"/signup"}
+          className="text-green-600 text-[16px] underline cursor-pointer"
+        >
+          Sign Up
+        </Link>
       </div>
     </form>
   );
