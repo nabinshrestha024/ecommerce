@@ -1,6 +1,6 @@
 export const endpoint = {
   REGISTER: "auth/register",
-  LOGIN: "auth/login",
+  LOGIN: "auth/login/admin",
   LOGOUT: "auth/logout",
   FETCH_PRODUCT: "admin/products",
   FETCH_ORDER: "admin/orders",
@@ -33,4 +33,5 @@ export const endpoint = {
   USERREPORT: "admin/reports/user-registration-overview",
   ORDERSTATUSREPORT: "admin/reports/orders-status-report",
   DASHBOARDORDERREPORT: "admin/reports/orders-status-report",
+  FETCH_BANNER: "banners",
 };
