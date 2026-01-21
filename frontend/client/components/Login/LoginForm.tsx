@@ -12,6 +12,9 @@ import { Input } from "../Input/Input";
 import { Dialog } from "../dialog/Dialog";
 import { ForgetPasswordDialogContent } from "../ForgetPassword/ForgetPasswordDialogContent";
 import { useState } from "react";
+import { useCart } from "@/contexts/CartContext";
+import { CartDataType } from "@/lib/cart/mergeCart";
+import { useMergeCart } from "@/hooks/cart/useMergeCart";
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -26,11 +29,21 @@ export const LoginForm = () => {
     mode: "onChange",
   });
 
+  const { cartLocal, setCartLocal } = useCart();
+  const mergeCart = useMergeCart();
+
   const onSubmit = (data: LoginFormSchemaType) => {
     reset();
     mutate(data, {
       onSuccess: () => {
-        router.push("/");
+        if (cartLocal.length !== 0) {
+          const cartData: CartDataType[] = cartLocal.map((val) => ({
+            variantId: val.variantId,
+            quantity: val.quantity,
+          }));
+          mergeCart.mutate(cartData);
+        }
+        router.push("/home");
       },
     });
   };

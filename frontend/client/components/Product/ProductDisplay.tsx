@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ProductCard } from "./ProductCard";
 import { Category } from "./Category";
@@ -23,8 +23,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/ui/select";
-import { Dialog } from "../Dialog/Dialog";
+import { Dialog } from "../dialog/Dialog";
 import { Funnel } from "lucide-react";
+import { AttributeType } from "../Order/Order";
+import { useCart } from "@/contexts/CartContext";
 export const currencyFormatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
   currency: "NPR",
@@ -71,6 +73,25 @@ export interface ProductType {
   finalPrice: number;
 }
 
+export interface LocalCartType {
+  cartId: number;
+  productId: number;
+  variantId: number;
+
+  productName: string;
+  sku: string;
+  productImageUrl: string;
+  description: string;
+
+  price: number;
+  quantity: number;
+  totalPrice: number;
+  finalPrice: number;
+
+  addedDate: string;
+  attributes: AttributeType[];
+}
+
 export const ProductDisplay = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -81,7 +102,7 @@ export const ProductDisplay = () => {
     () => (tagsParam ? tagsParam.split(",") : []),
     [tagsParam],
   );
-
+  const { cartLocal, setCartLocal } = useCart();
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
     minPrice: "",
     maxPrice: "",
