@@ -1,7 +1,7 @@
-﻿USE EcommerceDB;
+﻿USE [EcommerceDB]
 GO
-
-CREATE OR ALTER PROCEDURE spProducts_GetBySlugOrId
+ 
+ALTER PROCEDURE [dbo].[spProducts_GetBySlugOrId]
 (
     @SlugOrId VARCHAR(200),
     @OnlyActive BIT = 1,
@@ -10,17 +10,16 @@ CREATE OR ALTER PROCEDURE spProducts_GetBySlugOrId
 AS
 BEGIN
     SET NOCOUNT ON;
-
+ 
     DECLARE @ProductId INT = TRY_CONVERT(INT, @SlugOrId);
-
-   
+ 
     IF @ProductId IS NULL
     BEGIN
         SELECT @ProductId = ProductId
         FROM Products
         WHERE Slug = @SlugOrId;
     END
-
+ 
     SELECT TOP 1
         p.ProductId,
         p.CategoryId,
@@ -31,7 +30,7 @@ BEGIN
         p.ShortDescription,
         p.HasVariants,
         p.IsActive,
-
+ 
         COALESCE(v.Price,
             (SELECT TOP 1 Price
              FROM ProductVariants
@@ -39,8 +38,7 @@ BEGIN
                AND (@IncludeInactiveVariants = 1 OR IsActive = 1)
              ORDER BY IsDefault DESC, Price ASC)
         ) AS Price,
-
-
+ 
         COALESCE(v.StockQuantity,
             (SELECT TOP 1 StockQuantity
              FROM ProductVariants
@@ -48,19 +46,19 @@ BEGIN
                AND (@IncludeInactiveVariants = 1 OR IsActive = 1)
              ORDER BY IsDefault DESC, Price ASC)
         ) AS StockQuantity,
-
-        CASE WHEN d.DiscountId IS NOT NULL THEN d.DiscountId ELSE NULL END AS DiscountId,
+ 
+        v.DiscountId,
         d.DiscountType,
         d.DiscountValue,
-
         CASE
+            WHEN v.DiscountId IS NULL THEN 0
             WHEN d.DiscountType = 'Percentage'
                 THEN v.Price - (v.Price * d.DiscountValue / 100)
             WHEN d.DiscountType = 'Flat'
                 THEN v.Price - d.DiscountValue
-            ELSE v.Price
+            ELSE 0
         END AS FinalPrice
-
+ 
     FROM Products p
     INNER JOIN Categories c ON p.CategoryId = c.CategoryId
     LEFT JOIN ProductVariants v
@@ -74,23 +72,26 @@ BEGIN
        AND (d.EndDate IS NULL OR d.EndDate >= GETDATE())
     WHERE p.ProductId = @ProductId
       AND (@OnlyActive = 0 OR p.IsActive = 1);
-
+ 
     SELECT
         v.VariantId,
         v.ProductId,
         v.SKU,
         v.Price,
         v.StockQuantity,
-        CASE WHEN d.DiscountId IS NOT NULL THEN d.DiscountId ELSE NULL END AS DiscountId,
+        v.DiscountId,
         d.DiscountType,
         d.DiscountValue,
+ 
         CASE
+            WHEN v.DiscountId IS NULL THEN 0
             WHEN d.DiscountType = 'Percentage'
                 THEN v.Price - (v.Price * d.DiscountValue / 100)
             WHEN d.DiscountType = 'Flat'
                 THEN v.Price - d.DiscountValue
-            ELSE v.Price
+            ELSE 0
         END AS FinalPrice,
+ 
         v.IsDefault,
         v.IsActive
     FROM ProductVariants v
@@ -102,8 +103,8 @@ BEGIN
     WHERE v.ProductId = @ProductId
       AND (@IncludeInactiveVariants = 1 OR v.IsActive = 1)
     ORDER BY v.IsDefault DESC, v.VariantId ASC;
-
-
+ 
+    /* ================= ATTRIBUTES ================= */
     SELECT
         vav.VariantId,
         pv.ProductId,
@@ -112,8 +113,8 @@ BEGIN
     FROM VariantAttributeValues vav
     INNER JOIN ProductAttributeValues pav
         ON vav.AttributeValueId = pav.AttributeValueId
-        INNER JOIN ProductVariants pv
-    ON vav.VariantId = pv.VariantId
+    INNER JOIN ProductVariants pv
+        ON vav.VariantId = pv.VariantId
     INNER JOIN ProductAttributes pa
         ON pav.AttributeId = pa.AttributeId
     WHERE vav.VariantId IN (
@@ -122,9 +123,9 @@ BEGIN
         WHERE ProductId = @ProductId
           AND (@IncludeInactiveVariants = 1 OR IsActive = 1)
     )
-
+ 
     UNION ALL
-
+ 
     SELECT
         NULL AS VariantId,
         par.ProductId,
@@ -134,8 +135,7 @@ BEGIN
     INNER JOIN ProductAttributes pa
         ON par.AttributeId = pa.AttributeId
     WHERE par.ProductId = @ProductId;
-
-
+ 
     SELECT
         pi.ProductImageId,
         pi.ProductId,
@@ -147,5 +147,3 @@ BEGIN
     ORDER BY pi.IsPrimary DESC, pi.SortOrder ASC;
 END
 GO
-
-PRINT 'Stored Procedure spProducts_GetBySlugOrId updated successfully.';

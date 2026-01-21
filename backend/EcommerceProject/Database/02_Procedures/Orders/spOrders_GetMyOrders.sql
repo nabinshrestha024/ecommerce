@@ -13,11 +13,12 @@ BEGIN
         o.OrderDate,
         o.TotalAmount,
         o.Status,
+        o.GrandTotal,
         o.PaymentStatus,
         o.ShippingCity
     FROM Orders o
     INNER JOIN USers u ON o.UserId = u.UserId
     WHERE o.UserId = @UserId
-    ORDER BY o.OrderDate ASC;
+    ORDER BY o.OrderDate DESC;
 END
 GO
