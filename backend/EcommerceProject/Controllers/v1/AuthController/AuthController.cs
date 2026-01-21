@@ -1,6 +1,8 @@
 ﻿ using EcommerceProject.Models.DTOs.User;
 using EcommerceProject.Services.Interfaces;
+using EcommerceProject.utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
@@ -37,12 +39,12 @@ namespace EcommerceProject.Controllers.v1.AuthController
             
         }
 
-        [HttpPost("login")]
+        [HttpPost("login/customer")]
         public async Task <IActionResult> Login([FromBody]LoginDto loginDto)
         {
             try
             {
-                var result = await _authService.LoginAsync(loginDto);
+                var result = await _authService.LoginAsync(loginDto, isAdminLogin: false);
 
                 return Ok(result);
             }
@@ -51,6 +53,25 @@ namespace EcommerceProject.Controllers.v1.AuthController
                 return Unauthorized(new { message = ex.Message });
             }
             catch(Exception ex)
+            {
+                return StatusCode(500, new { message = "An error Occured", error = ex.Message });
+            }
+
+        }
+        [HttpPost("login/admin")]
+        public async Task<IActionResult> AdminLogin([FromBody] LoginDto loginDto)
+        {
+            try
+            {
+                var result = await _authService.LoginAsync(loginDto, isAdminLogin: true);
+
+                return Ok(result);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, new { message = "An error Occured", error = ex.Message });
             }

@@ -9,6 +9,7 @@ import { useChangePassword } from "@/hooks/profile/useChangePassword";
 import { Input } from "../Input/Input";
 import { useState } from "react";
 import { SquarePen } from "lucide-react";
+import { MdEdit } from "react-icons/md";
 export const ChangePassword = () => {
   const {
     register,
@@ -42,15 +43,13 @@ export const ChangePassword = () => {
             Change your password
           </h3>
           <button
-            className={`rounded-xl transition-all duration-200 ${
-              isEditing
-                ? "bg-white text-[#4EA674] shadow-md hover:shadow-lg"
-                : " text-white"
+            className={`transition-all duration-200 ${
+              isEditing ? "bg-white text-[#4EA674] " : " text-white"
             }`}
             onClick={handleEditToggle}
             aria-label={isEditing ? "Cancel editing" : "Edit profile"}
           >
-            <SquarePen className="h-5 w-5" color="black" />
+            <MdEdit className="h-5 w-5 text-gray-500" />
           </button>
         </div>
         <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>

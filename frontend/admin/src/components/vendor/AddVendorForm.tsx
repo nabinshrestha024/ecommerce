@@ -41,8 +41,11 @@ export const AddVendorForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col gap-4">
-        <div>
-          <label className="block text-sm font-medium ">Company Name</label>
+        <div className="sticky top-0 text-[24px] font-bold text-[#23272E] text-center bg-white pb-2 ">
+          Add Vendor
+        </div>
+        <div className="flex gap-2 items-center">
+          <label className="block text-sm font-medium w-36">Company Name</label>
           <input
             type="text"
             placeholder="Enter company name"
@@ -51,8 +54,10 @@ export const AddVendorForm = () => {
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium ">Contact Person</label>
+        <div className="flex gap-2 items-center">
+          <label className="block text-sm font-medium w-36">
+            Contact Person
+          </label>
           <input
             type="text"
             placeholder="Enter contact person"
@@ -61,8 +66,8 @@ export const AddVendorForm = () => {
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium ">Email</label>
+        <div className="flex gap-2 items-center">
+          <label className="block text-sm font-medium w-36">Email</label>
           <input
             type="email"
             placeholder="Enter email"
@@ -71,8 +76,8 @@ export const AddVendorForm = () => {
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium ">Phone</label>
+        <div className="flex gap-2 items-center">
+          <label className="block text-sm font-medium w-36">Phone</label>
           <input
             type="tel"
             placeholder="Enter phone number"
@@ -81,8 +86,8 @@ export const AddVendorForm = () => {
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium ">Address</label>
+        <div className="flex gap-2 items-center">
+          <label className="block text-sm font-medium w-36">Address</label>
           <input
             type="text"
             placeholder="Enter address"
@@ -97,7 +102,7 @@ export const AddVendorForm = () => {
             variant={"default"}
             className="px-4 py-4  text-white rounded-md "
           >
-            Add Vendor
+            Save Vendor
           </Button>
         </div>
       </div>

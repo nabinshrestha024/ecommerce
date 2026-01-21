@@ -1,12 +1,7 @@
 ﻿USE [EcommerceDB]
 GO
-/****** Object:  StoredProcedure [dbo].[spCart_UpdateCartQuantity]    Script Date: 1/6/2026 10:27:18 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 
-ALTER   PROCEDURE [dbo].[spCart_UpdateCartQuantity]
+CREATE OR ALTER   PROCEDURE spCart_UpdateCartQuantity
     @CartId INT,
     @Quantity INT
 AS
@@ -50,4 +45,5 @@ BEGIN
     UPDATE ShoppingCarts
     SET Quantity = @Quantity
     WHERE CartId = @CartId
+    RETURN;
 END

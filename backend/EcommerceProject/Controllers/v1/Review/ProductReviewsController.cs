@@ -9,7 +9,6 @@ namespace EcommerceProject.Controllers.v1.Review
 {
     [ApiController]
     [Route("v1/reviews")]
-    [Authorize(Roles = "Customer")]
     public class ProductReviewsController : ControllerBase
     {
         private readonly IReviewService _service;

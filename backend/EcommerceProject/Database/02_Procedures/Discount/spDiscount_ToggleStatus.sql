@@ -2,7 +2,7 @@
 GO
 
 
-CREATE OR ALTER   PROCEDURE [dbo].[spDiscount_ToggleStatus]
+ALTER   PROCEDURE [dbo].[spDiscount_ToggleStatus]
     @DiscountId INT,
     @IsActive BIT
 AS

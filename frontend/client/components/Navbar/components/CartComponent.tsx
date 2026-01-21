@@ -35,7 +35,7 @@ export const CartComponent = () => {
     data?.filter((item) => selectedCartItemIds.includes(item.cartId)) ?? [];
   const totalPrice =
     selectedItems?.reduce(
-      (sum, val) => sum + val.quantity * val.totalPrice,
+      (sum, val) => sum + val.quantity * val.finalPrice,
       0,
     ) ?? 0;
   useEffect(() => {
