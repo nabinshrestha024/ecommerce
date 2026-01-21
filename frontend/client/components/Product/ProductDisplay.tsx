@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/ui/select";
-import { Dialog } from "../dialog/Dialog";
+import { Dialog } from "../Dialog/Dialog";
 import { Funnel } from "lucide-react";
 export const currencyFormatter = new Intl.NumberFormat("en-IN", {
   style: "currency",

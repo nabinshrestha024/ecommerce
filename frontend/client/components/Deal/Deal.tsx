@@ -5,17 +5,25 @@ import { useProduct } from "@/hooks/product/useProduct";
 import { ProductCardSkeleton } from "../TrendingProduct/component/ProductCardLoading";
 import { ProductCard } from "../Product/ProductCard";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export const Deal = () => {
   const router = useRouter();
-  const { data, isLoading, isError } = useProduct();
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 100,
+  });
+  const { data, isLoading, isError } = useProduct(
+    pagination.pageIndex + 1,
+    pagination.pageSize,
+  );
 
   const placeholderCount = 4;
   return (
     <div className="w-full px-6 mx-auto flex items-center justify-center">
       <div className="w-full max-w-[1216px]">
         <div className="w-full flex justify-between items-center">
-          <h1 className="font-bold text-xl">Limited-Time Deal</h1>
+          <h1 className="font-bold text-xl">Limited Time Deal</h1>
           <Button
             variant={"outline"}
             className="rounded-2xl border border-black text-xs"
@@ -34,9 +42,11 @@ export const Deal = () => {
             Array.from({ length: placeholderCount }).map((_, index) => (
               <ProductCardSkeleton key={index} />
             ))}
-          {data?.items?.map((val, index) => {
-            return index < 4 && <ProductCard product={val} />;
-          })}
+          {data?.items
+            ?.filter((qty) => qty.stockQuantity > 0)
+            .map((val, index) => {
+              return index < 4 && <ProductCard product={val} />;
+            })}
         </div>
       </div>
     </div>

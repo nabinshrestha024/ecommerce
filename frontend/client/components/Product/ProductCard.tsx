@@ -15,6 +15,7 @@ import { Dialog } from "../Dialog/Dialog";
 import { Variant } from "./ProductDetails";
 import { Card } from "../card/Card";
 import { currencyFormatter, ProductType } from "./ProductDisplay";
+import { toast } from "sonner";
 
 interface ProductCardProps {
   product: ProductType;
@@ -53,10 +54,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   );
 
   const handleAddToCart = (productId: number, quantity: number) => {
-    addToCart.mutate({
-      variantId: productId,
-      quantity: quantity,
-    });
+    if (token) {
+      addToCart.mutate({
+        variantId: productId,
+        quantity: quantity,
+      });
+    } else {
+      toast.message("Login to add to cart");
+    }
   };
 
   const handleIncrease = () => {
