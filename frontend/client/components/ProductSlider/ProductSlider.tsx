@@ -12,7 +12,7 @@ export const ProductSlider = () => {
     () => Autoplay({ delay: 6000, stopOnInteraction: true }),
     [],
   );
-  const Slides = useFetchBanner();
+  const slides = useFetchBanner();
 
   return (
     <Carousel
@@ -22,7 +22,7 @@ export const ProductSlider = () => {
       opts={{ loop: true }}
       plugins={[autoplay]}
       items={
-        Slides.data?.data.map((slide, index) => (
+        slides.data?.data.map((slide, index) => (
           <div key={index} className="relative w-full h-[400px]">
             <img
               src={slide.imageUrl}
