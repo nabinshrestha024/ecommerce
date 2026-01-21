@@ -13,5 +13,7 @@
         public string PaymentStatus { get; set; } = default!;
         public string ShippingCity { get; set; } = default!;
 
+        public List<OrderItemDto> Items { get; set; } = new();
+
     }
 }
