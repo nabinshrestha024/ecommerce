@@ -5,6 +5,7 @@ CREATE OR ALTER PROCEDURE spProducts_GetPaged
 (
     @CategoryId     INT             = NULL,
     @Search         VARCHAR(200)    = NULL,
+    @CategoryName   VARCHAR(200)    = NULL,
     @TagNames       VARCHAR(MAX)    = NULL,
     @MinPrice       DECIMAL(10,2)   = NULL,
     @MaxPrice       DECIMAL(10,2)   = NULL,
