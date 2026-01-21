@@ -19,6 +19,7 @@ import {
   LocalCartType,
 } from "@/components/Product/ProductDisplay";
 import { useCart } from "@/contexts/CartContext";
+import { toast } from "sonner";
 
 export const CartComponent = () => {
   const [open, setOpen] = useState(false);
@@ -402,13 +403,14 @@ export const CartComponent = () => {
                         </div>
                         <button
                           className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                          onClick={() =>
+                          onClick={() => {
                             setCartLocal((prev) =>
                               prev.filter(
                                 (value) => value.cartId !== val.cartId,
                               ),
-                            )
-                          }
+                            );
+                            toast.success("Item deleted from cart");
+                          }}
                         >
                           <FaTrash size={16} />
                         </button>
