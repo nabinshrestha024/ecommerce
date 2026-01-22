@@ -2,13 +2,15 @@ import { Notification } from "@/components/Notification/Notification";
 import { User, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { IoReorderThreeOutline } from "react-icons/io5";
+import { IoLogOut, IoReorderThreeOutline } from "react-icons/io5";
 import { CartComponent } from "./CartComponent";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/ui/button";
 import { ConfirmationDialog } from "@/components/ConfirmationDialog/ConfirmationDialog";
 import { IoMdExit } from "react-icons/io";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { FaUserLarge } from "react-icons/fa6";
+import { DropDown } from "@/components/DropDown/DropDown";
 
 const data = [
   {
@@ -30,6 +32,8 @@ const data = [
 ];
 
 export const Sidebar = () => {
+  const router = useRouter();
+  const [profileOpen, setProfileOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const { token, logout } = useAuth();
   const isAuth = Boolean(token);
@@ -37,23 +41,45 @@ export const Sidebar = () => {
 
   return (
     <div className="flex items-center gap-3">
+      {isAuth && <Notification />}
+      <CartComponent />
       {isAuth ? (
-        <Link href="/profile">
-          <User size={20} />
-        </Link>
+        <DropDown
+          open={profileOpen}
+          onOpenChange={setProfileOpen}
+          side="bottom"
+          align="end"
+          sideOffset={15}
+          alignOffset={-10}
+          trigger={<FaUserLarge size={19} />}
+        >
+          <div className="w-[150px] flex flex-col gap-2">
+            <div
+              className="text-sm px-2 py-1 border-b cursor-pointer"
+              onClick={() => {
+                setProfileOpen(false);
+                router.push("/profile");
+              }}
+            >
+              My Profile
+            </div>
+
+            <ConfirmationDialog
+              trigger={
+                <button className="flex items-center gap-2 text-sm rounded px-2 py-1 cursor-pointer">
+                  <IoLogOut size={16} />
+                  Logout
+                </button>
+              }
+              confirmFunc={logout}
+              description="Are you sure you want to logout?"
+            />
+          </div>
+        </DropDown>
       ) : (
         <Link href="/login">
           <Button>Login</Button>
         </Link>
-      )}
-      {isAuth && <Notification />}
-      <CartComponent />
-      {isAuth && (
-        <ConfirmationDialog
-          trigger={<IoMdExit className="text-xl text-black cursor-pointer" />}
-          confirmFunc={logout}
-          description="Are you sure you want to logout?"
-        />
       )}
       <IoReorderThreeOutline
         className="text-2xl"

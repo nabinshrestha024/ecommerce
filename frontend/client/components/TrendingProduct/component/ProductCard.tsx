@@ -8,7 +8,7 @@ export const ProductCard = () => {
   const router = useRouter();
   return (
     <div>
-      <div className="w-full flex flex-col  gap-4 lg:gap-8 mx-auto max-w-[1216px]">
+      <div className="w-full flex flex-col gap-4 lg:gap-8 mx-auto max-w-[1216px]">
         <div className="flex justify-between items-center">
           <div className="font-bold text-xl text-emerald-600">
             Trending Product

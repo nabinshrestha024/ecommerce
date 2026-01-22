@@ -37,8 +37,8 @@ export const ChangePassword = () => {
       rootClassName="p-0 border-none shadow-none rounded-none overflow-hidden"
     >
       <div>
-        <div className="flex w-full justify-between ">
-          <h3 className="text-2xl font-semibold text-gray-900 flex items-center gap-2 mb-5">
+        <div className="flex w-full justify-between items-center mb-5">
+          <h3 className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
             Change your password
           </h3>
           <button

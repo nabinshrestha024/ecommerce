@@ -247,16 +247,16 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             </span> */}
             <div>
               {activeVariant?.finalPrice === 0 ? (
-                <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                <span className="text-[18px] font-bold text-[#4EA674]">
                   {currencyFormatter.format(product.price ?? 0)}
                 </span>
               ) : (
-                <div className="flex flex-col">
-                  <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
+                <div className="flex items-center gap-2">
+                  <span className="text-[18px] font-bold text-[#4EA674]">
                     {currencyFormatter.format(product?.finalPrice ?? 0)}
                   </span>
                   {product.discountId && (
-                    <span className="md:text-[12px] text-[12px] font-bold  text-red-500 line-through">
+                    <span className="text-[15px] font-bold  text-red-500 line-through">
                       {currencyFormatter.format(product?.price ?? 0)}
                     </span>
                   )}
@@ -266,16 +266,16 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           </Link>
         </div>
       </div>
-      <div className="flex justify-start lg:justify-between flex-row items-center md:mt-2">
+      <div className="flex justify-between flex-row items-center md:mt-2">
         <Link href={`/product/id/${product.slug}`}>
-          <div className="text-[14px] text-[#6467F2] font-normal hidden lg:block">
+          <div className="text-[14px] text-[#6467F2] font-normal">
             View Details
           </div>
         </Link>
         <Dialog
           triggerText={
             <Button
-              className="px-5 py-4 text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] hover:bg-[#4EA674] hover:text-white rounded-[200px]"
+              className="text-[14px] font-bold bg-white border border-[#4EA674] text-[#4EA674] hover:bg-[#4EA674] hover:text-white rounded-[200px]"
               onPointerDownCapture={() => setQuantity(1)}
             >
               Add to cart

@@ -158,7 +158,7 @@ export const CartComponent = () => {
       )}
 
       <aside
-        className={`fixed right-0 top-0 z-50 h-screen w-full max-w-md bg-slate-50 shadow-2xl transform transition-transform duration-500 ease-out ${
+        className={`fixed right-0 top-0 z-50 h-screen w-[300px] md:w-full max-w-md bg-slate-50 shadow-2xl transform transition-transform duration-500 ease-out ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >

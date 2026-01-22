@@ -12,6 +12,7 @@ import { ProductCard } from "./ProductCard";
 import { Card } from "../Card/Card";
 import { ProductReview } from "./Review/ProductReview";
 import { currencyFormatter } from "./ProductDisplay";
+import { Spinner } from "../Spinner/Spinner";
 
 export interface Variant {
   variantId: number;
@@ -38,37 +39,38 @@ const getDefaultSelectedVariants = (
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const productItems = useProductDetails(id as string);
+  const {
+    data: productItems,
+    isLoading,
+    isError,
+  } = useProductDetails(id as string);
   const addToCart = useAddToCart();
   const { token } = useAuth();
 
-  const defaultImage = productItems.data?.images[0]?.imageUrl;
+  const defaultImage = productItems?.images[0]?.imageUrl;
   const [images, setImages] = useState<string | undefined>(defaultImage);
   const displayedImage = images ?? defaultImage;
 
   const [quantity, setQuantity] = useState(1);
   const [selectedVariants, setSelectedVariants] = useState<
     Record<string, string | undefined>
-  >(() => getDefaultSelectedVariants(productItems.data?.variants));
+  >(() => getDefaultSelectedVariants(productItems?.variants));
 
-  if (
-    productItems.data?.variants &&
-    Object.keys(selectedVariants).length === 0
-  ) {
-    const defaults = getDefaultSelectedVariants(productItems.data.variants);
+  if (productItems?.variants && Object.keys(selectedVariants).length === 0) {
+    const defaults = getDefaultSelectedVariants(productItems.variants);
     if (Object.keys(defaults).length > 0) {
       setSelectedVariants(defaults);
     }
   }
 
-  const activeVariant = productItems.data?.variants?.find((variant) =>
+  const activeVariant = productItems?.variants?.find((variant) =>
     Object.entries(selectedVariants).every(
       ([key, value]) => variant.attributes[key] === value,
     ),
   );
 
   const handleVariantChange = (attributeName: string, value: string) => {
-    const variants = productItems.data?.variants ?? [];
+    const variants = productItems?.variants ?? [];
     const nextSelection = { ...selectedVariants, [attributeName]: value };
 
     Object.keys(nextSelection).forEach((key) => {
@@ -117,12 +119,11 @@ const ProductDetails = () => {
     });
   };
 
-  if (productItems.isLoading) return <p>Loading product details...</p>;
-  if (productItems.isError) return <p>Failed to load product details</p>;
+  const imageUrls = productItems?.images?.map((img) => img.imageUrl);
 
-  const imageUrls = productItems.data?.images?.map((img) => img.imageUrl);
-
-  return (
+  return isLoading || isError ? (
+    <Spinner />
+  ) : (
     <div className="w-full px-4 sm:px-6 md:px-10 lg:px-20 py-6 md:py-10 flex flex-col gap-5">
       <Card className="p-0 ">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 py-2">
@@ -160,10 +161,10 @@ const ProductDetails = () => {
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <h1 className="text-[28px] md:text-2xl font-bold">
-                  {productItems.data?.name}
+                  {productItems?.name}
                 </h1>
                 <p className="text-md md:text-[18px] ">
-                  {productItems.data?.shortDescription}
+                  {productItems?.shortDescription}
                 </p>
               </div>
 
@@ -192,7 +193,7 @@ const ProductDetails = () => {
                       Category:{" "}
                     </span>
                     <p className="text-[18px] font-bold">
-                      {productItems.data?.categoryName}
+                      {productItems?.categoryName}
                     </p>
                   </div>
                   <div className="flex gap-2 items-center">
@@ -207,7 +208,7 @@ const ProductDetails = () => {
               <div className="flex gap-5">
                 <div className="text-[18px] font-semibold">Variants: </div>
                 <div className="flex flex-col gap-3">
-                  {productItems.data?.availableAttributes?.map(
+                  {productItems?.availableAttributes?.map(
                     (variant, attrIndex) => (
                       <div key={variant.name}>
                         <div className="mb-1 text-[18px] font-bold">
@@ -221,7 +222,7 @@ const ProductDetails = () => {
                             const disabled =
                               attrIndex !== 0 &&
                               !isAvailable(
-                                productItems.data?.variants ?? [],
+                                productItems?.variants ?? [],
                                 selectedVariants,
                                 variant.name,
                                 value,
@@ -298,19 +299,19 @@ const ProductDetails = () => {
 
             <div className="space-y-1.5">
               <div className="text-[20px] font-bold ">Product details:</div>
-              <div>{productItems.data?.description}</div>
+              <div>{productItems?.description}</div>
             </div>
           </div>
         </div>
       </Card>
 
-      {productItems.data?.productId && (
-        <ProductReview productId={productItems.data?.productId} />
+      {productItems?.productId && (
+        <ProductReview productId={productItems?.productId} />
       )}
 
       <div className="font-bold text-lg sm:text-xl">Related Products</div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
-        {productItems?.data?.relatedProducts.map(
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
+        {productItems?.relatedProducts.map(
           (val, index) =>
             index < 5 && <ProductCard key={val.productId} product={val} />,
         )}
