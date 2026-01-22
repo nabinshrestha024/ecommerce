@@ -10,6 +10,10 @@ interface DropDownProp {
   className?: string;
   trigger?: ReactNode;
   triggerClassName?: string;
+  sideOffset?: number;
+  alignOffset?: number;
+  side?: "top" | "right" | "bottom" | "left";
+  align?: "start" | "center" | "end";
 }
 
 export const DropDown = ({
@@ -17,13 +21,23 @@ export const DropDown = ({
   className,
   trigger,
   triggerClassName,
+  sideOffset,
+  alignOffset,
+  side = "bottom",
+  align = "center",
 }: DropDownProp) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className={triggerClassName}>
         {trigger}
       </DropdownMenuTrigger>
-      <DropdownMenuContent className={className}>
+      <DropdownMenuContent
+        className={className}
+        side={side}
+        align={align}
+        sideOffset={sideOffset}
+        alignOffset={alignOffset}
+      >
         {children}
       </DropdownMenuContent>
     </DropdownMenu>

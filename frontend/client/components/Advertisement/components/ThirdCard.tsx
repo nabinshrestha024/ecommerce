@@ -48,7 +48,7 @@ export const ThirdCard = () => {
             </h3>
             <p className="text-xl font-bold text-blue-600 mt-1">Rs. 35,999</p>
             <Link href={`/product?categoryId=1`}>
-              <button className="mt-3 bg-[#EAF8E7] text-[#023337] px-4 py-2 rounded-2xl font-medium hover:bg-[#d4f0cf] transition-colors duration-200 cursor-pointer">
+              <button className="mt-3 bg-[#EAF8E7] text-black text-[14px] px-8 py-1 rounded-2xl font-bold hover:bg-[#d4f0cf] transition-colors duration-200 cursor-pointer">
                 Buy Now
               </button>
             </Link>

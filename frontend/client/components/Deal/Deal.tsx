@@ -23,14 +23,15 @@ export const Deal = () => {
     <div className="w-full px-6 mx-auto flex items-center justify-center">
       <div className="w-full max-w-[1216px]">
         <div className="w-full flex justify-between items-center">
-          <div className="font-bold text-xl">Limited Time Deal</div>
-          <Button
-            variant={"outline"}
-            className="rounded-2xl border border-black text-xs"
+          <div className="font-bold text-xl text-emerald-600">
+            Limited Time Deal
+          </div>
+          <div
+            className="text-[14px] underline underline-offset-2 text-[#6467F2] font-bold cursor-pointer"
             onClick={() => router.push("/product")}
           >
             View All
-          </Button>
+          </div>
         </div>
         <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mt-8">
           {isLoading &&

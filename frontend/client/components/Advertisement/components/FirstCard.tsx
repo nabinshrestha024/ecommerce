@@ -25,9 +25,9 @@ export const FirstCard = () => {
           <Link
             href={`/product?categoryId=17`}
             className="absolute bottom-1 translate-y-1/2 
-                       bg-[#EAF8E7] text-[#023337] 
-                       px-4 py-2 rounded-2xl text-sm font-medium
-                       hover:bg-[#dff3db] transition"
+                       bg-[#EAF8E7] text-black 
+                       px-8 py-1  rounded-2xl text-[14px] font-bold
+                       hover:bg-[#dff3db] transition "
           >
             Shop Now
           </Link>
