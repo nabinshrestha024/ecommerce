@@ -1,14 +1,17 @@
 "use client";
 import * as Slider from "@radix-ui/react-slider";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type PriceSliderProps = {
   priceRange: [number, number];
   onChangeAction: (priceRange: [number, number]) => void;
   maxPrice?: number;
+  setPriceRange: Dispatch<SetStateAction<[number, number]>>;
 };
 
 export const RangeSlider = ({
   priceRange,
+  setPriceRange,
   onChangeAction,
   maxPrice,
 }: PriceSliderProps) => {
@@ -18,14 +21,17 @@ export const RangeSlider = ({
       onChangeAction([value, priceRange[1]]);
     }
   };
-
   const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value) || 0;
     if (value >= priceRange[0] && value <= (maxPrice || 1000)) {
       onChangeAction([priceRange[0], value]);
     }
   };
-
+  useEffect(() => {
+    if (maxPrice && priceRange[1] === 0) {
+      setPriceRange([0, maxPrice]);
+    }
+  }, [maxPrice]);
   return (
     <div>
       <div>

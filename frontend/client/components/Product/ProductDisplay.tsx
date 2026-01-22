@@ -12,6 +12,13 @@ import { Dialog } from "../dialog/Dialog";
 import { Funnel } from "lucide-react";
 import { AttributeType } from "../Order/Order";
 import { X } from "lucide-react";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/ui/breadcrumb";
 export const currencyFormatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
   currency: "NPR",
@@ -343,6 +350,42 @@ export const ProductDisplay = () => {
       </div>
 
       <div className="space-y-6 w-full">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/product">Product</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            {categoryId === 1 && (
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/product?categoryId=1">
+                  Electronics
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            )}
+            {categoryId === 15 && (
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/product?categoryId=15">
+                  Shoes
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            )}
+            {categoryId === 17 && (
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/product?categoryId=17">
+                  Clothes
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            )}
+            {categoryId === 24 && (
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/product?categoryId=24">
+                  Groceries
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            )}
+          </BreadcrumbList>
+        </Breadcrumb>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-3 md:gap-6">
           {itemsState.items
             .filter((p) => (p.stockQuantity ?? 0) > 0)

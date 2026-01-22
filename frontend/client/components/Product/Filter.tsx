@@ -127,6 +127,7 @@ export const Filter = ({
 
       <RangeSlider
         priceRange={priceRange}
+        setPriceRange={setPriceRange}
         onChangeAction={setPriceRange}
         maxPrice={highestPrice}
       />
