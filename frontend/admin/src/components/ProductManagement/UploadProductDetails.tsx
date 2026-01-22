@@ -10,7 +10,13 @@ import { useGetCategories } from "@/hooks/product/useGetCategories";
 import { FormSection } from "./FormSection";
 import { useGetAttributes } from "@/hooks/attribute/useGetAttribute";
 import { Checkbox } from "@/ui/checkbox";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/ui/select.tsx";
 type ImageItem = {
   file: File;
   preview: string;
@@ -96,15 +102,18 @@ export const UploadProductDetails = forwardRef((_, ref) => {
   }, [images]);
 
   return (
-    <Card className="w-full rounded-lg p-6">
-      <h1 className="text-2xl font-bold text-foreground">Product Details</h1>
+    <Card className="w-full rounded-lg p-0 border-0 shadow-none">
+      {/* <h1 className="text-2xl font-bold text-foreground">Product Details</h1> */}
 
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-5">
         <FormSection title="Images">
           <div className="flex flex-col gap-4">
-            <label htmlFor="productImage" className="block cursor-pointer">
+            <label
+              htmlFor="productImage"
+              className=" cursor-pointer font-medium text-gray-700"
+            >
               <div
-                className={`relative flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed p-8 transition-colors ${
+                className={`relative col-span-3 flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed p-8 transition-colors ${
                   errors.images
                     ? "border-destructive bg-destructive/5"
                     : "border-input bg-secondary/30 hover:border-primary hover:bg-secondary/50"
@@ -130,7 +139,7 @@ export const UploadProductDetails = forwardRef((_, ref) => {
               accept="image/*"
               multiple
               {...register("images", { onChange: handleFileChange })}
-              className="hidden"
+              className="hidden flex-1"
             />
 
             {images.length > 0 && (
@@ -141,7 +150,7 @@ export const UploadProductDetails = forwardRef((_, ref) => {
                       src={img.preview || "/placeholder.svg"}
                       alt={`Product preview ${index + 1}`}
                       onClick={() => handleSetPrimaryImage(index)}
-                      className={`aspect-square w-full cursor-pointer rounded-lg object-cover transition-all ${
+                      className={`aspect-square w-full  cursor-pointer rounded-none object-cover transition-all ${
                         index === primaryImage
                           ? "ring-2 ring-primary"
                           : "ring-1 ring-input group-hover:ring-primary"
@@ -167,82 +176,89 @@ export const UploadProductDetails = forwardRef((_, ref) => {
           </div>
         </FormSection>
 
-        <div className="flex flex-col gap-2">
-          <h2 className="text-lg font-semibold text-foreground">
-            Product Category <span className="text-destructive">*</span>
-          </h2>
-          <select
-            id="categoryId"
-            {...register("categoryId")}
-            defaultValue=""
-            className={`rounded-md border-2 bg-background px-3 py-2 text-sm transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary ${
-              errors.categoryId ? "border-destructive" : "border-input"
-            }`}
-          >
-            <option value="" disabled className="text-muted-foreground">
-              Select a category...
-            </option>
-            {categories?.map(
-              (category: { categoryId: number; name: string }) => (
-                <option
-                  key={category.categoryId}
-                  value={category.categoryId}
-                  className="text-foreground bg-background "
+        <div className="grid grid-cols-4 gap-4 items-center  mt-5">
+          <label className="font-medium text-gray-700">Category</label>
+          <div className="col-span-3">
+            <Controller
+              name="categoryId"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  value={field.value?.toString()}
+                  onValueChange={(value) => field.onChange(Number(value))}
                 >
-                  {category.name}
-                </option>
-              ),
-            )}
-          </select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {categories.map(
+                      (val: { categoryId: number; name: string }) => (
+                        <SelectItem
+                          key={val.categoryId}
+                          value={String(val.categoryId)}
+                        >
+                          {val.name}
+                        </SelectItem>
+                      ),
+                    )}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
         </div>
 
         <FormSection title="Attributes">
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-            {attributesData?.map((item: AttributeItem) => (
-              <div
-                key={item.id || item.name}
-                className="flex items-center gap-2"
-              >
-                <Controller
-                  control={control}
-                  name="attributes"
-                  render={({ field }) => {
-                    const current: string[] = field.value || [];
-                    const checked = current.includes(item.name);
-                    return (
-                      <>
-                        <Checkbox
-                          id={`attr-${item.name}`}
-                          checked={checked}
-                          onClick={() => {
-                            if (checked) {
-                              field.onChange(
-                                current.filter((v) => v !== item.name),
-                              );
-                            } else {
-                              field.onChange([...current, item.name]);
-                            }
-                          }}
-                          className="border-[#4EA764] data-[state=checked]:bg-[#4EA764] data-[state=checked]:border-[#4EA764] data-[state=checked]:text-white"
-                        />
-                        <label
-                          htmlFor={`attr-${item.name}`}
-                          className="text-sm font-medium cursor-pointer text-foreground"
-                        >
-                          {item.name}
-                        </label>
-                      </>
-                    );
-                  }}
-                />
-              </div>
-            ))}
+          <div className="col-span-3">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-3 items-center ">
+              {attributesData?.map((item: AttributeItem) => (
+                <div
+                  key={item.id || item.name}
+                  className="flex items-center gap-2"
+                >
+                  <Controller
+                    control={control}
+                    name="attributes"
+                    render={({ field }) => {
+                      const current: string[] = field.value || [];
+                      const checked = current.includes(item.name);
+                      return (
+                        <>
+                          <Checkbox
+                            id={`attr-${item.name}`}
+                            checked={checked}
+                            onClick={() => {
+                              if (checked) {
+                                field.onChange(
+                                  current.filter((v) => v !== item.name),
+                                );
+                              } else {
+                                field.onChange([...current, item.name]);
+                              }
+                            }}
+                            className="border-[#4EA764] data-[state=checked]:bg-[#4EA764] data-[state=checked]:border-[#4EA764] data-[state=checked]:text-white"
+                          />
+                          <label
+                            htmlFor={`attr-${item.name}`}
+                            className="text-sm font-medium cursor-pointer text-foreground"
+                          >
+                            {item.name}
+                          </label>
+                        </>
+                      );
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {errors.attributes && (
+              <p className="text-xs text-destructive">
+                {errors.attributes?.message as string}
+              </p>
+            )}
           </div>
-          {errors.attributes && (
-            <p className="text-xs text-destructive">
-              {errors.attributes?.message as string}
-            </p>
-          )}
         </FormSection>
       </div>
     </Card>

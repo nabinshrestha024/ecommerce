@@ -3,6 +3,7 @@
 import { Card } from "@/ui/card";
 import { Checkbox } from "@/ui/checkbox";
 import { useFormContext } from "react-hook-form";
+import { Input } from "../Input/Input";
 
 export const BasicDetails = () => {
   const {
@@ -11,57 +12,50 @@ export const BasicDetails = () => {
   } = useFormContext();
 
   return (
-    <Card className="w-full rounded-lg p-6">
-      <h1 className="text-2xl font-bold text-foreground">Basic Details</h1>
+    <Card className="w-full rounded-lg p-0 border-0 shadow-none">
+      {/* <h1 className="text-2xl font-bold text-foreground">Basic Details</h1> */}
 
-      <div className=" flex flex-col gap-6">
-        <div className="flex flex-col gap-2">
-          <label htmlFor="name" className="text-sm font-medium text-foreground">
-            Product Name <span className="text-destructive">*</span>
+      <div className=" flex flex-col gap-5">
+        <div className="grid grid-cols-4 gap-4 items-center mt-5">
+          <label htmlFor="name" className="font-medium text-gray-700 ">
+            Name
           </label>
-          <input
-            id="name"
-            type="text"
-            placeholder="Enter product name"
-            className={`rounded-md border-2 border-input bg-background px-3 py-2 text-sm transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary ${
-              errors.name ? "border-red-500 " : ""
-            }`}
-            {...register("name")}
-          />
+          <div className="col-span-3">
+            <input
+              id="name"
+              type="text"
+              placeholder="Enter product name"
+              className={` w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 ${
+                errors.name ? "border-red-500 " : ""
+              }`}
+              {...register("name")}
+            />
+          </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <label
-            htmlFor="shortDescription"
-            className="text-sm font-medium text-foreground"
-          >
-            Short Description <span className="text-destructive">*</span>
-          </label>
-          <textarea
-            id="shortDescription"
-            placeholder="Enter short description"
-            className={`rounded-md border-2 border-input bg-background px-3 py-2 text-sm transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary ${
-              errors.shortDescription ? "border-red-500 " : ""
-            }`}
-            {...register("shortDescription")}
-          />
+        <div className="grid grid-cols-4 items-center gap-4 mt-5">
+          <label className="font-medium text-gray-700 ">Description</label>
+          <div className="col-span-3">
+            <Input
+              type="textarea"
+              placeholder="Enter description"
+              rows={4}
+              {...register("description")}
+              className={`w-full  px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 ${errors.description ? "border-red-500" : ""}`}
+            />
+          </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <label
-            htmlFor="description"
-            className="text-sm font-medium text-foreground"
-          >
-            Description <span className="text-destructive">*</span>
-          </label>
-          <textarea
-            id="description"
-            placeholder="Enter product description"
-            className={`rounded-md border-2 border-input bg-background px-3 py-2 text-sm transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary ${
-              errors.description ? "border-red-500 " : ""
-            }`}
-            {...register("description")}
-          />
+        <div className="grid grid-cols-4 items-center gap-4 mt-5">
+          <label className="font-medium text-gray-700 ">Short Desc</label>
+          <div className="col-span-3">
+            <Input
+              type="textarea"
+              placeholder="Enter short description"
+              {...register("shortDescription")}
+              className={`w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 ${errors.shortDescription ? "border-red-500" : ""}`}
+            />
+          </div>
         </div>
 
         <div className="flex items-center gap-3 rounded-md bg-secondary/30 ">
@@ -72,7 +66,7 @@ export const BasicDetails = () => {
           />
           <label
             htmlFor="highlightFeatured"
-            className="text-sm font-medium cursor-pointer text-foreground"
+            className="font-medium text-gray-700"
           >
             Highlight this product in featured section
           </label>

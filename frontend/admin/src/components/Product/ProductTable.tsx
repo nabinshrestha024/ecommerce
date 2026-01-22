@@ -99,12 +99,12 @@ export const ProductTable = () => {
           >
             <div
               style={{ width: 200 }}
-              className="h-30 border border-[#E5E7EB] rounded-md overflow-hidden "
+              className="h-30 w-30 rounded-md overflow-hidden "
             >
               <img
                 src={value ?? ""}
                 alt="image"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-content"
               />
             </div>
           </div>
