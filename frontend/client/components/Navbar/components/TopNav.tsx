@@ -18,6 +18,7 @@ import { ConfirmationDialog } from "@/components/ConfirmationDialog/Confirmation
 import { Sidebar } from "./Sidebar";
 import { IoLogOut } from "react-icons/io5";
 import { Notification } from "@/components/Notification/Notification";
+import { DropDown } from "@/components/DropDown/DropDown";
 
 interface AttributeType {
   name: string;
@@ -64,6 +65,12 @@ export const TopNav = () => {
   }, [debounceSearch]);
 
   const search = useSearch(debounceSearch);
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  const handleProfile = () => {
+    setProfileOpen(true);
+  };
+
   return (
     <div className="w-full bg-white flex justify-between px-5 lg:px-10 items-center py-5 border-b">
       <div className="flex gap-2 md:divide-x-2">
@@ -157,32 +164,34 @@ export const TopNav = () => {
             </div>
           )}
         </div>
+        <Notification />
+        <CartComponent />
 
         {isAuth ? (
-          <Link href="/profile">
-            <FaUserLarge size={19} />
-          </Link>
+          <DropDown
+            trigger={<FaUserLarge size={19} className="cursor-pointer" />}
+          >
+            <div className="w-[150px] flex flex-col gap-2">
+              <Link href="/profile" className="text-sm px-2 py-1 border-b">
+                My Profile
+              </Link>
+
+              <ConfirmationDialog
+                trigger={
+                  <button className="flex items-center gap-2 text-sm rounded px-2 py-1">
+                    <IoLogOut size={16} />
+                    Logout
+                  </button>
+                }
+                confirmFunc={logout}
+                description="Are you sure you want to logout?"
+              />
+            </div>
+          </DropDown>
         ) : (
           <Link href="/login">
             <Button>Login</Button>
           </Link>
-        )}
-
-        <Notification />
-
-        <CartComponent />
-
-        {isAuth && (
-          <ConfirmationDialog
-            trigger={
-              <IoLogOut
-                className="text-xl text-black cursor-pointer"
-                size={27}
-              />
-            }
-            confirmFunc={logout}
-            description="Are you sure you want to logout?"
-          />
         )}
       </div>
 

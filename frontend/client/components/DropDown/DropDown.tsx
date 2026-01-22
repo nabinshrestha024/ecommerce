@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
 
 interface DropDownProp {
   children: ReactNode;
-  className: string;
+  className?: string;
   trigger?: ReactNode;
   triggerClassName?: string;
 }

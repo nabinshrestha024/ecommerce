@@ -16,7 +16,7 @@ export const Explore = () => {
     <div className="w-full px-6 mx-auto flex items-center justify-center">
       <div className="w-full max-w-[1216px]">
         <div className="w-full flex justify-between items-center">
-          <h1 className="font-bold text-xl">Start Exploring Now</h1>
+          <div className="font-bold text-xl">Start Exploring Now</div>
           <Button
             variant={"outline"}
             className="rounded-2xl border border-black text-xs"

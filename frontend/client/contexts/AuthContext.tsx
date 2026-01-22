@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { createContext, useContext, useState } from "react";
 
 interface AuthContextType {
@@ -25,8 +26,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setTokenState(token);
   };
 
+  const router = useRouter();
   const logout = () => {
     setToken(null);
+    router.push("/home");
   };
 
   return (

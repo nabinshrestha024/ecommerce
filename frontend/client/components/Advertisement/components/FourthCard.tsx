@@ -13,7 +13,7 @@ export const FourthCard = () => {
       {advertisements.map((ad, index) => (
         <div
           key={index}
-          className="flex justify-center items-center rounded-lg cursor-pointer hover:shadow-lg transition-shadow duration-300"
+          className="flex justify-center items-center rounded-lg hover:shadow-lg transition-shadow duration-300"
         >
           <div className="relative w-[327px] h-[190px]">
             <Image
