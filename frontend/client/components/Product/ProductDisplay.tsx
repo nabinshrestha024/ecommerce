@@ -57,6 +57,12 @@ export interface ProductType {
   availableAttributes?: VariantAttributes[];
   images: ImageType[];
   relatedProducts: ProductType[];
+  tags: Tag[];
+}
+
+export interface Tag {
+  tagId: number;
+  name: string;
 }
 
 export interface LocalCartType {

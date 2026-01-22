@@ -23,7 +23,7 @@ export const Deal = () => {
     <div className="w-full px-6 mx-auto flex items-center justify-center">
       <div className="w-full max-w-[1216px]">
         <div className="w-full flex justify-between items-center">
-          <h1 className="font-bold text-xl">Limited Time Deal</h1>
+          <div className="font-bold text-xl">Limited Time Deal</div>
           <Button
             variant={"outline"}
             className="rounded-2xl border border-black text-xs"
@@ -44,9 +44,13 @@ export const Deal = () => {
             ))}
           {data?.items
             ?.filter((qty) => qty.stockQuantity > 0)
-            .map((val, index) => {
-              return index < 4 && <ProductCard product={val} />;
-            })}
+            ?.filter((item) =>
+              item.tags?.some((tag) => tag.name === "Best Seller"),
+            )
+            .slice(0, 4)
+            .map((val) => (
+              <ProductCard key={val.productId} product={val} />
+            ))}
         </div>
       </div>
     </div>

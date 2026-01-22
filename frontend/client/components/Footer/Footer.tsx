@@ -15,7 +15,7 @@ export const Footer = () => {
           <Input
             type={"text"}
             placeholder="Enter your email address"
-            className="shrink-0 w-[480px] h-12 rounded-3xl pr-25 hover:cursor-pointer"
+            className="shrink-0 w-[480px] h-12 rounded-3xl pr-25 hover:cursor-text"
           />
           <Button
             variant={"ghost"}
