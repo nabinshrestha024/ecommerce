@@ -5,6 +5,7 @@ CREATE OR ALTER PROCEDURE spProducts_GetPaged
 (
     @CategoryId     INT             = NULL,
     @Search         VARCHAR(200)    = NULL,
+    @CategoryName   VARCHAR(200)    = NULL,
     @TagNames       VARCHAR(MAX)    = NULL,
     @MinPrice       DECIMAL(10,2)   = NULL,
     @MaxPrice       DECIMAL(10,2)   = NULL,
@@ -27,12 +28,14 @@ BEGIN
     (
         SELECT DISTINCT p.ProductId
         FROM Products p
+        INNER JOIN Categories c ON p.CategoryId = c.CategoryId
         LEFT JOIN ProductVariants v
             ON v.ProductId = p.ProductId
            AND v.IsDefault = 1
            AND v.IsActive = 1
         WHERE
             (@CategoryId IS NULL OR p.CategoryId = @CategoryId)
+             AND (@CategoryName IS NULL OR LOWER(c.Name) LIKE '%' + LOWER(@CategoryName) + '%')
             AND (@OnlyActive = 0 OR p.IsActive = 1)
             AND (
                 @Search IS NULL
@@ -157,12 +160,14 @@ BEGIN
    
     SELECT COUNT(DISTINCT p.ProductId)
     FROM Products p
+    INNER JOIN Categories c ON p.CategoryId = c.CategoryId
     LEFT JOIN ProductVariants v
         ON v.ProductId = p.ProductId
        AND v.IsDefault = 1
        AND v.IsActive = 1
     WHERE
         (@CategoryId IS NULL OR p.CategoryId = @CategoryId)
+         AND (@CategoryName IS NULL OR LOWER(c.Name) LIKE '%' + LOWER(@CategoryName) + '%')
         AND (@OnlyActive = 0 OR p.IsActive = 1)
         AND (@MinPrice IS NULL OR v.Price >= @MinPrice)
         AND (@MaxPrice IS NULL OR v.Price <= @MaxPrice);

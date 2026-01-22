@@ -19,7 +19,7 @@ namespace EcommerceProject.Repositories.Implementations
             _tagRepository = tagRepository;
         }
 
-        public async Task<ProductCatalogResponse> GetPagedAsync(int? categoryId, string? search, List<string>? tags, decimal? minPrice, decimal? maxPrice, int page, int pageSize, bool onlyActive, CancellationToken ct)
+        public async Task<ProductCatalogResponse> GetPagedAsync(int? categoryId, string? search, string? categoryName, List<string>? tags, decimal? minPrice, decimal? maxPrice, int page, int pageSize, bool onlyActive, CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
 
@@ -27,6 +27,7 @@ namespace EcommerceProject.Repositories.Implementations
             {
                 CategoryId = categoryId,
                 Search = search,
+                categoryName = categoryName,
                 TagNames = tags != null && tags.Any() ? string.Join(",", tags) : null,
                 MinPrice = minPrice,
                 MaxPrice = maxPrice,

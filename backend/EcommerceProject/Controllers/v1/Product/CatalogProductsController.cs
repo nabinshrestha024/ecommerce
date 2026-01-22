@@ -23,11 +23,11 @@ namespace EcommerceProject.Controllers.v1.Product
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProducts([FromQuery] int? categoryId, [FromQuery] string? search,[FromQuery] List<string>? tagNames, [FromQuery] decimal? minPrice,[FromQuery] decimal? maxPrice,  [FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
+        public async Task<IActionResult> GetProducts([FromQuery] int? categoryId, [FromQuery] string? search, [FromQuery] string? categoryName, [FromQuery] List<string>? tagNames, [FromQuery] decimal? minPrice,[FromQuery] decimal? maxPrice,  [FromQuery] int page = 1, [FromQuery] int pageSize = 10, CancellationToken ct = default)
         {
             pageSize = Math.Clamp(pageSize, 1, 100);
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
-            var result = await _service.GetPagedAsync(categoryId, search,tagNames, minPrice, maxPrice, page, pageSize, ct);
+            var result = await _service.GetPagedAsync(categoryId, search, categoryName, tagNames, minPrice, maxPrice, page, pageSize, ct);
             foreach (var item in result.Items)
             {
                 if (!string.IsNullOrEmpty(item.PrimaryImageUrl))
