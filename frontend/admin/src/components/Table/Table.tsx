@@ -104,7 +104,7 @@ export const Table = <TData,>({
       {showPagination && (
         <div className="flex items-center justify-between">
           <Pagination>
-            <PaginationContent className="flex justify-around w-full">
+            <PaginationContent className="flex justify-center gap-4 w-full">
               <PaginationItem className="flex gap-2">
                 <PaginationPrevious
                   onClick={() => table.previousPage()}
