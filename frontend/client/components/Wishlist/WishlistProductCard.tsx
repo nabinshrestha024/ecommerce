@@ -142,7 +142,7 @@ export const WishlistProductCard = ({
     product?.variants?.find((v) => v.isDefault === true)?.variantId ?? null;
   return (
     <Card
-      className="p-3 w-full max-w-[285px] border-0 shadow-none flex flex-col justify-between h-[400px] md:h-[380px] "
+      className="p-3 w-full max-w-[285px] border-0 shadow-none flex flex-col justify-between h-[370px] md:h-[400px]  "
       key={product?.productId}
       rootClassName="py-0 border shadow-xl max-w-[285px]"
     >
