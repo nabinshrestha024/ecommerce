@@ -27,7 +27,7 @@ export const Product = () => {
               Add Attribute
             </Button>
           }
-          className=" w-[95vw] max-w-3xl max-h-[90vh] overflow-hidden flex flex-col"
+          className=" w-[95vw] max-w-[1000px] max-h-[90vh] overflow-hidden flex flex-col"
         >
           <div className="flex-1 overflow-y-auto">
             <ProductManagement setOpen={setOpen} />

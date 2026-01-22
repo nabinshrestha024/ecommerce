@@ -143,28 +143,28 @@ export const UploadProductDetails = forwardRef((_, ref) => {
             />
 
             {images.length > 0 && (
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
                 {images.map((img, index) => (
                   <div key={index} className="relative group">
                     <img
                       src={img.preview || "/placeholder.svg"}
                       alt={`Product preview ${index + 1}`}
                       onClick={() => handleSetPrimaryImage(index)}
-                      className={`aspect-square w-full  cursor-pointer rounded-none object-cover transition-all ${
+                      className={`aspect-square w-[95%] cursor-pointer rounded-none object-cover transition-all ${
                         index === primaryImage
                           ? "ring-2 ring-primary"
                           : "ring-1 ring-input group-hover:ring-primary"
                       }`}
                     />
                     {index === primaryImage && (
-                      <span className="absolute bottom-1 left-1 rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground">
+                      <span className="absolute -top-0.5 -left-0.5 rounded bg-primary px-2 py-1 text-xs font-medium text-primary-foreground">
                         Primary
                       </span>
                     )}
                     <button
                       type="button"
                       onClick={() => handleDeleteImage(index)}
-                      className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-white shadow-sm transition-transform hover:scale-110"
+                      className="absolute right-0 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-white shadow-sm transition-transform hover:scale-110"
                       aria-label={`Delete image ${index + 1}`}
                     >
                       <X className="h-3 w-3" />
@@ -187,7 +187,9 @@ export const UploadProductDetails = forwardRef((_, ref) => {
                   value={field.value?.toString()}
                   onValueChange={(value) => field.onChange(Number(value))}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger
+                    className={`w-full ${errors.categoryId ? "border-destructive" : ""}`}
+                  >
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
 
