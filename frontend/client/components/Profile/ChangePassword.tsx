@@ -4,11 +4,10 @@ import { Button } from "@/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordSchema } from "./schemas/Password.zod";
-import { Card } from "../Card/Card";
+import { Card } from "../card/Card";
 import { useChangePassword } from "@/hooks/profile/useChangePassword";
-import { Input } from "../Input/Input";
+import { Input } from "../input/Input";
 import { useState } from "react";
-import { SquarePen } from "lucide-react";
 import { MdEdit } from "react-icons/md";
 export const ChangePassword = () => {
   const {
@@ -55,14 +54,14 @@ export const ChangePassword = () => {
         <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-2 gap-5">
             <div className="flex flex-col ">
-              <label className="text-md font-medium text-gray-700">
+              <label className="text-md font-medium text-gray-700 mb-2">
                 Current Password
               </label>
               <Input
                 type="password"
                 disabled={!isEditing}
                 {...register("currentPassword")}
-                className="w-full mt-2"
+                className="w-full"
                 placeholder="Current password..."
               />
               {errors.currentPassword && (
@@ -72,14 +71,14 @@ export const ChangePassword = () => {
               )}
             </div>
             <div className="flex flex-col ">
-              <label className="text-md font-medium text-gray-700">
+              <label className="text-md font-medium text-gray-700 mb-2">
                 New Password
               </label>
               <Input
                 type="password"
                 disabled={!isEditing}
                 {...register("newPassword")}
-                className="w-full mt-2"
+                className="w-full"
                 placeholder="New password..."
               />
               {errors.newPassword && (
@@ -89,14 +88,14 @@ export const ChangePassword = () => {
               )}
             </div>
             <div className="flex flex-col ">
-              <label className="text-md font-medium text-gray-700">
+              <label className="text-md font-medium text-gray-700 mb-2">
                 Confirm Password
               </label>
               <Input
                 type="password"
                 disabled={!isEditing}
                 {...register("confirmPassword")}
-                className="w-full mt-2"
+                className="w-full"
                 placeholder="Confirm password..."
               />
               {errors.confirmPassword && (
