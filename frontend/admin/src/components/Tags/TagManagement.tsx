@@ -73,15 +73,16 @@ export const TagManagement = () => {
             {data?.map((val) => (
               <div
                 key={val.tagId}
-                className="group flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl hover:border-green-200 hover:bg-green-50/30 transition-all duration-200 shadow-sm hover:cursor-pointer"
+                className="group flex items-center justify-between px-4 py-5 bg-white border border-gray-200 rounded-xl  transition-all duration-200 shadow-sm hover:cursor-pointer"
               >
                 <div className="flex items-center gap-3 w-full overflow-hidden justify-between">
                   <div className="flex flex-row items-center gap-2 ">
-                    <div className="flex flex-row w-2 h-2  rounded-full bg-[#4EA674] shrink-0" />
+                    <div className="flex flex-row w-2 h-2  rounded-full shrink-0" />
                     <span className="font-medium text-gray-700 truncate ">
                       {val.name}
                     </span>
                   </div>
+
                   <Dialog
                     key={val.tagId}
                     open={editOpen[val.tagId] || false}
