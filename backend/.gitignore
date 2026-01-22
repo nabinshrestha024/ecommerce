@@ -68,6 +68,7 @@ appsettings.json
 appsettings.Local.json
 appsettings.Development.local.json
 EcommerceProject/appsettings.json
+EcommerceProject/appsettings.Development.json
 
 #############################
 ##       FRONTEND          ##
