@@ -67,10 +67,6 @@ export const TopNav = () => {
   const search = useSearch(debounceSearch);
   const [profileOpen, setProfileOpen] = useState(false);
 
-  const handleProfile = () => {
-    setProfileOpen(true);
-  };
-
   return (
     <div className="w-full bg-white flex justify-between px-5 lg:px-10 items-center py-5 border-b">
       <div className="flex gap-2 md:divide-x-2">
@@ -169,20 +165,28 @@ export const TopNav = () => {
 
         {isAuth ? (
           <DropDown
+            open={profileOpen}
+            onOpenChange={setProfileOpen}
             side="bottom"
             align="end"
             sideOffset={15}
             alignOffset={-10}
-            trigger={<FaUserLarge size={19} className="cursor-pointer" />}
+            trigger={<FaUserLarge size={19} />}
           >
             <div className="w-[150px] flex flex-col gap-2">
-              <Link href="/profile" className="text-sm px-2 py-1 border-b">
+              <div
+                className="text-sm px-2 py-1 border-b cursor-pointer"
+                onClick={() => {
+                  setProfileOpen(false);
+                  router.push("/profile");
+                }}
+              >
                 My Profile
-              </Link>
+              </div>
 
               <ConfirmationDialog
                 trigger={
-                  <button className="flex items-center gap-2 text-sm rounded px-2 py-1">
+                  <button className="flex items-center gap-2 text-sm rounded px-2 py-1 cursor-pointer">
                     <IoLogOut size={16} />
                     Logout
                   </button>

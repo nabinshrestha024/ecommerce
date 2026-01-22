@@ -15,8 +15,21 @@ interface DropDownProp {
   side?: "top" | "right" | "bottom" | "left";
   align?: "start" | "center" | "end";
 }
-
+interface DropDownProp {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  children: ReactNode;
+  className?: string;
+  trigger?: ReactNode;
+  triggerClassName?: string;
+  sideOffset?: number;
+  alignOffset?: number;
+  side?: "top" | "right" | "bottom" | "left";
+  align?: "start" | "center" | "end";
+}
 export const DropDown = ({
+  open,
+  onOpenChange,
   children,
   className,
   trigger,
@@ -27,10 +40,11 @@ export const DropDown = ({
   align = "center",
 }: DropDownProp) => {
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild className={triggerClassName}>
         {trigger}
       </DropdownMenuTrigger>
+
       <DropdownMenuContent
         className={className}
         side={side}
