@@ -7,7 +7,7 @@ namespace EcommerceProject.Repositories.Interfaces
 {
     public interface IProductRepository
     {
-        Task<ProductCatalogResponse> GetPagedAsync(int? categoryId, string? search, List<string>? tags, decimal? minPrice, decimal? maxPrice, int page, int pageSize, bool onlyActive, CancellationToken ct);
+        Task<ProductCatalogResponse> GetPagedAsync(int? categoryId, string? search,string?categoryName, List<string>? tags, decimal? minPrice, decimal? maxPrice, int page, int pageSize, bool onlyActive, CancellationToken ct);
         Task<ProductDetailsDto?> GetBySlugOrIdAsync(string slugOrId, bool onlyActive, bool includeInactiveVariants, CancellationToken ct);
         Task InsertImageAsync(int productId, string imageUrl, bool isPrimary, int sortOrder, CancellationToken ct);
         Task<int> DeleteImagesByProductIdAsync(int productId, CancellationToken ct);
