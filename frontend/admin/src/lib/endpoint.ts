@@ -33,5 +33,5 @@ export const endpoint = {
   USERREPORT: "admin/reports/user-registration-overview",
   ORDERSTATUSREPORT: "admin/reports/orders-status-report",
   DASHBOARDORDERREPORT: "admin/reports/orders-status-report",
-  FETCH_BANNER: "banners",
+  FETCH_BANNER: "admin/banners",
 };

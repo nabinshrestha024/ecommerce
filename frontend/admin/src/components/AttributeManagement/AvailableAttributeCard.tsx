@@ -39,16 +39,16 @@ export const AvailableAttributeCard = () => {
   return isLoading ? (
     <Spinner />
   ) : (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
       {attributes?.map((attribute) => (
         <Card
           key={attribute.attributeId}
-          className="group w-full p-0 rounded-xl overflow-hidden transition-all duration-200 hover:shadow-md border border-gray-200"
+          className="group w-full p-0 rounded-xl overflow-hidden transition-all duration-200  border border-gray-200"
           cardClassName="border-none shadow-none p-0"
         >
           <Accordion type="single" collapsible className="w-full space-y-3">
             <AccordionItem value={attribute.attributeId.toString()}>
-              <AccordionTrigger className="w-full flex items-center justify-between px-4 py-3  rounded-xl  border-b-none transition-all duration-200  hover:cursor-pointer">
+              <AccordionTrigger className="w-full flex items-center justify-between px-4 py-5  rounded-xl  border-b-none transition-all duration-200  hover:cursor-pointer">
                 <div className="text-sm font-bold text-gray-800 ">
                   {attribute.name}
                 </div>
