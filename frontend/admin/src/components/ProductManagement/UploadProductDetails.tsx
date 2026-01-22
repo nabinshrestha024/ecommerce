@@ -107,7 +107,7 @@ export const UploadProductDetails = forwardRef((_, ref) => {
 
       <div className="flex flex-col gap-5">
         <FormSection title="Images">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 col-span-3">
             <label
               htmlFor="productImage"
               className=" cursor-pointer font-medium text-gray-700"
