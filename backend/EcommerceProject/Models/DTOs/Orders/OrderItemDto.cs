@@ -12,6 +12,11 @@
         public decimal UnitPrice { get; set; }
         public decimal LineTotal { get; set; }
 
+        public int DiscountId {  get; set; }
+        public string DiscountType { get; set; }
+        public string DiscountValue { get; set; }
+
+
         public List<OrderItemVariantAttributeDto> Variant { get; set; } = new();
     }
 }
