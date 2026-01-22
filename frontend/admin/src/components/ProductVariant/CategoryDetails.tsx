@@ -25,11 +25,12 @@ import {
   getPaginationRowModel,
 } from "@tanstack/react-table";
 import { Table } from "../Table/Table";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { currencyFormatter } from "../Dashboard/DashboardStats";
 import { MdAddCircleOutline } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 import { VariantForm } from "./VariantForm";
+import { IoMdArrowBack } from "react-icons/io";
 
 export interface Variant {
   variantId: number;
@@ -227,6 +228,9 @@ export const CategoryDetails = () => {
     <div className="space-y-4">
       <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg">
         <div className="flex gap-10">
+          <Link to={"/product"} className="flex items-center justify-center">
+            <IoMdArrowBack className="text-xl" />
+          </Link>
           <div>
             <div className="text-sm text-gray-600">Product ID</div>
             <div className="font-medium">{data?.productId}</div>
