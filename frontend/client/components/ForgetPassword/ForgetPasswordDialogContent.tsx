@@ -82,12 +82,12 @@ export const ForgetPasswordDialogContent = ({
   return render === 1 ? (
     <div className="space-y-6">
       <div className="space-y-5">
-        <div className="text-3xl font-bold">Forgot Password ?</div>
+        <div className="text-3xl font-bold">Forgot Password</div>
         <div className="space-y-2">
           <div>Please enter your email below :</div>
           <Input
             type="email"
-            placeholder="yourexample@gmail.com"
+            placeholder="your@gmail.com"
             onChange={handleChange}
           />
         </div>
@@ -137,9 +137,9 @@ export const ForgetPasswordDialogContent = ({
     render === 3 && (
       <form
         onSubmit={handleSubmit((data) => onSubmit(data, email, value))}
-        className="py-6 flex flex-col gap-2"
+        className="flex flex-col gap-2"
       >
-        <div className="text-3xl font-semibold mb-5">Enter new password</div>
+        <div className="text-3xl font-semibold mb-5">Reset password</div>
         <div className="flex flex-col gap-6 px-2">
           <div className="grid gap-2">
             <Label htmlFor="password">New Password</Label>
@@ -152,7 +152,7 @@ export const ForgetPasswordDialogContent = ({
             <p className="text-red-500">{errors.newPassword?.message}</p>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="rePassword">Re-Password</Label>
+            <Label htmlFor="rePassword">Confirm New Password</Label>
             <Input
               id="rePassword"
               {...register("repassword")}

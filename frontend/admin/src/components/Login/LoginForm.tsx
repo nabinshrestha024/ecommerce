@@ -54,30 +54,19 @@ export const AdminLoginForm = () => {
           className={`${errors.password ? "border-red-500 focus:border-red-500" : ""}`}
         />
       </div>
-      <div className="mt-5 text-sm space-x-5 flex justify-between">
-        <div>
-          Don&apos;t have an account?{" "}
-          {/* <Link
-            href={"/signup"}
-            className="text-blue-500 underline cursor-pointer"
-          >
-            Sign Up
-          </Link> */}
-        </div>
-        <Dialog
-          open={open}
-          onOpenChange={setOpen}
-          triggerContent={
-            <div className="text-blue-500 underline cursor-pointer">
-              Forgot password?
-            </div>
-          }
-        >
-          <ForgotPassword onClose={() => setOpen(false)} />
-        </Dialog>
-      </div>
+      <Dialog
+        open={open}
+        onOpenChange={setOpen}
+        triggerContent={
+          <div className="text-green-600 text-[16px] flex justify-end underline cursor-pointer">
+            Forgot password?
+          </div>
+        }
+      >
+        <ForgotPassword onClose={() => setOpen(false)} />
+      </Dialog>
       <div>
-        <Button type="submit" className="mt-5 w-full" value={"Login"}>
+        <Button type="submit" className="mt-2 w-full" value={"Login"}>
           {isPending ? "Logging in..." : "Login"}
         </Button>
       </div>
