@@ -24,7 +24,6 @@ import { TooltipContent, Tooltip, TooltipTrigger } from "@/ui/tooltip";
 import { LogoutButton } from "../Logout/LogoutButton";
 import { useGetProfile } from "@/hooks/profile/useGetProfile";
 import { BiSolidCategory } from "react-icons/bi";
-import { RiApps2AddFill } from "react-icons/ri";
 
 const items = [
   {
@@ -44,12 +43,6 @@ const items = [
   {
     group: "Product",
     data: [
-      {
-        title: "Product Management",
-        url: "/product-management",
-        icon: RiApps2AddFill,
-      },
-
       {
         title: "Attribute Management",
         url: "/attribute-management",

@@ -1,7 +1,6 @@
 "use client";
 
 import { BasicDetails } from "@/components/ProductManagement/BasicDetails";
-import { Header } from "@/components/ProductManagement/Header";
 import { UploadProductDetails } from "@/components/ProductManagement/UploadProductDetails";
 
 import { useForm, FormProvider } from "react-hook-form";
@@ -11,9 +10,13 @@ import {
   type ProductFormType,
 } from "@/components/ProductManagement/schema/ProductForm.zod";
 import { useCreateProduct } from "@/hooks/useCreateProduct";
-import { useRef, useEffect } from "react";
-import { Button } from "@/ui/button";
-export const ProductManagement = () => {
+import { useRef, useEffect, type Dispatch, type SetStateAction } from "react";
+
+export const ProductManagement = ({
+  setOpen,
+}: {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}) => {
   const { mutate, isSuccess } = useCreateProduct();
   const uploadRef = useRef<{ resetImages: () => void }>(null);
   const methods = useForm({
@@ -57,6 +60,7 @@ export const ProductManagement = () => {
     mutate(formData, {
       onSuccess: () => {
         methods.reset();
+        setOpen(false);
       },
     });
   };
@@ -68,8 +72,7 @@ export const ProductManagement = () => {
   }, [isSuccess]);
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-6 px-4 py-5">
-      <Header />
+    <div className="mx-auto w-full max-w-5xl space-y-6">
       <FormProvider {...methods}>
         <form
           id="productForm"
@@ -77,18 +80,19 @@ export const ProductManagement = () => {
           className="w-full"
         >
           <div className="flex flex-col gap-6 w-full">
+            <div className="sticky top-0 text-[24px] font-bold text-[#23272E] text-center bg-white pb-2 ">
+              Add Product
+            </div>
             <BasicDetails />
             <UploadProductDetails ref={uploadRef} />
           </div>
-          <div className="flex justify-end mt-5 flex-row gap-2 sm:gap-4 shrink-0 w-full lg:w-auto">
-            <Button
-              variant="default"
-              className="px-5 py-7 text-[17px] w-full font-semibold leading-3 bg-[#4EA674] text-white  rounded-lg hover:bg-[#4EA674]"
+          <div className="sticky bottom-0 bg-white pt-4 flex justify-center z-9999">
+            <button
               type="submit"
-              form="productForm"
+              className="bg-green-600 hover:bg-green-700 text-white px-10 py-2 rounded transition mt-5"
             >
-              <span>Add new product</span>
-            </Button>
+              Save Product
+            </button>
           </div>
         </form>
       </FormProvider>
