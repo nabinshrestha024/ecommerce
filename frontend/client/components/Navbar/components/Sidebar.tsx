@@ -77,10 +77,9 @@ export const Sidebar = () => {
           {data.map((val, index) => {
             const isActive = pathname.startsWith(val.url);
             return (
-              <div>
+              <div key={index}>
                 <Link
                   href={val.url}
-                  key={index}
                   className="relative"
                   onClick={() => setOpen(false)}
                 >

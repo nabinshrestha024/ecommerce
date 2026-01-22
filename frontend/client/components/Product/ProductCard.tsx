@@ -10,15 +10,11 @@ import { useFetchWishlist } from "@/hooks/wishlist/useFetchWishlist";
 import { WishlistItem } from "../TrendingProduct/component/TrendingProductCard";
 import { DialogClose, DialogTitle } from "@/ui/dialog";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useState } from "react";
 import { Dialog } from "../dialog/Dialog";
 import { Variant } from "./ProductDetails";
 import { Card } from "../card/Card";
-import {
-  currencyFormatter,
-  LocalCartType,
-  ProductType,
-} from "./ProductDisplay";
+import { currencyFormatter, ProductType } from "./ProductDisplay";
 import { toast } from "sonner";
 import { useCart } from "@/contexts/CartContext";
 
@@ -41,7 +37,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const addMutate = useAddWishlist();
   const deleteMutate = useDeleteWishlist();
   const wishlists = useFetchWishlist();
-  const { cartLocal, setCartLocal } = useCart();
+  const { setCartLocal } = useCart();
   const [selectedVariants, setSelectedVariants] = useState<
     Record<string, string | undefined>
   >(() => getDefaultSelectedVariants(product?.variants));
