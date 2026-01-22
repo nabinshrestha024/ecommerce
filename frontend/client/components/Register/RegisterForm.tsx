@@ -29,7 +29,7 @@ export const RegisterForm = ({}: {
   });
   const router = useRouter();
 
-  const { mutate } = useRegister();
+  const { mutate, status } = useRegister();
 
   const onSubmit = (data: RegisterFormSchemaType) => {
     const { repassword, ...payload } = data;
@@ -44,11 +44,11 @@ export const RegisterForm = ({}: {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="py-6 flex flex-col gap-3"
+      className="py-6 flex flex-col gap-4"
     >
       <div className="text-4xl font-bold mb-5">Register</div>
-      <div className="flex flex-col gap-4 px-1 max-h-[300px] overflow-scroll overflow-y- overflow-x-hidden">
-        <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-2 gap-5 px-1">
+        <div className="flex flex-col gap-3">
           <Label htmlFor="fullName">Full name</Label>
           <Input
             id="fullName"
@@ -57,7 +57,7 @@ export const RegisterForm = ({}: {
             className={`${errors.fullName ? "border-red-500" : ""}`}
           />
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
@@ -67,7 +67,7 @@ export const RegisterForm = ({}: {
             className={` ${errors.email ? "border-red-500 focus:border-red-500" : ""}`}
           />
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           <Label htmlFor="phone">Phone number</Label>
           <Input
             type="text"
@@ -85,7 +85,17 @@ export const RegisterForm = ({}: {
             className={`no-spinner ${errors.phone ? "border-red-500 focus:border-red-500" : ""}`}
           />
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
+          <Label htmlFor="city">Date of Birth</Label>
+          <Input
+            id="city"
+            {...register("dateOfBirth")}
+            type="date"
+            placeholder="Enter your date of birth"
+            className={`${errors.dateOfBirth ? "border-red-500 focus:border-red-500" : ""}`}
+          />
+        </div>
+        <div className="flex flex-col gap-3">
           <Label htmlFor="password">Password</Label>
           <Input
             id="password"
@@ -96,7 +106,7 @@ export const RegisterForm = ({}: {
             autoComplete="off"
           />
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           <Label htmlFor="rePassword">Re-Password</Label>
           <Input
             id="rePassword"
@@ -106,17 +116,28 @@ export const RegisterForm = ({}: {
             className={`${errors.repassword ? "border-red-500 focus:border-red-500" : ""}`}
           />
         </div>
-        <div className="flex flex-col gap-4">
-          <Label htmlFor="city">Date of Birth</Label>
+
+        <div className="flex flex-col gap-3">
+          <Label htmlFor="address">Address</Label>
           <Input
-            id="city"
-            {...register("dateOfBirth")}
-            type="date"
-            placeholder="Enter your date of birth"
-            className={`${errors.dateOfBirth ? "border-red-500 focus:border-red-500" : ""}`}
+            id="address"
+            {...register("address")}
+            type="text"
+            placeholder="Enter your address"
+            className={`${errors.address ? "border-red-500 focus:border-red-500" : ""}`}
           />
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
+          <Label htmlFor="city">City</Label>
+          <Input
+            id="city"
+            {...register("city")}
+            type="text"
+            placeholder="Enter your city"
+            className={`${errors.city ? "border-red-500 focus:border-red-500" : ""}`}
+          />
+        </div>
+        <div className="flex gap-3">
           <Label htmlFor="city">Gender</Label>
           <div className="flex gap-5">
             <div className="flex gap-2 items-center">
@@ -124,7 +145,7 @@ export const RegisterForm = ({}: {
                 type="radio"
                 {...register("gender")}
                 value={"Male"}
-                className={`w-4 h-4 ${errors.gender ? "border-red-500 focus:border-red-500" : ""}`}
+                className={`w-4 h-4 ${errors.gender ? "border-red-500 focus:border-red-500" : ""} hover:cursor-pointer`}
               />
               <div>Male</div>
             </div>
@@ -139,32 +160,15 @@ export const RegisterForm = ({}: {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-4">
-          <Label htmlFor="address">Address</Label>
-          <Input
-            id="address"
-            {...register("address")}
-            type="text"
-            placeholder="Enter your address"
-            className={`${errors.address ? "border-red-500 focus:border-red-500" : ""}`}
-          />
-        </div>
-        <div className="flex flex-col gap-4">
-          <Label htmlFor="city">City</Label>
-          <Input
-            id="city"
-            {...register("city")}
-            type="text"
-            placeholder="Enter your city"
-            className={`${errors.city ? "border-red-500 focus:border-red-500" : ""}`}
-          />
-        </div>
       </div>
-      <div>
-        <Button type="submit" className="mt-5 w-full" value={"Register"}>
-          Register
-        </Button>
-      </div>
+      <Button
+        type="submit"
+        className="mt-5 w-full"
+        value={"Register"}
+        disabled={status === "pending"}
+      >
+        {status === "pending" ? "Registering..." : "Register"}
+      </Button>
       <div>
         Already have an account?{" "}
         <Link
