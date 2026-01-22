@@ -169,6 +169,10 @@ export const TopNav = () => {
 
         {isAuth ? (
           <DropDown
+            side="bottom"
+            align="end"
+            sideOffset={15}
+            alignOffset={-10}
             trigger={<FaUserLarge size={19} className="cursor-pointer" />}
           >
             <div className="w-[150px] flex flex-col gap-2">
