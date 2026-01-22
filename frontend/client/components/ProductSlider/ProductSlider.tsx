@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { Slides } from "./constants/Slides";
 import Link from "next/link";
 import { useFetchBanner } from "@/hooks/banner/useFetchBanner";
-import { Carousel } from "../Carousel/Carousel";
+import { Carousel } from "../carousel/Carousel";
 
 export const ProductSlider = () => {
   const autoplay = useMemo(
