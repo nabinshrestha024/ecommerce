@@ -112,7 +112,7 @@ export default function UserProfile() {
                 className="text-center group"
                 onClick={() => setSelected("orders")}
               >
-                <div className="text-2xl font-bold text-[gray-900] group underline hover:cursor-pointer hover:text-[#4EA674]">
+                <div className="text-2xl font-bold text-[gray-900] group underline hover:cursor-pointer ">
                   {Array.isArray(orders?.data) ? orders.data.length : 0}
                 </div>
                 <div className="text-sm text-gray-600 group underline-offset-2">
@@ -133,7 +133,7 @@ export default function UserProfile() {
                   className="text-center group"
                   onClick={() => setSelected("wishlist")}
                 >
-                  <div className="text-2xl font-bold text-gray-900 group underline hover:cursor-pointer hover:text-[#4EA674]">
+                  <div className="text-2xl font-bold text-gray-900 group underline hover:cursor-pointer ">
                     {wishlistCount}
                   </div>
                   <div className="text-sm text-gray-600 group underline-offset-2">
@@ -142,7 +142,7 @@ export default function UserProfile() {
                 </div>
               )}
               <div className="text-center group">
-                <div className="text-2xl font-bold text-gray-900 group underline hover:cursor-pointer hover:text-[#4EA674]">
+                <div className="text-2xl font-bold text-gray-900 group underline hover:cursor-pointer ">
                   {deliveredCount()}
                 </div>
                 <div className="text-sm text-gray-600 group underline-offset-2">

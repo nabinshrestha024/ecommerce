@@ -14,7 +14,7 @@ export const editBanner = async ({
   formData.append("title", bannerData.title);
   formData.append("description", bannerData.description || "");
   formData.append("sortOrder", String(bannerData.sortOrder));
-  formData.append("isFeatured", String(bannerData.redirectUrl));
+  formData.append("redirectUrl", String(bannerData.redirectUrl));
   formData.append("isActive", String(bannerData.isActive));
 
   if (bannerData.imageUrl) {

@@ -3,10 +3,10 @@ import { Camera } from "lucide-react";
 import { useRef, useState, type ChangeEvent } from "react";
 import { useFetchSocial } from "@/hooks/socialLinks/useFetchSocial";
 import { Card } from "@/components/Card/Card";
-import { socialIconMap } from "@/components/Profile/socialIconMap.import";
-import { ProfileUpdate } from "@/components/Profile/ProfileUpdate";
-import { ProfileCropDialog } from "@/components/Profile/ChangeProfile";
-import { ProfileHeader } from "@/components/Profile/ProfileHeader";
+import { socialIconMap } from "@/components/profile/socialIconMap.import";
+import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { ProfileUpdate } from "@/components/profile/ProfileUpdate";
+import { ProfileCropDialog } from "@/components/profile/ChangeProfile";
 
 export interface SocialLink {
   platform: "Instagram" | "Facebook" | "Twitter";

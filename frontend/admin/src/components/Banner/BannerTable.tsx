@@ -118,35 +118,29 @@ export const BannerTable = () => {
 
         return (
           <div className="flex gap-2 items-center">
-            {!isInactive ? (
-              <Dialog
-                triggerContent={
-                  <button
-                    type="button"
-                    className="p-1.5 hover:bg-gray-100 rounded-md transition-colors"
-                    onClick={() => handleEdit(info.row.original)}
-                  >
-                    <MdEdit className="text-gray-500 text-[20px]" />
-                  </button>
-                }
-                open={open === info.row.original.bannerId}
-                onOpenChange={(isOpen) => {
-                  setOpen(isOpen ? info.row.original.bannerId : null);
-                }}
-              >
-                {selectedBanner && (
-                  <EditBannerForm
-                    bannerData={selectedBanner}
-                    onSave={() => setSelectedBanner(null)}
-                    setOpen={setOpen}
-                  />
-                )}
-              </Dialog>
-            ) : (
-              <button disabled className="p-1.5 cursor-not-allowed">
-                <MdEdit className="text-gray-300 text-[20px]" />
-              </button>
-            )}
+            <Dialog
+              triggerContent={
+                <button
+                  type="button"
+                  className="p-1.5 hover:bg-gray-100 rounded-md transition-colors"
+                  onClick={() => handleEdit(info.row.original)}
+                >
+                  <MdEdit className="text-gray-500 text-[20px]" />
+                </button>
+              }
+              open={open === info.row.original.bannerId}
+              onOpenChange={(isOpen) => {
+                setOpen(isOpen ? info.row.original.bannerId : null);
+              }}
+            >
+              {selectedBanner && (
+                <EditBannerForm
+                  bannerData={selectedBanner}
+                  onSave={() => setSelectedBanner(null)}
+                  setOpen={setOpen}
+                />
+              )}
+            </Dialog>
 
             {!isInactive ? (
               <ConfirmationDialog

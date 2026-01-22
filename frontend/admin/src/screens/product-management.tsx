@@ -80,7 +80,7 @@ export const ProductManagement = ({
           className="w-full"
         >
           <div className="flex flex-col gap-6 w-full">
-            <div className="sticky top-0 text-[24px] font-bold text-[#23272E] text-center bg-white pb-2 ">
+            <div className="sticky top-0 text-[24px] font-bold text-[#23272E] text-center bg-white pb-2 z-9999">
               Add Product
             </div>
             <BasicDetails />

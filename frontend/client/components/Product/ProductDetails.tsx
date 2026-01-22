@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import { useParams } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/ui/button";
 import { useProductDetails } from "@/hooks/product/useProductDetails";
@@ -13,6 +12,14 @@ import { Card } from "../Card/Card";
 import { ProductReview } from "./Review/ProductReview";
 import { currencyFormatter } from "./ProductDisplay";
 import { Spinner } from "../Spinner/Spinner";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/ui/breadcrumb";
+import { useParams } from "next/navigation";
 
 export interface Variant {
   variantId: number;
@@ -125,6 +132,20 @@ const ProductDetails = () => {
     <Spinner />
   ) : (
     <div className="w-full px-4 sm:px-6 md:px-10 lg:px-20 py-6 md:py-10 flex flex-col gap-5">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/product">Product</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+
+          <BreadcrumbItem>
+            <BreadcrumbLink href={`/product/id/${productItems.data?.slug}`}>
+              {productItems.data?.slug}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <Card className="p-0 ">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 py-2">
           <div className="flex flex-col gap-5 p-2 ">
