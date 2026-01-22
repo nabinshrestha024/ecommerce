@@ -72,41 +72,37 @@ export const ForgotPassword = ({ onClose }: onCloseProps) => {
   };
 
   return (
-    <div className="max-h-[70vh] h-full overflow-y-auto overflow-x-hidden ">
+    <div className="max-h-[70vh] h-full overflow-y-auto overflow-x-hidden">
       {step === "Email" && (
         <form
-          className="p-6 space-y-4"
+          className="space-y-4"
           onSubmit={emailForm.handleSubmit(handleEmailSubmit)}
         >
-          <h2 className="text-3xl font-bold text-gray-800 mb-6">
+          <h2 className="text-3xl font-bold text-gray-800 mb-5">
             Forgot Password
           </h2>
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Enter your email address
-            </label>
+            <label>Please enter your email below :</label>
             <Input
               type="text"
               {...emailForm.register("email")}
               placeholder="your@email.com"
-              className={`${emailForm.formState.errors.email ? "border-red-500" : ""}`}
+              className={`mt-2 ${emailForm.formState.errors.email ? "border-red-500" : ""}`}
             />
           </div>
-          <div className="flex justify-center items-center pt-4">
-            <Button
-              type="submit"
-              className="w-full sm:w-auto px-6 py-2"
-              disabled={sendEmail.isPending}
-            >
-              {sendEmail.isPending ? "Submitting..." : "Submit Email"}
-            </Button>
-          </div>
+          <Button
+            type="submit"
+            className="w-full mt-7"
+            disabled={sendEmail.isPending}
+          >
+            {sendEmail.isPending ? "Submitting..." : "Submit"}
+          </Button>
         </form>
       )}
 
       {step === "OTP" && (
         <form
-          className="p-6 space-y-6"
+          className="space-y-6"
           onSubmit={(e) => {
             e.preventDefault();
             OtpForm.setValue("otp", otp, {
@@ -120,17 +116,13 @@ export const ForgotPassword = ({ onClose }: onCloseProps) => {
             <div className="text-3xl font-bold">Verify OTP</div>
 
             <div className="space-y-2">
-              <div>
-                Enter your one-time password sent to{" "}
-                <span className="text-blue-600 break-all">{email}</span>:
-              </div>
-
-              <div className="flex items-center justify-center mt-5">
+              <div>Enter your one-time password</div>
+              <div className="flex items-center justify-center">
                 <InputOTPField
                   length={6}
                   value={otp}
                   onChange={(value: string) => setOtp(value)}
-                  className="flex justify-center items-center gap-2 sm:gap-3 overflow-x-auto max-w-full"
+                  className="flex justify-center items-center gap-2 sm:gap-3 "
                   slotClassName="w-10 h-10 sm:w-12 sm:h-12 text-xl font-semibold border border-gray-400 rounded-md focus:border-blue-500 transition shrink-0"
                 />
               </div>
@@ -142,28 +134,26 @@ export const ForgotPassword = ({ onClose }: onCloseProps) => {
               )}
             </div>
 
-            <div className="flex justify-center pt-4">
-              <Button type="submit" disabled={sendOtp.isPending}>
-                {sendOtp.isPending ? "Submitting..." : "Submit OTP"}
-              </Button>
-            </div>
+            <Button
+              className="w-full mt-4"
+              type="submit"
+              disabled={sendOtp.isPending}
+            >
+              {sendOtp.isPending ? "Submitting..." : "Submit"}
+            </Button>
           </div>
         </form>
       )}
 
       {step === "ResetPassword" && (
         <form
-          className="p-6 space-y-4"
+          className="space-y-4"
           onSubmit={PasswordForm.handleSubmit(handlePasswordSubmit)}
         >
-          <h2 className="text-3xl font-bold text-gray-800 mb-6">
-            Reset Password
-          </h2>
+          <h2 className="text-3xl font-semibold mb-5">Reset Password</h2>
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                New Password
-              </label>
+              <label className="block ">New Password</label>
               <Input
                 type="password"
                 {...PasswordForm.register("newPassword")}
@@ -177,9 +167,7 @@ export const ForgotPassword = ({ onClose }: onCloseProps) => {
               )}
             </div>
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Confirm New Password
-              </label>
+              <label className="block">Confirm New Password</label>
               <Input
                 type="password"
                 {...PasswordForm.register("confirmPassword")}
@@ -193,15 +181,13 @@ export const ForgotPassword = ({ onClose }: onCloseProps) => {
               )}
             </div>
           </div>
-          <div className="flex justify-center items-center pt-4">
-            <Button
-              type="submit"
-              className="w-full sm:w-auto px-6 py-2"
-              disabled={sendNewPassword.isPending}
-            >
-              {sendNewPassword.isPending ? "Submitting..." : "Reset Password"}
-            </Button>
-          </div>
+          <Button
+            type="submit"
+            className="w-full mt-5"
+            disabled={sendNewPassword.isPending}
+          >
+            {sendNewPassword.isPending ? "Submitting..." : "Submit"}
+          </Button>
         </form>
       )}
     </div>
