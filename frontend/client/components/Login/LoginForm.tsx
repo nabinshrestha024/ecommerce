@@ -52,7 +52,7 @@ export const LoginForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="py-6 flex flex-col gap-3"
+      className="py-6 flex flex-col gap-3 "
     >
       <div className="text-4xl font-bold mb-5">Login</div>
       <div className="flex flex-col">

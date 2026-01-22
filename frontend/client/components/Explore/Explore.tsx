@@ -27,7 +27,7 @@ export const Explore = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-5 justify-center md:justify-start text-center mt-8 flex-wrap">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 justify-center md:justify-start text-center mt-8 flex-wrap">
           {isLoading &&
             Array.from({ length: placeholderCount }).map((_, index) => (
               <CategoryCardSkeleton key={index} />
@@ -41,18 +41,20 @@ export const Explore = () => {
             const href = `/product/?categoryId=${val.categoryId}`;
 
             return (
-              <Link key={val.categoryId} href={href} className="block">
-                <Card className="shadow-none p-2 min-w-[220px] flex flex-col gap-2 cursor-pointer hover:shadow-lg hover:rounded-2xl">
-                  <div className="w-full h-[150px] relative">
-                    <Image
-                      src={val.categoryImageURL}
-                      alt={val.name ?? "Image"}
-                      fill
-                      className="object-cover rounded-[12px]"
-                      unoptimized
-                    />
+              <Link key={val.categoryId} href={href}>
+                <Card className="shadow-none p-2 flex flex-col gap-2 cursor-pointer hover:shadow-lg hover:rounded-2xl">
+                  <div>
+                    <div className="w-full h-[150px] relative">
+                      <Image
+                        src={val.categoryImageURL}
+                        alt={val.name ?? "Image"}
+                        fill
+                        className="object-cover rounded-[12px]"
+                        unoptimized
+                      />
+                    </div>
+                    <p className="font-medium">{val.name}</p>
                   </div>
-                  <p className="font-medium">{val.name}</p>
                 </Card>
               </Link>
             );

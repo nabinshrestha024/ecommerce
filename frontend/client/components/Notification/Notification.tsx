@@ -2,7 +2,6 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useNotification } from "@/hooks/notification/useNotification";
 import { useNotificationSeen } from "@/hooks/notification/useNotificationSeen";
-import { Button } from "@/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
