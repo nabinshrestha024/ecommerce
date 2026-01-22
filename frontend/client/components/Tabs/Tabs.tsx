@@ -32,11 +32,7 @@ export const Tabs = ({
   setPage,
 }: TabsProps) => {
   return (
-    <Root
-      defaultValue={defaultValue}
-      value={defaultValue}
-      className={rootClassName}
-    >
+    <Root defaultValue={defaultValue} className={rootClassName}>
       <TabsList className={tabsListClassName}>
         {data.map((val) => (
           <TabsTrigger

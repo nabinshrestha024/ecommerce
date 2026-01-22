@@ -52,6 +52,7 @@ export const AdminLoginForm = () => {
           type="password"
           placeholder="Enter your password"
           className={`${errors.password ? "border-red-500 focus:border-red-500" : ""}`}
+          autoComplete="off"
         />
       </div>
       <Dialog

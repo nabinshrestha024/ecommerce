@@ -161,7 +161,10 @@ export const OrderDetails = ({
                     Cancel Order
                   </Button>
                 }
-                confirmFunc={() => cancelOrder(order.orderId)}
+                confirmFunc={() => {
+                  setOrder(null);
+                  cancelOrder(order.orderId);
+                }}
               />
 
               <form

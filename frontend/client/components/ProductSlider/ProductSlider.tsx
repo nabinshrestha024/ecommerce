@@ -36,7 +36,7 @@ export const ProductSlider = () => {
                 <p className="mt-2">{slide.description}</p>
 
                 <Link
-                  href={slide.redirectUrl}
+                  href={slide.redirectUrl || ""}
                   className="inline-block mt-4 bg-white text-black px-6 py-2 rounded"
                 >
                   Shop Now
