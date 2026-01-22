@@ -14,12 +14,10 @@ import { Spinner } from "@/ui/spinner";
 import { ProfileCropDialog } from "@/components/Profile/ProfileCropDialog";
 import { Order } from "@/components/Order/Order";
 import { Wishlist } from "@/components/Wishlist/Wishlist";
-import Link from "next/link";
 
 export default function UserProfile() {
   const { data, isLoading } = useFetchProfile();
   const orders = useOrder();
-  console.log("orders", orders);
   const wishlist = useFetchWishlist();
   const socialLinks = useFetchSocialLinks();
 
@@ -29,6 +27,22 @@ export default function UserProfile() {
   const [selected, setSelected] = useQueryState("value", {
     defaultValue: "profile",
   });
+
+  const deliveredCount = () => {
+    const list = Array.isArray(orders.data)
+      ? orders.data
+      : (orders.data?.items ?? []);
+
+    if (!Array.isArray(list)) return 0;
+
+    return list.filter(
+      (o) => (o?.status ?? "").toString().toLowerCase().trim() === "delivered",
+    ).length;
+  };
+
+  const wishlistCount = Array.isArray(wishlist?.data?.items)
+    ? wishlist.data.items.length
+    : 0;
 
   return isLoading || orders.isLoading || socialLinks.isLoading ? (
     <div className="fixed top-0 left-0 h-screen w-screen flex items-center justify-center">
@@ -105,25 +119,34 @@ export default function UserProfile() {
                   Orders
                 </div>
               </div>
-              <div
-                className="text-center group"
-                onClick={() => setSelected("wishlist")}
-              >
-                <div className="text-2xl font-bold text-gray-900 group underline hover:cursor-pointer hover:text-[#4EA674]">
-                  {Array.isArray(wishlist?.data?.items)
-                    ? wishlist.data.items.length
-                    : 0}
+              {wishlistCount === 0 ? (
+                <div className="text-center group">
+                  <div className="text-2xl font-bold text-gray-900 group underline">
+                    {wishlistCount}
+                  </div>
+                  <div className="text-sm text-gray-600 group underline-offset-2">
+                    Wishlist
+                  </div>
                 </div>
-                <div className="text-sm text-gray-600 group underline-offset-2">
-                  Wishlist
+              ) : (
+                <div
+                  className="text-center group"
+                  onClick={() => setSelected("wishlist")}
+                >
+                  <div className="text-2xl font-bold text-gray-900 group underline hover:cursor-pointer hover:text-[#4EA674]">
+                    {wishlistCount}
+                  </div>
+                  <div className="text-sm text-gray-600 group underline-offset-2">
+                    Wishlist
+                  </div>
                 </div>
-              </div>
+              )}
               <div className="text-center group">
                 <div className="text-2xl font-bold text-gray-900 group underline hover:cursor-pointer hover:text-[#4EA674]">
-                  {Array.isArray(orders?.data) ? orders.data.length : 0}
+                  {deliveredCount()}
                 </div>
                 <div className="text-sm text-gray-600 group underline-offset-2">
-                  Orders
+                  Completed Orders
                 </div>
               </div>
             </div>

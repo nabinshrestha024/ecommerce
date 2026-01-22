@@ -12,6 +12,7 @@ import { Tabs } from "../Tabs/Tabs";
 import { useState, useMemo } from "react";
 import { Input } from "@/ui/input";
 import { DropDown } from "../DropDown/DropDown";
+import { DropdownMenuItem } from "@/ui/dropdown-menu";
 import { IoFilter } from "react-icons/io5";
 import { useOrder } from "@/hooks/orders/useOrder";
 import { OrderDetails } from "./OrderDetails";
@@ -62,7 +63,9 @@ export interface AttributeType {
 export const Order = () => {
   const { data } = useOrder();
 
-  const [sortType, setSortType] = useState<"date" | "price" | null>(null);
+  const [sortType, setSortType] = useState<"ascending" | "descending" | null>(
+    "descending",
+  );
   const [searchTerm, setSearchTerm] = useState("");
 
   const [selectedOrder, setSelectedOrder] = useState<OrderData | null>(null);
@@ -96,7 +99,7 @@ export const Order = () => {
   const columns = useMemo(
     () => [
       columnHelper.accessor("orderId", {
-        header: "Order Id",
+        header: () => <div className="text-start">Order ID</div>,
         cell: (info) => (
           <div
             onClick={() => handleRowClick(info.row.original)}
@@ -107,19 +110,23 @@ export const Order = () => {
         ),
       }),
       columnHelper.accessor("shippingCity", {
-        header: "Shipping City",
+        header: () => <div className="text-start">Shipping City</div>,
         cell: (info) => (
           <div
             onClick={() => handleRowClick(info.row.original)}
-            className="cursor-pointer"
+            className="cursor-pointer text-start"
           >
             {info.getValue() || "N/A"}
           </div>
         ),
       }),
       columnHelper.accessor("orderDate", {
-        header: "Date",
-        cell: (info) => new Date(info.getValue()).toLocaleDateString(),
+        header: () => <div className="text-start">Date</div>,
+        cell: (info) => (
+          <div className="text-start">
+            {new Date(info.getValue()).toLocaleDateString()}
+          </div>
+        ),
       }),
       columnHelper.accessor("grandTotal", {
         header: "Price",
@@ -133,7 +140,7 @@ export const Order = () => {
         ),
       }),
       columnHelper.accessor("paymentStatus", {
-        header: "Payment",
+        header: () => <div className="text-start">Payment</div>,
         cell: (info) => {
           const isPaid = info.getValue() === "Paid";
           const isProcessing = info.getValue() === "Processing";
@@ -152,7 +159,7 @@ export const Order = () => {
 
           return (
             <div
-              className="flex justify-center items-center"
+              className="flex justify-start items-center"
               onClick={() => handleRowClick(info.row.original)}
             >
               <div
@@ -166,7 +173,7 @@ export const Order = () => {
         },
       }),
       columnHelper.accessor("status", {
-        header: "Status",
+        header: () => <div className="text-start">Status</div>,
         cell: ({ row }) => {
           const status = row.original.status;
 
@@ -185,7 +192,7 @@ export const Order = () => {
           }
 
           return (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-start items-center">
               <div
                 className={`${colorClass} flex items-center justify-start gap-3 w-24`}
               >
@@ -205,25 +212,31 @@ export const Order = () => {
       Array.isArray(data) ? data : data?.items || []
     ) as OrderData[];
 
-    const processData = (items: OrderData[]) => {
-      let result = [...items];
+    const processData = (item: OrderData[]) => {
+      let result = [...item];
 
       if (searchTerm) {
         const lowerTerm = searchTerm.toLowerCase();
-        result = result.filter(
-          (order) =>
-            order.orderId &&
-            String(order.orderId).toLowerCase().includes(lowerTerm),
-        );
+        result = result.filter((order) => {
+          if (
+            Array.isArray(order.items) &&
+            order.items.some(
+              (it) =>
+                it.productName &&
+                it.productName.toLowerCase().includes(lowerTerm),
+            )
+          ) {
+            return true;
+          }
+
+          return false;
+        });
       }
 
-      if (sortType === "date") {
-        result.sort(
-          (a, b) =>
-            new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime(),
-        );
-      } else if (sortType === "price") {
-        result.sort((a, b) => Number(a.grandTotal) - Number(b.grandTotal));
+      if (sortType === "ascending") {
+        result.sort((a, b) => Number(a.orderId) - Number(b.orderId));
+      } else if (sortType === "descending") {
+        result.sort((a, b) => Number(b.orderId) - Number(a.orderId));
       }
 
       return result;
@@ -340,11 +353,11 @@ export const Order = () => {
           data={tabsData}
           tabsListClassName="bg-[#EAF8E7] flex dark:bg-accent"
         />
-        <div className="absolute top-0 right-0 w-70 flex gap-2 justify-end items-center">
+        <div className="absolute top-0 right-0 w-85 flex gap-2 justify-end items-center">
           <Input
             onChange={(e) => setSearchTerm(e.target.value)}
             type="text"
-            placeholder="Search for order..."
+            placeholder="Search for order by product name..."
             value={searchTerm}
           />
           <div className="p-2 rounded-lg border shadow-2xl">
@@ -356,18 +369,26 @@ export const Order = () => {
               }
               className="p-2 flex flex-col gap-2"
             >
-              <div
-                className="cursor-pointer hover:text-green-600"
-                onClick={() => setSortType("date")}
+              <DropdownMenuItem
+                className={
+                  sortType === "ascending"
+                    ? "bg-accent text-accent-foreground"
+                    : ""
+                }
+                onSelect={() => setSortType("ascending")}
               >
-                Sort by Date
-              </div>
-              <div
-                className="cursor-pointer hover:text-green-600"
-                onClick={() => setSortType("price")}
+                Sort by Ascending Order
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className={
+                  sortType === "descending"
+                    ? "bg-accent text-accent-foreground"
+                    : ""
+                }
+                onSelect={() => setSortType("descending")}
               >
-                Sort by Price
-              </div>
+                Sort by Descending Order
+              </DropdownMenuItem>
             </DropDown>
           </div>
         </div>
