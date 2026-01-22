@@ -58,6 +58,7 @@ export interface ProductType {
   images: ImageType[];
   relatedProducts: ProductType[];
   tags: Tag[];
+  discountId: number;
 }
 
 export interface Tag {

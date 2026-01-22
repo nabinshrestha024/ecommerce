@@ -259,9 +259,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                   <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
                     {currencyFormatter.format(product?.finalPrice ?? 0)}
                   </span>
-                  <span className="md:text-[12px] text-[12px] font-bold  text-red-500 line-through">
-                    {currencyFormatter.format(product?.price ?? 0)}
-                  </span>
+                  {product.discountId && (
+                    <span className="md:text-[12px] text-[12px] font-bold  text-red-500 line-through">
+                      {currencyFormatter.format(product?.price ?? 0)}
+                    </span>
+                  )}
                 </div>
               )}
             </div>
