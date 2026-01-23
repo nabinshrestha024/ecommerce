@@ -17,8 +17,8 @@ export const DashboardTransaction = () => {
     pageIndex: 0,
     pageSize: 10,
   });
-  const { data, isLoading } = useFetchProduct();
-  const orders = useFetchOrder(pagination.pageIndex + 1, pagination.pageSize);
+  const { data } = useFetchProduct();
+  const orders = useFetchOrder(pagination.pageIndex + 1, 100);
   const columnHelper = createColumnHelper<OrderData>();
   const columns = [
     columnHelper.accessor("orderId", {
@@ -76,7 +76,7 @@ export const DashboardTransaction = () => {
 
   const table = useReactTable({
     columns,
-    data: orders.data?.items.slice(0, 7) || [],
+    data: [...(orders.data?.items ?? [])].reverse().slice(0, 7),
     state: { pagination },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -105,7 +105,7 @@ export const DashboardTransaction = () => {
               .map((val, index) => {
                 if (index < 5) {
                   return (
-                    <div className="grid grid-cols-[1fr_1fr_1fr] gap-1.5 items-start border-b border-b-gray-200 pb-2">
+                    <div className="grid grid-cols-[20%_45%_10%] gap-1.5 items-start border-b border-b-gray-200 pb-2">
                       <div className="h-15 w-15 ">
                         <img
                           src={val.primaryImageUrl}
