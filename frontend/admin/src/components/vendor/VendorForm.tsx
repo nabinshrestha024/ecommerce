@@ -76,9 +76,12 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
       >
         <h2 className="text-[24px] font-bold mb-6 text-center">Edit Vendor</h2>
 
-        <div className="grid grid-cols-[1fr_3fr] gap-4 items-center mt-5 ">
-          <label className="font-medium ">Business Name</label>
-          <div className="col-span-1 w-full">
+        <div className="grid grid-cols-4 gap-10 items-center  mt-5">
+          <label className="col-span-1 font-small text-gray-700 whitespace-nowrap">
+            Business Name
+          </label>
+
+          <div className="col-span-3">
             <Input
               type="text"
               placeholder="Enter business name"
@@ -87,9 +90,11 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
             />
           </div>
         </div>
-        <div className="grid grid-cols-[1fr_3fr] gap-4 items-center mt-5">
-          <label className="font-medium ">Contact Person</label>
-          <div className="col-span-1 w-full">
+        <div className="grid grid-cols-4 gap-10 items-center  mt-5">
+          <label className="col-span-1 font-small text-gray-700 whitespace-nowrap">
+            Contact Person
+          </label>
+          <div className="col-span-3">
             <Input
               type="text"
               placeholder="Enter contact person"
@@ -99,9 +104,11 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-[1fr_3fr] gap-4 items-center mt-5">
-          <label className="font-medium ">Email</label>
-          <div className="col-span-1 w-full">
+        <div className="grid grid-cols-4 gap-10 items-center  mt-5">
+          <label className="col-span-1 font-small text-gray-700 whitespace-nowrap">
+            Email
+          </label>
+          <div className="col-span-3">
             <Input
               type="email"
               placeholder="Enter email address"
@@ -111,9 +118,11 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-[1fr_3fr] gap-4 items-center mt-5">
-          <label className="font-medium ">Phone</label>
-          <div className="col-span-1 w-full">
+        <div className="grid grid-cols-4 gap-10 items-center  mt-5">
+          <label className="col-span-1 font-small text-gray-700 whitespace-nowrap">
+            Phone
+          </label>
+          <div className="col-span-3">
             <Input
               type="text"
               placeholder="Enter phone number"
@@ -123,9 +132,11 @@ export const VendorForm = ({ vendor, onSave }: Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-[1fr_3fr] gap-4 items-center mt-5">
-          <label className="font-medium ">Address</label>
-          <div className="col-span-1 w-full">
+        <div className="grid grid-cols-4 gap-10 items-center  mt-5">
+          <label className="col-span-1 font-small text-gray-700 whitespace-nowrap">
+            Address
+          </label>
+          <div className="col-span-3">
             <Input
               type="text"
               placeholder="Enter address"

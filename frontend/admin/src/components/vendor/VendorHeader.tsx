@@ -24,7 +24,7 @@ export const VendorHeader = () => {
               </Button>
             }
           >
-            <div className="max-h-[70vh] overflow-y-auto px-4 py-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <div className="max-h-[70vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
               {" "}
               <AddVendorForm />
             </div>

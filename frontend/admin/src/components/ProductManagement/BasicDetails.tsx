@@ -41,7 +41,7 @@ export const BasicDetails = () => {
               placeholder="Enter description"
               rows={4}
               {...register("description")}
-              className={`w-full  px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 ${errors.description ? "border-red-500" : ""}`}
+              className={`w-full px-4 py-2 border border-[#DFE0E1] rounded focus-visible:border-[#DFE0E1] focus-visible:ring-0 ${errors.description ? "border-red-500" : ""}`}
             />
           </div>
         </div>
