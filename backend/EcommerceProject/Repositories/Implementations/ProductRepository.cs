@@ -19,7 +19,8 @@ namespace EcommerceProject.Repositories.Implementations
             _tagRepository = tagRepository;
         }
 
-        public async Task<ProductCatalogResponse> GetPagedAsync(int? categoryId, string? search, string? categoryName, List<string>? tags, decimal? minPrice, decimal? maxPrice, int page, int pageSize, bool onlyActive, CancellationToken ct)
+        
+        public async Task<ProductCatalogResponse> GetPagedAsync(int? categoryId, string? search, string? categoryName, List<string>? tags, decimal? minPrice, decimal? maxPrice, int page, int pageSize, string sortOrder, bool onlyActive, CancellationToken ct)
         {
             using var conn = _factory.CreateConnection();
 
@@ -33,7 +34,9 @@ namespace EcommerceProject.Repositories.Implementations
                 MaxPrice = maxPrice,
                 Page = page,
                 PageSize = pageSize,
+                SortOrder = sortOrder,
                 OnlyActive = onlyActive
+                
             };
 
             using var multi = await conn.QueryMultipleAsync(
@@ -322,7 +325,6 @@ namespace EcommerceProject.Repositories.Implementations
             );
         }
 
-        // helper functions
         private class AttributeMapping
         {
             public int VariantId { get; set; }
