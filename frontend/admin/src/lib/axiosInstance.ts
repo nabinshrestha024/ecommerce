@@ -5,7 +5,8 @@ export const axiosInstance = axios.create({
   // baseURL: "http://192.168.80.167:5009/v1/",
   // baseURL: "http://192.168.80.246/v1/",
   // baseURL: "http://192.168.80.251/v1/",
-  baseURL: "http://192.168.80.181/v1/",
+  // baseURL: "http://192.168.80.181/v1/",
+  baseURL: "http://192.168.80.179/v1/",
   timeout: 10000,
 });
 axiosInstance.interceptors.request.use(
