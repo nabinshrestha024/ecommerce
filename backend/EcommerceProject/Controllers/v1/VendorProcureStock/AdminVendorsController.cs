@@ -25,8 +25,7 @@ namespace EcommerceProject.Controllers.v1.Admin
         [HttpGet]
         public async Task<IActionResult> GetAllVendors(
             [FromQuery] bool? isActive, 
-            [FromQuery] PaginationDto pagination,
-            string sortOrder = "desc")
+            [FromQuery] PaginationDto pagination)
         {
             try
             {
