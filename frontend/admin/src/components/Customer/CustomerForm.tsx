@@ -106,7 +106,7 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
                 {...register("role")}
                 className="accent-blue-600"
               />
-              <span>True</span>
+              <span>Admin</span>
             </label>
 
             <label className="flex items-center gap-2">
@@ -116,7 +116,7 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
                 {...register("role")}
                 className="accent-blue-600"
               />
-              <span>False</span>
+              <span>Customer</span>
             </label>
           </div>
 
@@ -131,7 +131,7 @@ export const CustomerForm = ({ customer, onSave }: Props) => {
             type="submit"
             className="bg-green-600 hover:bg-green-700 text-white px-10 py-2 rounded transition mt-5"
           >
-            Save Product
+            Save
           </button>
         </div>
       </form>
