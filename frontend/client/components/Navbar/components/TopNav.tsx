@@ -174,12 +174,13 @@ export const TopNav = () => {
           >
             <div className="w-[150px] flex flex-col gap-2">
               <div
-                className="text-sm px-2 py-1 border-b cursor-pointer"
+                className="flex items-center gap-2 text-sm px-2 py-1 border-b cursor-pointer"
                 onClick={() => {
                   setProfileOpen(false);
                   router.push("/profile");
                 }}
               >
+                <FaUserLarge size={16} />
                 My Profile
               </div>
 
