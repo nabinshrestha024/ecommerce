@@ -1,12 +1,12 @@
-﻿USE [EcommerceDB]
+﻿USE EcommerceDB;
 GO
 
-CREATE OR ALTER   PROCEDURE [dbo].[spReport_GetTotalSales]
+
+CREATE OR ALTER PROCEDURE dbo.spReport_GetTotalSales
 (
     @FromDate DATETIME = NULL,
     @ToDate   DATETIME = NULL,
-    @Period   VARCHAR(20) = NULL,
-    @SortOrder VARCHAR(10) ='desc'
+    @Period   VARCHAR(20) = NULL
 )
 AS
 BEGIN
@@ -14,7 +14,6 @@ BEGIN
 
     DECLARE @Today DATE = CAST(GETDATE() AS DATE);
 
-   
     IF @Period IS NOT NULL
     BEGIN
         IF @Period = 'day'
@@ -24,38 +23,33 @@ BEGIN
         END
         ELSE IF @Period = 'lastweek'
         BEGIN
-            SET @FromDate = DATEADD(DAY, -6, @Today); -- includes today
+            SET @FromDate = DATEADD(DAY, -6, @Today);
             SET @ToDate   = DATEADD(DAY, 1, @Today);
         END
         ELSE IF @Period = 'lastmonth'
         BEGIN
-            SET @FromDate = DATEADD(DAY, -29, @Today); -- includes today
+            SET @FromDate = DATEADD(DAY, -29, @Today); 
             SET @ToDate   = DATEADD(DAY, 1, @Today);
         END
     END
 
 
-    IF @FromDate IS NULL SET @FromDate = '2020-01-01';
+    IF @FromDate IS NULL SET @FromDate = '2025-01-01';
     IF @ToDate   IS NULL SET @ToDate   = DATEADD(DAY, 1, @Today);
 
-    ;WITH DateRange AS
-    (
-        SELECT CAST(@FromDate AS DATE) AS [Date]
-        UNION ALL
-        SELECT DATEADD(DAY, 1, [Date])
-        FROM DateRange
-        WHERE [Date] < CAST(DATEADD(DAY, -1, @ToDate) AS DATE)
-    )
-    SELECT
+      SELECT
         d.[Date],
         ISNULL(SUM(o.TotalAmount), 0) AS TotalSales,
         COUNT(o.OrderId) AS TotalOrders
-    FROM DateRange d
+    FROM
+    (
+        SELECT DATEADD(DAY, n.number, CAST(@FromDate AS DATE)) AS [Date]
+        FROM master.dbo.spt_values n
+        WHERE n.type = 'P'
+          AND n.number <= DATEDIFF(DAY, @FromDate, @ToDate)
+    ) d
     LEFT JOIN Orders o
         ON CAST(o.OrderDate AS DATE) = d.[Date]
     GROUP BY d.[Date]
-    ORDER BY
-        CASE WHEN @SortOrder = 'asc'  THEN d.[Date] END ASC,
-        CASE WHEN @SortOrder = 'desc' THEN d.[Date] END DESC
-    OPTION (MAXRECURSION 1000);
+    ORDER BY d.[Date];
 END

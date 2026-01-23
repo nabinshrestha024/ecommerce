@@ -1,13 +1,11 @@
 ﻿USE [EcommerceDB]
 GO
 
-
-CREATE OR ALTER   PROCEDURE spReport_GetUserRegistrationOverview
+CREATE OR ALTER PROCEDURE spReport_GetUserRegistrationOverview
 (
     @FromDate DATE = NULL,
     @ToDate   DATE = NULL,
-    @Period   VARCHAR(10) = NULL,   -- lastday | lastweek | lastmonth
-    @sortOrder VARCHAR(20) = 'Desc'
+    @Period   VARCHAR(10) = NULL   -- lastday | lastweek | lastmonth
 )
 AS
 BEGIN
@@ -66,8 +64,6 @@ BEGIN
     FROM AllDates ad
     LEFT JOIN Registrations r
         ON ad.[Date] = r.[Date]
-    ORDER BY
-    CASE WHEN @SortOrder = 'asc'  THEN ad.[Date] END ASC,
-        CASE WHEN @SortOrder = 'desc' THEN ad.[Date] END DESC
+    ORDER BY ad.[Date]
     OPTION (MAXRECURSION 0);
 END

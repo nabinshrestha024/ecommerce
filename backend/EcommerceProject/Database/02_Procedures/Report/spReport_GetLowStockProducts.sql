@@ -1,13 +1,11 @@
 ﻿USE [EcommerceDB]
 GO
 
-
-CREATE OR ALTER PROCEDURE spReport_GetLowStockProducts
+CREATE OR ALTER   PROCEDURE spReport_GetLowStockProducts
     (
     @FromDate DATETIME = NULL,
     @ToDate DATETIME = NULL,
-    @Period VARCHAR(10) = NULL,     --Way| Week | Month
-    @sortOrder VARCHAR(20) = 'desc'
+    @Period VARCHAR(10) = NULL     --Way| Week | Month
     )
 AS
 BEGIN
@@ -52,8 +50,6 @@ BEGIN
     LEFT JOIN Orders o
         ON CAST(o.OrderDate AS DATE) = d.[Date]
     GROUP BY d.[Date]
-    ORDER BY
-    CASE WHEN @sortOrder = 'asc' THEN d.Date END ASC,
-    CASE WHEN @sortOrder = 'desc' THEN d.Date END DESC
+    ORDER BY d.[Date]
     OPTION (MAXRECURSION 1000);
 END
