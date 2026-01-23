@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { ProductCard } from "./ProductCard";
-import { Card } from "../Card/Card";
+import { Card } from "../card/Card";
 import { ProductReview } from "./Review/ProductReview";
 import { currencyFormatter } from "./ProductDisplay";
 import { Spinner } from "../Spinner/Spinner";
@@ -20,6 +20,7 @@ import {
   BreadcrumbSeparator,
 } from "@/ui/breadcrumb";
 import { useParams } from "next/navigation";
+import { useCart } from "@/contexts/CartContext";
 
 export interface Variant {
   variantId: number;
@@ -114,16 +115,65 @@ const ProductDetails = () => {
     );
   };
 
+  const { setCartLocal } = useCart();
+
   const handleAddToCart = () => {
-    if (!token) {
-      toast.message("Login to add to cart");
+    if (token) {
+      addToCart.mutate({ variantId: activeVariant?.variantId ?? 0, quantity });
       return;
     }
 
-    addToCart.mutate({
-      variantId: activeVariant?.variantId ?? 0,
-      quantity,
+    const attributesForCart = Object.entries(selectedVariants ?? {}).map(
+      ([name, value]) => ({ name, value: value ?? "" }),
+    );
+
+    const unitFinalPrice =
+      productItems?.finalPrice === 0
+        ? productItems?.price
+        : productItems?.finalPrice;
+
+    setCartLocal((prev) => {
+      const existingItem = prev.find(
+        (item) => item.variantId === activeVariant?.variantId,
+      );
+
+      if (existingItem) {
+        return prev.map((item) =>
+          item.variantId === activeVariant?.variantId
+            ? {
+                ...item,
+                quantity: item.quantity + quantity,
+                totalPrice: (item.quantity + quantity) * (unitFinalPrice ?? 0),
+                finalPrice: unitFinalPrice ?? 0,
+              }
+            : item,
+        );
+      }
+
+      return [
+        ...prev,
+        {
+          cartId: Date.now(),
+          productId: productItems?.productId || 0,
+          variantId: activeVariant?.variantId || 0,
+
+          productName: productItems?.name || "",
+          sku: productItems?.sku || "",
+          productImageUrl: productItems?.images[0].imageUrl || "",
+          description: productItems?.description || "",
+
+          price: productItems?.price || 0,
+          quantity,
+          totalPrice: (unitFinalPrice ?? 0) * quantity,
+          finalPrice: unitFinalPrice ?? 0,
+
+          addedDate: new Date().toISOString(),
+          attributes: attributesForCart,
+        },
+      ];
     });
+
+    toast.success("Item added to cart successfully");
   };
 
   const imageUrls = productItems?.images?.map((img) => img.imageUrl);

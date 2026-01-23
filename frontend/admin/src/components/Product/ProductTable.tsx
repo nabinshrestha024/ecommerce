@@ -127,7 +127,7 @@ export const ProductTable = () => {
               <img
                 src={value ?? ""}
                 alt="image"
-                className="w-full h-full object-content"
+                className="w-full h-full object-cover"
               />
             </div>
           </div>
