@@ -22,26 +22,27 @@ namespace EcommerceProject.Controllers.v1.Admin
             _logger = logger;
         }
 
-[HttpGet]
-public async Task<IActionResult> GetAllVendors(
-    [FromQuery] bool? isActive, 
-    [FromQuery] PaginationDto pagination)
-{
-    try
-    {
-        var result = await _vendorService.GetAllVendorsAsync(isActive, pagination);
-        
-        return Ok(new { 
-            Success = true, 
-            Data = result 
-        });
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError(ex, "Error getting vendors");
-        return StatusCode(500, new { Success = false, Message = "Internal server error" });
-    }
-}
+        [HttpGet]
+        public async Task<IActionResult> GetAllVendors(
+            [FromQuery] bool? isActive, 
+            [FromQuery] PaginationDto pagination,
+            string sortOrder = "desc")
+        {
+            try
+            {
+                var result = await _vendorService.GetAllVendorsAsync(isActive, pagination);
+                
+                return Ok(new { 
+                    Success = true, 
+                    Data = result 
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting vendors");
+                return StatusCode(500, new { Success = false, Message = "Internal server error" });
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateVendor([FromBody] CreateVendorRequestDto request)
