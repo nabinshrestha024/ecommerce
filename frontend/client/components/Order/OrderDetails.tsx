@@ -7,7 +7,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useInitiatePayment } from "@/hooks/esewa/useInitiatePayment";
 import { EsewaPaymentPayload } from "../Navbar/components/CheckoutForm";
 import { Trash2, X } from "lucide-react";
-import { Dialog } from "../Dialog/Dialog";
+import { Dialog } from "../dialog/Dialog";
 import { ProductReviewForm } from "../Product/Review/ReviewForm";
 import { ConfirmationDialog } from "../ConfirmationDialog/ConfirmationDialog";
 
@@ -22,6 +22,7 @@ export const OrderDetails = ({
   const { mutate: cancelOrder, isPending: isCancelling } = useCancelOrder(
     order.orderId,
   );
+  console.log(data ?? "");
   const [total, setTotal] = useState("");
   const [signature, setSignature] = useState("");
   const [transactionUid, setTransactionUid] = useState("");
@@ -48,7 +49,6 @@ export const OrderDetails = ({
         Loading order details...
       </div>
     );
-
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="space-y-3">
@@ -95,7 +95,7 @@ export const OrderDetails = ({
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-bold text-gray-900">
-                      Rs. {val.unitPrice.toLocaleString()}
+                      Rs. {val.lineTotal.toLocaleString()}
                     </p>
                     <p className="text-[11px] text-gray-400 font-medium">
                       Qty: {val.quantity}
@@ -131,7 +131,7 @@ export const OrderDetails = ({
             <div>
               <p className="text-sm text-gray-500 font-medium">Order Total</p>
               <p className="text-2xl font-black text-gray-900">
-                Rs. {order.totalAmount}
+                Rs. {data?.totalAmount}
               </p>
             </div>
             <div className="text-right">

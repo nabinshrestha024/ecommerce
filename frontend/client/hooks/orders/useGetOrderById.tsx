@@ -20,7 +20,7 @@ export type OrderResponse = {
   orderId: number;
   userId: number;
   orderDate: string;
-  totalAmount: 390;
+  totalAmount: number;
   status: string;
   shippingName: string;
   shippingAddress: string;
