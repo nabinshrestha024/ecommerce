@@ -35,29 +35,42 @@ namespace EcommerceProject.Services.Implementations
             }
         }
 
-public async Task<PagedResult<VendorDto>> GetAllVendorsAsync(bool? isActive, PaginationDto pagination)
-{
-    try
-    {
-        _logger.LogInformation("Getting vendors Page:{PageNumber}, Size:{PageSize}", pagination.Page, pagination.PageSize);
+        public async Task<PagedResult<VendorDto>> GetAllVendorsAsync(bool? isActive, PaginationDto pagination)
+        {
+            try
+            {
+                string sortOrder = "ascending"; 
+                if (!string.IsNullOrEmpty(pagination.SortOrder))
+                {
+                    if (pagination.SortOrder.StartsWith("desc", StringComparison.OrdinalIgnoreCase))
+                        sortOrder = "descending";
+                }
 
-        var vendors = await _vendorRepository.GetAllVendorsAsync(isActive, pagination.Page, pagination.PageSize);
-        
-        int totalCount = vendors.FirstOrDefault()?.TotalCount ?? 0;
+                _logger.LogInformation("Fetching vendors - Page: {Page}, Size: {Size}, Order: {Order}", 
+                    pagination.Page, pagination.PageSize, sortOrder);
 
-        return new PagedResult<VendorDto>(
-            vendors, 
-            pagination.Page, 
-            pagination.PageSize, 
-            totalCount
-        );
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError(ex, "Error getting paged vendors in service");
-        throw;
-    }
-}
+                var vendors = await _vendorRepository.GetAllVendorsAsync(
+                    isActive,
+                    pagination.Page,
+                    pagination.PageSize,
+                    sortOrder
+                );
+
+                int totalCount = vendors.FirstOrDefault()?.TotalCount ?? 0;
+
+                return new PagedResult<VendorDto>(
+                    vendors, 
+                    pagination.Page, 
+                    pagination.PageSize, 
+                    totalCount
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in VendorService.GetAllVendorsAsync");
+                throw;
+            }
+        }
 
         public async Task<VendorDto> CreateVendorAsync(CreateVendorRequestDto request, int createdBy)
         {
