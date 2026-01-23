@@ -24,7 +24,7 @@ export const Product = () => {
           triggerContent={
             <Button className="px-5 py-4 text-[15px] font-bold leading-3 bg-[#4EA674] text-white  rounded-lg hover:bg-[#4EA674]">
               <GoPlusCircle size={20} />
-              Add Attribute
+              Add Product
             </Button>
           }
           className=" w-[95vw] max-w-[1000px] max-h-[90vh] overflow-hidden flex flex-col"
