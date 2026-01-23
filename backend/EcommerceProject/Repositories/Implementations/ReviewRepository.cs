@@ -119,7 +119,7 @@ namespace EcommerceProject.Repositories.Implementations
 
             using var multi = await conn.QueryMultipleAsync(
                 "spAdminReviews_GetPaged",
-                new { pagination.Page, pagination.PageSize },
+                new { pagination.Page, pagination.PageSize, pagination.SortOrder },
                 commandType: CommandType.StoredProcedure
             );
 
@@ -141,7 +141,7 @@ namespace EcommerceProject.Repositories.Implementations
 
             using var multi = await conn.QueryMultipleAsync(
                 "spAdminWebsiteReviews_GetPaged",
-                new { pagination.Page, pagination.PageSize },
+                new { pagination.Page, pagination.PageSize , pagination.SortOrder},
                 commandType: CommandType.StoredProcedure
             );
 
