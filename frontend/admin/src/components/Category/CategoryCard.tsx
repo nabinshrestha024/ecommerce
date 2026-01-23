@@ -152,10 +152,10 @@ export const CategoryCard = () => {
         ))}
       </div>
 
-      {totalPages > 0 && (
+      {totalPages > 1 && (
         <div className="flex justify-between items-center fixed bottom-5 left-0 w-full">
           <Pagination>
-            <PaginationContent className="flex justify-around w-full">
+            <PaginationContent className="flex justify-center gap-4 w-full">
               <PaginationItem className="flex gap-2">
                 <PaginationPrevious
                   onClick={() =>
