@@ -24,6 +24,7 @@ namespace EcommerceProject.Repositories.Implementations
             parameters.Add("@FromDate", filter.FromDate);
             parameters.Add("@ToDate", filter.ToDate);
             parameters.Add("@Period", filter.Period?.ToString().ToLower());
+            parameters.Add("@sortOrder", filter.sortOrder);
 
             return await connection.QueryAsync<SalesOverviewDto>
                 ("spReport_GetTotalSales", 
@@ -39,6 +40,7 @@ namespace EcommerceProject.Repositories.Implementations
             parameters.Add("@FromDate", filter.FromDate);
             parameters.Add("@ToDate", filter.ToDate);
             parameters.Add("@Period", filter.Period?.ToString().ToLower());
+            parameters.Add("@sortOrder", filter.sortOrder);
 
             return await connection.QueryAsync<TopProductDto>
                 ("spReport_GetTopProducts",
@@ -54,6 +56,7 @@ namespace EcommerceProject.Repositories.Implementations
             parameters.Add("@FromDate", filter.FromDate);
             parameters.Add("@ToDate", filter.ToDate);
             parameters.Add("@Period", filter.Period?.ToString().ToLower());
+            parameters.Add("@sortOrder", filter.sortOrder);
 
             return await connection.QueryAsync<CategorySalesDto>
                 ("spReport_GetSalesByCategory",
@@ -68,6 +71,7 @@ namespace EcommerceProject.Repositories.Implementations
             parameters.Add("@FromDate", filter.FromDate);
             parameters.Add("@ToDate", filter.ToDate);
             parameters.Add("@Period", filter.Period?.ToString().ToLower());
+            parameters.Add("@sortOrder", filter.sortOrder);
 
             return await connection.QueryAsync<LowStockProductDto>
                 ("spReport_GetLowStockProducts",
@@ -84,6 +88,7 @@ namespace EcommerceProject.Repositories.Implementations
             parameters.Add("@FromDate", filter.FromDate);
             parameters.Add("@ToDate", filter.ToDate);
             parameters.Add("@Period", filter.Period?.ToString().ToLower());
+            parameters.Add("@sortOrder", filter.sortOrder);
 
             return await connection.QueryAsync<UserRegisterOverviewDto>(
                 "spReport_GetUserRegistrationOverview",

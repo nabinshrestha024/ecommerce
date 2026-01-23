@@ -9,7 +9,7 @@ namespace EcommerceProject.Repositories.Interfaces
         Task UpdateAsync(UpdateDiscountDto dto);
 
         Task ToggleAsync(int discountId, bool isActive);
-        Task<IEnumerable<DiscountDto>> GetAllAsync();
+        Task<IEnumerable<DiscountDto>> GetAllAsync(string sortOrder);
 
         Task AddDiscountToProductsAsync(int discountId, List<int> productIds);
         Task AddDiscountToVariantsAsync(int discountId, List<int> variantIds);

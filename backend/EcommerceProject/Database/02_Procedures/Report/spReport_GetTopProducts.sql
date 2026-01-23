@@ -1,12 +1,12 @@
 ﻿USE [EcommerceDB]
 GO
 
-
-CREATE OR ALTER PROCEDURE spReport_GetTopProducts
+CREATE OR ALTER   PROCEDURE [dbo].[spReport_GetTopProducts]
 (
     @FromDate DATETIME = NULL,
     @ToDate DATETIME = NULL,
-    @Period VARCHAR(20) = NULL
+    @Period VARCHAR(20) = NULL,
+    @sortOrder VARCHAR(20) = 'Desc'
     )
 AS
 BEGIN
@@ -46,5 +46,7 @@ BEGIN
     WHERE (@FromDate IS NULL OR o.OrderDate >= @FromDate)
       AND (@ToDate IS NULL OR o.OrderDate <= @ToDate)
     GROUP BY p.ProductId, p.Name
-    ORDER BY QuantitySold ASC;
+    ORDER BY
+    CASE WHEN @SortOrder = 'asc'  THEN SUM(oi.Quantity) END ASC,
+        CASE WHEN @SortOrder = 'desc' THEN SUM(oi.Quantity) END DESC;
 END

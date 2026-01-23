@@ -19,9 +19,12 @@ namespace EcommerceProject.Services.Implementations
         }
 
 
-        public async Task<IEnumerable<DiscountDto>> GetAllAsync()
+        public async Task<IEnumerable<DiscountDto>> GetAllAsync(string sortOrder)
         {
-            return await _adminRepo.GetAllAsync();
+            if (string.IsNullOrEmpty(sortOrder))
+                sortOrder = "desc";
+
+            return await _adminRepo.GetAllAsync(sortOrder);
         }
 
         public async Task<int> CreateAsync(CreateDiscountDto dto)

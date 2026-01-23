@@ -19,13 +19,20 @@ namespace EcommerceProject.Repositories.Implementations
         }
 
 
-        public async Task<IEnumerable<DiscountDto>> GetAllAsync()
+        public async Task<IEnumerable<DiscountDto>> GetAllAsync(string sortOrder)
         {
+            using var conn = _sqlConnectionFactory.CreateConnection();
 
-            using var connection = _sqlConnectionFactory.CreateConnection();
-            return await connection.QueryAsync<DiscountDto>(
+            var discounts = await conn.QueryAsync<DiscountDto>(
                 "spDiscount_GetAll",
-                commandType: CommandType.StoredProcedure);
+                new
+                {
+                    SortOrder = sortOrder
+                },
+                commandType: CommandType.StoredProcedure
+            );
+
+            return discounts.ToList();
         }
 
         public async Task AddDiscountToProductsAsync(int discountId, List<int> productIds)

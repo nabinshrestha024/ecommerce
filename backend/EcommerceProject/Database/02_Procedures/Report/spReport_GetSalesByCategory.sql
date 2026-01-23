@@ -1,15 +1,11 @@
 ﻿USE [EcommerceDB]
 GO
-/****** Object:  StoredProcedure [dbo].[spReport_GetSalesByCategory]    Script Date: 1/13/2026 10:24:48 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 
-CREATE OR ALTER PROCEDURE [dbo].[spReport_GetSalesByCategory]
+CREATE OR ALTER   PROCEDURE [dbo].[spReport_GetSalesByCategory]
     @FromDate DATETIME = NULL,
     @ToDate DATETIME = NULL,
-    @Period VARCHAR(20) = NULL
+    @Period VARCHAR(20) = NULL,
+    @sortOrder VARCHAR(20) = 'desc'
 
 AS
 BEGIN
@@ -47,5 +43,7 @@ BEGIN
     WHERE (@FromDate IS NULL OR o.OrderDate >= @FromDate)
       AND (@ToDate IS NULL OR o.OrderDate <= @ToDate)
     GROUP BY c.Name
-    ORDER BY TotalRevenue ASC;
+    ORDER BY
+    CASE WHEN @sortOrder = 'asc' THEN SUM(oi.Quantity * oi.UnitPrice) END ASC,
+    CASE WHEN @sortOrder = 'desc' THEN SUM (oi.Quantity * oi.UnitPrice) END DESC;
 END

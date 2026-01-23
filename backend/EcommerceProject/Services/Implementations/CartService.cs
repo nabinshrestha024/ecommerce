@@ -148,7 +148,7 @@ namespace EcommerceProject.Services.Implementations
                 throw;
             }
 
-            // ✅ ONLY ONE PLACE for notification
+        
             await _notificationservice.NotifyUserAsync(
                 userId,
                 "Order Placed Successfully",
