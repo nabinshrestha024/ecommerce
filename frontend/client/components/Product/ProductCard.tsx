@@ -193,7 +193,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     <Card
       className="p-3 w-full lg:max-w-[285px] border-0 shadow-none flex flex-col justify-between h-[370px] md:h-[380px] "
       key={product.productId}
-      rootClassName="py-0 border shadow-xl lg:max-w-[285px]"
+      rootClassName="py-0 border shadow-xl lg:max-w-[285px] overflow-hidden"
     >
       <div className="flex flex-col gap-2">
         <div className="w-full h-[185px] relative shrink-0">
