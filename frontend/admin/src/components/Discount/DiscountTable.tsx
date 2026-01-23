@@ -56,11 +56,17 @@ export const DiscountTable = () => {
     }),
     columnHelper.accessor("discountValue", {
       header: "Discount Value",
-      cell: (info) => (
-        <div className="text-end">
-          {currencyFormatter.format(info.getValue())}
-        </div>
-      ),
+      cell: (info) => {
+        const row = info.row.original;
+
+        return (
+          <div className="text-end">
+            {row.discountType === "Flat"
+              ? currencyFormatter.format(info.getValue())
+              : info.getValue() + "%"}
+          </div>
+        );
+      },
     }),
 
     columnHelper.accessor("isActive", {
