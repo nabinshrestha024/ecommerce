@@ -63,7 +63,7 @@ export const Notification = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button
+        <div
           className="relative rounded-lg  transition-colors"
           onPointerDownCapture={handleNotification}
         >
@@ -71,7 +71,7 @@ export const Notification = () => {
           {!read && isAuth && (
             <span className="absolute top-0 right-0 flex items-center justify-center h-2 w-2 px-1 text-[10px] font-semibold text-white bg-red-500 rounded-full"></span>
           )}
-        </button>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"

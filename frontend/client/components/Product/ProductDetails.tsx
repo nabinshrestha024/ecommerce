@@ -140,8 +140,8 @@ const ProductDetails = () => {
           <BreadcrumbSeparator />
 
           <BreadcrumbItem>
-            <BreadcrumbLink href={`/product/id/${productItems.data?.slug}`}>
-              {productItems.data?.slug}
+            <BreadcrumbLink href={`/product/id/${productItems?.slug}`}>
+              {productItems?.name}
             </BreadcrumbLink>
           </BreadcrumbItem>
         </BreadcrumbList>
