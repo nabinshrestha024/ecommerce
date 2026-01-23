@@ -145,26 +145,6 @@ namespace EcommerceProject.Controllers.v1.Cart
             }
         }
 
-        //[Authorize]
-        //[HttpPost("merge")]
-        //public async Task<IActionResult> MergeCart([FromBody] List<GuestCartItemDto> guestCart)
-        //{
-        //    try
-        //    {
-        //        if(guestCart == null || guestCart.Any())
-        //        {
-        //            return Ok();
-        //        }
-
-        //        int userId = User.GetUserId().Value;
-        //        await _cartService.MergeGuestCartAsync(userId, guestCart);
-        //        return Ok(new { message = "Cart merged successfully" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, new { message = "Internal Server Error", error = ex.Message });
-        //    }
-        //}
         [HttpPost("merge")]
         [Authorize]
         public async Task<IActionResult> MergeCart([FromBody] List<GuestCartItemDto> guestCart)
