@@ -21,10 +21,15 @@ namespace EcommerceProject.Controllers.v1.Discount
             
         }
         [HttpGet("get")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string sortOrder = "Desc")
         {
+            if (sortOrder != "Asc" && sortOrder != "Desc")
+            {
+                return BadRequest("sortOrder must be 'Asc' or 'Desc'");
 
-            return Ok(await _service.GetAllAsync());
+            }
+                
+            return Ok(await _service.GetAllAsync(sortOrder));
         }
 
 

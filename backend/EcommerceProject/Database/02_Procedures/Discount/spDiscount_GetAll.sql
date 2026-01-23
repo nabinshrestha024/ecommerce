@@ -1,7 +1,10 @@
-﻿USE EcommerceDB;
+﻿USE [EcommerceDB]
 GO
 
-CREATE OR ALTER PROCEDURE dbo.spDiscount_GetAll
+CREATE OR ALTER PROCEDURE spDiscount_GetAll
+(
+    @SortOrder VARCHAR(10) ='desc'
+)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -14,27 +17,24 @@ BEGIN
         d.StartDate,
         d.EndDate,
         d.IsActive,
-        
 
-        -- Assigned Products
         (
-            SELECT da.ProductId
-            FROM DiscountAssigns da
-            WHERE da.DiscountId = d.DiscountId
-              AND da.ProductId IS NOT NULL
+            SELECT dp.ProductId
+            FROM DiscountProducts dp
+            WHERE dp.DiscountId = d.DiscountId
             FOR JSON PATH
         ) AS ProductIds,
 
-        -- Assigned Variants
         (
-            SELECT da.VariantId
-            FROM DiscountAssigns da
-            WHERE da.DiscountId = d.DiscountId
-              AND da.VariantId IS NOT NULL
+            SELECT dv.VariantId
+            FROM DiscountVariants dv
+            WHERE dv.DiscountId = d.DiscountId
             FOR JSON PATH
         ) AS VariantIds
 
     FROM Discounts d
-    ORDER BY d.DiscountId ASC;
+    ORDER BY
+    CASE WHEN @SortOrder = 'asc' THEN d.DiscountId END DESC,
+    CASE WHEN @SortOrder = 'desc' THEN d.DiscountId END ASC;
+
 END
-GO
