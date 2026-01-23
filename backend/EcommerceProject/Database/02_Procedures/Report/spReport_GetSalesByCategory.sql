@@ -1,11 +1,11 @@
 ﻿USE [EcommerceDB]
 GO
 
-CREATE OR ALTER   PROCEDURE [dbo].[spReport_GetSalesByCategory]
+
+CREATE OR ALTER PROCEDURE [dbo].[spReport_GetSalesByCategory]
     @FromDate DATETIME = NULL,
     @ToDate DATETIME = NULL,
-    @Period VARCHAR(20) = NULL,
-    @sortOrder VARCHAR(20) = 'desc'
+    @Period VARCHAR(20) = NULL
 
 AS
 BEGIN
@@ -43,7 +43,5 @@ BEGIN
     WHERE (@FromDate IS NULL OR o.OrderDate >= @FromDate)
       AND (@ToDate IS NULL OR o.OrderDate <= @ToDate)
     GROUP BY c.Name
-    ORDER BY
-    CASE WHEN @sortOrder = 'asc' THEN SUM(oi.Quantity * oi.UnitPrice) END ASC,
-    CASE WHEN @sortOrder = 'desc' THEN SUM (oi.Quantity * oi.UnitPrice) END DESC;
+    ORDER BY TotalRevenue ASC;
 END

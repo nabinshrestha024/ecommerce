@@ -8,6 +8,5 @@ namespace EcommerceProject.Filters
         public DateTime? ToDate { get; set; }
 
         public ReportPeriod? Period { get; set; }
-        public string sortOrder { get; set; }
     }
 }
