@@ -55,7 +55,7 @@ export const OrderDetails = ({
             </div>
 
             <div className="flex-1 flex flex-col justify-center min-w-0">
-              <div className="flex justify-between items-start">
+              <div className="flex flex-col justify-between items-start">
                 <div className="space-y-1">
                   <h4 className="text-md font-bold w-40 text-gray-900 leading-tight truncate">
                     {val.productName}
@@ -72,16 +72,16 @@ export const OrderDetails = ({
                   </div>
                 </div>
 
-                <div className="text-right">
+                <div>
                   <div className="flex flex-col gap-2">
-                    {val?.finalPrice === 0 ? (
+                    {val?.lineTotal === 0 ? (
                       <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
-                        {currencyFormatter.format(val?.lineTotal ?? 0)}
+                        {currencyFormatter.format(val?.unitPrice ?? 0)}
                       </span>
                     ) : (
                       <div className="flex gap-2">
                         <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
-                          {currencyFormatter.format(val?.finalPrice ?? 0)}
+                          {currencyFormatter.format(val?.lineTotal ?? 0)}
                         </span>
                       </div>
                     )}
@@ -101,7 +101,7 @@ export const OrderDetails = ({
           <div>
             <p className="text-sm text-gray-500 font-medium">Order Total</p>
             <p className="text-2xl font-black text-gray-900">
-              Rs. {order.totalAmount}
+              {currencyFormatter.format(order.totalAmount)}
             </p>
           </div>
           <div className="text-right">
