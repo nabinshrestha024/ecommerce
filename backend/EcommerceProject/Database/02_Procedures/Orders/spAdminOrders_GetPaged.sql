@@ -5,7 +5,8 @@ CREATE OR ALTER PROCEDURE spAdminOrders_GetPaged
     @Page INT,
     @PageSize INT,
     @Status VARCHAR(20) = NULL,
-    @Search VARCHAR(100) = NULL
+    @Search VARCHAR(100) = NULL,
+    @SortOrder VARCHAR(4) = 'desc'   -- ?? NEW
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -30,7 +31,9 @@ BEGIN
                 OR o.ShippingName LIKE '%' + @Search + '%'
                 OR o.ShippingPhone LIKE '%' + @Search + '%'
             )
-        ORDER BY o.OrderDate ASC 
+        ORDER BY
+            CASE WHEN @SortOrder = 'asc'  THEN o.OrderDate END ASC,
+            CASE WHEN @SortOrder = 'desc' THEN o.OrderDate END DESC
         OFFSET (@Page - 1) * @PageSize ROWS
         FETCH NEXT @PageSize ROWS ONLY
     )
@@ -49,10 +52,13 @@ BEGIN
     LEFT JOIN OrderItems oi ON oi.OrderId = op.OrderId
     LEFT JOIN Products p ON p.ProductId = oi.ProductId
     LEFT JOIN ProductImages pi
-    ON pi.ProductId = P.ProductId
-    AND pi.IsPrimary = 1
-    ORDER BY op.OrderDate ASC;
+        ON pi.ProductId = p.ProductId
+       AND pi.IsPrimary = 1
+    ORDER BY
+        CASE WHEN @SortOrder = 'asc'  THEN op.OrderDate END ASC,
+        CASE WHEN @SortOrder = 'desc' THEN op.OrderDate END DESC;
 
+    -- COUNT (no ORDER BY needed)
     SELECT COUNT(1)
     FROM Orders o
     WHERE
@@ -62,6 +68,7 @@ BEGIN
             OR o.ShippingName LIKE '%' + @Search + '%'
             OR o.ShippingPhone LIKE '%' + @Search + '%'
         );
+
     
     SELECT
         oi.OrderItemId,

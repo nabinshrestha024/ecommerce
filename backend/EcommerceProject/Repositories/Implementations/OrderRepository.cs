@@ -123,7 +123,8 @@ namespace EcommerceProject.Repositories.Implementations
                     Page = pagination.Page,
                     PageSize = pagination.PageSize,
                     Status = status,
-                    Search = search
+                    Search = search,
+                    SortOrder = pagination.SortOrder
                 },
                 commandType: CommandType.StoredProcedure
             );
