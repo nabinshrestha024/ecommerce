@@ -95,7 +95,7 @@ export const DiscountForm = ({ discount, setOpen }: Props) => {
           Edit Discount
         </h2>
 
-        <div className="grid grid-cols-4 gap-4  mt-5">
+        <div className="grid grid-cols-4 gap-4 items-center mt-5">
           <label className="font-medium text-gray-700">Discount Id</label>
           <div className="col-span-3">
             <Input
@@ -107,7 +107,7 @@ export const DiscountForm = ({ discount, setOpen }: Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 mt-5">
+        <div className="grid grid-cols-4 gap-4 items-center mt-5">
           <label className="col-span-1 font-medium text-gray-700 whitespace-nowrap">
             Discount Name
           </label>
@@ -121,7 +121,7 @@ export const DiscountForm = ({ discount, setOpen }: Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4  mt-5">
+        <div className="grid grid-cols-4 gap-4 items-center mt-5">
           <label className="col-span-1 font-medium text-gray-700 whitespace-nowrap">
             Discount Type
           </label>
@@ -136,7 +136,7 @@ export const DiscountForm = ({ discount, setOpen }: Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 mt-5">
+        <div className="grid grid-cols-4 gap-4 items-center mt-5">
           <label className="col-span-1 font-medium text-gray-700 whitespace-nowrap">
             Discount Value
           </label>
@@ -150,7 +150,7 @@ export const DiscountForm = ({ discount, setOpen }: Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 mt-5">
+        <div className="grid grid-cols-4 gap-4 items-center mt-5">
           <label className="font-medium text-gray-700 whitespace-nowrap">
             Start Date
           </label>
@@ -164,7 +164,7 @@ export const DiscountForm = ({ discount, setOpen }: Props) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 mt-5">
+        <div className="grid grid-cols-4 gap-4 items-center mt-5">
           <label className="font-medium text-gray-700 mt-2">End Date</label>
           <div className="col-span-3">
             <Input
