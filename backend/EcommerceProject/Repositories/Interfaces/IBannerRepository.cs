@@ -5,7 +5,7 @@ namespace EcommerceProject.Repositories.Interfaces
     public interface IBannerRepository
     {
         Task<IEnumerable<BannerResponseDto>> GetActiveBannerAsync();
-        Task<IEnumerable<BannerResponseDto>> GetAllBannerAsync();
+        Task<IEnumerable<BannerResponseDto>> GetAllBannerAsync(string sortOrder);
         Task<BannerResponseDto?> GetByIdAsync(int bannerId);
         Task<int> CreateBannerAsync(CreateBannerDto dto, string imageUrl);
         Task UpdateBannerAsync(int id, UpdateBannerDto dto);

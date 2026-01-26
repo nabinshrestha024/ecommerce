@@ -24,12 +24,12 @@ namespace EcommerceProject.Repositories.Implementations
             );
         }
 
-        public async Task<IEnumerable<BannerResponseDto>> GetAllBannerAsync()
+        public async Task<IEnumerable<BannerResponseDto>> GetAllBannerAsync(string sortOrder)
         {
             using var connection = _db.CreateConnection();
-            // Use a stored procedure that DOES NOT filter by IsActive
             return await connection.QueryAsync<BannerResponseDto>(
                 "spBanners_GetAllBannersAdmin", 
+                new { SortOrder = sortOrder },
                 commandType: CommandType.StoredProcedure
             );
         }
