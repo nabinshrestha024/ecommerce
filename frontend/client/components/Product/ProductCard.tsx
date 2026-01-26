@@ -343,9 +343,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                     <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
                       {currencyFormatter.format(activeVariant?.finalPrice ?? 0)}
                     </span>
-                    <span className="md:text-[15px] text-[12px] font-bold  text-red-500 line-through">
-                      {currencyFormatter.format(activeVariant?.price ?? 0)}
-                    </span>
+                    {activeVariant?.discountId && (
+                      <span className="md:text-[15px] text-[12px] font-bold  text-red-500 line-through">
+                        {currencyFormatter.format(activeVariant?.price ?? 0)}
+                      </span>
+                    )}
                   </div>
                 )}
               </div>

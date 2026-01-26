@@ -31,6 +31,7 @@ export interface Variant {
   isActive: boolean;
   attributes: Record<string, string | undefined>;
   finalPrice: number;
+  discountId: number;
 }
 
 export interface VariantAttributes {
