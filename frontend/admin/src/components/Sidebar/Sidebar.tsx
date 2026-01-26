@@ -6,6 +6,8 @@ import { FaUserLarge } from "react-icons/fa6";
 import { FaUserGroup } from "react-icons/fa6";
 import { FaUsers } from "react-icons/fa6";
 import { MdReviews } from "react-icons/md";
+import { RiAdvertisementFill } from "react-icons/ri";
+
 import {
   Sidebar as Root,
   SidebarContent,
@@ -61,7 +63,7 @@ const items = [
       {
         title: "Banner Management",
         url: "/banner-management",
-        icon: FaTags,
+        icon: RiAdvertisementFill,
       },
     ],
   },

@@ -48,7 +48,7 @@ export const ProductDiscountForm = ({ id, setAddOpen }: Props) => {
         </div>
         <div className="flex-1 overflow-auto ">
           <div className="grid grid-cols-4 gap-2 items-center  mt-5">
-            <label className="col-span-1 font-small text-gray-700">
+            <label className="col-span-1 font-small text-gray-700 whitespace-nowrap">
               Discount Name
             </label>
             <div className="col-span-3">

@@ -345,7 +345,7 @@ const ProductDetails = () => {
                     <div className="px-3 py-1 border rounded">{quantity}</div>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
-                      className="p-1 border rounded"
+                      className={`p-1 border rounded ${quantity >= (activeVariant?.stockQuantity ?? 0) ? "opacity-50 cursor-not-allowed" : ""}`}
                       disabled={quantity >= (activeVariant?.stockQuantity ?? 0)}
                     >
                       <MdKeyboardArrowUp />
