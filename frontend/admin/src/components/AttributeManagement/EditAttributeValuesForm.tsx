@@ -57,7 +57,7 @@ export const EditAttributeValueForm = ({
           Edit Attribute Values
         </div>
         <div className="flex-1 overflow-auto mt-5">
-          <div className="flex gap-4 w-full">
+          <div className="flex gap-4 items-center w-full">
             <label className=" font-medium text-gray-700">
               Attribute Values
             </label>
