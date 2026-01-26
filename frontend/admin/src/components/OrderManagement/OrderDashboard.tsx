@@ -21,8 +21,8 @@ export const OrderDashboard = () => {
       time: "Last 7 days",
     },
     {
-      heading: "Canceled Orders",
-      description: String(orderdata.data?.canceled || 0),
+      heading: "Cancelled Orders",
+      description: String(orderdata.data?.cancelled || 0),
       time: "Last 7 days",
     },
   ];

@@ -56,7 +56,7 @@ export const Table = <TData,>({
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="p-3 border-b align-top text-left"
+                  className="p-3 border-b align-middle text-left"
                 >
                   {flexRender(
                     header.column.columnDef.header,

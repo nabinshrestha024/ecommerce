@@ -10,12 +10,13 @@ import { LuBus } from "react-icons/lu";
 import { Tabs } from "../Tabs/Tabs";
 import { useState, useMemo } from "react";
 import { Input } from "@/ui/input";
-import { DropDown } from "../DropDown/DropDown";
-import { IoFilter } from "react-icons/io5";
 import { useFetchOrder, type OrderData } from "@/hooks/order/useFetchOrder";
 import { OrderDetails } from "./OrderDetails";
 import { currencyFormatter } from "../Dashboard/DashboardStats";
 import { Spinner } from "../Spinner/Spinner";
+import { useSortOrder } from "@/hooks/order/useSortOrder";
+import { RiArrowDropDownLine, RiArrowDropUpLine } from "react-icons/ri";
+import { LiaSearchSolid } from "react-icons/lia";
 
 const statusType = {
   DELIVERED: "Delivered",
@@ -30,9 +31,11 @@ export const OrderTable = () => {
     pageSize: 10,
   });
   const orders = useFetchOrder(pagination.pageIndex + 1, pagination.pageSize);
-  const [sortType, setSortType] = useState<"date" | "price" | null>(null);
+  const [sortType, setSortType] = useState("Descending Order");
 
   const [selectedOrder, setSelectedOrder] = useState<OrderData | null>(null);
+
+  const sortOrders = useSortOrder(sortType, pagination.pageIndex + 1);
 
   const handleRowClick = (row: OrderData) => {
     if (selectedOrder?.orderId === row.orderId) {
@@ -45,7 +48,33 @@ export const OrderTable = () => {
   const columnHelper = createColumnHelper<OrderData>();
   const columns = [
     columnHelper.accessor("orderId", {
-      header: () => <div className="flex justify-start">Order Id</div>,
+      header: () => (
+        <div className="flex gap-3 items-center">
+          <div className="flex justify-start">Order Id</div>
+          <div className="flex flex-col gap-0 justify-center">
+            <div
+              className="cursor-pointer "
+              onClick={() => {
+                setSortType("Ascending Order");
+              }}
+            >
+              <RiArrowDropUpLine
+                className={`text-[#4B5563] text-[25px] -mb-1  hover:text-green-700 ${sortType === "Ascending Order" && "text-green-600"}`}
+              />
+            </div>
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                setSortType("Descending Order");
+              }}
+            >
+              <RiArrowDropDownLine
+                className={`text-[#4B5563] text-[25px] -mt-1   hover:text-green-700 ${sortType === "Descending Order" && "text-green-600"}`}
+              />
+            </div>
+          </div>
+        </div>
+      ),
       cell: (info) => (
         <div className="cursor-pointer text-start">{info.getValue()}</div>
       ),
@@ -198,16 +227,11 @@ export const OrderTable = () => {
     };
 
     const sortOrder = (orders: OrderData[]) => {
-      if (sortType === "date") {
-        return [...orders].sort(
-          (a, b) =>
-            new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime(),
-        );
+      if (sortType === "Ascending Order") {
+        return sortOrders.data?.items || [];
       }
-      if (sortType === "price") {
-        return [...orders].sort(
-          (a, b) => Number(a.totalAmount) - Number(b.totalAmount),
-        );
+      if (sortType === "Descending Order") {
+        return sortOrders.data?.items || [];
       }
       return orders;
     };
@@ -355,38 +379,19 @@ export const OrderTable = () => {
           tabsListClassName="bg-[#EAF8E7] flex dark:bg-accent mb-3"
         />
         <div className="absolute top-0 right-0 w-70 flex gap-2 justify-end items-center">
-          <Input
-            onChange={handleChange}
-            type="text"
-            placeholder="Search for order..."
-          />
-          <div className="p-2 rounded-lg border shadow-2xl">
-            <DropDown
-              trigger={
-                <div>
-                  <IoFilter className="text-[#4B5563] text-[20px]" />
-                </div>
-              }
-              className="p-2 flex flex-col gap-2"
-            >
-              <div
-                className="cursor-pointer hover:text-green-600"
-                onClick={() => {
-                  setSortType("date");
-                }}
-              >
-                Sort by Date
-              </div>
-              <div
-                className="cursor-pointer hover:text-green-600"
-                onClick={() => {
-                  setSortType("price");
-                }}
-              >
-                Sort by Price
-              </div>
-            </DropDown>
+          <div className="relative w-full">
+            <Input
+              onChange={handleChange}
+              type="text"
+              placeholder="Search for order..."
+              className="pl-10"
+            />
+            <LiaSearchSolid
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-black"
+              size={18}
+            />
           </div>
+          ;
         </div>
       </div>
       {selectedOrder && (
