@@ -7,7 +7,7 @@ public interface IBannerService
 {
     Task<IEnumerable<BannerResponseDto>> GetActiveBannerAsync();
 
-    Task<IEnumerable<BannerResponseDto>> GetAllBannerAsync();
+    Task<IEnumerable<BannerResponseDto>> GetAllBannerAsync(string sortOrder);
 
     Task<int> CreateBannerAsync(
         CreateBannerDto dto,

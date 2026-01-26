@@ -35,9 +35,9 @@ namespace EcommerceProject.Services.Implementations
             return banners;
         }
 
-        public async Task<IEnumerable<BannerResponseDto>> GetAllBannerAsync()
+        public async Task<IEnumerable<BannerResponseDto>> GetAllBannerAsync(string? sortOrder)
         {
-            var banners = await _repo.GetAllBannerAsync();
+            var banners = await _repo.GetAllBannerAsync(sortOrder);
             var bannerList = banners.ToList();
 
             foreach(var banner in bannerList)

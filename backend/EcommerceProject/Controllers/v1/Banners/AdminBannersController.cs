@@ -21,9 +21,9 @@ namespace EcommerceProject.Controllers.v1.Banners
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(string sortOrder = "asc")
         {
-            var banners = await _service.GetAllBannerAsync();
+            var banners = await _service.GetAllBannerAsync(sortOrder);
 
             var data = banners.ToList();
 
@@ -34,7 +34,6 @@ namespace EcommerceProject.Controllers.v1.Banners
                     banner.ImageUrl = _urlService.ToAbsoluteUrl(banner.ImageUrl);
                 }
             }
-
 
             return Ok(new { 
                 message = "Banners retrieved successfully", 
