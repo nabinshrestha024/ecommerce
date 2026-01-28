@@ -18,19 +18,23 @@ import {
   currencyFormatter,
   LocalCartType,
 } from "@/components/Product/ProductDisplay";
-import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
+import { useCartStore } from "@/store/cart/cart.store";
 
 export const CartComponent = () => {
   const [open, setOpen] = useState(false);
   const deleteCart = useDeleteCart();
   const updateCart = useUpdateCart();
 
+  const localDeleteCart = useCartStore((state) => state.removeCart);
+  const increaseQuantity = useCartStore((state) => state.addQuantity);
+  const decreaseQuantity = useCartStore((state) => state.decreaseQuantity);
+  const cartLocal = useCartStore((state) => state.cart);
+
   const { data, isLoading, refetch } = useFetchCart();
   const { token } = useAuth();
   const isAuth = Boolean(token);
   const router = useRouter();
-  const { cartLocal, setCartLocal } = useCart();
 
   const [selectedCartItemIds, setSelectedCartItemIds] = useState<number[]>([]);
   const [selectedLocalCartItemIds, setSelectedLocalCartItemIds] = useState<
@@ -126,10 +130,6 @@ export const CartComponent = () => {
       selectedLocalCartItemIds.includes(item.variantId),
     ),
   );
-
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartLocal));
-  }, [cartLocal]);
 
   return (
     <div className="flex gap-2 shrink-0 items-center">
@@ -283,13 +283,15 @@ export const CartComponent = () => {
                           <div className="flex flex-col gap-2">
                             {val?.finalPrice === 0 ? (
                               <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
-                                {currencyFormatter.format(val?.price ?? 0)}
+                                {currencyFormatter.format(
+                                  val?.price * val.quantity,
+                                )}
                               </span>
                             ) : (
                               <div className="flex gap-2">
                                 <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
                                   {currencyFormatter.format(
-                                    val?.finalPrice ?? 0,
+                                    val?.finalPrice * val.quantity,
                                   )}
                                 </span>
                               </div>
@@ -404,11 +406,7 @@ export const CartComponent = () => {
                         <button
                           className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                           onClick={() => {
-                            setCartLocal((prev) =>
-                              prev.filter(
-                                (value) => value.cartId !== val.cartId,
-                              ),
-                            );
+                            localDeleteCart(val.cartId);
                             toast.success("Item deleted from cart");
                           }}
                         >
@@ -431,36 +429,23 @@ export const CartComponent = () => {
                         <div className="flex flex-col gap-2">
                           {val?.finalPrice === 0 ? (
                             <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
-                              {currencyFormatter.format(val?.price ?? 0)}
+                              {currencyFormatter.format(
+                                val?.price * val.quantity,
+                              )}
                             </span>
                           ) : (
                             <div className="flex gap-2">
                               <span className="md:text-[15px] text-[12px] font-bold text-[#4EA674]">
-                                {currencyFormatter.format(val?.finalPrice ?? 0)}
+                                {currencyFormatter.format(
+                                  val?.finalPrice * val.quantity,
+                                )}
                               </span>
                             </div>
                           )}
                         </div>
                         <div className="flex items-center bg-white border rounded-lg shadow-sm overflow-hidden">
                           <button
-                            onClick={() =>
-                              setCartLocal((prev) =>
-                                prev.map((item) =>
-                                  item.variantId === val.variantId
-                                    ? {
-                                        ...item,
-                                        quantity: Math.max(
-                                          1,
-                                          item.quantity - 1,
-                                        ),
-                                        totalPrice:
-                                          (item.quantity - 1) * item.price,
-                                        finalPrice: item.price,
-                                      }
-                                    : item,
-                                ),
-                              )
-                            }
+                            onClick={() => decreaseQuantity(val.variantId)}
                             disabled={val.quantity <= 1}
                             className="p-1.5 hover:bg-gray-50 disabled:opacity-30 transition-colors"
                           >
@@ -470,21 +455,7 @@ export const CartComponent = () => {
                             {val.quantity}
                           </span>
                           <button
-                            onClick={() =>
-                              setCartLocal((prev) =>
-                                prev.map((item) =>
-                                  item.variantId === val.variantId
-                                    ? {
-                                        ...item,
-                                        quantity: item.quantity + 1,
-                                        totalPrice:
-                                          (item.quantity + 1) * item.price,
-                                        finalPrice: item.price,
-                                      }
-                                    : item,
-                                ),
-                              )
-                            }
+                            onClick={() => increaseQuantity(val.variantId)}
                             className="p-1.5 hover:bg-gray-50 transition-colors"
                           >
                             <MdKeyboardArrowUp size={18} />
