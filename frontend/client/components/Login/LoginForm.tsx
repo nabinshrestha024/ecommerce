@@ -8,13 +8,13 @@ import { Button } from "@/ui/button";
 import Link from "next/link";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { useRouter } from "next/navigation";
-import { Input } from "../Input/Input";
+import { Input } from "../input/Input";
 import { Dialog } from "../dialog/Dialog";
 import { ForgetPasswordDialogContent } from "../ForgetPassword/ForgetPasswordDialogContent";
 import { useState } from "react";
-import { useCart } from "@/contexts/CartContext";
 import { CartDataType } from "@/lib/cart/mergeCart";
 import { useMergeCart } from "@/hooks/cart/useMergeCart";
+import { useCartStore } from "@/store/cart/cart.store";
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -29,7 +29,7 @@ export const LoginForm = () => {
     mode: "onChange",
   });
 
-  const { cartLocal, setCartLocal } = useCart();
+  const cartLocal = useCartStore((state) => state.cart);
   const mergeCart = useMergeCart();
 
   const onSubmit = (data: LoginFormSchemaType) => {

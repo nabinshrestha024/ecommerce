@@ -15,8 +15,7 @@ import { Dialog } from "../dialog/Dialog";
 import { Variant } from "./ProductDetails";
 import { Card } from "../card/Card";
 import { currencyFormatter, ProductType } from "./ProductDisplay";
-import { toast } from "sonner";
-import { useCart } from "@/contexts/CartContext";
+import { useCartStore } from "@/store/cart/cart.store";
 
 interface ProductCardProps {
   product: ProductType;
@@ -37,7 +36,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const addMutate = useAddWishlist();
   const deleteMutate = useDeleteWishlist();
   const wishlists = useFetchWishlist();
-  const { setCartLocal } = useCart();
+  const addToCartLocal = useCartStore((state) => state.addToCart);
   const [selectedVariants, setSelectedVariants] = useState<
     Record<string, string | undefined>
   >(() => getDefaultSelectedVariants(product?.variants));
@@ -59,55 +58,9 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     if (token) {
       addToCart.mutate({ variantId, quantity });
       return;
+    } else {
+      addToCartLocal(product, selectedVariants, variantId, quantity);
     }
-
-    const attributesForCart = Object.entries(selectedVariants ?? {}).map(
-      ([name, value]) => ({ name, value: value ?? "" }),
-    );
-
-    const unitFinalPrice =
-      product.finalPrice === 0 ? product.price : product.finalPrice;
-
-    setCartLocal((prev) => {
-      const existingItem = prev.find((item) => item.variantId === variantId);
-
-      if (existingItem) {
-        return prev.map((item) =>
-          item.variantId === variantId
-            ? {
-                ...item,
-                quantity: item.quantity + quantity,
-                totalPrice: (item.quantity + quantity) * unitFinalPrice,
-                finalPrice: unitFinalPrice,
-              }
-            : item,
-        );
-      }
-
-      return [
-        ...prev,
-        {
-          cartId: Date.now(),
-          productId: product.productId,
-          variantId,
-
-          productName: product.name,
-          sku: product.sku,
-          productImageUrl: product.primaryImageUrl,
-          description: product.description,
-
-          price: product.price,
-          quantity,
-          totalPrice: unitFinalPrice * quantity,
-          finalPrice: unitFinalPrice,
-
-          addedDate: new Date().toISOString(),
-          attributes: attributesForCart,
-        },
-      ];
-    });
-
-    toast.success("Item added to cart successfully");
   };
 
   const handleIncrease = () => {
